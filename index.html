@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mon style</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FFFFFF;--surface:#FFFFFF;--soft:#F7EEF0;--ink:#1E1A1D;--muted:#76696F;--line:#ECE3E6;--accent:#7D2E4A;--on:#FFFFFF;--gold:#B8935A}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141113;--surface:#1D181B;--soft:#271E23;--ink:#F4EEF0;--muted:#B3A6AC;--line:#33292E;--accent:#E7A6BC;--on:#141113;--gold:#D6B47E}}
+:root[data-theme="dark"]{--bg:#141113;--surface:#1D181B;--soft:#271E23;--ink:#F4EEF0;--muted:#B3A6AC;--line:#33292E;--accent:#E7A6BC;--on:#141113;--gold:#D6B47E}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font:17px/1.55 Jost,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+button:focus-visible,a:focus-visible,label:focus-within{outline:2px solid var(--accent);outline-offset:3px}
+#app{max-width:480px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;padding:env(safe-area-inset-top,0) 0 0}
+header{display:flex;align-items:center;gap:12px;padding:14px 20px 6px;min-height:58px}
+.ib{width:40px;height:40px;border:0;background:none;border-radius:50%;display:grid;place-items:center;cursor:pointer;flex:none}
+.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.ib[hidden]{visibility:hidden;display:grid}
+.bar{flex:1;height:2px;background:var(--line);border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.brand{flex:1;text-align:center;font:600 21px "Cormorant Garamond",Georgia,serif;letter-spacing:.02em}
+#page{flex:1;padding:18px 24px 24px;display:flex;flex-direction:column}
+.in-f{animation:inf .45s cubic-bezier(.2,.8,.2,1)}.in-b{animation:inb .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes inf{from{opacity:0;transform:translateX(28px)}}@keyframes inb{from{opacity:0;transform:translateX(-28px)}}
+h1{font:600 38px/1.08 "Cormorant Garamond",Georgia,serif;margin:6px 0 12px;letter-spacing:-.01em}
+h2{font:600 26px/1.15 "Cormorant Garamond",Georgia,serif;margin:28px 0 10px}
+p{margin:0 0 14px}.sub{color:var(--muted)}
+.step{color:var(--gold);font-size:14px;margin-bottom:2px}
+footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg) 30%);padding:18px 24px calc(18px + env(safe-area-inset-bottom,0px))}
+.btn{display:block;width:100%;border:0;border-radius:999px;padding:16px;background:var(--accent);color:var(--on);font-weight:500;font-size:17px;cursor:pointer;text-align:center;transition:transform .15s,opacity .2s}
+.btn:active{transform:scale(.97)}.btn:disabled{opacity:.35;cursor:default}
+.btn.ghost{background:none;color:var(--accent);border:1px solid var(--line);margin-top:10px}
+.link{display:block;width:100%;border:0;background:none;color:var(--muted);padding:12px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:16px 18px;margin-bottom:10px;cursor:pointer;transition:border-color .2s,background .2s,transform .15s}
+.opt:active{transform:scale(.98)}
+.opt[aria-pressed="true"]{border-color:var(--accent);background:var(--soft)}
+.opt .dot{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line);flex:none;display:grid;place-items:center}
+.opt[aria-pressed="true"] .dot{border-color:var(--accent)}
+.opt[aria-pressed="true"] .dot::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.opt .sw{width:30px;height:30px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.opt small{display:block;color:var(--muted);font-size:14px}
+.tile{display:block;text-decoration:none;color:inherit;width:100%;text-align:left;border:0;border-radius:24px;padding:22px;margin-bottom:12px;cursor:pointer;background:var(--soft);transition:transform .15s}
+.tile:active{transform:scale(.98)}
+.tile b{display:block;font:600 27px/1.1 "Cormorant Garamond",Georgia,serif;margin-bottom:4px}
+.tile span{color:var(--muted);font-size:15px}
+.tile.main{background:var(--accent);color:var(--on)}.tile.main span{color:inherit;opacity:.85}
+.photo{position:relative;border-radius:24px;background:var(--soft);aspect-ratio:3/4;max-height:46vh;width:100%;margin:6px auto 16px;display:grid;place-items:center;overflow:hidden;color:var(--muted);text-align:center;padding:20px}
+.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.photo svg{width:84px;height:84px;fill:none;stroke:var(--gold);stroke-width:1.2}
+.photo.scan::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--gold);box-shadow:0 0 16px 3px var(--gold);animation:scan 1.6s ease-in-out infinite alternate}
+@keyframes scan{to{top:calc(100% - 2px)}}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lb{display:block;text-align:center;border:1px solid var(--line);border-radius:999px;padding:14px 8px;cursor:pointer;font-weight:500;color:var(--accent)}
+.lb.pri{background:var(--accent);color:var(--on);border-color:var(--accent)}
+.tips{list-style:none;padding:0;margin:8px 0 0}
+.tips li{padding:12px 0;border-top:1px solid var(--line);display:flex;gap:12px}.tips li:first-child{border-top:0}
+.tips li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:10px;flex:none}
+.row{padding:14px 0;border-top:1px solid var(--line)}
+.row span{display:block;color:var(--gold);font-size:14px;margin-bottom:2px}
+.big{font:600 52px/1 "Cormorant Garamond",Georgia,serif;color:var(--accent);margin:4px 0 10px}
+.pal{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:8px 0 18px}
+.pal div{aspect-ratio:1;border-radius:18px;display:flex;align-items:flex-end;padding:8px;font-size:12px;font-weight:500;animation:pop .5s backwards;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+@keyframes pop{from{opacity:0;transform:scale(.85)}}
+.rings{position:relative;width:44px;height:44px;flex:none}
+.rings i{position:absolute;inset:0;border-radius:50%;border:1.2px solid var(--gold);opacity:.9}
+.rings i:nth-child(2){inset:8px;opacity:.7}.rings i:nth-child(3){inset:16px;background:var(--gold);opacity:1}
+.talk .rings i:nth-child(1){animation:ring 1.4s ease-out infinite}.talk .rings i:nth-child(2){animation:ring 1.4s .35s ease-out infinite}
+@keyframes ring{to{transform:scale(1.5);opacity:0}}
+#splash{position:fixed;inset:0;z-index:20;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px;transition:opacity .7s,transform .7s}
+#splash.out{opacity:0;transform:scale(1.04);pointer-events:none}
+#splash .rings{width:150px;height:150px;margin-bottom:34px}
+#splash .rings i:nth-child(2){inset:26px}#splash .rings i:nth-child(3){inset:54px}
+#splash .rings i:nth-child(1){animation:ring 2.4s ease-out infinite}#splash .rings i:nth-child(2){animation:ring 2.4s .8s ease-out infinite}
+#splash h1{font-size:54px;min-height:1.1em;margin:0 0 12px}
+#splash p{max-width:330px;min-height:3.2em;color:var(--muted)}
+#splash .btn{max-width:320px;opacity:0;transform:translateY(10px);transition:opacity .6s,transform .6s;pointer-events:none}
+#splash .btn.show{opacity:1;transform:none;pointer-events:auto}
+nav.dock{display:flex;justify-content:space-around;border-top:1px solid var(--line);background:var(--bg);padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));position:sticky;bottom:0}
+nav.dock button{flex:1;border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px;font-size:13px;color:var(--muted);cursor:pointer}
+nav.dock svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+nav.dock button[aria-current="true"]{color:var(--accent)}
+.card{border:1px solid var(--line);border-radius:20px;padding:16px 18px;margin-bottom:10px}
+.card b{display:block;margin-bottom:8px;font-weight:500}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips a{border:1px solid var(--line);border-radius:999px;padding:7px 13px;color:var(--accent);text-decoration:none;font-size:14px}
+.field{width:100%;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:16px Jost,sans-serif}
+.chat{display:flex;flex-direction:column;gap:10px;margin:6px 0 14px}
+.bub{max-width:86%;padding:12px 16px;border-radius:20px;white-space:pre-wrap}
+.bub.u{align-self:flex-end;background:var(--accent);color:var(--on);border-bottom-right-radius:6px}
+.bub.a{align-self:flex-start;background:var(--soft);border-bottom-left-radius:6px}
+.mic{width:88px;height:88px;border-radius:50%;border:0;background:var(--accent);color:var(--on);display:grid;place-items:center;margin:8px auto 6px;cursor:pointer}
+.mic svg{width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}
+.mic.on{animation:breath 1.2s ease-in-out infinite}
+@keyframes breath{50%{transform:scale(1.08)}}
+.note{background:var(--soft);border-radius:16px;padding:14px 16px;color:var(--muted);font-size:15px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="splash"><div class="rings"><i></i><i></i><i></i></div><h1 id="hi"></h1><p id="hi2"></p><button class="btn" id="start">Commencer</button></div>
+<div id="app">
+<header><button class="ib" id="back" aria-label="Retour"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div id="mid" class="brand">Mon style</div><button class="ib" id="voice" aria-label="Voix"><span class="rings" style="width:26px;height:26px"><i></i><i></i><i></i></span></button></header>
+<main id="page"></main>
+<footer id="foot"></footer>
+<nav class="dock" id="dock">
+<button data-go="boutique"><svg viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>Boutique</button>
+<button data-go="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Accueil</button>
+<button data-go="o_photo"><svg viewBox="0 0 24 24"><path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/></svg>Outfit check</button>
+</nav>
+</div>
+<script>
+const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
+COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
+MORPHOLOGIE DU CORPS : Sablier (épaules et hanches égales, taille marquée), Rectangle (épaules, taille, hanches alignées), Triangle ou Poire (hanches plus larges que les épaules), Triangle inversé (épaules plus larges que les hanches), Rond ou Pomme (masse au centre, membres fins). Règle d’or : la morphologie dit où placer les ouvertures, les coupes et la taille ; le Kibbe dit la matière et le mouvement des tissus. Règle des professionnelles : on triche avec l’œil, on crée un point focal sur ses atouts, la silhouette (contour) doit convenir à la morphologie, la superposition rééquilibre les proportions. Questions utiles : où est-on la plus large, où grossit-on et maigrit-on en premier ; tenir compte de la taille, de l’ossature et de la génétique.
+KIBBE (équilibre Yin = douceur, courbes, et Yang = force, angles, lignes) : Dramatic (très long, tranchant, droit ; tissus durs, épais, lignes géométriques), Soft Dramatic (long, tranchant, avec courbes ; velours, tissus fluides), Flamboyant Natural (grande carrure, os larges ; lignes libres, tissus lourds et naturels), Soft Natural (corps large et doux ; texture douce, coupes relâchées), Dramatic Classic (équilibré, épaules carrées nettes ; coupes Tailored structurées), Soft Classic (équilibré et doux, taille moyenne ; Fluide en bas, légère structure en haut), Pure Romantic (courbes totales, petit, sablier ; tissus très fluides, taille marquée), Theatrical Romantic (courbes avec angles vifs ; coupes féminines nettes), Soft Gamine (petit, os carrés, chair ronde ; lignes brisées, coupes vives). Test en 3 points : vérifier la fin des os des épaules (droits ou arrondis), la ligne verticale (long et élancé ou plus ramassé), l’interaction de la stature avec les os. Équilibre visuel : confort psychologique devant le miroir + gènes qui soutiennent la silhouette = allure idéale.
+HARMONIE DES TENUES : une tenue a un point focal (une couleur vive ou un imprimé), tout le reste le soutient. Coordination par la couleur, les accessoires et le style. Mélange d’imprimés : garder les mêmes proportions. Palette neutre de 4 couleurs qui vont bien ensemble. Les bases : chemisiers, pantalons, jeans, vestes, robes, jupes, mailles, chaussures, sacs, accessoires. Penser aussi à l’âge et au mode de vie, à la qualité plutôt qu’à la quantité.
+GARDE-ROBE CAPSULE (règle 5-4-3-2-1 = 15 pièces) : 5 hauts, 4 bas, 3 pièces d’extérieur ou couches (blazer, trench, cardigan), 2 paires de chaussures, 1 sac iconique. Équation : peu de pièces + qualité et tissus nobles + accord avec la morphologie et le Kibbe + couleurs cohérentes = looks sans fin. Test des 3 façons : avant d’acheter, la pièce doit pouvoir se porter de 3 façons différentes avec ce qu’on possède déjà, sinon elle n’a pas sa place. Looks types : travail élégant (blazer noir structuré, chemise blanche, pantalon droit), casual chic (cachemire gris, jean foncé, trench), soirée chic (haut fluide, jupe en crêpe fluide, talons, accessoire iconique). Désencombrer : classer en 3 (pièces qui vont à la morphologie et aux couleurs, pièces à retoucher, pièces à donner), limiter la palette neutre, photographier les looks réussis.`;
+let NOM="ma belle";
+const AGENT_URL="https://elevenlabs.io/app/talk-to?agent_id=agent_3801m58kjga8fddsm7bz46gcz4wf";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const cap=s=>{s=String(s||"");return s.charAt(0).toUpperCase()+s.slice(1)};
+
+const SEASONS={
+"Printemps Clair":{f:"Printemps",t:"Clair, chaud et délicat.",c:[["#F9C9A8","Pêche"],["#F4A28C","Corail doux"],["#F6E3A1","Jaune beurre"],["#B9DDB1","Menthe"],["#9FD8D1","Aqua"],["#FBF1DC","Ivoire"]],e:"Le noir et les couleurs très sombres."},
+"Printemps Chaud":{f:"Printemps",t:"Chaud, doré et lumineux.",c:[["#F27D5E","Corail"],["#F2B632","Jaune d’or"],["#8DC63F","Vert pomme"],["#2BB3A3","Turquoise"],["#F59A4A","Abricot"],["#D9A86C","Camel"]],e:"Les gris froids et les roses bleutés."},
+"Printemps Vif":{f:"Printemps",t:"Vif, chaud et éclatant.",c:[["#FF5A4E","Corail vif"],["#E6397A","Fuchsia chaud"],["#00B2A9","Turquoise"],["#3DBE5A","Vert vif"],["#FFC93C","Jaune vif"],["#FFF8EC","Blanc chaud"]],e:"Les tons poussiéreux et grisés."},
+"Été Clair":{f:"Été",t:"Clair, froid et délicat.",c:[["#A9C8E8","Bleu ciel"],["#F2B8C6","Rose dragée"],["#C7B8E0","Lavande"],["#B5DCCF","Menthe froide"],["#D9DCE1","Gris perle"],["#F7EEF1","Blanc rosé"]],e:"Le noir et l’orange."},
+"Été Froid":{f:"Été",t:"Froid, frais et équilibré.",c:[["#4A6FA5","Bleu doux"],["#C9577E","Framboise douce"],["#A58FC9","Lilas"],["#6FAFA4","Vert d’eau"],["#6C7A89","Gris ardoise"],["#F2F2F4","Blanc doux"]],e:"L’or, l’orange et les tons terre."},
+"Été Doux":{f:"Été",t:"Froid, doux et poudré.",c:[["#C48B95","Vieux rose"],["#A89490","Taupe rosé"],["#8DA1B5","Bleu gris"],["#9AAE9B","Vert sauge"],["#9C7A93","Mauve"],["#E6E0D8","Écru"]],e:"Le noir intense, le blanc optique et les couleurs vives."},
+"Automne Doux":{f:"Automne",t:"Chaud, doux et naturel.",c:[["#A3A270","Olive clair"],["#C19A6B","Camel"],["#D99A82","Saumon doux"],["#8F8B65","Kaki"],["#E2B79B","Pêche grisée"],["#E5D3B8","Beige chaud"]],e:"Les couleurs vives et le noir."},
+"Automne Chaud":{f:"Automne",t:"Chaud, terreux et doré.",c:[["#C5603B","Terracotta"],["#D29F2E","Moutarde"],["#6B7A2E","Olive"],["#A94A23","Rouille"],["#C57A44","Cuivre"],["#EED9B0","Crème dorée"]],e:"Les roses bleutés et les gris froids."},
+"Automne Profond":{f:"Automne",t:"Profond, chaud et riche.",c:[["#5A3420","Chocolat"],["#7B2B2E","Bordeaux chaud"],["#2F4A2E","Vert forêt"],["#5E2E46","Prune"],["#B07E1F","Moutarde foncée"],["#1F5A5E","Pétrole"]],e:"Les pastels."},
+"Hiver Vif":{f:"Hiver",t:"Vif, froid et contrasté.",c:[["#D7192D","Rouge vif"],["#E0218A","Fuchsia"],["#1458D6","Bleu électrique"],["#009A6E","Émeraude"],["#111111","Noir"],["#FFFFFF","Blanc pur"]],e:"Les tons poussiéreux et les beiges."},
+"Hiver Froid":{f:"Hiver",t:"Froid, net et intense.",c:[["#1C2D5A","Marine"],["#A3123A","Rubis"],["#5B2C83","Violet"],["#0E5F4E","Vert sapin"],["#3A3D42","Anthracite"],["#FFFFFF","Blanc pur"]],e:"L’orange, l’or et le camel."},
+"Hiver Profond":{f:"Hiver",t:"Profond, froid et intense.",c:[["#141414","Noir"],["#6E1230","Bordeaux"],["#0F3B2E","Vert bouteille"],["#3E1F47","Aubergine"],["#14213D","Bleu nuit"],["#FAFAFA","Blanc"]],e:"Les pastels et les tons clairs ternes."}};
+
+const QS=[
+{id:"yeux",q:"La couleur de tes yeux ?",o:[["bleu","Bleu ou gris","#8EA6BF"],["vert","Vert ou noisette","#8C8A4E"],["marron","Marron clair","#9A6A3A"],["fonce","Marron foncé ou noir","#3B2418"]]},
+{id:"cheveux",q:"Ta couleur de cheveux naturelle ?",h:"Sans coloration.",o:[["blond","Blond","#D8B878"],["chatain","Châtain","#7A5434"],["roux","Roux ou cuivré","#A4502A"],["brun","Brun foncé","#3A2418"],["noir","Noir","#121212"]]},
+{id:"veines",q:"Les veines de ton poignet ?",h:"Regarde-les à la lumière du jour.",o:[["vert","Plutôt vertes"],["bleu","Plutôt bleues ou violettes"],["deux","Difficile à dire"]]},
+{id:"bijoux",q:"Quel bijou illumine ton visage ?",o:[["or","L’or"],["argent","L’argent"],["deux","Les deux"]]},
+{id:"soleil",q:"Au soleil, ta peau…",o:[["bronze","Bronze facilement"],["rougit","Rougit, puis bronze"],["brule","Rougit et brûle"]]},
+{id:"blanc",q:"Près du visage, quel blanc te va le mieux ?",o:[["pur","Le blanc pur, éclatant","#FFFFFF"],["casse","Le blanc cassé, crème","#F3E7D3"]]},
+{id:"noir",q:"Le noir près du visage ?",o:[["oui","Il me va bien","#141414"],["non","Il me durcit ou me fatigue","#141414"]]},
+{id:"vif",q:"Quelle couleur te met en valeur ?",h:"Imagine-les en haut, près du visage.",o:[["vif","Le fuchsia vif","#E0218A"],["doux","Le vieux rose doux","#C48B95"]]},
+{id:"contraste",q:"Le contraste entre tes cheveux, ta peau et tes yeux ?",o:[["fort","Fort, ils se démarquent nettement"],["moyen","Moyen"],["faible","Faible, tout est doux et proche"]]}];
+
+function seasonFromAnswers(a){
+ let w=0,d=0,c=0;
+ w+=a.veines==="vert"?1:a.veines==="bleu"?-1:0; w+=a.bijoux==="or"?1:a.bijoux==="argent"?-1:0;
+ w+=a.soleil==="bronze"?1:a.soleil==="brule"?-1:0; w+=a.blanc==="casse"?1:a.blanc==="pur"?-1:0;
+ if(a.cheveux==="roux")w+=1;
+ d+={blond:-2,chatain:0,roux:0,brun:1,noir:2}[a.cheveux]||0; d+={bleu:-1,vert:0,marron:0,fonce:1}[a.yeux]||0;
+ c+=a.vif==="vif"?1:a.vif==="doux"?-1:0; c+=a.noir==="oui"?1:a.noir==="non"?-1:0; c+=a.contraste==="fort"?1:a.contraste==="faible"?-1:0;
+ const W=Math.abs(w)/4,D=Math.abs(d)/3,C=Math.abs(c)/3,warm=w>=0;
+ if(D>=W&&D>=C)return d<0?(warm?"Printemps Clair":"Été Clair"):(warm?"Automne Profond":"Hiver Profond");
+ if(C>=W)return c>0?(warm?"Printemps Vif":"Hiver Vif"):(warm?"Automne Doux":"Été Doux");
+ return warm?(d<=0?"Printemps Chaud":"Automne Chaud"):(d<=0?"Été Froid":"Hiver Froid");
+}
+const ANS_TXT=a=>QS.map(q=>{const o=q.o.find(x=>x[0]===a[q.id]);return o?q.q+" "+o[1]:""}).filter(Boolean).join(" ; ");
+
+const CORPS={"Sablier":"Marque la taille : robes portefeuille, ceintures, tailles hautes.","Poire":"Attire le regard vers le haut : encolures bateau, couleurs claires en haut, pantalons droits ou évasés.","Pomme":"Tissus fluides, coupe empire, décolleté en V, et mets tes jambes en valeur.","Rectangle":"Crée des courbes : volants, ceintures, jupes évasées, superpositions.","Triangle inversé":"Équilibre en bas : jupes trapèze, pantalons larges, hauts à encolure simple."};
+const SHOPCUT={"Sablier":["robe portefeuille","pantalon taille haute","chemisier cintré"],"Poire":["top encolure bateau","pantalon évasé","veste courte structurée"],"Pomme":["robe empire","blouse col V fluide","pantalon droit"],"Rectangle":["jupe évasée","top à volants","robe ceinturée"],"Triangle inversé":["pantalon large","jupe trapèze","top col V"]};
+const SHOPS=[["Zara","zara.com"],["H&M","hm.com"],["Mango","mango.com"],["Shein","shein.com"],["Namshi","namshi.com"],["Ounass","ounass.ae"]];
+
+let S={page:"home",hist:[],dir:"f",ans:{},file:{},url:{},res:{},busy:false,err:"",voice:true,chat:[],draft:"",shopQ:"",listen:false,flow:null};
+try{const j=JSON.parse(localStorage.getItem("monstyle")||"null");if(j){S.res=j.res||{};S.ans=j.ans||{};if(j.nom){S.nom=j.nom;NOM=j.nom}}}catch(e){}
+function save(){try{localStorage.setItem("monstyle",JSON.stringify({res:{visage:S.res.visage,corps:S.res.corps,couleurs:S.res.couleurs,outfit:S.res.outfit},ans:S.ans,nom:S.nom}))}catch(e){}}
+const ok=k=>S.res[k]&&!S.res[k].erreur?S.res[k]:null;
+const season=()=>{const c=ok("couleurs");return c&&SEASONS[c.saison]?c.saison:null};
+function PROFIL(){const v=ok("visage"),b=ok("corps"),s=season(),p=[];
+ if(v)p.push("visage "+v.forme);if(b)p.push("morphologie "+b.forme+", Kibbe "+b.kibbe);if(s)p.push("saison "+s);return p.join(", ")}
+
+const FLOW_A=["a_nom","a_intro","a_face",...QS.map(q=>"q_"+q.id),"a_body","a_run","r_visage","r_corps","r_kibbe","r_couleurs","r_fin"];
+const FLOW_O=["o_photo","o_run","o_res"];
+const DOCK=["home","boutique","o_photo","profil","chat"];
+
+const IC={face:'<svg viewBox="0 0 24 24"><circle cx="12" cy="10" r="5"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>',body:'<svg viewBox="0 0 24 24"><circle cx="12" cy="4" r="2"/><path d="M12 6v8M8 9h8M12 14l-3 7M12 14l3 7"/></svg>',outfit:'<svg viewBox="0 0 24 24"><path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/></svg>'};
+
+function photoPage(k,o){
+ return {step:o.step,html:`<p class="step">${o.step}</p><h1>${o.t}</h1><p class="sub">${o.c}</p>
+ <div class="photo ${S.busy===k?"scan":""}">${S.url[k]?`<img src="${S.url[k]}" alt="Ta photo">`:IC[o.ic]+`<span style="display:block;margin-top:10px">${o.ph}</span>`}</div>
+ <div class="two"><label class="lb pri">Prendre la photo<input type="file" accept="image/*" capture="${o.cam}" data-f="${k}" hidden></label><label class="lb">Galerie<input type="file" accept="image/*" data-f="${k}" hidden></label></div>`,
+ say:o.say,foot:`<button class="btn" data-next ${S.file[k]?"":"disabled"}>${o.b}</button>`};
+}
+
+const P={
+home:()=>{const done=!!(ok("visage")||ok("corps")||season()||ok("outfit"));
+ return {dock:1,html:`<h1>Salut ${NOM}.</h1><p class="sub">Que veux-tu faire aujourd’hui ?</p>
+ <button class="tile main" data-start="A"><b>${done?"Refaire mon analyse":"Mon analyse"}</b><span>Visage, couleurs, morphologie et Kibbe</span></button>
+ ${done?`<button class="tile" data-go="profil"><b>Mon profil</b><span>${esc(PROFIL())}</span></button>`:""}
+ <button class="tile" data-go="o_photo"><b>Outfit check</b><span>Une note et des conseils pour ta tenue</span></button>
+ <a class="tile" href="${AGENT_URL}" target="_blank" rel="noopener" data-call><b>Parler à ma styliste</b><span>Un appel à voix haute avec elle</span></a>`,
+ say:done?"Contente de te revoir, "+NOM+". Que veux-tu faire aujourd’hui ?":"Commence par ton analyse, "+NOM+". Je regarde ton visage, je te pose quelques questions sur tes couleurs, puis je regarde ta silhouette."}},
+a_nom:()=>({html:`<p class="step">Ton analyse</p><h1>Comment tu t’appelles ?</h1><p class="sub">Ton prénom, pour que je puisse t’appeler par ton nom.</p>
+ <input class="field" id="nom" autocomplete="given-name" placeholder="Ton prénom" value="${esc(S.nomDraft??S.nom??"")}" style="font-size:20px;padding:18px">`,
+ say:"Avant de commencer, comment tu t’appelles ?",foot:`<button class="btn" data-nom ${(S.nomDraft??S.nom??"").trim()?"":"disabled"}>Continuer</button>`}),
+a_intro:()=>({html:`<p class="step">Ton analyse</p><h1>On commence, ${NOM}.</h1><p class="sub">Trois étapes, quelques minutes.</p>
+ <ul class="tips"><li>Une photo de ton visage</li><li>Quelques questions sur tes couleurs</li><li>Une photo de ta silhouette</li></ul>
+ <h2>Pour une analyse juste</h2><ul class="tips"><li>Lumière du jour, près d’une fenêtre</li><li>Visage sans maquillage, cheveux attachés</li><li>Sans lunettes, sans filtre</li></ul>`,
+ say:"On commence, "+NOM+". Mets-toi près d’une fenêtre, en lumière du jour, sans maquillage et les cheveux attachés.",foot:`<button class="btn" data-next>C’est parti</button>`}),
+a_face:()=>photoPage("face",{step:"Étape 1 sur 3",t:"Ton visage",c:"De face, le téléphone à hauteur des yeux, à bout de bras tendu.",ph:"Ta photo de visage",ic:"face",cam:"user",b:"Continuer",say:"Prends une photo de ton visage, bien de face, le téléphone à hauteur des yeux."}),
+a_body:()=>photoPage("body",{step:"Étape 3 sur 3",t:"Ta silhouette",c:"En pied, de face, bras le long du corps, vêtements près du corps. Pose le téléphone à 2 mètres et utilise le minuteur.",ph:"Ta photo en pied",ic:"body",cam:"environment",b:"Lancer mon analyse",say:"Dernière étape. Prends une photo de toi en pied, de face, avec des vêtements près du corps."}),
+a_run:()=>({html:`<p class="step">Analyse</p><h1>${S.err?"Un souci":"Je t’analyse…"}</h1>
+ <div class="photo scan">${S.url.face?`<img src="${S.url.face}" alt="">`:""}</div>
+ <p class="sub" id="runmsg">${esc(S.err||S.runmsg||"Je regarde ton visage.")}</p>`,
+ foot:S.err?`<button class="btn" data-retry>Réessayer</button><button class="link" data-go="a_face">Changer mes photos</button>`:"",back:!!S.err}),
+r_visage:()=>{const v=ok("visage");if(!v)return missing("visage",S.res.visage);
+ return {step:"Résultat 1 sur 4",html:`<p class="step">Ton visage</p><div class="big">${esc(cap(v.forme))}</div><p>${esc(v.pourquoi)}</p>
+ <div class="row"><span>Coupes de cheveux</span>${esc(v.coupes)}</div><div class="row"><span>Couleur de cheveux</span>${esc(v.couleur_cheveux)}</div>
+ <div class="row"><span>Lunettes</span>${esc(v.lunettes)}</div><div class="row"><span>Make-up</span>${esc(v.makeup)}</div>`,
+ say:"Ton visage est "+String(v.forme).toLowerCase()+". "+v.pourquoi+" Les coupes qui te vont : "+v.coupes,foot:nextBtn()}},
+r_corps:()=>{const b=ok("corps");if(!b)return missing("corps",S.res.corps);
+ return {step:"Résultat 2 sur 4",html:`<p class="step">Ta morphologie</p><div class="big">${esc(b.forme)}</div><p>${esc(b.proportions)}</p>
+ <div class="row"><span>Ce qui te met en valeur</span>${esc(b.conseils)}</div><div class="row"><span>À éviter</span>${esc(b.a_eviter)}</div>`,
+ say:"Ta morphologie est "+String(b.forme).toLowerCase()+". "+b.proportions+" Pour te mettre en valeur : "+b.conseils,foot:nextBtn()}},
+r_kibbe:()=>{const b=ok("corps");if(!b)return missing("corps",S.res.corps);
+ return {step:"Résultat 3 sur 4",html:`<p class="step">Ton type Kibbe</p><div class="big">${esc(b.kibbe)}</div><p>${esc(b.kibbe_pourquoi)}</p>
+ <p class="note">Le Kibbe dépend aussi de ta structure osseuse : c’est une estimation à partir de ta photo.</p>`,
+ say:"Ton type Kibbe est "+b.kibbe+". "+b.kibbe_pourquoi,foot:nextBtn()}},
+r_couleurs:()=>{const s=season();if(!s)return missing("couleurs",S.res.couleurs);const c=S.res.couleurs,d=SEASONS[s];
+ return {step:"Résultat 4 sur 4",html:`<p class="step">Ta saison</p><div class="big">${esc(s)}</div><p>${esc(d.t)} ${esc(c.pourquoi||"")}</p>
+ <div class="pal">${d.c.map((x,i)=>`<div style="background:${x[0]};color:${lum(x[0])>0.55?"#1E1A1D":"#fff"};animation-delay:${i*80}ms">${x[1]}</div>`).join("")}</div>
+ <div class="row"><span>À éviter</span>${esc(d.e)}</div>${c.sous_ton?`<div class="row"><span>Sous-ton</span>${esc(cap(c.sous_ton))}</div>`:""}`,
+ say:"Ta saison est "+s+". "+d.t+" "+(c.pourquoi||"")+" Évite "+d.e.charAt(0).toLowerCase()+d.e.slice(1),foot:nextBtn()}},
+r_fin:()=>({html:`<p class="step">C’est prêt</p><h1>Ton profil est prêt, ${NOM}.</h1><p class="sub">${esc(PROFIL())}</p>`,
+ say:"Ton profil est prêt, "+NOM+". Je le garde pour toi : tu le retrouves sur la page d’accueil.",
+ foot:`<button class="btn" data-home>Retour à l’accueil</button>`}),
+profil:()=>({dock:1,html:`<h1>Mon profil</h1>${S.nom?`<p class="sub">${esc(S.nom)}</p>`:""}${[["visage","Visage",ok("visage")?.forme,"r_visage"],["corps","Morphologie",ok("corps")?.forme,"r_corps"],["kibbe","Kibbe",ok("corps")?.kibbe,"r_kibbe"],["couleurs","Saison",season(),"r_couleurs"],["outfit","Dernière tenue",ok("outfit")?ok("outfit").note+" / 10":"","o_res"]].map(x=>`<button class="tile" data-view="${x[3]}"><span>${x[1]}</span><b>${esc(x[2]||"À analyser")}</b></button>`).join("")}`,
+ say:"Voici ton profil, "+NOM+". Touche une carte pour réécouter le détail."}),
+o_photo:()=>photoPage("outfit",{step:"Outfit check",t:"Ta tenue",c:"En pied, de face, la tenue complète avec les chaussures, en lumière claire.",ph:"Ta photo de tenue",ic:"outfit",cam:"environment",b:"Noter ma tenue",say:"Montre-moi ta tenue, "+NOM+". Prends une photo en pied, avec les chaussures."}),
+o_run:()=>({html:`<p class="step">Outfit check</p><h1>${S.err?"Un souci":"Je regarde ta tenue…"}</h1><div class="photo scan">${S.url.outfit?`<img src="${S.url.outfit}" alt="">`:""}</div><p class="sub">${esc(S.err||"Une seconde.")}</p>`,
+ foot:S.err?`<button class="btn" data-retry>Réessayer</button><button class="link" data-go="o_photo">Changer ma photo</button>`:"",back:!!S.err}),
+o_res:()=>{const o=ok("outfit");if(!o)return missing("outfit",S.res.outfit);
+ return {html:`<p class="step">Outfit check</p><div class="big"><span id="note">0</span><span style="font-size:28px"> / 10</span></div><p>${esc(o.resume)}</p>
+ <h2>Ce qui marche</h2><ul class="tips">${(o.points_forts||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+ <h2>À changer</h2><ul class="tips">${(o.changements||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`,
+ say:"Ta tenue a "+o.note+" sur 10. "+o.resume+" Ce que je changerais : "+(o.changements||[]).join(". "),count:+o.note,
+ foot:`<button class="btn" data-profil>Retour à mon profil</button><button class="link" data-go="o_photo">Noter une autre tenue</button>`}},
+boutique:()=>{const b=ok("corps"),s=season(),cols=s?SEASONS[s].c.filter(x=>!/Noir|Blanc/.test(x[1])).map(x=>x[1].toLowerCase()):[];
+ const ideas=(SHOPCUT[b?.forme]||["blazer structuré","robe fluide","pantalon taille haute"]).map((c,i)=>cols.length?c+" "+cols[i%cols.length]:c);
+ return {dock:1,html:`<h1>Ma boutique</h1><p class="sub">${b||s?"Des pièces choisies pour ta morphologie et ta saison.":"Fais ton analyse pour des pièces faites pour toi."}</p>
+ ${ideas.map(q=>`<div class="card"><b>${esc(cap(q))}</b>${links(q)}</div>`).join("")}
+ <div class="card"><b>Je cherche autre chose</b><input class="field" id="shopq" placeholder="Par exemple : robe de soirée" value="${esc(S.shopQ)}"><button class="btn ghost" data-shop>Chercher</button>${S.shopQ?`<div style="margin-top:12px">${links(S.shopQ+(cols[0]?" "+cols[0]:""))}</div>`:""}</div>
+ <p class="sub" style="font-size:14px">Chaque bouton ouvre une recherche Google limitée au site de la boutique.</p>`,
+ say:"Voici ta boutique, "+NOM+". J’ai choisi ces pièces pour toi. Touche une boutique pour voir les articles."}},
+chat:()=>({dock:1,html:`<h1>Ta styliste</h1><a class="btn" href="${AGENT_URL}" target="_blank" rel="noopener" data-call style="text-decoration:none">Appeler ma styliste</a><p class="sub" style="margin-top:10px">Elle te répond à voix haute. Autorise le micro quand ton téléphone le demande.</p><h2>Ou écris-lui</h2>
+ <div class="chat">${S.chat.map((c,i)=>`<div class="bub ${c.r}" id="b${i}">${esc(c.t)||"…"}</div>`).join("")}</div>
+ ${SR?`<button class="mic ${S.listen?"on":""}" data-mic aria-label="Parler"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><p class="sub" style="text-align:center">${S.listen?"Je t’écoute…":S.micMsg||"Touche pour parler"}</p>`:""}
+ <div style="display:flex;gap:8px;margin-top:8px"><input class="field" id="msg" placeholder="Écris ta question" value="${esc(S.draft)}"><button class="btn" style="width:auto;padding:14px 20px" data-send ${S.busy?"disabled":""}>Envoyer</button></div>`,
+ say:S.chat.length?"":"Je t’écoute, "+NOM+". Pose-moi ta question."})
+};
+QS.forEach((q,i)=>{P["q_"+q.id]=()=>({step:"Étape 2 sur 3",html:`<p class="step">Tes couleurs · ${i+1} sur ${QS.length}</p><h1>${q.q}</h1>${q.h?`<p class="sub">${q.h}</p>`:""}
+ ${q.o.map(o=>`<button class="opt" data-ans="${q.id}" data-v="${o[0]}" aria-pressed="${S.ans[q.id]===o[0]}">${o[2]?`<span class="sw" style="background:${o[2]}"></span>`:`<span class="dot"></span>`}<span>${o[1]}</span></button>`).join("")}`,
+ say:(i===0?"Maintenant, quelques questions sur tes couleurs. ":"")+q.q,foot:`<button class="btn" data-next ${S.ans[q.id]?"":"disabled"}>Continuer</button>`})});
+
+function nextBtn(){return S.flow?`<button class="btn" data-next>Continuer</button>`:`<button class="btn" data-back>Retour</button>`}
+function missing(k,r){return {html:`<h1>Pas encore de résultat</h1><p class="sub">${esc(r&&r.erreur?r.erreur:"La photo n’a pas pu être analysée.")}</p>`,foot:S.flow?`<button class="btn" data-next>Continuer</button><button class="link" data-start="A">Refaire mon analyse</button>`:`<button class="btn" data-start="A">Faire mon analyse</button>`}}
+function links(q){return `<div class="chips">${SHOPS.map(s=>`<a target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent("site:"+s[1]+" "+q)}">${s[0]}</a>`).join("")}</div>`}
+function lum(h){const n=parseInt(h.slice(1),16);return(0.299*(n>>16)+0.587*(n>>8&255)+0.114*(n&255))/255}
+
+function render(sayIt){
+ const p=P[S.page](),pg=$("#page");
+ pg.className="";void pg.offsetWidth;pg.classList.add(S.dir==="b"?"in-b":"in-f");
+ pg.innerHTML=p.html;$("#foot").innerHTML=p.foot||"";$("#foot").style.display=p.foot?"":"none";
+ $("#dock").style.display=p.dock?"":"none";
+ document.querySelectorAll("#dock button").forEach(b=>b.setAttribute("aria-current",String(b.dataset.go===S.page)));
+ const fl=S.flow,ix=fl?fl.indexOf(S.page):-1;
+ $("#mid").className=ix>=0?"bar":"brand";$("#mid").innerHTML=ix>=0?`<i style="width:${(ix+1)/fl.length*100}%"></i>`:"Mon style";
+ $("#back").hidden=p.dock||p.back===false;
+ if(p.count)countUp(p.count);
+ if(window.onPage)window.onPage(S.page);
+ if(sayIt&&p.say)say(p.say);
+ window.scrollTo(0,0);
+}
+function go(page,dir){if(page!==S.page&&!/_run$/.test(S.page))S.hist.push(S.page);S.page=page;S.dir=dir||"f";S.err="";if(DOCK.includes(page)&&page!=="o_photo"){S.flow=null}render(true)}
+function back(){stopVoice();const p=S.hist.pop();if(!p){S.page="home";S.flow=null}else S.page=p;S.dir="b";S.err="";if(S.flow&&!S.flow.includes(S.page))S.flow=null;render(false)}
+function next(){const ix=S.flow.indexOf(S.page);const n=S.flow[ix+1];if(n==="a_run"||n==="o_run"){go(n);run(n)}else if(n)go(n);else home()}
+function home(){S.flow=null;S.hist=[];S.page="home";S.dir="b";render(true)}
+function countUp(to){const el=$("#note");if(!el||isNaN(to))return;const t0=performance.now();(function f(n){const k=Math.min(1,(n-t0)/1000);el.textContent=k<1?(to*k).toFixed(1):String(to);if(k<1)requestAnimationFrame(f)})(t0)}
+
+const FMT="Réponds uniquement avec un objet JSON valide, en français, sans texte autour. ";
+const SEAS_LIST=Object.keys(SEASONS).join(", ");
+const KIBBE_LIST="Dramatic, Soft Dramatic, Flamboyant Natural, Soft Natural, Dramatic Classic, Soft Classic, Pure Romantic, Theatrical Romantic, Soft Gamine";
+const PR_FACE=()=>REF+" Tu es styliste experte en morphologie du visage et en colorimétrie. Voici la photo de visage d’une cliente. 1) VISAGE : estime la longueur du visage, la largeur du front, des pommettes et de la mâchoire, calcule les ratios et déduis la forme (ovale, rond, carré, rectangle, cœur, diamant ou allongé). 2) COULEURS : combine ce que tu vois (teint, sous-ton, yeux, cheveux, contraste) avec ses réponses au questionnaire : "+ANS_TXT(S.ans)+". Le questionnaire seul indique : "+seasonFromAnswers(S.ans)+". Choisis la saison exacte parmi : "+SEAS_LIST+". Si la photo est inutilisable (pas de visage, trop sombre, filtre), réponds {\"erreur\":\"explication courte et ce qu’il faut changer\"}. "+FMT+"Format : {\"visage\":{\"forme\":\"\",\"pourquoi\":\"2 phrases\",\"coupes\":\"\",\"couleur_cheveux\":\"\",\"lunettes\":\"\",\"makeup\":\"\"},\"couleurs\":{\"saison\":\"une des 12 saisons exactement\",\"sous_ton\":\"chaud|froid|neutre\",\"pourquoi\":\"2 phrases\"}}";
+const PR_BODY=()=>REF+" Tu es styliste experte en morphologie et en Kibbe. Voici la photo en pied d’une cliente. Analyse ses proportions (épaules, taille, hanches, buste, jambes) et sa structure (anguleuse ou douce). Reste bienveillante, ne juge jamais le poids ni les formes. Morphologie parmi : Sablier, Poire, Pomme, Rectangle, Triangle inversé. Kibbe parmi : "+KIBBE_LIST+". Si la photo est inutilisable, réponds {\"erreur\":\"explication courte et ce qu’il faut changer\"}. "+FMT+"Format : {\"forme\":\"\",\"proportions\":\"1 phrase\",\"kibbe\":\"\",\"kibbe_pourquoi\":\"2 phrases\",\"conseils\":\"\",\"a_eviter\":\"\"}";
+const PR_OUT=()=>REF+" Tu es styliste personnelle exigeante et bienveillante. Note la tenue de la photo de 0 à 10 : harmonie des couleurs, coupe, proportions, point focal, adéquation avec son profil ("+(PROFIL()||"inconnu")+"). Si la photo est inutilisable, réponds {\"erreur\":\"explication courte\"}. "+FMT+"Format : {\"note\":0,\"resume\":\"1 phrase\",\"points_forts\":[\"\"],\"changements\":[\"changement précis\"]}";
+const ERRS={not_granted:"Autorise Claude à analyser tes photos, puis réessaie.",image_rejected:"Cette photo n’est pas acceptée. Essaie-en une autre.",rate_limited:"Trop de demandes. Réessaie dans un instant.",images_unavailable:"L’envoi de photos n’est pas disponible ici.",invalid_json:"La réponse n’a pas pu être lue. Réessaie."};
+let SAMPLE=null;
+async function getSample(){if(SAMPLE!==null)return SAMPLE;try{SAMPLE=window.claude?(await window.claude.use("sample"))||false:false}catch(e){SAMPLE=false}return SAMPLE}
+function setMsg(t){S.runmsg=t;const m=$("#runmsg");if(m)m.textContent=t}
+async function run(k){
+ const sm=await getSample();S.busy=true;S.err="";
+ if(k==="a_run"){
+  if(!sm){S.res.couleurs={saison:seasonFromAnswers(S.ans),sous_ton:"",pourquoi:"D’après tes réponses au questionnaire."};S.res.visage={erreur:"L’analyse par photo n’est pas disponible ici."};S.res.corps={erreur:"L’analyse par photo n’est pas disponible ici."};save();S.busy=false;go("r_visage");return}
+  say("Je regarde ton visage et tes couleurs, une seconde.");setMsg("Je regarde ton visage et tes couleurs.");
+  try{
+   const f=await sm.json(PR_FACE(),{images:[S.file.face]});
+   if(f.erreur){S.res.visage=f;S.res.couleurs={saison:seasonFromAnswers(S.ans),sous_ton:"",pourquoi:"D’après tes réponses au questionnaire."}}
+   else{S.res.visage=f.visage;S.res.couleurs=f.couleurs&&SEASONS[f.couleurs.saison]?f.couleurs:{saison:seasonFromAnswers(S.ans),sous_ton:f.couleurs?.sous_ton||"",pourquoi:f.couleurs?.pourquoi||""}}
+   setMsg("Maintenant, ta silhouette.");say("Maintenant, je regarde ta silhouette.");
+   S.res.corps=await sm.json(PR_BODY(),{images:[S.file.body]});
+   save();S.busy=false;if(S.page==="a_run")go("r_visage");
+  }catch(e){S.busy=false;S.err=ERRS[e&&e.code]||"L’analyse a échoué. Réessaie.";if(S.page==="a_run"){render(false);say(S.err)}}
+ }else{
+  if(!sm){S.err="L’analyse par photo n’est pas disponible ici.";S.busy=false;render(false);return}
+  say("Je regarde ta tenue.");
+  try{S.res.outfit=await sm.json(PR_OUT(),{images:[S.file.outfit]});save();S.busy=false;if(S.page==="o_run")go("o_res")}
+  catch(e){S.busy=false;S.err=ERRS[e&&e.code]||"L’analyse a échoué. Réessaie.";if(S.page==="o_run"){render(false);say(S.err)}}
+ }
+}
+
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;S.micMsg="";
+function SYS(){return REF+" Tu es la styliste personnelle de l’application Mon style. Parle comme une amie styliste chaleureuse, à l’oral : 2 à 4 phrases courtes, sans liste, sans emoji. Elle s’appelle "+(S.nom||"(prénom inconnu)")+" : appelle-la par son prénom et parfois « ma belle ». Commence ta toute première réponse par « Salut ma belle, ». Réponds en français, ou en arabe ou en anglais si elle écrit dans ces langues. Son profil : "+(PROFIL()||"pas encore analysé : invite-la à faire son analyse")+". Pour les achats, donne le type de pièce, la couleur et les mots-clés à chercher sur Zara, H&M, Mango, Shein, Namshi ou Ounass, sans inventer de lien ni de prix."}
+async function send(text){
+ text=(text||"").trim();if(!text||S.busy)return;const sm=await getSample();
+ if(!sm){S.chat.push({r:"u",t:text},{r:"a",t:"La styliste n’est pas disponible sur cette page."});S.draft="";render(false);return}
+ S.chat.push({r:"u",t:text},{r:"a",t:""});S.draft="";S.busy=true;render(false);unlock();
+ const h=S.chat.slice(0,-1).map(c=>({role:c.r==="u"?"user":"assistant",content:c.t}));h[0]={role:"user",content:SYS()+"\n\n"+h[0].content};
+ const id="#b"+(S.chat.length-1);
+ try{const r=await sm(h,{cache:false,onText:({text})=>{const b=$(id);if(b)b.textContent=text}});S.chat[S.chat.length-1].t=r.text;say(r.text)}
+ catch(e){S.chat[S.chat.length-1].t=e&&e.code==="rate_limited"?"Trop de messages, réessaie dans un instant.":e&&e.code==="not_granted"?"Autorise la styliste pour discuter avec elle.":"Une erreur est survenue. Réessaie."}
+ S.busy=false;if(S.page==="chat")render(false);
+}
+function listen(){
+ if(!SR||S.listen||S.busy)return;const r=new SR();r.lang="fr-FR";r.interimResults=false;
+ unlock();S.listen=true;S.micMsg="";render(false);
+ r.onresult=ev=>{S.listen=false;send(ev.results[0][0].transcript)};
+ r.onerror=()=>{S.listen=false;S.micMsg="Le micro n’est pas disponible ici. Dicte avec le micro de ton clavier.";render(false)};
+ r.onend=()=>{if(S.listen){S.listen=false;render(false)}};
+ try{r.start()}catch(e){r.onerror()}
+}
+
+/*VOICE*/
+function talk(on){document.body.classList.toggle("talk",on)}
+function speak(t){const ss=window.speechSynthesis;if(!ss)return;ss.cancel();ss.resume();
+ const lang=/[؀-ۿ]/.test(t)?"ar-SA":"fr-FR";const vs=ss.getVoices().filter(x=>x.lang.toLowerCase().startsWith(lang.slice(0,2)));
+ const v=vs.find(x=>/female|femme|amélie|audrey|marie|julie|hortense|denise|google/i.test(x.name))||vs[0];
+ const parts=t.split(/(?<=[.!?…])\s+/).filter(Boolean);
+ parts.forEach((p,i)=>{const u=new SpeechSynthesisUtterance(p);u.lang=lang;if(v)u.voice=v;u.rate=1;
+  if(i===0)u.onstart=()=>talk(true);if(i===parts.length-1)u.onend=()=>talk(false);u.onerror=()=>talk(false);ss.speak(u)})}
+function unlock(){const ss=window.speechSynthesis;if(!S.voice||!ss)return;ss.cancel();ss.resume();const u=new SpeechSynthesisUtterance(" ");u.volume=0;ss.speak(u)}
+function stopVoice(){if(window.speechSynthesis)speechSynthesis.cancel();talk(false)}
+/*ENDVOICE*/
+function say(t){if(S.voice&&t)speak(t)}
+
+document.addEventListener("click",e=>{
+ const t=e.target.closest("button,[data-go]");if(!t)return;
+ if(t.id==="back")return back();
+ if(t.id==="voice"){S.voice=!S.voice;t.style.opacity=S.voice?1:.35;if(!S.voice)stopVoice();else{unlock();const p=P[S.page]();say(p.say||"Je suis là, "+NOM+".")}return}
+ if(t.dataset.start==="A"){S.flow=FLOW_A;S.hist=["home"];S.page="a_nom";S.dir="f";S.res={outfit:S.res.outfit};render(true);return}
+ if(t.dataset.go==="o_photo"){S.flow=FLOW_O;if(S.page!=="o_photo"){S.hist=["home"];S.page="o_photo";S.dir="f";render(true)}return}
+ if(t.dataset.go){go(t.dataset.go);return}
+ if(t.dataset.view){S.flow=null;go(t.dataset.view);return}
+ if(t.hasAttribute("data-next"))return next();
+ if(t.hasAttribute("data-back"))return back();
+ if(t.hasAttribute("data-home"))return home();
+ if(t.hasAttribute("data-profil")){S.flow=null;S.hist=["home"];S.page="profil";S.dir="b";render(true);return}
+ if(t.hasAttribute("data-nom")){const v=(S.nomDraft??S.nom??"").trim();if(!v)return;S.nom=v;NOM=v;S.nomDraft=undefined;save();return next()}
+ if(t.hasAttribute("data-retry")){run(S.page);S.err="";render(false);return}
+ if(t.dataset.ans){S.ans[t.dataset.ans]=t.dataset.v;render(false);setTimeout(()=>{if(S.page==="q_"+t.dataset.ans)next()},380);return}
+ if(t.hasAttribute("data-shop")){S.shopQ=($("#shopq")||{}).value?.trim()||"";render(false);return}
+ if(t.hasAttribute("data-mic"))return listen();
+ if(t.hasAttribute("data-send"))return send(($("#msg")||{}).value);
+});
+document.addEventListener("click",e=>{if(e.target.closest("[data-call]"))stopVoice()});
+document.addEventListener("change",e=>{const k=e.target.dataset.f,f=e.target.files&&e.target.files[0];if(!k||!f)return;
+ if(S.url[k])URL.revokeObjectURL(S.url[k]);S.file[k]=f;S.url[k]=URL.createObjectURL(f);render(false);say("Très bien, ta photo est prête.")});
+document.addEventListener("input",e=>{if(e.target.id==="msg")S.draft=e.target.value;if(e.target.id==="nom"){S.nomDraft=e.target.value;const b=document.querySelector("[data-nom]");if(b)b.disabled=!e.target.value.trim()}});
+document.addEventListener("keydown",e=>{if(e.target.id==="msg"&&e.key==="Enter"){e.preventDefault();send(e.target.value)}if(e.target.id==="nom"&&e.key==="Enter"){e.preventDefault();const b=document.querySelector("[data-nom]");if(b&&!b.disabled)b.click()}});
+
+function typeInto(el,t,ms){return new Promise(r=>{let i=0;const h=setInterval(()=>{el.textContent=t.slice(0,++i);if(i>=t.length){clearInterval(h);r()}},ms)})}
+render(false);
+(async()=>{const rm=matchMedia("(prefers-reduced-motion:reduce)").matches;
+ await typeInto($("#hi"),"Salut ma belle.",rm?1:75);
+ await typeInto($("#hi2"),"Je suis ta styliste. Je vais trouver avec toi ce qui te va le mieux.",rm?1:28);
+ $("#start").classList.add("show")})();
+$("#start").addEventListener("click",()=>{unlock();$("#splash").classList.add("out");setTimeout(()=>$("#splash").remove(),800);
+ say("Salut ma belle"+(S.nom?" "+S.nom:"")+" ! Je suis ta styliste. "+P.home().say)});
+</script>
+</body>
+</html>
