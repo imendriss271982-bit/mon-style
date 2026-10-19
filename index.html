@@ -221,11 +221,11 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 .hp-t b{display:block;font-size:16px;font-weight:500;margin-top:2px}
 .hp-b{align-self:flex-start;min-height:44px;border:0;border-radius:22px;background:var(--accent);color:var(--on);font:500 14px Jost,sans-serif;letter-spacing:.04em;padding:0 20px;cursor:pointer;transition:transform .15s}.hp-b:active{transform:scale(.97)}
 .hg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.ht{min-height:112px;border:1px solid var(--line);border-radius:20px;background:var(--surface);padding:16px;display:flex;flex-direction:column;justify-content:space-between;gap:12px;text-align:left;color:var(--ink);cursor:pointer;transition:transform .15s}.ht:active{transform:scale(.97)}
+.ht{min-height:112px;border:1px solid transparent;border-radius:20px;background:var(--soft);padding:16px;display:flex;flex-direction:column;justify-content:space-between;gap:12px;text-align:left;color:var(--ink);cursor:pointer;transition:transform .15s}.ht:active{transform:scale(.97)}
 .ht.ok{background:var(--soft);border-color:transparent}
 .ht-top{display:flex;justify-content:space-between;align-items:center}
 .ht-top small{font-size:12px;color:var(--muted)}
-.ht-i{width:36px;height:36px;border-radius:50%;background:var(--soft);display:grid;place-items:center}.ht.ok .ht-i{background:var(--surface)}
+.ht-i{width:36px;height:36px;border-radius:50%;background:var(--surface);display:grid;place-items:center}.ht.ok .ht-i{background:var(--surface)}
 .ht-i svg{width:20px;height:20px;fill:none;stroke:var(--accent);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .ht-b{display:flex;flex-direction:column;gap:2px}
 .ht-b b{font:500 15px/1.2 Jost,sans-serif}
@@ -253,7 +253,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </nav>
 </div>
 <script>
-const VERSION="18";
+const VERSION="19";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -637,11 +637,11 @@ function affPlay(){const ss=window.speechSynthesis;if(!ss){toast("Voix non dispo
  ss.cancel();talk(false);if(!VOICES.length)loadVoices();
  const vs=VOICES.filter(x=>x.lang.toLowerCase().startsWith("fr"));const v=vs.find(x=>/amélie|audrey|marie|julie|hortense|denise|female|femme|google/i.test(x.name))||vs[0];
  AFFON=true;const b=$("#affbtn");b.classList.add("on");b.setAttribute("aria-pressed","true");b.setAttribute("aria-label","Arrêter les affirmations");toast("Respire… et écoute");ambStart();
- const el=document.getElementById("affirm");let i=0,r=0;
+ const el=document.getElementById("affirm");let i=0;const ord=affMix();
  const one=()=>{if(!AFFON)return;if(i>=AFF.length){affStop();return}
-  const t=affTxt(i);if(el){el.textContent=t;el.classList.remove("off")}
+  const t=affTxt(ord[i]);if(el){el.textContent=t;el.classList.remove("off")}
   const u=new SpeechSynthesisUtterance(t);u.lang="fr-FR";if(v)u.voice=v;u.rate=.82;u.pitch=1.05;u.volume=1;KEEP=[u];
-  u.onend=()=>{if(r<1){r++;AFFT=setTimeout(one,1300)}else{r=0;i++;AFFT=setTimeout(one,2400)}};u.onerror=()=>{r=0;i++;AFFT=setTimeout(one,300)};ss.resume();ss.speak(u)};
+  u.onend=()=>{i++;AFFT=setTimeout(one,2400)};u.onerror=()=>{i++;AFFT=setTimeout(one,300)};ss.resume();ss.speak(u)};
  AFFT=setTimeout(one,2500)}
 function say(t){if(S.voice&&t)speak(t)}
 const IC_ON='<svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>',
@@ -686,8 +686,9 @@ document.addEventListener("keydown",e=>{if(e.target.id==="msg"&&e.key==="Enter")
 
 const AFF=[n=>n+", tu es belle, toujours.",()=>"Tu es rayonnante aujourd’hui.",n=>"N’oublie pas de sourire, "+n+".",()=>"Ton sourire est ta plus belle parure.",n=>n+", tu mérites de te sentir bien.",()=>"Ta beauté est unique.",n=>"Souris, "+n+", tu illumines la journée.",()=>"Tu es élégante, comme tu es.",n=>n+", aime-toi un peu plus aujourd’hui.",()=>"Ta confiance te rend magnifique.",n=>"Tu es une lumière, "+n+".",()=>"Prends soin de toi, tu le vaux bien."];
 const affTxt=k=>{const n=NOM==="ma belle"?"Ma belle":NOM;let t=AFF[k](n);return t.replace(/, Ma belle([.,])/,", ma belle$1")};
-(()=>{const el=document.getElementById("affirm");if(!el)return;let k=Math.floor(Math.random()*AFF.length);el.textContent=affTxt(k);
-setInterval(()=>{if(AFFON)return;el.classList.add("off");setTimeout(()=>{k=(k+1)%AFF.length;el.textContent=affTxt(k);el.classList.remove("off")},600)},7000)})();
+function affMix(last){const a=AFF.map((_,k)=>k);for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}if(a[0]===last)a.push(a.shift());return a}
+(()=>{const el=document.getElementById("affirm");if(!el)return;let ord=affMix(),k=0;el.textContent=affTxt(ord[0]);
+setInterval(()=>{if(AFFON)return;el.classList.add("off");setTimeout(()=>{k++;if(k>=ord.length){ord=affMix(ord[ord.length-1]);k=0}el.textContent=affTxt(ord[k]);el.classList.remove("off")},600)},7000)})();
 function typeInto(el,t,ms){return new Promise(r=>{let i=0;const h=setInterval(()=>{el.textContent=t.slice(0,++i);if(i>=t.length){clearInterval(h);r()}},ms)})}
 render(false);
 // Mise à jour automatique : si une nouvelle version est en ligne, l'app se recharge toute seule.
