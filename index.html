@@ -252,7 +252,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </nav>
 </div>
 <script>
-const VERSION="13";
+const VERSION="14";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -657,9 +657,10 @@ document.addEventListener("change",e=>{const k=e.target.dataset.f,f=e.target.fil
 document.addEventListener("input",e=>{if(e.target.id==="msg")S.draft=e.target.value;if(e.target.dataset.i&&S.idraft){S.idraft[e.target.dataset.i]=e.target.value;e.target.classList.remove("bad")}if(e.target.id==="nom"){S.nomDraft=e.target.value;const b=document.querySelector("[data-nom]");if(b)b.disabled=!e.target.value.trim()}});
 document.addEventListener("keydown",e=>{if(e.target.id==="msg"&&e.key==="Enter"){e.preventDefault();send(e.target.value)}if(e.target.id==="nom"&&e.key==="Enter"){e.preventDefault();const b=document.querySelector("[data-nom]");if(b&&!b.disabled)b.click()}});
 
-const AFF=["Tu es belle, toujours.","Tu es rayonnante aujourd’hui.","N’oublie pas de sourire.","Ton sourire est ta plus belle parure.","Tu mérites de te sentir bien.","Ta beauté est unique.","Souris, tu illumines la journée.","Tu es élégante, comme tu es.","Aime-toi un peu plus aujourd’hui.","Ta confiance te rend magnifique.","Tu es une lumière.","Prends soin de toi, tu le vaux bien."];
-(()=>{const el=document.getElementById("affirm");if(!el)return;let k=Math.floor(Math.random()*AFF.length);el.textContent=AFF[k];
-setInterval(()=>{el.classList.add("off");setTimeout(()=>{k=(k+1)%AFF.length;el.textContent=AFF[k];el.classList.remove("off")},600)},7000)})();
+const AFF=[n=>n+", tu es belle, toujours.",()=>"Tu es rayonnante aujourd’hui.",n=>"N’oublie pas de sourire, "+n+".",()=>"Ton sourire est ta plus belle parure.",n=>n+", tu mérites de te sentir bien.",()=>"Ta beauté est unique.",n=>"Souris, "+n+", tu illumines la journée.",()=>"Tu es élégante, comme tu es.",n=>n+", aime-toi un peu plus aujourd’hui.",()=>"Ta confiance te rend magnifique.",n=>"Tu es une lumière, "+n+".",()=>"Prends soin de toi, tu le vaux bien."];
+const affTxt=k=>{const n=NOM==="ma belle"?"Ma belle":NOM;let t=AFF[k](n);return t.replace(/, Ma belle([.,])/,", ma belle$1")};
+(()=>{const el=document.getElementById("affirm");if(!el)return;let k=Math.floor(Math.random()*AFF.length);el.textContent=affTxt(k);
+setInterval(()=>{el.classList.add("off");setTimeout(()=>{k=(k+1)%AFF.length;el.textContent=affTxt(k);el.classList.remove("off")},600)},7000)})();
 function typeInto(el,t,ms){return new Promise(r=>{let i=0;const h=setInterval(()=>{el.textContent=t.slice(0,++i);if(i>=t.length){clearInterval(h);r()}},ms)})}
 render(false);
 // Mise à jour automatique : si une nouvelle version est en ligne, l'app se recharge toute seule.
