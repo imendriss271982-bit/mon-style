@@ -313,7 +313,12 @@ const PR_BODY=()=>REF+" Tu es styliste experte en morphologie et en Kibbe. Voici
 const PR_OUT=()=>REF+" Tu es styliste personnelle exigeante et bienveillante. Note la tenue de la photo de 0 à 10 : harmonie des couleurs, coupe, proportions, point focal, adéquation avec son profil ("+(PROFIL()||"inconnu")+"). Si la photo est inutilisable, réponds {\"erreur\":\"explication courte\"}. "+FMT+"Format : {\"note\":0,\"resume\":\"1 phrase\",\"points_forts\":[\"\"],\"changements\":[\"changement précis\"]}";
 const ERRS={not_granted:"Autorise Claude à analyser tes photos, puis réessaie.",image_rejected:"Cette photo n’est pas acceptée. Essaie-en une autre.",rate_limited:"Trop de demandes. Réessaie dans un instant.",images_unavailable:"L’envoi de photos n’est pas disponible ici.",invalid_json:"La réponse n’a pas pu être lue. Réessaie."};
 let SAMPLE=null;
-async function getSample(){if(SAMPLE!==null)return SAMPLE;try{SAMPLE=window.claude?(await window.claude.use("sample"))||false:false}catch(e){SAMPLE=false}return SAMPLE}
+const AI_URL="";
+function shrink(file,max=1024){return new Promise((ok,ko)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL("image/jpeg",0.85).split(",")[1])};im.onerror=()=>{URL.revokeObjectURL(u);ko(Object.assign(new Error("photo"),{code:"image_rejected"}))};im.src=u})}
+const WORKER_AI={json:async(prompt,o={})=>{const images=[];for(const f of o.images||[])images.push({mime:"image/jpeg",data:await shrink(f)});
+ const r=await fetch(AI_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt,images})});let d={};try{d=await r.json()}catch(e){}
+ if(!r.ok)throw Object.assign(new Error(d.erreur||"erreur"),{code:d.code||(r.status===429?"rate_limited":"ai_error")});return d}};
+async function getSample(){if(SAMPLE!==null)return SAMPLE;try{SAMPLE=window.claude?(await window.claude.use("sample"))||false:false}catch(e){SAMPLE=false}if(!SAMPLE&&AI_URL)SAMPLE=WORKER_AI;return SAMPLE}
 function setMsg(t){S.runmsg=t;const m=$("#runmsg");if(m)m.textContent=t}
 async function run(k){
  const sm=await getSample();S.busy=true;S.err="";
@@ -327,12 +332,12 @@ async function run(k){
    setMsg("Maintenant, ta silhouette.");say("Maintenant, je regarde ta silhouette.");
    S.res.corps=await sm.json(PR_BODY(),{images:[S.file.body]});
    save();S.busy=false;if(S.page==="a_run")go("r_visage");
-  }catch(e){S.busy=false;S.err=ERRS[e&&e.code]||"L’analyse a échoué. Réessaie.";if(S.page==="a_run"){render(false);say(S.err)}}
+  }catch(e){S.busy=false;S.err=ERRS[e&&e.code]||(e&&e.message&&e.message!=="erreur"&&e.message!=="photo"?e.message:"L’analyse a échoué. Réessaie.");if(S.page==="a_run"){render(false);say(S.err)}}
  }else{
   if(!sm){S.err="L’analyse par photo n’est pas disponible ici.";S.busy=false;render(false);return}
   say("Je regarde ta tenue.");
   try{S.res.outfit=await sm.json(PR_OUT(),{images:[S.file.outfit]});save();S.busy=false;if(S.page==="o_run")go("o_res")}
-  catch(e){S.busy=false;S.err=ERRS[e&&e.code]||"L’analyse a échoué. Réessaie.";if(S.page==="o_run"){render(false);say(S.err)}}
+  catch(e){S.busy=false;S.err=ERRS[e&&e.code]||(e&&e.message&&e.message!=="erreur"&&e.message!=="photo"?e.message:"L’analyse a échoué. Réessaie.");if(S.page==="o_run"){render(false);say(S.err)}}
  }
 }
 
@@ -352,7 +357,7 @@ async function textConv(){
 }
 async function send(text){
  text=(text||"").trim();if(!text||S.busy)return;const sm=await getSample();
- if(!sm){S.chat.push({r:"u",t:text},{r:"a",t:""});S.draft="";S.busy=true;render(false);
+ if(typeof sm!=="function"){S.chat.push({r:"u",t:text},{r:"a",t:""});S.draft="";S.busy=true;render(false);
   try{const c=await textConv();c.sendUserMessage(text)}catch(e){S.chat[S.chat.length-1].t="La styliste n’a pas pu répondre. Réessaie.";S.busy=false;if(S.page==="chat")render(false)}
   return}
  S.chat.push({r:"u",t:text},{r:"a",t:""});S.draft="";S.busy=true;render(false);unlock();
