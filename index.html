@@ -26,7 +26,7 @@ button:focus-visible,a:focus-visible,label:focus-within{outline:2px solid var(--
 header{display:flex;align-items:center;gap:12px;padding:14px 20px 6px;min-height:58px}
 .ib{width:40px;height:40px;border:0;background:none;border-radius:50%;display:grid;place-items:center;cursor:pointer;flex:none}
 #voice{border:1px solid var(--line);color:var(--accent)}
-#affbtn{border:1px solid var(--line);color:var(--accent)}#affbtn.on{background:var(--accent);color:var(--on);border-color:var(--accent);animation:breath 1.6s ease-in-out infinite}
+nav.dock #affbtn.on{color:var(--accent)}nav.dock #affbtn.on svg{fill:var(--accent);animation:breath 1.6s ease-in-out infinite}
 #voice.off{color:var(--muted);background:var(--soft)}
 .talk #voice{animation:breath 1.2s ease-in-out infinite}
 #toast{position:fixed;left:50%;top:calc(64px + env(safe-area-inset-top,0px));transform:translate(-50%,-8px);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:999px;font-size:14px;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:50}
@@ -240,20 +240,20 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 <ol id="instL"><li><span>Ouvert depuis <b>WhatsApp</b> ? Touche d’abord la <b>boussole Safari</b> <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg> en bas à droite</span></li><li><span>Touche <b>Partager</b> <svg viewBox="0 0 24 24"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M6 11H5v10h14V11h-1"/></svg> en bas de Safari</span></li><li><span>Fais défiler et choisis <b>Sur l’écran d’accueil</b> <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg></span></li><li><span>Touche <b>Ajouter</b>, puis ouvre l’icône My Style</span></li></ol>
 <button class="btn" id="instOk">J’ai compris</button></div></div>
 <div id="app">
-<header><button class="ib" id="back" aria-label="Retour"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button class="ib" id="affbtn" aria-label="Écouter mes affirmations" aria-pressed="false"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M9 21h6"/></svg></button><div id="mid" class="brand"><span class="logo" role="img" aria-label="My Style"><span class="my" aria-hidden="true">My</span><span class="st" aria-hidden="true">STYLE</span></span></div><button class="ib" id="voice" aria-label="Couper la voix" aria-pressed="true"></button></header>
+<header><button class="ib" id="back" aria-label="Retour"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div id="mid" class="brand"><span class="logo" role="img" aria-label="My Style"><span class="my" aria-hidden="true">My</span><span class="st" aria-hidden="true">STYLE</span></span></div><button class="ib" id="voice" aria-label="Couper la voix" aria-pressed="true"></button></header>
 <main id="page"></main>
 <footer id="foot"></footer>
 <nav class="dock" id="dock">
 <button data-go="boutique"><svg viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>Boutique</button>
 <button data-go="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Accueil</button>
-<button data-go="o_photo"><svg viewBox="0 0 24 24"><path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/></svg>Outfit check</button>
+<button id="affbtn" aria-label="Écouter mes affirmations" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/><path d="M9.5 10.5c.4-1 1.3-1.5 2.5-1.5"/></svg>Affirmations</button>
 <button data-go="news"><svg viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>Nouveautés</button>
 <button data-go="profil"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.4-4 4.4-6 8-6s6.6 2 8 6"/></svg>Profil</button>
 <p class="affirm" id="affirm"></p>
 </nav>
 </div>
 <script>
-const VERSION="17";
+const VERSION="18";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -328,7 +328,7 @@ function PROFIL(){const v=ok("visage"),b=ok("corps"),s=season(),p=[];
  if(i.budget)p.push("budget "+i.budget.toLowerCase());if(i.styles&&i.styles.length)p.push("styles préférés : "+i.styles.join(", ").toLowerCase());
  return p.join(", ")}
 
-const FLOW_A=["a_nom","a_intro","a_face",...QS.map(q=>"q_"+q.id),"a_body","a_run","r_visage","r_corps","r_kibbe","r_couleurs","r_fin"];
+const FLOW_A=["a_nom","a_intro","a_face",...QS.map(q=>"q_"+q.id),"a_body","a_run","r_visage","r_corps","r_couleurs","r_fin"];
 const FLOW_O=["o_photo","o_run","o_res"];
 const DOCK=["home","boutique","o_photo","news","profil","chat"];
 
@@ -343,18 +343,18 @@ function photoPage(k,o){
 
 const P={
 home:()=>{const v=ok("visage"),bd=ok("corps"),c=season();
- const nd=[v,bd,bd&&bd.kibbe,c].filter(Boolean).length,todo=!v?"visage":!bd?"corps":!c?"couleurs":"";
- const NEXT={visage:["Étape 1","Commence par ton visage"],corps:["Étape 2","Continue avec ta silhouette"],couleurs:["Étape 4","Découvre tes couleurs"]};
+ const oc=ok("outfit"),nd=[v,bd,c,oc].filter(Boolean).length,todo=!v?"visage":!bd?"corps":!c?"couleurs":!oc?"outfit":"";
+ const NEXT={visage:["Étape 1","Commence par ton visage"],corps:["Étape 2","Continue avec ta silhouette"],couleurs:["Étape 3","Découvre tes couleurs"],outfit:["Étape 4","Fais ton premier outfit check"]};
  const R=34,L=2*Math.PI*R,seg=L/4;
  const ring=`<svg viewBox="0 0 80 80" class="hp-r" aria-hidden="true">${[0,1,2,3].map(k=>`<circle cx="40" cy="40" r="${R}" stroke-dasharray="${seg-9} ${L-seg+9}" stroke-dashoffset="${-k*seg-4.5}" class="${k<nd?"on":""}"/>`).join("")}</svg>`;
- const ICO={visage:'<ellipse cx="12" cy="12" rx="6.5" ry="8.5"/><path d="M9.5 10.5h.01M14.5 10.5h.01M10 15c1.2.8 2.8.8 4 0"/>',corps:'<circle cx="12" cy="4.5" r="2"/><path d="M8 9h8l-2 6 2 6M8 9l2 6-2 6M12 9v6"/>',couleurs:'<path d="M12 3a9 9 0 1 0 0 18c1.5 0 2-1 2-2 0-1.5-1-2 0-3s3 0 4.5-1.5C20 13 21 11 21 10c0-4-4-7-9-7z"/><path d="M7.5 11h.01M10 7.5h.01M15 7.5h.01"/>',kibbe:'<path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z"/>'};
- const tile=(n,m,ic,label,val,extra)=>`<button class="ht ${val?"ok":""}" ${val?`data-view="${m}"`:`data-mod="${RES_MOD[m]}"`}><span class="ht-top"><span class="ht-i"><svg viewBox="0 0 24 24">${ICO[ic]}</svg></span><small>${n}</small></span><span class="ht-b"><b>${label}</b><em>${esc(val?cap(val):"À analyser")}</em>${extra||""}</span></button>`;
+ const ICO={visage:'<ellipse cx="12" cy="12" rx="6.5" ry="8.5"/><path d="M9.5 10.5h.01M14.5 10.5h.01M10 15c1.2.8 2.8.8 4 0"/>',corps:'<circle cx="12" cy="4.5" r="2"/><path d="M8 9h8l-2 6 2 6M8 9l2 6-2 6M12 9v6"/>',couleurs:'<path d="M12 3a9 9 0 1 0 0 18c1.5 0 2-1 2-2 0-1.5-1-2 0-3s3 0 4.5-1.5C20 13 21 11 21 10c0-4-4-7-9-7z"/><path d="M7.5 11h.01M10 7.5h.01M15 7.5h.01"/>',kibbe:'<path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z"/>',outfit:'<path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/>'};
+ const tile=(n,m,ic,label,val,extra)=>`<button class="ht ${val?"ok":""}" ${val?`data-view="${m}"`:m==="o_res"?'data-go="o_photo"':`data-mod="${RES_MOD[m]}"`}><span class="ht-top"><span class="ht-i"><svg viewBox="0 0 24 24">${ICO[ic]}</svg></span><small>${n}</small></span><span class="ht-b"><b>${label}</b><em>${esc(val?cap(val):"À analyser")}</em>${extra||""}</span></button>`;
  const sw=c?`<span class="ht-sw">${SEASONS[c].c.slice(0,6).map(x=>`<i style="background:${x[0]}"></i>`).join("")}</span>`:"";
- const card=todo?`<div class="hp-t"><small>${NEXT[todo][0]}</small><b>${NEXT[todo][1]}</b></div><button class="hp-b" data-mod="${todo}">Commencer</button>`:`<div class="hp-t"><small>Bravo</small><b>Ton profil style est complet</b></div><button class="hp-b" data-go="profil">Voir mon profil</button>`;
+ const card=todo?`<div class="hp-t"><small>${NEXT[todo][0]}</small><b>${NEXT[todo][1]}</b></div><button class="hp-b" ${todo==="outfit"?'data-go="o_photo"':`data-mod="${todo}"`}>Commencer</button>`:`<div class="hp-t"><small>Bravo</small><b>Ton profil style est complet</b></div><button class="hp-b" data-go="profil">Voir mon profil</button>`;
  return {dock:1,html:`<div class="hm">
  <div class="hm-h"><h1 class="hh">Salut <em>${esc(cap(NOM))}</em></h1><p>${nd?`${nd} analyse${nd>1?"s":""} sur 4 terminée${nd>1?"s":""}`:"Découvre ton style en 4 analyses"}</p></div>
  <section class="hp" aria-label="Analyse du style"><div class="hp-o">${ring}<b>${nd}/4</b></div><div class="hp-c">${card}</div></section>
- <section class="hg" aria-label="Mes analyses">${tile("01","r_visage","visage","Morpho visage",v&&v.forme)}${tile("02","r_corps","corps","Morpho corps",bd&&bd.forme)}${tile("03","r_kibbe","kibbe","Kibbe",bd&&bd.kibbe)}${tile("04","r_couleurs","couleurs","Colorimétrie",c,sw)}</section>
+ <section class="hg" aria-label="Mes analyses">${tile("01","r_visage","visage","Morpho visage",v&&v.forme)}${tile("02","r_corps","corps","Morpho & Kibbe",bd&&(bd.kibbe?bd.forme+" · "+bd.kibbe:bd.forme))}${tile("03","o_res","outfit","Outfit check",oc&&oc.note+" / 10")}${tile("04","r_couleurs","couleurs","Colorimétrie",c,sw)}</section>
  <button class="mys" data-view="chat"><span><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span><div><b>My Stylist</b><small>Parle avec ta styliste</small></div></button>
  </div>`,
  say:"Bonjour "+NOM+", je suis contente de te voir. Touche le micro pour me parler, ou choisis une analyse."}},
@@ -366,26 +366,28 @@ a_intro:()=>({html:`<p class="step">Ton analyse</p><h1>On commence, ${NOM}.</h1>
  <h2>Pour une analyse juste</h2><ul class="tips"><li>Lumière du jour, près d’une fenêtre</li><li>Visage sans maquillage, cheveux attachés</li><li>Sans lunettes, sans filtre</li></ul>`,
  say:"On commence, "+NOM+". Mets-toi près d’une fenêtre, en lumière du jour, sans maquillage et les cheveux attachés.",foot:`<button class="btn" data-next>C’est parti</button>`}),
 a_face:()=>photoPage("face",{step:S.flow&&S.flow.includes("k_run")?"Colorimétrie · ta photo":"Morpho visage",t:"Ton visage",c:"De face, le téléphone à hauteur des yeux, à bout de bras tendu.",ph:"Ta photo de visage",ic:"face",cam:"user",b:S.flow&&S.flow.includes("k_run")?"Continuer":"Analyser mon visage",say:"Prends une photo de ton visage, bien de face, le téléphone à hauteur des yeux."}),
-a_body:()=>photoPage("body",{step:S.flow&&S.flow.includes("r_kibbe")?"Kibbe":"Morpho corps",t:"Ta silhouette",c:"En pied, de face, bras le long du corps, vêtements près du corps. Pose le téléphone à 2 mètres et utilise le minuteur.",ph:"Ta photo en pied",ic:"body",cam:"environment",b:"Lancer l’analyse",say:"Prends une photo de toi en pied, de face, avec des vêtements près du corps."}),
+a_body:()=>photoPage("body",{step:"Morpho & Kibbe",t:"Ta silhouette",c:"En pied, de face, bras le long du corps, vêtements près du corps. Pose le téléphone à 2 mètres et utilise le minuteur.",ph:"Ta photo en pied",ic:"body",cam:"environment",b:"Lancer l’analyse",say:"Prends une photo de toi en pied, de face, avec des vêtements près du corps."}),
 a_run:()=>({html:`<p class="step">Analyse</p><h1>${S.err?"Un souci":"Je t’analyse…"}</h1>
  <div class="photo scan">${S.url.face?`<img src="${S.url.face}" alt="">`:""}</div>
  <p class="sub" id="runmsg">${esc(S.err||S.runmsg||"Je regarde ton visage.")}</p>`,
  foot:S.err?`<button class="btn" data-retry>Réessayer</button><button class="link" data-go="a_face">Changer mes photos</button>`:"",back:!!S.err}),
 r_visage:()=>{const v=ok("visage");if(!v)return missing("visage",S.res.visage);
- return {step:"Résultat 1 sur 4",html:`<p class="step">Ton visage</p><div class="big">${esc(cap(v.forme))}</div><p>${esc(v.pourquoi)}</p>
+ return {step:"Résultat 1 sur 3",html:`<p class="step">Ton visage</p><div class="big">${esc(cap(v.forme))}</div><p>${esc(v.pourquoi)}</p>
  <div class="row"><span>Coupes de cheveux</span>${esc(v.coupes)}</div><div class="row"><span>Couleur de cheveux</span>${esc(v.couleur_cheveux)}</div>
  <div class="row"><span>Lunettes</span>${esc(v.lunettes)}</div><div class="row"><span>Make-up</span>${esc(v.makeup)}</div>`,
  say:"Ton visage est "+String(v.forme).toLowerCase()+". "+v.pourquoi+" Les coupes qui te vont : "+v.coupes,foot:nextBtn()}},
 r_corps:()=>{if(S.wait&&S.wait.corps)return waitPage("corps");const b=ok("corps");if(!b)return missing("corps",S.res.corps);
- return {step:"Résultat 2 sur 4",html:`<p class="step">Ta morphologie</p><div class="big">${esc(b.forme)}</div><p>${esc(b.proportions)}</p>
- <div class="row"><span>Ce qui te met en valeur</span>${esc(b.conseils)}</div><div class="row"><span>À éviter</span>${esc(b.a_eviter)}</div>`,
- say:"Ta morphologie est "+String(b.forme).toLowerCase()+". "+b.proportions+" Pour te mettre en valeur : "+b.conseils,foot:nextBtn()}},
+ return {step:"Résultat 2 sur 3",html:`<p class="step">Ta morphologie</p><div class="big">${esc(b.forme)}</div><p>${esc(b.proportions)}</p>
+ <div class="row"><span>Ce qui te met en valeur</span>${esc(b.conseils)}</div><div class="row"><span>À éviter</span>${esc(b.a_eviter)}</div>
+ ${b.kibbe?`<p class="step" style="margin-top:26px">Ton type Kibbe</p><div class="big">${esc(b.kibbe)}</div><p>${esc(b.kibbe_pourquoi||"")}</p>
+ <p class="note">Le Kibbe dépend aussi de ta structure osseuse : c’est une estimation à partir de ta photo.</p>`:""}`,
+ say:"Ta morphologie est "+String(b.forme).toLowerCase()+". "+b.proportions+" Pour te mettre en valeur : "+b.conseils+(b.kibbe?" Et ton type Kibbe est "+b.kibbe+". "+(b.kibbe_pourquoi||""):""),foot:nextBtn()}},
 r_kibbe:()=>{if(S.wait&&S.wait.corps)return waitPage("corps");const b=ok("corps");if(!b)return missing("corps",S.res.corps);
  return {step:"Résultat 3 sur 4",html:`<p class="step">Ton type Kibbe</p><div class="big">${esc(b.kibbe)}</div><p>${esc(b.kibbe_pourquoi)}</p>
  <p class="note">Le Kibbe dépend aussi de ta structure osseuse : c’est une estimation à partir de ta photo.</p>`,
  say:"Ton type Kibbe est "+b.kibbe+". "+b.kibbe_pourquoi,foot:nextBtn()}},
 r_couleurs:()=>{if(S.wait&&S.wait.couleurs)return waitPage("couleurs");const s=season();if(!s)return missing("couleurs",S.res.couleurs);const c=S.res.couleurs,d=SEASONS[s];
- return {step:"Résultat 4 sur 4",html:`<p class="step">Ta saison</p><div class="big">${esc(s)}</div><p>${esc(d.t)} ${esc(c.pourquoi||"")}</p>
+ return {step:"Résultat 3 sur 3",html:`<p class="step">Ta saison</p><div class="big">${esc(s)}</div><p>${esc(d.t)} ${esc(c.pourquoi||"")}</p>
  <div class="pal">${d.c.map((x,i)=>`<div style="background:${x[0]};color:${lum(x[0])>0.55?"#1E1A1D":"#fff"};animation-delay:${i*80}ms">${x[1]}</div>`).join("")}</div>
  <div class="row"><span>À éviter</span>${esc(d.e)}</div>${c.sous_ton?`<div class="row"><span>Sous-ton</span>${esc(cap(c.sous_ton))}</div>`:""}`,
  say:"Ta saison est "+s+". "+d.t+" "+(c.pourquoi||"")+" Évite "+d.e.charAt(0).toLowerCase()+d.e.slice(1),foot:nextBtn()}},
@@ -399,7 +401,7 @@ profil:()=>{const i=S.info||{},has=!!i.email,pick=(k,l)=>`<div class="row"><span
  <button class="btn ghost" data-go="infos" style="margin:6px 0 4px">Modifier mes informations</button>`
  :`<button class="tile main" data-go="infos"><b>Créer mon profil</b><span>Ton email, ta taille, ton style : je m’en sers pour mieux te conseiller.</span></button>`}
  <h2>Mes résultats</h2>
- ${[["visage","Visage",ok("visage")?.forme,"r_visage"],["corps","Morphologie",ok("corps")?.forme,"r_corps"],["kibbe","Kibbe",ok("corps")?.kibbe,"r_kibbe"],["couleurs","Saison",season(),"r_couleurs"],["outfit","Dernière tenue",ok("outfit")?ok("outfit").note+" / 10":"","o_res"]].map(x=>`<button class="tile" data-view="${x[3]}"><span>${x[1]}</span><b>${esc(x[2]||"À analyser")}</b></button>`).join("")}
+ ${[["visage","Visage",ok("visage")?.forme,"r_visage"],["corps","Morpho & Kibbe",ok("corps")&&[ok("corps").forme,ok("corps").kibbe].filter(Boolean).join(" · "),"r_corps"],["couleurs","Saison",season(),"r_couleurs"],["outfit","Dernière tenue",ok("outfit")?ok("outfit").note+" / 10":"","o_res"]].map(x=>`<button class="tile" data-view="${x[3]}"><span>${x[1]}</span><b>${esc(x[2]||"À analyser")}</b></button>`).join("")}
  <button class="link" data-wipe>Effacer toutes mes données</button>`,
  say:has?"Voici ton profil, "+NOM+". Touche une carte pour réécouter le détail.":"Crée ton profil, "+NOM+". Ton email, ta taille et ton style m’aident à mieux te conseiller."}},
 infos:()=>{const d=S.idraft||(S.idraft={...S.info,nom:S.nom||"",styles:[...(S.info.styles||[])]});
@@ -485,7 +487,7 @@ function render(sayIt){
  document.querySelectorAll("#dock button").forEach(b=>b.setAttribute("aria-current",String(b.dataset.go===S.page)));
  const fl=S.flow,ix=fl?fl.indexOf(S.page):-1;
  $("#mid").className=ix>=0?"bar":"brand";$("#mid").innerHTML=ix>=0?`<i style="width:${(ix+1)/fl.length*100}%"></i>`:`<span class="logo" role="img" aria-label="My Style"><span class="my" aria-hidden="true">My</span><span class="st" aria-hidden="true">STYLE</span></span>`;
- $("#back").hidden=p.dock||p.back===false;$("#affbtn").hidden=!p.dock;if(!p.dock)affStop();
+ $("#back").hidden=p.dock||p.back===false;if(!p.dock)affStop();
  if(p.count)countUp(p.count);
  if(window.onPage)window.onPage(S.page);
  if(sayIt&&p.say)say(p.say);
