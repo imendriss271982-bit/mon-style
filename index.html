@@ -192,7 +192,7 @@ nav.dock button[aria-current="true"]{color:var(--accent)}
 .pr circle{stroke:#E8BFCB!important}.pr circle.on{stroke:var(--accent)!important}
 .ring .o{background:#fff!important;box-shadow:0 6px 18px rgba(125,46,74,.12)}
 .ring .n .logo,.ring .n .logo span{width:auto!important;height:auto!important;background:none!important;border-radius:0!important;box-shadow:none!important;display:block!important;text-align:center}.ring .n .logo .my{color:var(--accent)!important;}.ring .n .logo .my{font-size:34px;margin-bottom:-8px}.ring .n .logo .st{color:var(--ink)!important;font-size:17px;letter-spacing:.28em;margin-right:-.28em}
-.ring .n small{display:block;margin-top:8px;color:var(--accent)!important;font-size:13px!important}
+.ring .n small{display:block;margin-top:2px;color:var(--accent)!important}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .dash{background:linear-gradient(160deg,#2A1D23,#3A2430)!important;border-color:#4A2E3A!important}:root:not([data-theme="light"]) .ring .o{background:var(--surface)!important}}
 /* écriture élégante (accueil) */
 .hh{font:500 46px/1.05 "Cormorant Garamond",Georgia,serif;letter-spacing:.005em}
@@ -225,7 +225,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </nav>
 </div>
 <script>
-const VERSION="11";
+const VERSION="12";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -318,7 +318,7 @@ home:()=>{const v=ok("visage"),bd=ok("corps"),c=season(),o=ok("outfit");
  const it=(m,label,val,extra)=>`<button class="di" ${val?`data-view="${m}"`:`data-mod="${RES_MOD[m]||"couleurs"}"`}><small>${label}</small><b class="${val?"":"no"}">${esc(val?cap(val):"À analyser")}</b>${extra||""}</button>`;
  const nd=[v,bd,bd&&bd.kibbe,c].filter(Boolean).length,todo=!v?"visage":!bd?"corps":!c?"couleurs":"";
  const R=52,L=2*Math.PI*R,seg=L/4;
- const ring=`<button class="ring" ${todo?`data-mod="${todo}"`:`data-go="profil"`} aria-label="Analyse du style"><i class="t">Analyse<br>du style</i><span class="o"><svg viewBox="0 0 120 120" class="pr">${[0,1,2,3].map(k=>`<circle cx="60" cy="60" r="${R}" stroke-dasharray="${seg-16} ${L-seg+16}" stroke-dashoffset="${-k*seg}" class="${k<nd?"on":""}"/>`).join("")}</svg><span class="n"><span class="logo"><span class="my">My</span><span class="st">STYLE</span></span><small>${nd} sur 4</small></span></span></button>`;
+ const ring=`<button class="ring" ${todo?`data-mod="${todo}"`:`data-go="profil"`} aria-label="Analyse du style"><i class="t">Analyse<br>du style</i><span class="o"><svg viewBox="0 0 120 120" class="pr">${[0,1,2,3].map(k=>`<circle cx="60" cy="60" r="${R}" stroke-dasharray="${seg-16} ${L-seg+16}" stroke-dashoffset="${-k*seg}" class="${k<nd?"on":""}"/>`).join("")}</svg><span class="n"><b>${nd}</b><small>sur 4</small></span></span></button>`;
  const sw=c?`<div class="sw">${SEASONS[c].c.slice(0,6).map(x=>`<i style="background:${x[0]}"></i>`).join("")}</div>`:"";
  return {dock:1,html:`<h1 class="hh">Salut <em>${esc(cap(NOM))}</em></h1>
  <div class="dash"><div class="dg">
