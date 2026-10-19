@@ -145,6 +145,20 @@ nav.dock button[aria-current="true"]{color:var(--accent)}
 .mic svg{width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}
 .mic.on{animation:breath 1.2s ease-in-out infinite}
 @keyframes breath{50%{transform:scale(1.08)}}
+.sty{display:flex;flex-direction:column;align-items:center;text-align:center;margin:8px 0 22px}
+.sty button{width:132px;height:132px;border-radius:50%;border:0;background:var(--accent);color:var(--on);display:grid;place-items:center;cursor:pointer;box-shadow:0 0 0 10px var(--soft);transition:transform .15s}
+.sty button:active{transform:scale(.96)}
+.sty button svg{width:52px;height:52px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.sty b{display:block;font:600 28px/1.1 "Cormorant Garamond",Georgia,serif;margin-top:20px}
+.sty span{color:var(--muted);font-size:15px}
+.mods{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mod{border:0;background:var(--soft);border-radius:22px;padding:16px;text-align:left;min-height:138px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;transition:transform .15s}
+.mod:active{transform:scale(.97)}
+.mod svg{width:30px;height:30px;fill:none;stroke:var(--accent);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.mod b{display:block;font:600 22px/1.1 "Cormorant Garamond",Georgia,serif;margin-top:10px}
+.mod span{display:block;color:var(--muted);font-size:13px;margin-top:3px}
+.mod span.done{color:var(--accent);font-weight:500}
+.mod .sw{display:flex;gap:4px;margin-top:6px}.mod .sw i{width:16px;height:16px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
 .note{background:var(--soft);border-radius:16px;padding:14px 16px;color:var(--muted);font-size:15px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -167,7 +181,7 @@ nav.dock button[aria-current="true"]{color:var(--accent)}
 </nav>
 </div>
 <script>
-const VERSION="2";
+const VERSION="3";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -256,14 +270,18 @@ function photoPage(k,o){
 }
 
 const P={
-home:()=>{const done=!!(ok("visage")||ok("corps")||season()||ok("outfit"));
+home:()=>{const v=ok("visage"),b=ok("corps"),c=season();
+ const mod=(m,ic,t,r,extra)=>`<button class="mod" ${r?`data-view="${MOD_RES[m]}"`:`data-mod="${m}"`}>${MIC[ic]}<div><b>${t}</b><span class="${r?"done":""}">${esc(r?cap(r):"À analyser")}</span>${extra||""}</div></button>`;
  return {dock:1,html:`<h1>Salut ${NOM}.</h1><p class="sub">Que veux-tu faire aujourd’hui ?</p>
- <button class="tile main" data-start="A"><b>${done?"Refaire mon analyse":"Mon analyse"}</b><span>Visage, couleurs, morphologie et Kibbe</span></button>
- ${done?`<button class="tile" data-go="profil"><b>Mon profil</b><span>${esc(PROFIL())}</span></button>`:""}
- <button class="tile" data-go="o_photo"><b>Outfit check</b><span>Une note et des conseils pour ta tenue</span></button>
- <button class="tile" data-view="chat"><b>Parler à ma styliste</b><span>Un appel à voix haute avec elle</span></button>
+ <div class="sty"><button data-view="chat" aria-label="Parler à ma styliste"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><b>Ma styliste</b><span>Parle avec elle à voix haute</span></div>
+ <div class="mods">
+ ${mod("visage","face","Morpho visage",v&&v.forme)}
+ ${mod("corps","body","Morpho corps",b&&b.forme)}
+ ${mod("kibbe","kibbe","Kibbe",b&&b.kibbe)}
+ ${mod("couleurs","pal","Colorimétrie",c,c?`<div class="sw">${SEASONS[c].c.slice(0,5).map(x=>`<i style="background:${x[0]}"></i>`).join("")}</div>`:"")}
+ </div>
  <p class="note" style="text-align:center;margin-top:18px">Version ${VERSION}</p>`,
- say:done?"Contente de te revoir, "+NOM+". Que veux-tu faire aujourd’hui ?":"Commence par ton analyse, "+NOM+". Je regarde ton visage, je te pose quelques questions sur tes couleurs, puis je regarde ta silhouette."}},
+ say:"Bonjour "+NOM+". Parle avec ta styliste, ou choisis une analyse : morpho visage, morpho corps, Kibbe ou colorimétrie."}},
 a_nom:()=>({html:`<p class="step">Ton analyse</p><h1>Comment tu t’appelles ?</h1><p class="sub">Ton prénom, pour que je puisse t’appeler par ton nom.</p>
  <input class="field" id="nom" autocomplete="given-name" placeholder="Ton prénom" value="${esc(S.nomDraft??S.nom??"")}" style="font-size:20px;padding:18px">`,
  say:"Avant de commencer, comment tu t’appelles ?",foot:`<button class="btn" data-nom ${(S.nomDraft??S.nom??"").trim()?"":"disabled"}>Continuer</button>`}),
@@ -271,8 +289,8 @@ a_intro:()=>({html:`<p class="step">Ton analyse</p><h1>On commence, ${NOM}.</h1>
  <ul class="tips"><li>Une photo de ton visage</li><li>Quelques questions sur tes couleurs</li><li>Une photo de ta silhouette</li></ul>
  <h2>Pour une analyse juste</h2><ul class="tips"><li>Lumière du jour, près d’une fenêtre</li><li>Visage sans maquillage, cheveux attachés</li><li>Sans lunettes, sans filtre</li></ul>`,
  say:"On commence, "+NOM+". Mets-toi près d’une fenêtre, en lumière du jour, sans maquillage et les cheveux attachés.",foot:`<button class="btn" data-next>C’est parti</button>`}),
-a_face:()=>photoPage("face",{step:"Étape 1 sur 3",t:"Ton visage",c:"De face, le téléphone à hauteur des yeux, à bout de bras tendu.",ph:"Ta photo de visage",ic:"face",cam:"user",b:"Continuer",say:"Prends une photo de ton visage, bien de face, le téléphone à hauteur des yeux."}),
-a_body:()=>photoPage("body",{step:"Étape 3 sur 3",t:"Ta silhouette",c:"En pied, de face, bras le long du corps, vêtements près du corps. Pose le téléphone à 2 mètres et utilise le minuteur.",ph:"Ta photo en pied",ic:"body",cam:"environment",b:"Lancer mon analyse",say:"Dernière étape. Prends une photo de toi en pied, de face, avec des vêtements près du corps."}),
+a_face:()=>photoPage("face",{step:S.flow&&S.flow.includes("k_run")?"Colorimétrie · ta photo":"Morpho visage",t:"Ton visage",c:"De face, le téléphone à hauteur des yeux, à bout de bras tendu.",ph:"Ta photo de visage",ic:"face",cam:"user",b:S.flow&&S.flow.includes("k_run")?"Continuer":"Analyser mon visage",say:"Prends une photo de ton visage, bien de face, le téléphone à hauteur des yeux."}),
+a_body:()=>photoPage("body",{step:S.flow&&S.flow.includes("r_kibbe")?"Kibbe":"Morpho corps",t:"Ta silhouette",c:"En pied, de face, bras le long du corps, vêtements près du corps. Pose le téléphone à 2 mètres et utilise le minuteur.",ph:"Ta photo en pied",ic:"body",cam:"environment",b:"Lancer l’analyse",say:"Prends une photo de toi en pied, de face, avec des vêtements près du corps."}),
 a_run:()=>({html:`<p class="step">Analyse</p><h1>${S.err?"Un souci":"Je t’analyse…"}</h1>
  <div class="photo scan">${S.url.face?`<img src="${S.url.face}" alt="">`:""}</div>
  <p class="sub" id="runmsg">${esc(S.err||S.runmsg||"Je regarde ton visage.")}</p>`,
@@ -322,6 +340,9 @@ infos:()=>{const d=S.idraft||(S.idraft={...S.info,nom:S.nom||"",styles:[...(S.in
  <span class="lbl">Styles que tu aimes <small>· plusieurs choix</small></span>${chips("styles",STYLES,true)}`,
  say:"Remplis tes informations, "+NOM+". Seul ton email est obligatoire.",
  foot:`<button class="btn" data-isave>Enregistrer</button>`}},
+v_run:()=>runPage("face","Je regarde ton visage…","a_face"),
+c_run:()=>runPage("body","Je regarde ta silhouette…","a_body"),
+k_run:()=>runPage("face","Je regarde tes couleurs…","a_face"),
 o_photo:()=>photoPage("outfit",{step:"Outfit check",t:"Ta tenue",c:"En pied, de face, la tenue complète avec les chaussures, en lumière claire.",ph:"Ta photo de tenue",ic:"outfit",cam:"environment",b:"Noter ma tenue",say:"Montre-moi ta tenue, "+NOM+". Prends une photo en pied, avec les chaussures."}),
 o_run:()=>({html:`<p class="step">Outfit check</p><h1>${S.err?"Un souci":"Je regarde ta tenue…"}</h1><div class="photo scan">${S.url.outfit?`<img src="${S.url.outfit}" alt="">`:""}</div><p class="sub">${esc(S.err||"Une seconde.")}</p>`,
  foot:S.err?`<button class="btn" data-retry>Réessayer</button><button class="link" data-go="o_photo">Changer ma photo</button>`:"",back:!!S.err}),
@@ -353,12 +374,20 @@ chat:()=>({dock:1,html:`<h1>Ta styliste</h1><button class="callbtn" id="callbtn"
  <div style="display:flex;gap:8px;margin-top:8px"><input class="field" id="msg" placeholder="Écris ta question" value="${esc(S.draft)}"><button class="btn" style="width:auto;padding:14px 20px" data-send ${S.busy?"disabled":""}>Envoyer</button></div>`,
  say:S.chat.length?"":"Je t’écoute, "+NOM+". Pose-moi ta question."})
 };
-QS.forEach((q,i)=>{P["q_"+q.id]=()=>({step:"Étape 2 sur 3",html:`<p class="step">Tes couleurs · ${i+1} sur ${QS.length}</p><h1>${q.q}</h1>${q.h?`<p class="sub">${q.h}</p>`:""}
+QS.forEach((q,i)=>{P["q_"+q.id]=()=>({step:"Colorimétrie",html:`<p class="step">Colorimétrie · ${i+1} sur ${QS.length}</p><h1>${q.q}</h1>${q.h?`<p class="sub">${q.h}</p>`:""}
  ${q.o.map(o=>`<button class="opt" data-ans="${q.id}" data-v="${o[0]}" aria-pressed="${S.ans[q.id]===o[0]}">${o[2]?`<span class="sw" style="background:${o[2]}"></span>`:`<span class="dot"></span>`}<span>${o[1]}</span></button>`).join("")}`,
  say:(i===0?"Maintenant, quelques questions sur tes couleurs. ":"")+q.q,foot:`<button class="btn" data-next ${S.ans[q.id]?"":"disabled"}>Continuer</button>`})});
 
-function nextBtn(){return S.flow?`<button class="btn" data-next>Continuer</button>`:`<button class="btn" data-back>Retour</button>`}
-function missing(k,r){return {html:`<h1>Pas encore de résultat</h1><p class="sub">${esc(r&&r.erreur?r.erreur:"La photo n’a pas pu être analysée.")}</p>`,foot:S.flow?`<button class="btn" data-next>Continuer</button><button class="link" data-start="A">Refaire mon analyse</button>`:`<button class="btn" data-start="A">Faire mon analyse</button>`}}
+const MOD_RES={visage:"r_visage",corps:"r_corps",kibbe:"r_kibbe",couleurs:"r_couleurs"};
+const RES_MOD={r_visage:"visage",r_corps:"corps",r_kibbe:"kibbe",r_couleurs:"couleurs"};
+const MODS={visage:["a_face","v_run","r_visage"],corps:["a_body","c_run","r_corps"],kibbe:["a_body","c_run","r_kibbe"],couleurs:["a_face",...QS.map(q=>"q_"+q.id),"k_run","r_couleurs"]};
+const MIC={face:IC.face,body:IC.body,kibbe:'<svg viewBox="0 0 24 24"><path d="M12 3l7 9-7 9-7-9z"/><path d="M5 12h14"/></svg>',pal:'<svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.2 0 1.8-.9 1.4-1.9-.5-1.1.3-2.1 1.5-2.1H17a4 4 0 0 0 4-4c0-5.5-4-10-9-10z"/><circle cx="7.5" cy="11" r="1.2"/><circle cx="10" cy="7" r="1.2"/><circle cx="15" cy="7.5" r="1.2"/></svg>'};
+function startMod(m){const F=MODS[m];if(!F)return;S.flow=S.nom?F:["a_nom",...F];S.hist=["home"];S.page=S.flow[0];S.dir="f";S.err="";S.rid++;render(true)}
+function runPage(f,t,redo){return {html:`<p class="step">Analyse</p><h1>${S.err?"Un souci":t}</h1><div class="photo scan">${S.url[f]?`<img src="${S.url[f]}" alt="">`:""}</div><p class="sub">${esc(S.err||"Une seconde.")}</p>`,
+ foot:S.err?`<button class="btn" data-retry>Réessayer</button><button class="link" data-go="${redo}">Changer ma photo</button>`:"",back:!!S.err}}
+function nextBtn(){if(S.flow){const last=S.flow.indexOf(S.page)===S.flow.length-1;return `<button class="btn" data-next>${last?"Retour à l’accueil":"Continuer"}</button>`}
+ const m=RES_MOD[S.page];return `<button class="btn" data-back>Retour</button>${m?`<button class="link" data-mod="${m}">Refaire cette analyse</button>`:""}`}
+function missing(k,r){const m=RES_MOD[S.page]||k;return {html:`<h1>Pas encore de résultat</h1><p class="sub">${esc(r&&r.erreur?r.erreur:"Cette analyse n’est pas encore faite.")}</p>`,foot:`<button class="btn" data-mod="${m}">Faire cette analyse</button>`}}
 const MAGS=[["Vogue Arabia","https://www.vogue.me/fashion/"],["Harper’s Bazaar Arabia","https://www.harpersbazaararabia.com/fashion"],["Elle Arabia","https://www.ellearabia.com/fashion/"],["Vogue France","https://www.vogue.fr/mode"]];
 async function loadNews(){
  const sm=await getSample();if(!sm){S.newsErr="Les tendances ne sont pas disponibles ici.";render(false);return}
@@ -397,7 +426,7 @@ function saveInfo(){const d=S.idraft;if(!d)return;const bad=(id,m)=>{const f=$("
  save();S.idraft=undefined;toast("Profil enregistré");S.hist=S.hist.filter(h=>h!=="infos");if(S.hist[S.hist.length-1]==="profil")S.hist.pop();S.page="profil";S.dir="b";render(true)}
 function go(page,dir){if(page==="infos")S.idraft=undefined;if(page!==S.page&&!/_run$/.test(S.page))S.hist.push(S.page);S.page=page;S.dir=dir||"f";S.err="";if(DOCK.includes(page)&&page!=="o_photo"){S.flow=null}render(true)}
 function back(){stopVoice();const p=S.hist.pop();if(!p){S.page="home";S.flow=null}else S.page=p;S.dir="b";S.err="";if(S.flow&&!S.flow.includes(S.page))S.flow=null;render(false)}
-function next(){const ix=S.flow.indexOf(S.page);const n=S.flow[ix+1];if(n==="a_run"||n==="o_run"){go(n);run(n)}else if(n)go(n);else home()}
+function next(){const ix=S.flow.indexOf(S.page);const n=S.flow[ix+1];if(/_run$/.test(n)){go(n);run(n)}else if(n)go(n);else home()}
 function home(){S.flow=null;S.hist=[];S.page="home";S.dir="b";render(true)}
 function countUp(to){const el=$("#note");if(!el||isNaN(to))return;const t0=performance.now();(function f(n){const k=Math.min(1,(n-t0)/1000);el.textContent=k<1?(to*k).toFixed(1):String(to);if(k<1)requestAnimationFrame(f)})(t0)}
 
@@ -429,7 +458,17 @@ function waitPage(key){const body=key==="corps";
  <div class="photo scan">${(body?S.url.body:S.url.face)?`<img src="${body?S.url.body:S.url.face}" alt="">`:""}</div>
  <p class="sub">${body?"Je regarde encore ta silhouette.":"Je regarde encore tes couleurs."}</p>`,say:body?"Je regarde encore ta silhouette, ça arrive.":"Je regarde encore tes couleurs, ça arrive."}}
 function setMsg(t){S.runmsg=t;const m=$("#runmsg");if(m)m.textContent=t}
-async function run(k){
+const RUNS={v_run:["visage",()=>PR_VISAGE(),"face","Je regarde ton visage, une seconde."],c_run:["corps",()=>PR_BODY(),"body","Je regarde ta silhouette, une seconde."],k_run:["couleurs",()=>PR_COUL(),"face","Je regarde tes couleurs, une seconde."]};
+async function runMod(k){const [key,pr,f,msg]=RUNS[k];const sm=await getSample();S.busy=true;S.err="";
+ const Q={saison:seasonFromAnswers(S.ans),sous_ton:"",pourquoi:"D’après tes réponses au questionnaire."};
+ const done=r=>{S.res[key]=r;save();S.busy=false;if(S.page===k)next()},fail=m=>{S.busy=false;S.err=m;if(S.page===k){render(false);say(m)}};
+ if(!sm){if(key==="couleurs")return done(Q);return fail("L’analyse par photo n’est pas disponible ici.")}
+ const rid=++S.rid;say(msg);
+ try{let r=await sm.json(pr(),{images:[S.file[f]]});if(rid!==S.rid)return;
+  if(key==="couleurs")r=r&&!r.erreur&&SEASONS[r.saison]?r:{...Q,quiz:1,sous_ton:(r&&r.sous_ton)||""};
+  if(r&&r.erreur)return fail(r.erreur);done(r)}
+ catch(e){if(rid!==S.rid)return;if(key==="couleurs")return done(Q);fail(errMsg(e))}}
+async function run(k){if(RUNS[k])return runMod(k);
  const sm=await getSample();S.busy=true;S.err="";
  if(k==="a_run"){
   const Q={saison:seasonFromAnswers(S.ans),sous_ton:"",pourquoi:"D’après tes réponses au questionnaire."};
@@ -514,6 +553,7 @@ document.addEventListener("click",e=>{
  const t=e.target.closest("button,[data-go]");if(!t)return;
  if(t.id==="back")return back();
  if(t.id==="voice"){S.voice=!S.voice;try{localStorage.setItem("monstyle_voix",S.voice?"1":"0")}catch(e){}voiceBtn();if(!S.voice){stopVoice();toast("Voix coupée")}else{toast("Voix activée");unlock();const p=P[S.page]();say(p.say||"Je suis là, "+NOM+".")}return}
+ if(t.dataset.mod)return startMod(t.dataset.mod);
  if(t.dataset.start==="A"){S.flow=FLOW_A;S.hist=["home"];S.page="a_nom";S.dir="f";S.res={outfit:S.res.outfit};S.wait={};S.rid++;render(true);return}
  if(t.dataset.go==="o_photo"){S.flow=FLOW_O;if(S.page!=="o_photo"){S.hist=["home"];S.page="o_photo";S.dir="f";render(true)}return}
  if(t.dataset.go){go(t.dataset.go);return}
