@@ -11,7 +11,6 @@
 <meta name="apple-mobile-web-app-title" content="My Style">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#7D2E4A">
-<script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Great+Vibes&family=Italiana&family=Jost:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -35,6 +34,10 @@ header{display:flex;align-items:center;gap:12px;padding:14px 20px 6px;min-height
 .logo .my{font:400 22px "Great Vibes",cursive;color:var(--accent);margin-bottom:-6px}
 .logo .st{font:400 19px Italiana,Georgia,serif;letter-spacing:.3em;margin-right:-.3em;color:var(--ink)}
 .logo .ln{width:34px;height:1px;background:var(--accent);margin-top:5px}
+.callbtn{width:150px;height:150px;border-radius:50%;border:0;background:var(--accent);margin:28px auto 8px;display:grid;place-items:center;cursor:pointer;transition:transform .2s}
+.callbtn svg{width:58px;height:58px;fill:none;stroke:var(--on);stroke-width:1.6;stroke-linecap:round}
+.callbtn.live{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.06);box-shadow:0 0 0 18px rgba(125,46,74,.12)}}
 .splashlogo{width:200px;height:200px;border-radius:44px;margin-bottom:36px;box-shadow:0 10px 30px rgba(125,46,74,.18)}
 #splash .logo{margin-bottom:40px}
 #splash .logo .my{font-size:64px;margin-bottom:-16px}
@@ -266,7 +269,7 @@ boutique:()=>{const b=ok("corps"),s=season(),cols=s?SEASONS[s].c.filter(x=>!/Noi
  <div class="card"><b>Je cherche autre chose</b><input class="field" id="shopq" placeholder="Par exemple : robe de soirée" value="${esc(S.shopQ)}"><button class="btn ghost" data-shop>Chercher</button>${S.shopQ?`<div style="margin-top:12px">${links(S.shopQ+(cols[0]?" "+cols[0]:""))}</div>`:""}</div>
  <p class="sub" style="font-size:14px">Chaque bouton ouvre une recherche Google limitée au site de la boutique.</p>`,
  say:"Voici ta boutique, "+NOM+". J’ai choisi ces pièces pour toi. Touche une boutique pour voir les articles."}},
-chat:()=>({dock:1,html:`<h1>Ta styliste</h1><div data-call style="min-height:80px"><elevenlabs-convai agent-id="${AGENT_ID}"></elevenlabs-convai></div><p class="sub" style="margin-top:10px">Appuie sur le bouton d’appel en bas de l’écran. Elle te répond à voix haute. Autorise le micro quand ton téléphone le demande.</p><h2>Ou écris-lui</h2>
+chat:()=>({dock:1,html:`<h1>Ta styliste</h1><button class="callbtn" id="callbtn" aria-label="Parler à ma styliste"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><p id="callst" class="sub" style="text-align:center" aria-live="polite">Appuie pour parler avec ta styliste</p><h2>Ou écris-lui</h2>
  <div class="chat">${S.chat.map((c,i)=>`<div class="bub ${c.r}" id="b${i}">${esc(c.t)||"…"}</div>`).join("")}</div>
  ${SR?`<button class="mic ${S.listen?"on":""}" data-mic aria-label="Parler"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><p class="sub" style="text-align:center">${S.listen?"Je t’écoute…":S.micMsg||"Touche pour parler"}</p>`:""}
  <div style="display:flex;gap:8px;margin-top:8px"><input class="field" id="msg" placeholder="Écris ta question" value="${esc(S.draft)}"><button class="btn" style="width:auto;padding:14px 20px" data-send ${S.busy?"disabled":""}>Envoyer</button></div>`,
@@ -406,6 +409,29 @@ render(false);
  $("#start").classList.add("show")})();
 $("#start").addEventListener("click",()=>{unlock();$("#splash").classList.add("out");setTimeout(()=>$("#splash").remove(),800);
  say("Salut ma belle"+(S.nom?" "+S.nom:"")+" ! Je suis ta styliste. "+P.home().say)});
+</script>
+<script type="module">
+let conv=null,busy=false;
+const st=t=>{const e=document.getElementById("callst");if(e)e.textContent=t};
+const live=on=>{const b=document.getElementById("callbtn");if(b)b.classList.toggle("live",on)};
+document.addEventListener("click",async e=>{
+ if(!e.target.closest("#callbtn")||busy)return;
+ busy=true;
+ if(conv){try{await conv.endSession()}catch(_){}conv=null;live(false);st("Appuie pour parler avec ta styliste");busy=false;return}
+ st("Connexion…");
+ try{
+  if(typeof stopVoice==="function")stopVoice();
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error("le micro n’est pas disponible ici. Ouvre l’application depuis Safari.");
+  await navigator.mediaDevices.getUserMedia({audio:true});
+  const {Conversation}=await import("https://esm.sh/@elevenlabs/client");
+  conv=await Conversation.startSession({agentId:AGENT_ID,connectionType:"websocket",
+   onModeChange:({mode})=>st(mode==="speaking"?"Elle te parle…":"Je t’écoute, parle-moi"),
+   onDisconnect:()=>{conv=null;live(false);st("Appel terminé. Appuie pour reparler.")},
+   onError:m=>st("Petit souci : "+m)});
+  live(true);st("Je t’écoute, parle-moi");
+ }catch(err){conv=null;live(false);st(err&&err.name==="NotAllowedError"?"Autorise le micro : Réglages, Safari, Micro.":"Impossible de lancer l’appel : "+(err&&err.message||err))}
+ busy=false;
+});
 </script>
 </body>
 </html>
