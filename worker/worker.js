@@ -44,16 +44,19 @@ export default {
         ...images.map(i => ({ inline_data: { mime_type: i.mime || "image/jpeg", data: i.data } }))
       ];
       const models = [String(env.MODEL || "").trim(), "gemini-3.8-flash", "gemini-flash-latest"].filter(Boolean);
-      const payload = JSON.stringify({
-        contents: [{ role: "user", parts }],
-        generationConfig: { responseMimeType: "application/json", temperature: 0.4 }
-      });
+      // Réflexion courte : l'analyse arrive beaucoup plus vite.
+      const gen = { responseMimeType: "application/json", temperature: 0.4 };
+      const fast = JSON.stringify({ contents: [{ role: "user", parts }], generationConfig: { ...gen, thinkingConfig: { thinkingLevel: "low" } } });
+      const plain = JSON.stringify({ contents: [{ role: "user", parts }], generationConfig: gen });
+      const call = (model, body) => fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+        { method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": KEY }, body }
+      );
       let r;
       for (const model of models) {
-        r = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
-          { method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": KEY }, body: payload }
-        );
+        r = await call(model, fast);
+        // Si ce modèle ne connaît pas le réglage de réflexion, on réessaie sans.
+        if (r.status === 400) r = await call(model, plain);
         if (r.status !== 404) break;
       }
 

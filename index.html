@@ -223,7 +223,7 @@ const CORPS={"Sablier":"Marque la taille : robes portefeuille, ceintures, taille
 const SHOPCUT={"Sablier":["robe portefeuille","pantalon taille haute","chemisier cintré"],"Poire":["top encolure bateau","pantalon évasé","veste courte structurée"],"Pomme":["robe empire","blouse col V fluide","pantalon droit"],"Rectangle":["jupe évasée","top à volants","robe ceinturée"],"Triangle inversé":["pantalon large","jupe trapèze","top col V"]};
 const SHOPS=[["Zara","zara.com"],["H&M","hm.com"],["Mango","mango.com"],["Shein","shein.com"],["Namshi","namshi.com"],["Ounass","ounass.ae"]];
 
-let S={page:"home",hist:[],dir:"f",ans:{},file:{},url:{},res:{},busy:false,err:"",voice:true,chat:[],draft:"",shopQ:"",listen:false,flow:null,news:null,newsBusy:false,newsErr:""};
+let S={rid:0,wait:{},page:"home",hist:[],dir:"f",ans:{},file:{},url:{},res:{},busy:false,err:"",voice:true,chat:[],draft:"",shopQ:"",listen:false,flow:null,news:null,newsBusy:false,newsErr:""};
 try{if(localStorage.getItem("monstyle_voix")==="0")S.voice=false}catch(e){}
 S.info={};
 try{const j=JSON.parse(localStorage.getItem("monstyle")||"null");if(j){S.res=j.res||{};S.ans=j.ans||{};S.info=j.info||{};if(j.nom){S.nom=j.nom;NOM=j.nom}}}catch(e){}
@@ -280,15 +280,15 @@ r_visage:()=>{const v=ok("visage");if(!v)return missing("visage",S.res.visage);
  <div class="row"><span>Coupes de cheveux</span>${esc(v.coupes)}</div><div class="row"><span>Couleur de cheveux</span>${esc(v.couleur_cheveux)}</div>
  <div class="row"><span>Lunettes</span>${esc(v.lunettes)}</div><div class="row"><span>Make-up</span>${esc(v.makeup)}</div>`,
  say:"Ton visage est "+String(v.forme).toLowerCase()+". "+v.pourquoi+" Les coupes qui te vont : "+v.coupes,foot:nextBtn()}},
-r_corps:()=>{const b=ok("corps");if(!b)return missing("corps",S.res.corps);
+r_corps:()=>{if(S.wait&&S.wait.corps)return waitPage("corps");const b=ok("corps");if(!b)return missing("corps",S.res.corps);
  return {step:"Résultat 2 sur 4",html:`<p class="step">Ta morphologie</p><div class="big">${esc(b.forme)}</div><p>${esc(b.proportions)}</p>
  <div class="row"><span>Ce qui te met en valeur</span>${esc(b.conseils)}</div><div class="row"><span>À éviter</span>${esc(b.a_eviter)}</div>`,
  say:"Ta morphologie est "+String(b.forme).toLowerCase()+". "+b.proportions+" Pour te mettre en valeur : "+b.conseils,foot:nextBtn()}},
-r_kibbe:()=>{const b=ok("corps");if(!b)return missing("corps",S.res.corps);
+r_kibbe:()=>{if(S.wait&&S.wait.corps)return waitPage("corps");const b=ok("corps");if(!b)return missing("corps",S.res.corps);
  return {step:"Résultat 3 sur 4",html:`<p class="step">Ton type Kibbe</p><div class="big">${esc(b.kibbe)}</div><p>${esc(b.kibbe_pourquoi)}</p>
  <p class="note">Le Kibbe dépend aussi de ta structure osseuse : c’est une estimation à partir de ta photo.</p>`,
  say:"Ton type Kibbe est "+b.kibbe+". "+b.kibbe_pourquoi,foot:nextBtn()}},
-r_couleurs:()=>{const s=season();if(!s)return missing("couleurs",S.res.couleurs);const c=S.res.couleurs,d=SEASONS[s];
+r_couleurs:()=>{if(S.wait&&S.wait.couleurs)return waitPage("couleurs");const s=season();if(!s)return missing("couleurs",S.res.couleurs);const c=S.res.couleurs,d=SEASONS[s];
  return {step:"Résultat 4 sur 4",html:`<p class="step">Ta saison</p><div class="big">${esc(s)}</div><p>${esc(d.t)} ${esc(c.pourquoi||"")}</p>
  <div class="pal">${d.c.map((x,i)=>`<div style="background:${x[0]};color:${lum(x[0])>0.55?"#1E1A1D":"#fff"};animation-delay:${i*80}ms">${x[1]}</div>`).join("")}</div>
  <div class="row"><span>À éviter</span>${esc(d.e)}</div>${c.sous_ton?`<div class="row"><span>Sous-ton</span>${esc(cap(c.sous_ton))}</div>`:""}`,
@@ -402,31 +402,44 @@ function countUp(to){const el=$("#note");if(!el||isNaN(to))return;const t0=perfo
 const FMT="Réponds uniquement avec un objet JSON valide, en français, sans texte autour. ";
 const SEAS_LIST=Object.keys(SEASONS).join(", ");
 const KIBBE_LIST="Dramatic, Soft Dramatic, Flamboyant Natural, Soft Natural, Dramatic Classic, Soft Classic, Pure Romantic, Theatrical Romantic, Soft Gamine";
-const PR_FACE=()=>REF+" Tu es styliste experte en morphologie du visage et en colorimétrie. Voici la photo de visage d’une cliente. 1) VISAGE : estime la longueur du visage, la largeur du front, des pommettes et de la mâchoire, calcule les ratios et déduis la forme (ovale, rond, carré, rectangle, cœur, diamant ou allongé). 2) COULEURS : combine ce que tu vois (teint, sous-ton, yeux, cheveux, contraste) avec ses réponses au questionnaire : "+ANS_TXT(S.ans)+". Le questionnaire seul indique : "+seasonFromAnswers(S.ans)+". Choisis la saison exacte parmi : "+SEAS_LIST+". Si la photo est inutilisable (pas de visage, trop sombre, filtre), réponds {\"erreur\":\"explication courte et ce qu’il faut changer\"}. "+FMT+"Format : {\"visage\":{\"forme\":\"\",\"pourquoi\":\"2 phrases\",\"coupes\":\"\",\"couleur_cheveux\":\"\",\"lunettes\":\"\",\"makeup\":\"\"},\"couleurs\":{\"saison\":\"une des 12 saisons exactement\",\"sous_ton\":\"chaud|froid|neutre\",\"pourquoi\":\"2 phrases\"}}";
-const PR_BODY=()=>REF+" Tu es styliste experte en morphologie et en Kibbe. Voici la photo en pied d’une cliente. Analyse ses proportions (épaules, taille, hanches, buste, jambes) et sa structure (anguleuse ou douce). Reste bienveillante, ne juge jamais le poids ni les formes. Morphologie parmi : Sablier, Poire, Pomme, Rectangle, Triangle inversé. Kibbe parmi : "+KIBBE_LIST+". Si la photo est inutilisable, réponds {\"erreur\":\"explication courte et ce qu’il faut changer\"}. "+FMT+"Format : {\"forme\":\"\",\"proportions\":\"1 phrase\",\"kibbe\":\"\",\"kibbe_pourquoi\":\"2 phrases\",\"conseils\":\"\",\"a_eviter\":\"\"}";
+const REFL=REF.split("\n"),REFP=(...k)=>REFL[0]+"\n"+REFL.filter(l=>k.some(x=>l.startsWith(x))).join("\n")+"\n";
+const PR_VISAGE=()=>"Tu es styliste experte en morphologie du visage. Voici la photo de visage d’une cliente. Estime la longueur du visage, la largeur du front, des pommettes et de la mâchoire, calcule les ratios et déduis la forme (ovale, rond, carré, rectangle, cœur, diamant ou allongé). Si la photo est inutilisable (pas de visage, trop sombre, filtre), réponds {\"erreur\":\"explication courte et ce qu’il faut changer\"}. "+FMT+"Format : {\"forme\":\"\",\"pourquoi\":\"2 phrases\",\"coupes\":\"\",\"couleur_cheveux\":\"\",\"lunettes\":\"\",\"makeup\":\"\"}";
+const PR_COUL=()=>REFP("COLORIMÉTRIE")+" Tu es styliste experte en colorimétrie. Voici la photo de visage d’une cliente. Combine ce que tu vois (teint, sous-ton, yeux, cheveux, contraste) avec ses réponses au questionnaire : "+ANS_TXT(S.ans)+". Le questionnaire seul indique : "+seasonFromAnswers(S.ans)+". Choisis la saison exacte parmi : "+SEAS_LIST+". Si la photo est inutilisable, réponds {\"erreur\":\"explication courte\"}. "+FMT+"Format : {\"saison\":\"une des 12 saisons exactement\",\"sous_ton\":\"chaud|froid|neutre\",\"pourquoi\":\"2 phrases\"}";
+const PR_BODY=()=>REFP("MORPHOLOGIE","KIBBE")+" Tu es styliste experte en morphologie et en Kibbe. Voici la photo en pied d’une cliente. Analyse ses proportions (épaules, taille, hanches, buste, jambes) et sa structure (anguleuse ou douce). Reste bienveillante, ne juge jamais le poids ni les formes. Morphologie parmi : Sablier, Poire, Pomme, Rectangle, Triangle inversé. Kibbe parmi : "+KIBBE_LIST+". Si la photo est inutilisable, réponds {\"erreur\":\"explication courte et ce qu’il faut changer\"}. "+FMT+"Format : {\"forme\":\"\",\"proportions\":\"1 phrase\",\"kibbe\":\"\",\"kibbe_pourquoi\":\"2 phrases\",\"conseils\":\"\",\"a_eviter\":\"\"}";
 const PR_OUT=()=>REF+" Tu es styliste personnelle exigeante et bienveillante. Note la tenue de la photo de 0 à 10 : harmonie des couleurs, coupe, proportions, point focal, adéquation avec son profil ("+(PROFIL()||"inconnu")+"). Si la photo est inutilisable, réponds {\"erreur\":\"explication courte\"}. "+FMT+"Format : {\"note\":0,\"resume\":\"1 phrase\",\"points_forts\":[\"\"],\"changements\":[\"changement précis\"]}";
 const ERRS={not_granted:"Autorise Claude à analyser tes photos, puis réessaie.",image_rejected:"Cette photo n’est pas acceptée. Essaie-en une autre.",rate_limited:"Trop de demandes. Réessaie dans un instant.",images_unavailable:"L’envoi de photos n’est pas disponible ici.",invalid_json:"La réponse n’a pas pu être lue. Réessaie."};
 let SAMPLE=null;
 const AI_URL="https://mon-style.imendriss271982.workers.dev";
 function shrink(file,max=1024){return new Promise((ok,ko)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL("image/jpeg",0.85).split(",")[1])};im.onerror=()=>{URL.revokeObjectURL(u);ko(Object.assign(new Error("photo"),{code:"image_rejected"}))};im.src=u})}
-const WORKER_AI={json:async(prompt,o={})=>{const images=[];for(const f of o.images||[])images.push({mime:"image/jpeg",data:await shrink(f)});
+const SHR=new WeakMap();function shrunk(f){if(!SHR.has(f))SHR.set(f,shrink(f));return SHR.get(f)}
+const WORKER_AI={json:async(prompt,o={})=>{const images=[];for(const f of o.images||[])images.push({mime:"image/jpeg",data:await shrunk(f)});
  const r=await fetch(AI_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt,images})});let d={};try{d=await r.json()}catch(e){}
  if(!r.ok)throw Object.assign(new Error(d.erreur||"erreur"),{code:d.code||(r.status===429?"rate_limited":"ai_error")});return d}};
 async function getSample(){if(SAMPLE!==null)return SAMPLE;try{SAMPLE=window.claude?(await window.claude.use("sample"))||false:false}catch(e){SAMPLE=false}if(!SAMPLE&&AI_URL)SAMPLE=WORKER_AI;return SAMPLE}
+function errMsg(e){return ERRS[e&&e.code]||(e&&e.message&&e.message!=="erreur"&&e.message!=="photo"?e.message:"L’analyse a échoué. Réessaie.")}
+const PAGE_KEY={r_visage:"visage",r_corps:"corps",r_kibbe:"corps",r_couleurs:"couleurs"};
+function arrived(key){
+ if(key==="visage"&&S.page==="a_run"){S.busy=false;const v=S.res.visage;if(v&&v.fail){S.err=v.erreur;render(false);say(S.err)}else go("r_visage");return}
+ if(PAGE_KEY[S.page]===key)render(true);
+}
+function waitPage(key){const body=key==="corps";
+ return {step:"Encore un instant",html:`<p class="step">${body?"Ta silhouette":"Tes couleurs"}</p><h1>Encore un instant…</h1>
+ <div class="photo scan">${(body?S.url.body:S.url.face)?`<img src="${body?S.url.body:S.url.face}" alt="">`:""}</div>
+ <p class="sub">${body?"Je regarde encore ta silhouette.":"Je regarde encore tes couleurs."}</p>`,say:body?"Je regarde encore ta silhouette, ça arrive.":"Je regarde encore tes couleurs, ça arrive."}}
 function setMsg(t){S.runmsg=t;const m=$("#runmsg");if(m)m.textContent=t}
 async function run(k){
  const sm=await getSample();S.busy=true;S.err="";
  if(k==="a_run"){
-  if(!sm){S.res.couleurs={saison:seasonFromAnswers(S.ans),sous_ton:"",pourquoi:"D’après tes réponses au questionnaire."};S.res.visage={erreur:"L’analyse par photo n’est pas disponible ici."};S.res.corps={erreur:"L’analyse par photo n’est pas disponible ici."};save();S.busy=false;go("r_visage");return}
-  say("Je regarde ton visage et tes couleurs, une seconde.");setMsg("Je regarde ton visage et tes couleurs.");
-  try{
-   const f=await sm.json(PR_FACE(),{images:[S.file.face]});
-   if(f.erreur){S.res.visage=f;S.res.couleurs={saison:seasonFromAnswers(S.ans),sous_ton:"",pourquoi:"D’après tes réponses au questionnaire."}}
-   else{S.res.visage=f.visage;S.res.couleurs=f.couleurs&&SEASONS[f.couleurs.saison]?f.couleurs:{saison:seasonFromAnswers(S.ans),sous_ton:f.couleurs?.sous_ton||"",pourquoi:f.couleurs?.pourquoi||""}}
-   setMsg("Maintenant, ta silhouette.");say("Maintenant, je regarde ta silhouette.");
-   S.res.corps=await sm.json(PR_BODY(),{images:[S.file.body]});
-   save();S.busy=false;if(S.page==="a_run")go("r_visage");
-  }catch(e){S.busy=false;S.err=ERRS[e&&e.code]||(e&&e.message&&e.message!=="erreur"&&e.message!=="photo"?e.message:"L’analyse a échoué. Réessaie.");if(S.page==="a_run"){render(false);say(S.err)}}
+  const Q={saison:seasonFromAnswers(S.ans),sous_ton:"",pourquoi:"D’après tes réponses au questionnaire."};
+  if(!sm){S.res.couleurs=Q;S.res.visage={erreur:"L’analyse par photo n’est pas disponible ici."};S.res.corps={erreur:"L’analyse par photo n’est pas disponible ici."};save();S.busy=false;go("r_visage");return}
+  const rid=++S.rid;S.wait=S.wait||{};
+  const job=(key,pr,img,fix)=>{if(ok(key)&&!S.res[key].quiz)return;S.wait[key]=true;
+   sm.json(pr(),{images:[img]}).then(r=>fix?fix(r):r,e=>({erreur:errMsg(e),fail:1})).then(r=>{if(rid!==S.rid)return;S.res[key]=r;S.wait[key]=false;save();arrived(key)})};
+  say("Je regarde ton visage, une seconde.");setMsg("Je regarde ton visage.");
+  job("visage",PR_VISAGE,S.file.face);
+  job("corps",PR_BODY,S.file.body);
+  job("couleurs",PR_COUL,S.file.face,r=>r&&!r.erreur&&SEASONS[r.saison]?r:{...Q,quiz:1,sous_ton:(r&&r.sous_ton)||""});
+  if(ok("visage")){S.busy=false;go("r_visage")}
  }else{
   if(!sm){S.err="L’analyse par photo n’est pas disponible ici.";S.busy=false;render(false);return}
   say("Je regarde ta tenue.");
@@ -499,7 +512,7 @@ document.addEventListener("click",e=>{
  const t=e.target.closest("button,[data-go]");if(!t)return;
  if(t.id==="back")return back();
  if(t.id==="voice"){S.voice=!S.voice;try{localStorage.setItem("monstyle_voix",S.voice?"1":"0")}catch(e){}voiceBtn();if(!S.voice){stopVoice();toast("Voix coupée")}else{toast("Voix activée");unlock();const p=P[S.page]();say(p.say||"Je suis là, "+NOM+".")}return}
- if(t.dataset.start==="A"){S.flow=FLOW_A;S.hist=["home"];S.page="a_nom";S.dir="f";S.res={outfit:S.res.outfit};render(true);return}
+ if(t.dataset.start==="A"){S.flow=FLOW_A;S.hist=["home"];S.page="a_nom";S.dir="f";S.res={outfit:S.res.outfit};S.wait={};S.rid++;render(true);return}
  if(t.dataset.go==="o_photo"){S.flow=FLOW_O;if(S.page!=="o_photo"){S.hist=["home"];S.page="o_photo";S.dir="f";render(true)}return}
  if(t.dataset.go){go(t.dataset.go);return}
  if(t.dataset.view){S.flow=null;go(t.dataset.view);return}
