@@ -272,7 +272,7 @@ boutique:()=>{const b=ok("corps"),s=season(),cols=s?SEASONS[s].c.filter(x=>!/Noi
  say:"Voici ta boutique, "+NOM+". J’ai choisi ces pièces pour toi. Touche une boutique pour voir les articles."}},
 chat:()=>({dock:1,html:`<h1>Ta styliste</h1><button class="callbtn" id="callbtn" aria-label="Parler à ma styliste"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><p id="callst" class="sub" style="text-align:center" aria-live="polite">Appuie pour parler avec ta styliste</p><h2>Ou écris-lui</h2>
  <div class="chat">${S.chat.map((c,i)=>`<div class="bub ${c.r}" id="b${i}">${esc(c.t)||"…"}</div>`).join("")}</div>
- ${SR?`<button class="mic ${S.listen?"on":""}" data-mic aria-label="Parler"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><p class="sub" style="text-align:center">${S.listen?"Je t’écoute…":S.micMsg||"Touche pour parler"}</p>`:""}
+
  <div style="display:flex;gap:8px;margin-top:8px"><input class="field" id="msg" placeholder="Écris ta question" value="${esc(S.draft)}"><button class="btn" style="width:auto;padding:14px 20px" data-send ${S.busy?"disabled":""}>Envoyer</button></div>`,
  say:S.chat.length?"":"Je t’écoute, "+NOM+". Pose-moi ta question."})
 };
@@ -338,9 +338,23 @@ async function run(k){
 
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;S.micMsg="";
 function SYS(){return REF+" Tu es la styliste personnelle de l’application Mon style. Parle comme une amie styliste chaleureuse, à l’oral : 2 à 4 phrases courtes, sans liste, sans emoji. Elle s’appelle "+(S.nom||"(prénom inconnu)")+" : dis « ma belle » une seule fois, dans ta toute première réponse (« Salut ma belle, »), puis ne le répète plus jamais ; ensuite utilise seulement son prénom, de temps en temps. Réponds en français, ou en arabe ou en anglais si elle écrit dans ces langues. Son profil : "+(PROFIL()||"pas encore analysé : invite-la à faire son analyse")+". Pour les achats, donne le type de pièce, la couleur et les mots-clés à chercher sur Zara, H&M, Mango, Shein, Namshi ou Ounass, sans inventer de lien ni de prix."}
+let TCONV=null;
+async function textConv(){
+ if(TCONV)return TCONV;
+ const {Conversation}=await import("https://esm.sh/@elevenlabs/client");
+ TCONV=await Conversation.startSession({agentId:AGENT_ID,textOnly:true,connectionType:"websocket",overrides:{conversation:{textOnly:true}},
+  dynamicVariables:{user_name:S.nom||"",profil:PROFIL()||"pas encore analysé"},
+  onMessage:({message,source})=>{if(source!=="ai"||!message)return;const l=S.chat[S.chat.length-1];
+   if(l&&l.r==="a"&&!l.t)l.t=message;else S.chat.push({r:"a",t:message});
+   S.busy=false;save&&save();if(S.page==="chat")render(false)},
+  onDisconnect:()=>{TCONV=null}});
+ return TCONV;
+}
 async function send(text){
  text=(text||"").trim();if(!text||S.busy)return;const sm=await getSample();
- if(!sm){S.chat.push({r:"u",t:text},{r:"a",t:"La styliste n’est pas disponible sur cette page."});S.draft="";render(false);return}
+ if(!sm){S.chat.push({r:"u",t:text},{r:"a",t:""});S.draft="";S.busy=true;render(false);
+  try{const c=await textConv();c.sendUserMessage(text)}catch(e){S.chat[S.chat.length-1].t="La styliste n’a pas pu répondre. Réessaie.";S.busy=false;if(S.page==="chat")render(false)}
+  return}
  S.chat.push({r:"u",t:text},{r:"a",t:""});S.draft="";S.busy=true;render(false);unlock();
  const h=S.chat.slice(0,-1).map(c=>({role:c.r==="u"?"user":"assistant",content:c.t}));h[0]={role:"user",content:SYS()+"\n\n"+h[0].content};
  const id="#b"+(S.chat.length-1);
