@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#7D2E4A">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Great+Vibes&family=Italiana&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&family=Italiana&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#FFFFFF;--surface:#FFFFFF;--soft:#F7EEF0;--ink:#1E1A1D;--muted:#76696F;--line:#ECE3E6;--accent:#7D2E4A;--on:#FFFFFF;--gold:#B8935A}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141113;--surface:#1D181B;--soft:#271E23;--ink:#F4EEF0;--muted:#B3A6AC;--line:#33292E;--accent:#E7A6BC;--on:#141113;--gold:#D6B47E}}
@@ -187,6 +187,17 @@ nav.dock button[aria-current="true"]{color:var(--accent)}
 @media (max-width:370px){.ring .o{width:112px;height:112px}.ring .o span{width:84px;height:84px}.di small{font-size:12px}}
 .note{background:var(--soft);border-radius:16px;padding:14px 16px;color:var(--muted);font-size:15px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* écriture élégante (accueil) */
+.hh{font:500 46px/1.05 "Cormorant Garamond",Georgia,serif;letter-spacing:.005em}
+.hh em{font-style:italic;color:var(--accent)}
+.di small{font:300 11px/1.3 Jost,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.di b{font:500 20px/1.15 "Cormorant Garamond",Georgia,serif;color:var(--accent);margin-top:5px}
+.di b.no{font:italic 400 17px/1.15 "Cormorant Garamond",Georgia,serif;color:var(--muted)}
+.ring .t{font:300 11px/1.4 Jost,sans-serif;letter-spacing:.2em}
+.ring .n small{font:italic 400 15px "Cormorant Garamond",Georgia,serif}
+.ring .n b{font-weight:500}
+.mys b{font-weight:500;font-size:26px;letter-spacing:.01em}.mys small{font-weight:300;letter-spacing:.03em}
+nav.dock button{font-weight:300;letter-spacing:.02em}
 </style>
 </head>
 <body>
@@ -207,7 +218,7 @@ nav.dock button[aria-current="true"]{color:var(--accent)}
 </nav>
 </div>
 <script>
-const VERSION="9";
+const VERSION="10";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -302,7 +313,7 @@ home:()=>{const v=ok("visage"),bd=ok("corps"),c=season(),o=ok("outfit");
  const R=52,L=2*Math.PI*R,seg=L/4;
  const ring=`<button class="ring" ${todo?`data-mod="${todo}"`:`data-go="profil"`} aria-label="Analyse du style"><i class="t">Analyse<br>du style</i><span class="o"><svg viewBox="0 0 120 120" class="pr">${[0,1,2,3].map(k=>`<circle cx="60" cy="60" r="${R}" stroke-dasharray="${seg-16} ${L-seg+16}" stroke-dashoffset="${-k*seg}" class="${k<nd?"on":""}"/>`).join("")}</svg><span class="n"><b>${nd}</b><small>sur 4</small></span></span></button>`;
  const sw=c?`<div class="sw">${SEASONS[c].c.slice(0,6).map(x=>`<i style="background:${x[0]}"></i>`).join("")}</div>`:"";
- return {dock:1,html:`<h1 class="hh">Salut ${esc(cap(NOM))}.</h1>
+ return {dock:1,html:`<h1 class="hh">Salut <em>${esc(cap(NOM))}</em></h1>
  <div class="dash"><div class="dg">
  <div class="dc">${it("r_visage","Morpho visage",v&&v.forme)}${it("r_corps","Morpho corps",bd&&bd.forme)}${it("r_kibbe","Kibbe",bd&&bd.kibbe)}</div>
  ${ring}
