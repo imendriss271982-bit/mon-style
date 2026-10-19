@@ -205,6 +205,31 @@ nav.dock button[aria-current="true"]{color:var(--accent)}
 .ring .n b{font-weight:500}
 .mys b{font-weight:500;font-size:26px;letter-spacing:.01em}.mys small{font-weight:300;letter-spacing:.03em}
 nav.dock button{font-weight:300;letter-spacing:.02em}
+/* Accueil v2 : grille de 8, une action principale */
+.hm{display:flex;flex-direction:column;gap:24px;margin:auto 0}
+.hm .hh{margin:0;font-size:40px;line-height:1.1}
+.hm-h{display:flex;flex-direction:column;gap:4px}.hm-h p{margin:0;font-size:14px;color:var(--muted)}
+.hp{display:flex;align-items:center;gap:20px;background:var(--soft);border-radius:24px;padding:20px}
+.hp-o{position:relative;width:80px;height:80px;flex:none;display:grid;place-items:center}
+.hp-r{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.hp-r circle{fill:none;stroke:var(--line);stroke-width:6;stroke-linecap:round}.hp-r circle.on{stroke:var(--accent)}
+.hp-o b{position:relative;font:600 26px/1 "Cormorant Garamond",Georgia,serif;color:var(--accent)}
+.hp-c{display:flex;flex-direction:column;gap:12px;flex:1;min-width:0}
+.hp-t small{display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.hp-t b{display:block;font-size:16px;font-weight:500;margin-top:2px}
+.hp-b{align-self:flex-start;min-height:44px;border:0;border-radius:22px;background:var(--accent);color:var(--on);font:500 14px Jost,sans-serif;letter-spacing:.04em;padding:0 20px;cursor:pointer;transition:transform .15s}.hp-b:active{transform:scale(.97)}
+.hg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.ht{min-height:112px;border:1px solid var(--line);border-radius:20px;background:var(--surface);padding:16px;display:flex;flex-direction:column;justify-content:space-between;gap:12px;text-align:left;color:var(--ink);cursor:pointer;transition:transform .15s}.ht:active{transform:scale(.97)}
+.ht.ok{background:var(--soft);border-color:transparent}
+.ht-top{display:flex;justify-content:space-between;align-items:center}
+.ht-top small{font-size:12px;color:var(--muted)}
+.ht-i{width:36px;height:36px;border-radius:50%;background:var(--soft);display:grid;place-items:center}.ht.ok .ht-i{background:var(--surface)}
+.ht-i svg{width:20px;height:20px;fill:none;stroke:var(--accent);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.ht-b{display:flex;flex-direction:column;gap:2px}
+.ht-b b{font:500 15px/1.2 Jost,sans-serif}
+.ht-b em{font:italic 500 15px/1.2 "Cormorant Garamond",Georgia,serif;color:var(--accent)}
+.ht-sw{display:flex;gap:3px;margin-top:4px}.ht-sw i{width:12px;height:12px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.hm .mys{margin:0;min-height:72px;padding:12px 24px 12px 12px}.hm .mys>span{width:48px;height:48px}.hm .mys b{font-size:22px}.hm .mys small{font-size:13px}
 </style>
 </head>
 <body>
@@ -314,19 +339,21 @@ function photoPage(k,o){
 }
 
 const P={
-home:()=>{const v=ok("visage"),bd=ok("corps"),c=season(),o=ok("outfit");
- const it=(m,label,val,extra)=>`<button class="di" ${val?`data-view="${m}"`:`data-mod="${RES_MOD[m]||"couleurs"}"`}><small>${label}</small><b class="${val?"":"no"}">${esc(val?cap(val):"À analyser")}</b>${extra||""}</button>`;
+home:()=>{const v=ok("visage"),bd=ok("corps"),c=season();
  const nd=[v,bd,bd&&bd.kibbe,c].filter(Boolean).length,todo=!v?"visage":!bd?"corps":!c?"couleurs":"";
- const R=52,L=2*Math.PI*R,seg=L/4;
- const ring=`<button class="ring" ${todo?`data-mod="${todo}"`:`data-go="profil"`} aria-label="Analyse du style"><i class="t">Analyse<br>du style</i><span class="o"><svg viewBox="0 0 120 120" class="pr">${[0,1,2,3].map(k=>`<circle cx="60" cy="60" r="${R}" stroke-dasharray="${seg-16} ${L-seg+16}" stroke-dashoffset="${-k*seg}" class="${k<nd?"on":""}"/>`).join("")}</svg><span class="n"><b>${nd}</b><small>sur 4</small></span></span></button>`;
- const sw=c?`<div class="sw">${SEASONS[c].c.slice(0,6).map(x=>`<i style="background:${x[0]}"></i>`).join("")}</div>`:"";
- return {dock:1,html:`<h1 class="hh">Salut <em>${esc(cap(NOM))}</em></h1>
- <div class="dash"><div class="dg">
- <div class="dc">${it("r_visage","Morpho visage",v&&v.forme)}${it("r_corps","Morpho corps",bd&&bd.forme)}${it("r_kibbe","Kibbe",bd&&bd.kibbe)}</div>
- ${ring}
- <div class="dc r">${it("r_couleurs","Colorimétrie",c)}${it("r_couleurs","Ma palette",c?" ":"",sw).replace('<b class=""> </b>','')}${o?`<button class="di" data-view="o_res"><small>Outfit check</small><b>${esc(o.note)} / 10</b></button>`:`<button class="di" data-go="o_photo"><small>Outfit check</small><b class="no">À noter</b></button>`}</div>
- </div></div>
- <button class="mys" data-view="chat"><span><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span><div><b>My Stylist</b><small>Parle avec ta styliste</small></div></button>`,
+ const NEXT={visage:["Étape 1","Commence par ton visage"],corps:["Étape 2","Continue avec ta silhouette"],couleurs:["Étape 4","Découvre tes couleurs"]};
+ const R=34,L=2*Math.PI*R,seg=L/4;
+ const ring=`<svg viewBox="0 0 80 80" class="hp-r" aria-hidden="true">${[0,1,2,3].map(k=>`<circle cx="40" cy="40" r="${R}" stroke-dasharray="${seg-9} ${L-seg+9}" stroke-dashoffset="${-k*seg-4.5}" class="${k<nd?"on":""}"/>`).join("")}</svg>`;
+ const ICO={visage:'<ellipse cx="12" cy="12" rx="6.5" ry="8.5"/><path d="M9.5 10.5h.01M14.5 10.5h.01M10 15c1.2.8 2.8.8 4 0"/>',corps:'<circle cx="12" cy="4.5" r="2"/><path d="M8 9h8l-2 6 2 6M8 9l2 6-2 6M12 9v6"/>',couleurs:'<path d="M12 3a9 9 0 1 0 0 18c1.5 0 2-1 2-2 0-1.5-1-2 0-3s3 0 4.5-1.5C20 13 21 11 21 10c0-4-4-7-9-7z"/><path d="M7.5 11h.01M10 7.5h.01M15 7.5h.01"/>',kibbe:'<path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z"/>'};
+ const tile=(n,m,ic,label,val,extra)=>`<button class="ht ${val?"ok":""}" ${val?`data-view="${m}"`:`data-mod="${RES_MOD[m]}"`}><span class="ht-top"><span class="ht-i"><svg viewBox="0 0 24 24">${ICO[ic]}</svg></span><small>${n}</small></span><span class="ht-b"><b>${label}</b><em>${esc(val?cap(val):"À analyser")}</em>${extra||""}</span></button>`;
+ const sw=c?`<span class="ht-sw">${SEASONS[c].c.slice(0,6).map(x=>`<i style="background:${x[0]}"></i>`).join("")}</span>`:"";
+ const card=todo?`<div class="hp-t"><small>${NEXT[todo][0]}</small><b>${NEXT[todo][1]}</b></div><button class="hp-b" data-mod="${todo}">Commencer</button>`:`<div class="hp-t"><small>Bravo</small><b>Ton profil style est complet</b></div><button class="hp-b" data-go="profil">Voir mon profil</button>`;
+ return {dock:1,html:`<div class="hm">
+ <div class="hm-h"><h1 class="hh">Salut <em>${esc(cap(NOM))}</em></h1><p>${nd?`${nd} analyse${nd>1?"s":""} sur 4 terminée${nd>1?"s":""}`:"Découvre ton style en 4 analyses"}</p></div>
+ <section class="hp" aria-label="Analyse du style"><div class="hp-o">${ring}<b>${nd}/4</b></div><div class="hp-c">${card}</div></section>
+ <section class="hg" aria-label="Mes analyses">${tile("01","r_visage","visage","Morpho visage",v&&v.forme)}${tile("02","r_corps","corps","Morpho corps",bd&&bd.forme)}${tile("03","r_kibbe","kibbe","Kibbe",bd&&bd.kibbe)}${tile("04","r_couleurs","couleurs","Colorimétrie",c,sw)}</section>
+ <button class="mys" data-view="chat"><span><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span><div><b>My Stylist</b><small>Parle avec ta styliste</small></div></button>
+ </div>`,
  say:"Bonjour "+NOM+", je suis contente de te voir. Touche le micro pour me parler, ou choisis une analyse."}},
 a_nom:()=>({html:`<p class="step">Ton analyse</p><h1>Comment tu t’appelles ?</h1><p class="sub">Ton prénom, pour que je puisse t’appeler par ton nom.</p>
  <input class="field" id="nom" autocomplete="given-name" placeholder="Ton prénom" value="${esc(S.nomDraft??S.nom??"")}" style="font-size:20px;padding:18px">`,
