@@ -11,6 +11,7 @@
 <meta name="apple-mobile-web-app-title" content="My Style">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#7D2E4A">
+<script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Great+Vibes&family=Italiana&family=Jost:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -136,7 +137,7 @@ KIBBE (équilibre Yin = douceur, courbes, et Yang = force, angles, lignes) : Dra
 HARMONIE DES TENUES : une tenue a un point focal (une couleur vive ou un imprimé), tout le reste le soutient. Coordination par la couleur, les accessoires et le style. Mélange d’imprimés : garder les mêmes proportions. Palette neutre de 4 couleurs qui vont bien ensemble. Les bases : chemisiers, pantalons, jeans, vestes, robes, jupes, mailles, chaussures, sacs, accessoires. Penser aussi à l’âge et au mode de vie, à la qualité plutôt qu’à la quantité.
 GARDE-ROBE CAPSULE (règle 5-4-3-2-1 = 15 pièces) : 5 hauts, 4 bas, 3 pièces d’extérieur ou couches (blazer, trench, cardigan), 2 paires de chaussures, 1 sac iconique. Équation : peu de pièces + qualité et tissus nobles + accord avec la morphologie et le Kibbe + couleurs cohérentes = looks sans fin. Test des 3 façons : avant d’acheter, la pièce doit pouvoir se porter de 3 façons différentes avec ce qu’on possède déjà, sinon elle n’a pas sa place. Looks types : travail élégant (blazer noir structuré, chemise blanche, pantalon droit), casual chic (cachemire gris, jean foncé, trench), soirée chic (haut fluide, jupe en crêpe fluide, talons, accessoire iconique). Désencombrer : classer en 3 (pièces qui vont à la morphologie et aux couleurs, pièces à retoucher, pièces à donner), limiter la palette neutre, photographier les looks réussis.`;
 let NOM="ma belle";
-const AGENT_URL="https://elevenlabs.io/app/talk-to?agent_id=agent_3801m58kjga8fddsm7bz46gcz4wf";
+const AGENT_ID="agent_3801m58kjga8fddsm7bz46gcz4wf";const AGENT_URL="https://elevenlabs.io/app/talk-to?agent_id="+AGENT_ID;
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const cap=s=>{s=String(s||"");return s.charAt(0).toUpperCase()+s.slice(1)};
@@ -211,7 +212,7 @@ home:()=>{const done=!!(ok("visage")||ok("corps")||season()||ok("outfit"));
  <button class="tile main" data-start="A"><b>${done?"Refaire mon analyse":"Mon analyse"}</b><span>Visage, couleurs, morphologie et Kibbe</span></button>
  ${done?`<button class="tile" data-go="profil"><b>Mon profil</b><span>${esc(PROFIL())}</span></button>`:""}
  <button class="tile" data-go="o_photo"><b>Outfit check</b><span>Une note et des conseils pour ta tenue</span></button>
- <a class="tile" href="${AGENT_URL}" target="_blank" rel="noopener" data-call><b>Parler à ma styliste</b><span>Un appel à voix haute avec elle</span></a>`,
+ <button class="tile" data-view="chat"><b>Parler à ma styliste</b><span>Un appel à voix haute avec elle</span></button>`,
  say:done?"Contente de te revoir, "+NOM+". Que veux-tu faire aujourd’hui ?":"Commence par ton analyse, "+NOM+". Je regarde ton visage, je te pose quelques questions sur tes couleurs, puis je regarde ta silhouette."}},
 a_nom:()=>({html:`<p class="step">Ton analyse</p><h1>Comment tu t’appelles ?</h1><p class="sub">Ton prénom, pour que je puisse t’appeler par ton nom.</p>
  <input class="field" id="nom" autocomplete="given-name" placeholder="Ton prénom" value="${esc(S.nomDraft??S.nom??"")}" style="font-size:20px;padding:18px">`,
@@ -265,7 +266,7 @@ boutique:()=>{const b=ok("corps"),s=season(),cols=s?SEASONS[s].c.filter(x=>!/Noi
  <div class="card"><b>Je cherche autre chose</b><input class="field" id="shopq" placeholder="Par exemple : robe de soirée" value="${esc(S.shopQ)}"><button class="btn ghost" data-shop>Chercher</button>${S.shopQ?`<div style="margin-top:12px">${links(S.shopQ+(cols[0]?" "+cols[0]:""))}</div>`:""}</div>
  <p class="sub" style="font-size:14px">Chaque bouton ouvre une recherche Google limitée au site de la boutique.</p>`,
  say:"Voici ta boutique, "+NOM+". J’ai choisi ces pièces pour toi. Touche une boutique pour voir les articles."}},
-chat:()=>({dock:1,html:`<h1>Ta styliste</h1><a class="btn" href="${AGENT_URL}" target="_blank" rel="noopener" data-call style="text-decoration:none">Appeler ma styliste</a><p class="sub" style="margin-top:10px">Elle te répond à voix haute. Autorise le micro quand ton téléphone le demande.</p><h2>Ou écris-lui</h2>
+chat:()=>({dock:1,html:`<h1>Ta styliste</h1><div data-call style="min-height:80px"><elevenlabs-convai agent-id="${AGENT_ID}"></elevenlabs-convai></div><p class="sub" style="margin-top:10px">Appuie sur le bouton d’appel en bas de l’écran. Elle te répond à voix haute. Autorise le micro quand ton téléphone le demande.</p><h2>Ou écris-lui</h2>
  <div class="chat">${S.chat.map((c,i)=>`<div class="bub ${c.r}" id="b${i}">${esc(c.t)||"…"}</div>`).join("")}</div>
  ${SR?`<button class="mic ${S.listen?"on":""}" data-mic aria-label="Parler"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><p class="sub" style="text-align:center">${S.listen?"Je t’écoute…":S.micMsg||"Touche pour parler"}</p>`:""}
  <div style="display:flex;gap:8px;margin-top:8px"><input class="field" id="msg" placeholder="Écris ta question" value="${esc(S.draft)}"><button class="btn" style="width:auto;padding:14px 20px" data-send ${S.busy?"disabled":""}>Envoyer</button></div>`,
