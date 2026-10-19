@@ -45,7 +45,7 @@ export default {
     let data = {};
     try { data = await r.json(); } catch {}
     if (!r.ok) {
-      return json({ erreur: r.status === 429 ? "Trop de demandes. Réessaie dans un instant." : "L'IA n'a pas pu analyser la photo.", code: r.status === 429 ? "rate_limited" : "ai_error" }, r.status === 429 ? 429 : 502);
+      return json({ erreur: r.status === 429 ? "Trop de demandes. Réessaie dans un instant." : "Erreur Gemini " + r.status + " : " + ((data.error && data.error.message) || "inconnue"), code: r.status === 429 ? "rate_limited" : "ai_error" }, r.status === 429 ? 429 : 502);
     }
     const text = (data.candidates?.[0]?.content?.parts || []).map(p => p.text || "").join("");
     try { return json(JSON.parse(text)); }
