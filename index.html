@@ -118,7 +118,7 @@ footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg)
 #inst b{font-weight:500}
 
 nav.dock{display:flex;justify-content:space-around;border-top:1px solid var(--line);background:var(--bg);padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));position:sticky;bottom:0}
-nav.dock button{flex:1;border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px;font-size:13px;color:var(--muted);cursor:pointer}
+nav.dock button{flex:1;min-width:0;border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;font-size:12px;white-space:nowrap;color:var(--muted);cursor:pointer}
 nav.dock svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 nav.dock button[aria-current="true"]{color:var(--accent)}
 .card{border:1px solid var(--line);border-radius:20px;padding:16px 18px;margin-bottom:10px}
@@ -127,6 +127,17 @@ nav.dock button[aria-current="true"]{color:var(--accent)}
 .chips a{border:1px solid var(--line);border-radius:999px;padding:7px 13px;color:var(--accent);text-decoration:none;font-size:14px}
 .field{width:100%;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:16px Jost,sans-serif}
 .chat{display:flex;flex-direction:column;gap:10px;margin:6px 0 14px}
+.lbl{display:block;font-size:14px;color:var(--gold);margin:18px 0 6px}
+.lbl small{color:var(--muted);font-size:13px}
+.pk{display:flex;flex-wrap:wrap;gap:8px}
+.pk button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:9px 15px;font-size:15px;cursor:pointer}
+.pk button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on)}
+.unit{position:relative}.unit .field{padding-right:48px}.unit i{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-style:normal;color:var(--muted)}
+.hint{font-size:13px;color:var(--muted);margin:6px 2px 0}
+.field.bad{border-color:#C0392B}
+.who{display:flex;align-items:center;gap:14px;margin:4px 0 18px}
+.av{width:58px;height:58px;border-radius:50%;background:var(--accent);color:var(--on);display:grid;place-items:center;font:600 28px "Cormorant Garamond",Georgia,serif;flex:none}
+.who b{display:block;font:600 26px/1.1 "Cormorant Garamond",Georgia,serif}.who span{color:var(--muted);font-size:14px;word-break:break-all}
 .bub{max-width:86%;padding:12px 16px;border-radius:20px;white-space:pre-wrap}
 .bub.u{align-self:flex-end;background:var(--accent);color:var(--on);border-bottom-right-radius:6px}
 .bub.a{align-self:flex-start;background:var(--soft);border-bottom-left-radius:6px}
@@ -152,6 +163,7 @@ nav.dock button[aria-current="true"]{color:var(--accent)}
 <button data-go="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Accueil</button>
 <button data-go="o_photo"><svg viewBox="0 0 24 24"><path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/></svg>Outfit check</button>
 <button data-go="news"><svg viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>Nouveautés</button>
+<button data-go="profil"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.4-4 4.4-6 8-6s6.6 2 8 6"/></svg>Profil</button>
 </nav>
 </div>
 <script>
@@ -213,12 +225,21 @@ const SHOPS=[["Zara","zara.com"],["H&M","hm.com"],["Mango","mango.com"],["Shein"
 
 let S={page:"home",hist:[],dir:"f",ans:{},file:{},url:{},res:{},busy:false,err:"",voice:true,chat:[],draft:"",shopQ:"",listen:false,flow:null,news:null,newsBusy:false,newsErr:""};
 try{if(localStorage.getItem("monstyle_voix")==="0")S.voice=false}catch(e){}
-try{const j=JSON.parse(localStorage.getItem("monstyle")||"null");if(j){S.res=j.res||{};S.ans=j.ans||{};if(j.nom){S.nom=j.nom;NOM=j.nom}}}catch(e){}
-function save(){try{localStorage.setItem("monstyle",JSON.stringify({res:{visage:S.res.visage,corps:S.res.corps,couleurs:S.res.couleurs,outfit:S.res.outfit},ans:S.ans,nom:S.nom}))}catch(e){}}
+S.info={};
+try{const j=JSON.parse(localStorage.getItem("monstyle")||"null");if(j){S.res=j.res||{};S.ans=j.ans||{};S.info=j.info||{};if(j.nom){S.nom=j.nom;NOM=j.nom}}}catch(e){}
+function save(){try{localStorage.setItem("monstyle",JSON.stringify({res:{visage:S.res.visage,corps:S.res.corps,couleurs:S.res.couleurs,outfit:S.res.outfit},ans:S.ans,nom:S.nom,info:S.info}))}catch(e){}}
+const AGES=["18–24 ans","25–34 ans","35–44 ans","45–54 ans","55 ans et +"];
+const TAILLES=["XS","S","M","L","XL","XXL","3XL et +"];
+const BUDGETS=["Petit budget","Moyen","Haut de gamme"];
+const STYLES=["Classique","Chic","Casual","Modest","Romantique","Bohème","Minimaliste","Sport"];
+const EMAIL_OK=v=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(v||"").trim());
 const ok=k=>S.res[k]&&!S.res[k].erreur?S.res[k]:null;
 const season=()=>{const c=ok("couleurs");return c&&SEASONS[c.saison]?c.saison:null};
 function PROFIL(){const v=ok("visage"),b=ok("corps"),s=season(),p=[];
- if(v)p.push("visage "+v.forme);if(b)p.push("morphologie "+b.forme+", Kibbe "+b.kibbe);if(s)p.push("saison "+s);return p.join(", ")}
+ if(v)p.push("visage "+v.forme);if(b)p.push("morphologie "+b.forme+", Kibbe "+b.kibbe);if(s)p.push("saison "+s);const i=S.info||{};
+ if(i.taille)p.push("mesure "+i.taille+" cm");if(i.tvet)p.push("taille de vêtements "+i.tvet);if(i.age)p.push("âge "+i.age);
+ if(i.budget)p.push("budget "+i.budget.toLowerCase());if(i.styles&&i.styles.length)p.push("styles préférés : "+i.styles.join(", ").toLowerCase());
+ return p.join(", ")}
 
 const FLOW_A=["a_nom","a_intro","a_face",...QS.map(q=>"q_"+q.id),"a_body","a_run","r_visage","r_corps","r_kibbe","r_couleurs","r_fin"];
 const FLOW_O=["o_photo","o_run","o_res"];
@@ -275,8 +296,30 @@ r_couleurs:()=>{const s=season();if(!s)return missing("couleurs",S.res.couleurs)
 r_fin:()=>({html:`<p class="step">C’est prêt</p><h1>Ton profil est prêt, ${NOM}.</h1><p class="sub">${esc(PROFIL())}</p>`,
  say:"Ton profil est prêt, "+NOM+". Je le garde pour toi : tu le retrouves sur la page d’accueil.",
  foot:`<button class="btn" data-home>Retour à l’accueil</button>`}),
-profil:()=>({dock:1,html:`<h1>Mon profil</h1>${S.nom?`<p class="sub">${esc(S.nom)}</p>`:""}${[["visage","Visage",ok("visage")?.forme,"r_visage"],["corps","Morphologie",ok("corps")?.forme,"r_corps"],["kibbe","Kibbe",ok("corps")?.kibbe,"r_kibbe"],["couleurs","Saison",season(),"r_couleurs"],["outfit","Dernière tenue",ok("outfit")?ok("outfit").note+" / 10":"","o_res"]].map(x=>`<button class="tile" data-view="${x[3]}"><span>${x[1]}</span><b>${esc(x[2]||"À analyser")}</b></button>`).join("")}`,
- say:"Voici ton profil, "+NOM+". Touche une carte pour réécouter le détail."}),
+profil:()=>{const i=S.info||{},has=!!i.email,pick=(k,l)=>`<div class="row"><span>${l}</span>${esc(k||"—")}</div>`;
+ return {dock:1,html:`<h1>Mon profil</h1>
+ <div class="who"><div class="av">${esc((S.nom||"M").charAt(0).toUpperCase())}</div><div><b>${esc(S.nom||"Ma belle")}</b><span>${esc(i.email||"Ajoute ton email pour créer ton compte")}</span></div></div>
+ ${has?`<h2 style="margin-top:0">Mes informations</h2>${pick(i.taille?i.taille+" cm":"","Taille")}${pick(i.poids?i.poids+" kg":"","Poids (privé)")}${pick(i.age,"Âge")}${pick(i.tvet,"Taille de vêtements")}${pick(i.budget,"Budget")}${pick((i.styles||[]).join(", "),"Styles préférés")}
+ <button class="btn ghost" data-go="infos" style="margin:6px 0 4px">Modifier mes informations</button>`
+ :`<button class="tile main" data-go="infos"><b>Créer mon profil</b><span>Ton email, ta taille, ton style : je m’en sers pour mieux te conseiller.</span></button>`}
+ <h2>Mes résultats</h2>
+ ${[["visage","Visage",ok("visage")?.forme,"r_visage"],["corps","Morphologie",ok("corps")?.forme,"r_corps"],["kibbe","Kibbe",ok("corps")?.kibbe,"r_kibbe"],["couleurs","Saison",season(),"r_couleurs"],["outfit","Dernière tenue",ok("outfit")?ok("outfit").note+" / 10":"","o_res"]].map(x=>`<button class="tile" data-view="${x[3]}"><span>${x[1]}</span><b>${esc(x[2]||"À analyser")}</b></button>`).join("")}
+ <button class="link" data-wipe>Effacer toutes mes données</button>`,
+ say:has?"Voici ton profil, "+NOM+". Touche une carte pour réécouter le détail.":"Crée ton profil, "+NOM+". Ton email, ta taille et ton style m’aident à mieux te conseiller."}},
+infos:()=>{const d=S.idraft||(S.idraft={...S.info,nom:S.nom||"",styles:[...(S.info.styles||[])]});
+ const chips=(k,list,multi)=>`<div class="pk" data-k="${k}"${multi?' data-multi':''}>${list.map(v=>`<button type="button" data-pk="${esc(v)}" aria-pressed="${multi?(d[k]||[]).includes(v):d[k]===v}">${esc(v)}</button>`).join("")}</div>`;
+ return {back:true,html:`<p class="step">Mon profil</p><h1>Mes informations</h1><p class="sub">Seul ton email est obligatoire. Le reste m’aide à te conseiller plus juste.</p>
+ <label class="lbl" for="i_email">Email</label><input class="field" id="i_email" data-i="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" placeholder="toi@exemple.com" value="${esc(d.email||"")}">
+ <label class="lbl" for="i_nom">Prénom <small>· facultatif</small></label><input class="field" id="i_nom" data-i="nom" autocomplete="given-name" placeholder="Ton prénom" value="${esc(d.nom||"")}">
+ <div class="two"><div><label class="lbl" for="i_taille">Taille</label><div class="unit"><input class="field" id="i_taille" data-i="taille" inputmode="numeric" placeholder="165" value="${esc(d.taille||"")}"><i>cm</i></div></div>
+ <div><label class="lbl" for="i_poids">Poids <small>· facultatif</small></label><div class="unit"><input class="field" id="i_poids" data-i="poids" inputmode="decimal" placeholder="60" value="${esc(d.poids||"")}"><i>kg</i></div></div></div>
+ <p class="hint">Ton poids reste sur ton téléphone : il n’est jamais envoyé ni montré à personne.</p>
+ <span class="lbl">Âge</span>${chips("age",AGES)}
+ <span class="lbl">Taille de vêtements</span>${chips("tvet",TAILLES)}
+ <span class="lbl">Budget shopping</span>${chips("budget",BUDGETS)}
+ <span class="lbl">Styles que tu aimes <small>· plusieurs choix</small></span>${chips("styles",STYLES,true)}`,
+ say:"Remplis tes informations, "+NOM+". Seul ton email est obligatoire.",
+ foot:`<button class="btn" data-isave>Enregistrer</button>`}},
 o_photo:()=>photoPage("outfit",{step:"Outfit check",t:"Ta tenue",c:"En pied, de face, la tenue complète avec les chaussures, en lumière claire.",ph:"Ta photo de tenue",ic:"outfit",cam:"environment",b:"Noter ma tenue",say:"Montre-moi ta tenue, "+NOM+". Prends une photo en pied, avec les chaussures."}),
 o_run:()=>({html:`<p class="step">Outfit check</p><h1>${S.err?"Un souci":"Je regarde ta tenue…"}</h1><div class="photo scan">${S.url.outfit?`<img src="${S.url.outfit}" alt="">`:""}</div><p class="sub">${esc(S.err||"Une seconde.")}</p>`,
  foot:S.err?`<button class="btn" data-retry>Réessayer</button><button class="link" data-go="o_photo">Changer ma photo</button>`:"",back:!!S.err}),
@@ -341,7 +384,16 @@ function render(sayIt){
  if(sayIt&&p.say)say(p.say);
  window.scrollTo(0,0);
 }
-function go(page,dir){if(page!==S.page&&!/_run$/.test(S.page))S.hist.push(S.page);S.page=page;S.dir=dir||"f";S.err="";if(DOCK.includes(page)&&page!=="o_photo"){S.flow=null}render(true)}
+function saveInfo(){const d=S.idraft;if(!d)return;const bad=(id,m)=>{const f=$("#"+id);if(f){f.classList.add("bad");f.focus()}toast(m)};
+ const email=String(d.email||"").trim().toLowerCase();if(!EMAIL_OK(email))return bad("i_email","Vérifie ton email");
+ const num=v=>{v=String(v||"").replace(",",".").trim();return v===""?"":Number(v)};
+ const ta=num(d.taille),po=num(d.poids);
+ if(ta!==""&&!(ta>=120&&ta<=220))return bad("i_taille","Ta taille en cm, entre 120 et 220");
+ if(po!==""&&!(po>=30&&po<=250))return bad("i_poids","Ton poids en kg, entre 30 et 250");
+ S.info={email,taille:ta===""?"":Math.round(ta),poids:po===""?"":Math.round(po*10)/10,age:d.age||"",tvet:d.tvet||"",budget:d.budget||"",styles:[...(d.styles||[])]};
+ const n=String(d.nom||"").trim();if(n){S.nom=n;NOM=n}
+ save();S.idraft=undefined;toast("Profil enregistré");S.hist=S.hist.filter(h=>h!=="infos");if(S.hist[S.hist.length-1]==="profil")S.hist.pop();S.page="profil";S.dir="b";render(true)}
+function go(page,dir){if(page==="infos")S.idraft=undefined;if(page!==S.page&&!/_run$/.test(S.page))S.hist.push(S.page);S.page=page;S.dir=dir||"f";S.err="";if(DOCK.includes(page)&&page!=="o_photo"){S.flow=null}render(true)}
 function back(){stopVoice();const p=S.hist.pop();if(!p){S.page="home";S.flow=null}else S.page=p;S.dir="b";S.err="";if(S.flow&&!S.flow.includes(S.page))S.flow=null;render(false)}
 function next(){const ix=S.flow.indexOf(S.page);const n=S.flow[ix+1];if(n==="a_run"||n==="o_run"){go(n);run(n)}else if(n)go(n);else home()}
 function home(){S.flow=null;S.hist=[];S.page="home";S.dir="b";render(true)}
@@ -455,6 +507,12 @@ document.addEventListener("click",e=>{
  if(t.hasAttribute("data-back"))return back();
  if(t.hasAttribute("data-home"))return home();
  if(t.hasAttribute("data-profil")){S.flow=null;S.hist=["home"];S.page="profil";S.dir="b";render(true);return}
+ if(t.dataset.pk!==undefined){const box=t.closest(".pk"),k=box.dataset.k,d=S.idraft;if(!d)return;
+  if(box.hasAttribute("data-multi")){const a=d[k]||(d[k]=[]),i=a.indexOf(t.dataset.pk);i<0?a.push(t.dataset.pk):a.splice(i,1);t.setAttribute("aria-pressed",String(i<0))}
+  else{d[k]=d[k]===t.dataset.pk?"":t.dataset.pk;box.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.pk===d[k])))}return}
+ if(t.hasAttribute("data-isave"))return saveInfo();
+ if(t.hasAttribute("data-wipe")){if(!confirm("Effacer ton profil, tes résultats et ton email de ce téléphone ?"))return;
+  try{localStorage.removeItem("monstyle")}catch(e){}S.info={};S.res={};S.ans={};S.nom=undefined;NOM="ma belle";S.idraft=undefined;toast("Tes données sont effacées");home();return}
  if(t.hasAttribute("data-nom")){const v=(S.nomDraft??S.nom??"").trim();if(!v)return;S.nom=v;NOM=v;S.nomDraft=undefined;save();return next()}
  if(t.hasAttribute("data-retry")){run(S.page);S.err="";render(false);return}
  if(t.dataset.ans){S.ans[t.dataset.ans]=t.dataset.v;render(false);setTimeout(()=>{if(S.page==="q_"+t.dataset.ans)next()},380);return}
@@ -466,7 +524,7 @@ document.addEventListener("click",e=>{
 document.addEventListener("click",e=>{if(e.target.closest("[data-call]"))stopVoice()});
 document.addEventListener("change",e=>{const k=e.target.dataset.f,f=e.target.files&&e.target.files[0];if(!k||!f)return;
  if(S.url[k])URL.revokeObjectURL(S.url[k]);S.file[k]=f;S.url[k]=URL.createObjectURL(f);render(false);say("Très bien, ta photo est prête.")});
-document.addEventListener("input",e=>{if(e.target.id==="msg")S.draft=e.target.value;if(e.target.id==="nom"){S.nomDraft=e.target.value;const b=document.querySelector("[data-nom]");if(b)b.disabled=!e.target.value.trim()}});
+document.addEventListener("input",e=>{if(e.target.id==="msg")S.draft=e.target.value;if(e.target.dataset.i&&S.idraft){S.idraft[e.target.dataset.i]=e.target.value;e.target.classList.remove("bad")}if(e.target.id==="nom"){S.nomDraft=e.target.value;const b=document.querySelector("[data-nom]");if(b)b.disabled=!e.target.value.trim()}});
 document.addEventListener("keydown",e=>{if(e.target.id==="msg"&&e.key==="Enter"){e.preventDefault();send(e.target.value)}if(e.target.id==="nom"&&e.key==="Enter"){e.preventDefault();const b=document.querySelector("[data-nom]");if(b&&!b.disabled)b.click()}});
 
 function typeInto(el,t,ms){return new Promise(r=>{let i=0;const h=setInterval(()=>{el.textContent=t.slice(0,++i);if(i>=t.length){clearInterval(h);r()}},ms)})}
