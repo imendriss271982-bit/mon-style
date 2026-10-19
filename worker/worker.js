@@ -43,19 +43,19 @@ export default {
         { text: prompt },
         ...images.map(i => ({ inline_data: { mime_type: i.mime || "image/jpeg", data: i.data } }))
       ];
-      const model = String(env.MODEL || "").trim() || "gemini-2.5-flash";
-
-      const r = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "x-goog-api-key": KEY },
-          body: JSON.stringify({
-            contents: [{ role: "user", parts }],
-            generationConfig: { responseMimeType: "application/json", temperature: 0.4 }
-          })
-        }
-      );
+      const models = [String(env.MODEL || "").trim(), "gemini-3.8-flash", "gemini-flash-latest"].filter(Boolean);
+      const payload = JSON.stringify({
+        contents: [{ role: "user", parts }],
+        generationConfig: { responseMimeType: "application/json", temperature: 0.4 }
+      });
+      let r;
+      for (const model of models) {
+        r = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+          { method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": KEY }, body: payload }
+        );
+        if (r.status !== 404) break;
+      }
 
       let data = {};
       try { data = await r.json(); } catch {}
