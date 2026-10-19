@@ -159,23 +159,25 @@ nav.dock button[aria-current="true"]{color:var(--accent)}
 .mod span{display:block;color:var(--muted);font-size:13px;margin-top:3px}
 .mod span.done{color:var(--accent);font-weight:500}
 .mod .sw{display:flex;gap:4px;margin-top:6px}.mod .sw i{width:16px;height:16px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
-.dash{background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:24px 16px;box-shadow:0 8px 28px rgba(125,46,74,.08);margin:8px 0 12px}
+.hh{margin-top:auto}
+.hh+.dash{margin-bottom:auto!important}
+.dash{background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:30px 16px;box-shadow:0 8px 28px rgba(125,46,74,.08);margin:8px 0 12px}
 .dash>.t{text-align:center;color:var(--muted);font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:28px}
 .dg{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:stretch;gap:8px}
-.dc{display:grid;grid-template-rows:repeat(3,1fr);align-items:center;gap:14px}.dc.r{text-align:right}
+.dc{display:grid;grid-template-rows:repeat(3,1fr);align-items:center;gap:26px}.dc.r{text-align:right}
 .di{border:0;background:none;padding:2px 0;text-align:inherit;cursor:pointer;line-height:1.2;color:inherit}
 .di small{display:block;font-size:13px;color:var(--ink)}
 .di b{display:block;font-weight:500;font-size:14px;line-height:1.25;color:var(--accent);margin-top:4px}
 .di b.no{color:var(--muted);font-weight:400;font-size:13px}
 .di .sw{display:flex;gap:2px;margin-top:6px}.dc.r .sw{justify-content:flex-end}.di .sw i{width:11px;height:11px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
 .ring{border:0;background:none;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;cursor:pointer;color:inherit}
-.ring .o{width:120px;height:120px;border-radius:50%;background:var(--soft);display:grid;place-items:center;transition:transform .15s}
+.ring .o{width:126px;height:126px;border-radius:50%;background:var(--soft);display:grid;place-items:center;transition:transform .15s}
 .ring:active .o{transform:scale(.96)}
-.ring .o span{width:90px;height:90px;border-radius:50%;background:var(--accent);color:var(--on);display:grid;place-items:center;box-shadow:0 0 0 1px var(--surface)}
+.ring .o span{width:96px;height:96px;border-radius:50%;background:var(--accent);color:var(--on);display:grid;place-items:center;box-shadow:0 0 0 1px var(--surface)}
 .ring svg{width:38px;height:38px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}
 .ring b{font:600 22px/1 "Cormorant Garamond",Georgia,serif}
 .ring .t{font-style:normal;color:var(--muted);font-size:13px;letter-spacing:.14em;text-transform:uppercase}
-@media (max-width:370px){.ring .o{width:108px;height:108px}.ring .o span{width:80px;height:80px}.di small{font-size:12px}}
+@media (max-width:370px){.ring .o{width:112px;height:112px}.ring .o span{width:84px;height:84px}.di small{font-size:12px}}
 .note{background:var(--soft);border-radius:16px;padding:14px 16px;color:var(--muted);font-size:15px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -198,7 +200,7 @@ nav.dock button[aria-current="true"]{color:var(--accent)}
 </nav>
 </div>
 <script>
-const VERSION="7";
+const VERSION="8";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -290,7 +292,7 @@ const P={
 home:()=>{const v=ok("visage"),bd=ok("corps"),c=season(),o=ok("outfit");
  const it=(m,label,val,extra)=>`<button class="di" ${val?`data-view="${m}"`:`data-mod="${RES_MOD[m]||"couleurs"}"`}><small>${label}</small><b class="${val?"":"no"}">${esc(val?cap(val):"À analyser")}</b>${extra||""}</button>`;
  const sw=c?`<div class="sw">${SEASONS[c].c.slice(0,6).map(x=>`<i style="background:${x[0]}"></i>`).join("")}</div>`:"";
- return {dock:1,html:`<h1>Salut ${esc(cap(NOM))}.</h1>
+ return {dock:1,html:`<h1 class="hh">Salut ${esc(cap(NOM))}.</h1>
  <div class="dash"><div class="dg">
  <div class="dc">${it("r_visage","Morpho visage",v&&v.forme)}${it("r_corps","Morpho corps",bd&&bd.forme)}${it("r_kibbe","Kibbe",bd&&bd.kibbe)}</div>
  <button class="ring" data-view="chat" aria-label="Parler à My Stylist"><i class="t">Analyse</i><span class="o"><span><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span></span><b>My Stylist</b></button>
