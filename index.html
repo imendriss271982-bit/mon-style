@@ -34,6 +34,7 @@ header{display:flex;align-items:center;gap:12px;padding:14px 20px 6px;min-height
 .logo .my{font:400 22px "Great Vibes",cursive;color:var(--accent);margin-bottom:-6px}
 .logo .st{font:400 19px Italiana,Georgia,serif;letter-spacing:.3em;margin-right:-.3em;color:var(--ink)}
 .logo .ln{width:34px;height:1px;background:var(--accent);margin-top:5px}
+.splashlogo{width:200px;height:200px;border-radius:44px;margin-bottom:36px;box-shadow:0 10px 30px rgba(125,46,74,.18)}
 #splash .logo{margin-bottom:40px}
 #splash .logo .my{font-size:64px;margin-bottom:-16px}
 #splash .logo .st{font-size:60px}
@@ -116,7 +117,7 @@ nav.dock button[aria-current="true"]{color:var(--accent)}
 </style>
 </head>
 <body>
-<div id="splash"><div class="logo" role="img" aria-label="My Style"><span class="my" aria-hidden="true">My</span><span class="st" aria-hidden="true">STYLE</span><span class="ln"></span></div><h1 id="hi"></h1><p id="hi2"></p><button class="btn" id="start">Commencer</button></div>
+<div id="splash"><img src="icon-512.png" alt="My Style" class="splashlogo"><h1 id="hi"></h1><p id="hi2"></p><button class="btn" id="start">Commencer</button></div>
 <div id="app">
 <header><button class="ib" id="back" aria-label="Retour"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div id="mid" class="brand"><span class="logo" role="img" aria-label="My Style"><span class="my" aria-hidden="true">My</span><span class="st" aria-hidden="true">STYLE</span></span></div><button class="ib" id="voice" aria-label="Voix"><span class="rings" style="width:26px;height:26px"><i></i><i></i><i></i></span></button></header>
 <main id="page"></main>
