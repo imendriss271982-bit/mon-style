@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Mon style</title>
+<title>My Style</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Mon style">
+<meta name="apple-mobile-web-app-title" content="My Style">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#7D2E4A">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Great+Vibes&family=Italiana&family=Jost:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#FFFFFF;--surface:#FFFFFF;--soft:#F7EEF0;--ink:#1E1A1D;--muted:#76696F;--line:#ECE3E6;--accent:#7D2E4A;--on:#FFFFFF;--gold:#B8935A}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141113;--surface:#1D181B;--soft:#271E23;--ink:#F4EEF0;--muted:#B3A6AC;--line:#33292E;--accent:#E7A6BC;--on:#141113;--gold:#D6B47E}}
@@ -29,7 +29,15 @@ header{display:flex;align-items:center;gap:12px;padding:14px 20px 6px;min-height
 .ib[hidden]{visibility:hidden;display:grid}
 .bar{flex:1;height:2px;background:var(--line);border-radius:2px;overflow:hidden}
 .bar i{display:block;height:100%;background:var(--accent);transition:width .6s cubic-bezier(.2,.8,.2,1)}
-.brand{flex:1;text-align:center;font:600 21px "Cormorant Garamond",Georgia,serif;letter-spacing:.02em}
+.brand{flex:1;display:flex;justify-content:center}
+.logo{display:inline-flex;flex-direction:column;align-items:center;line-height:1}
+.logo .my{font:400 22px "Great Vibes",cursive;color:var(--gold);margin-bottom:-6px}
+.logo .st{font:400 19px Italiana,Georgia,serif;letter-spacing:.3em;margin-right:-.3em;color:var(--ink)}
+.logo .ln{width:34px;height:1px;background:var(--gold);margin-top:5px}
+#splash .logo{margin-bottom:40px}
+#splash .logo .my{font-size:64px;margin-bottom:-16px}
+#splash .logo .st{font-size:60px}
+#splash .logo .ln{width:90px;margin-top:12px}
 #page{flex:1;padding:18px 24px 24px;display:flex;flex-direction:column}
 .in-f{animation:inf .45s cubic-bezier(.2,.8,.2,1)}.in-b{animation:inb .45s cubic-bezier(.2,.8,.2,1)}
 @keyframes inf{from{opacity:0;transform:translateX(28px)}}@keyframes inb{from{opacity:0;transform:translateX(-28px)}}
@@ -108,9 +116,9 @@ nav.dock button[aria-current="true"]{color:var(--accent)}
 </style>
 </head>
 <body>
-<div id="splash"><div class="rings"><i></i><i></i><i></i></div><h1 id="hi"></h1><p id="hi2"></p><button class="btn" id="start">Commencer</button></div>
+<div id="splash"><div class="logo" role="img" aria-label="My Style"><span class="my" aria-hidden="true">My</span><span class="st" aria-hidden="true">STYLE</span><span class="ln"></span></div><h1 id="hi"></h1><p id="hi2"></p><button class="btn" id="start">Commencer</button></div>
 <div id="app">
-<header><button class="ib" id="back" aria-label="Retour"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div id="mid" class="brand">Mon style</div><button class="ib" id="voice" aria-label="Voix"><span class="rings" style="width:26px;height:26px"><i></i><i></i><i></i></span></button></header>
+<header><button class="ib" id="back" aria-label="Retour"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div id="mid" class="brand"><span class="logo" role="img" aria-label="My Style"><span class="my" aria-hidden="true">My</span><span class="st" aria-hidden="true">STYLE</span></span></div><button class="ib" id="voice" aria-label="Voix"><span class="rings" style="width:26px;height:26px"><i></i><i></i><i></i></span></button></header>
 <main id="page"></main>
 <footer id="foot"></footer>
 <nav class="dock" id="dock">
@@ -278,7 +286,7 @@ function render(sayIt){
  $("#dock").style.display=p.dock?"":"none";
  document.querySelectorAll("#dock button").forEach(b=>b.setAttribute("aria-current",String(b.dataset.go===S.page)));
  const fl=S.flow,ix=fl?fl.indexOf(S.page):-1;
- $("#mid").className=ix>=0?"bar":"brand";$("#mid").innerHTML=ix>=0?`<i style="width:${(ix+1)/fl.length*100}%"></i>`:"Mon style";
+ $("#mid").className=ix>=0?"bar":"brand";$("#mid").innerHTML=ix>=0?`<i style="width:${(ix+1)/fl.length*100}%"></i>`:`<span class="logo" role="img" aria-label="My Style"><span class="my" aria-hidden="true">My</span><span class="st" aria-hidden="true">STYLE</span></span>`;
  $("#back").hidden=p.dock||p.back===false;
  if(p.count)countUp(p.count);
  if(window.onPage)window.onPage(S.page);
