@@ -104,6 +104,19 @@ footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg)
 #splash p{max-width:330px;min-height:3.2em;color:var(--muted)}
 #splash .btn{max-width:320px;opacity:0;transform:translateY(10px);transition:opacity .6s,transform .6s;pointer-events:none}
 #splash .btn.show{opacity:1;transform:none;pointer-events:auto}
+#splash .btn.ghost{background:none;color:var(--accent);border:1px solid var(--accent);margin-top:12px}
+#splash .btn[hidden]{display:none}
+#inst{position:fixed;inset:0;z-index:60;background:rgba(20,17,19,.45);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+#inst.show{opacity:1;pointer-events:auto}
+#inst .sh{width:100%;max-width:480px;background:var(--surface);border-radius:28px 28px 0 0;padding:26px 24px calc(24px + env(safe-area-inset-bottom,0px));transform:translateY(30px);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+#inst.show .sh{transform:none}
+#inst h2{margin:0 0 6px}
+#inst ol{list-style:none;padding:0;margin:18px 0 22px;counter-reset:s}
+#inst li{counter-increment:s;display:flex;gap:14px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+#inst li::before{content:counter(s);flex:none;width:30px;height:30px;border-radius:50%;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-weight:500}
+#inst li svg{width:22px;height:22px;flex:none;fill:none;stroke:var(--accent);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;vertical-align:-5px}
+#inst b{font-weight:500}
+
 nav.dock{display:flex;justify-content:space-around;border-top:1px solid var(--line);background:var(--bg);padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));position:sticky;bottom:0}
 nav.dock button{flex:1;border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px;font-size:13px;color:var(--muted);cursor:pointer}
 nav.dock svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
@@ -126,7 +139,10 @@ nav.dock button[aria-current="true"]{color:var(--accent)}
 </style>
 </head>
 <body>
-<div id="splash"><img src="icon-512.png" alt="My Style" class="splashlogo"><h1 id="hi"></h1><p id="hi2"></p><button class="btn" id="start">Commencer</button></div>
+<div id="splash"><img src="icon-512.png" alt="My Style" class="splashlogo"><h1 id="hi"></h1><p id="hi2"></p><button class="btn" id="install" hidden>Télécharger l’application</button><button class="btn" id="start">Commencer</button></div>
+<div id="inst" role="dialog" aria-modal="true" aria-labelledby="instT"><div class="sh"><h2 id="instT">Installer My Style</h2><p class="sub" id="instS">Trois gestes dans Safari, et My Style s’ouvre comme une vraie application depuis ton écran d’accueil.</p>
+<ol id="instL"><li><span>Touche <b>Partager</b> <svg viewBox="0 0 24 24"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M6 11H5v10h14V11h-1"/></svg> en bas de Safari</span></li><li><span>Fais défiler et choisis <b>Sur l’écran d’accueil</b> <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg></span></li><li><span>Touche <b>Ajouter</b>, puis ouvre l’icône My Style</span></li></ol>
+<button class="btn" id="instOk">J’ai compris</button></div></div>
 <div id="app">
 <header><button class="ib" id="back" aria-label="Retour"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div id="mid" class="brand"><span class="logo" role="img" aria-label="My Style"><span class="my" aria-hidden="true">My</span><span class="st" aria-hidden="true">STYLE</span></span></div><button class="ib" id="voice" aria-label="Couper la voix" aria-pressed="true"></button></header>
 <main id="page"></main>
@@ -458,7 +474,19 @@ render(false);
 (async()=>{const rm=matchMedia("(prefers-reduced-motion:reduce)").matches;
  await typeInto($("#hi"),"Salut ma belle.",rm?1:75);
  await typeInto($("#hi2"),"Je suis ta styliste. Je vais trouver avec toi ce qui te va le mieux.",rm?1:28);
- $("#start").classList.add("show")})();
+ $("#start").classList.add("show");if(!$("#install").hidden)$("#install").classList.add("show")})();
+const UA=navigator.userAgent,IOS=/iPhone|iPad|iPod/.test(UA)||(/Macintosh/.test(UA)&&navigator.maxTouchPoints>1);
+const APP=navigator.standalone===true||matchMedia("(display-mode: standalone)").matches;
+const NOT_SAFARI=/CriOS|FxiOS|EdgiOS|FBAN|FBAV|Instagram|Line\/|Snapchat|TikTok/.test(UA);
+let BIP=null;
+function showInstall(){if(APP)return;const b=$("#install");b.hidden=false;$("#start").textContent="Continuer dans le navigateur";$("#start").classList.add("ghost");if($("#start").classList.contains("show"))b.classList.add("show")}
+if(IOS&&!APP){showInstall();if(NOT_SAFARI){$("#instS").textContent="Ce lien est ouvert hors de Safari. Copie-le, ouvre Safari, colle-le dans la barre d’adresse, puis :";}}
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();BIP=e;showInstall()});
+$("#install").addEventListener("click",async()=>{if(BIP){BIP.prompt();try{await BIP.userChoice}catch(_){}BIP=null;return}
+ if(NOT_SAFARI){try{navigator.clipboard&&navigator.clipboard.writeText(location.href.split("?")[0])}catch(_){}}
+ $("#inst").classList.add("show");$("#instOk").focus()});
+$("#instOk").addEventListener("click",()=>$("#inst").classList.remove("show"));
+$("#inst").addEventListener("click",e=>{if(e.target.id==="inst")$("#inst").classList.remove("show")});
 $("#start").addEventListener("click",()=>{unlock();$("#splash").classList.add("out");setTimeout(()=>$("#splash").remove(),800);
  say("Salut ma belle"+(S.nom?" "+S.nom:"")+" ! Je suis ta styliste. "+P.home().say)});
 </script>
