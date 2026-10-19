@@ -25,6 +25,11 @@ button:focus-visible,a:focus-visible,label:focus-within{outline:2px solid var(--
 #app{max-width:480px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;padding:env(safe-area-inset-top,0) 0 0}
 header{display:flex;align-items:center;gap:12px;padding:14px 20px 6px;min-height:58px}
 .ib{width:40px;height:40px;border:0;background:none;border-radius:50%;display:grid;place-items:center;cursor:pointer;flex:none}
+#voice{border:1px solid var(--line);color:var(--accent)}
+#voice.off{color:var(--muted);background:var(--soft)}
+.talk #voice{animation:breath 1.2s ease-in-out infinite}
+#toast{position:fixed;left:50%;top:calc(64px + env(safe-area-inset-top,0px));transform:translate(-50%,-8px);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:999px;font-size:14px;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:50}
+#toast.show{opacity:1;transform:translate(-50%,0)}
 .ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .ib[hidden]{visibility:hidden;display:grid}
 .bar{flex:1;height:2px;background:var(--line);border-radius:2px;overflow:hidden}
@@ -123,7 +128,7 @@ nav.dock button[aria-current="true"]{color:var(--accent)}
 <body>
 <div id="splash"><img src="icon-512.png" alt="My Style" class="splashlogo"><h1 id="hi"></h1><p id="hi2"></p><button class="btn" id="start">Commencer</button></div>
 <div id="app">
-<header><button class="ib" id="back" aria-label="Retour"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div id="mid" class="brand"><span class="logo" role="img" aria-label="My Style"><span class="my" aria-hidden="true">My</span><span class="st" aria-hidden="true">STYLE</span></span></div><button class="ib" id="voice" aria-label="Voix"><span class="rings" style="width:26px;height:26px"><i></i><i></i><i></i></span></button></header>
+<header><button class="ib" id="back" aria-label="Retour"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div id="mid" class="brand"><span class="logo" role="img" aria-label="My Style"><span class="my" aria-hidden="true">My</span><span class="st" aria-hidden="true">STYLE</span></span></div><button class="ib" id="voice" aria-label="Couper la voix" aria-pressed="true"></button></header>
 <main id="page"></main>
 <footer id="foot"></footer>
 <nav class="dock" id="dock">
@@ -191,6 +196,7 @@ const SHOPCUT={"Sablier":["robe portefeuille","pantalon taille haute","chemisier
 const SHOPS=[["Zara","zara.com"],["H&M","hm.com"],["Mango","mango.com"],["Shein","shein.com"],["Namshi","namshi.com"],["Ounass","ounass.ae"]];
 
 let S={page:"home",hist:[],dir:"f",ans:{},file:{},url:{},res:{},busy:false,err:"",voice:true,chat:[],draft:"",shopQ:"",listen:false,flow:null,news:null,newsBusy:false,newsErr:""};
+try{if(localStorage.getItem("monstyle_voix")==="0")S.voice=false}catch(e){}
 try{const j=JSON.parse(localStorage.getItem("monstyle")||"null");if(j){S.res=j.res||{};S.ans=j.ans||{};if(j.nom){S.nom=j.nom;NOM=j.nom}}}catch(e){}
 function save(){try{localStorage.setItem("monstyle",JSON.stringify({res:{visage:S.res.visage,corps:S.res.corps,couleurs:S.res.couleurs,outfit:S.res.outfit},ans:S.ans,nom:S.nom}))}catch(e){}}
 const ok=k=>S.res[k]&&!S.res[k].erreur?S.res[k]:null;
@@ -415,11 +421,16 @@ function unlock(){const ss=window.speechSynthesis;if(!S.voice||!ss)return;try{ss
 function stopVoice(){if(window.speechSynthesis)speechSynthesis.cancel();talk(false)}
 /*ENDVOICE*/
 function say(t){if(S.voice&&t)speak(t)}
+const IC_ON='<svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>',
+IC_OFF='<svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>';
+function voiceBtn(){const b=$("#voice");if(!b)return;b.innerHTML=S.voice?IC_ON:IC_OFF;b.classList.toggle("off",!S.voice);b.setAttribute("aria-pressed",String(S.voice));b.setAttribute("aria-label",S.voice?"Couper la voix":"Activer la voix")}
+let toastT;function toast(m){let t=$("#toast");if(!t){t=document.createElement("div");t.id="toast";t.setAttribute("role","status");document.body.appendChild(t)}t.textContent=m;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),1800)}
+voiceBtn();
 
 document.addEventListener("click",e=>{
  const t=e.target.closest("button,[data-go]");if(!t)return;
  if(t.id==="back")return back();
- if(t.id==="voice"){S.voice=!S.voice;t.style.opacity=S.voice?1:.35;if(!S.voice)stopVoice();else{unlock();const p=P[S.page]();say(p.say||"Je suis là, "+NOM+".")}return}
+ if(t.id==="voice"){S.voice=!S.voice;try{localStorage.setItem("monstyle_voix",S.voice?"1":"0")}catch(e){}voiceBtn();if(!S.voice){stopVoice();toast("Voix coupée")}else{toast("Voix activée");unlock();const p=P[S.page]();say(p.say||"Je suis là, "+NOM+".")}return}
  if(t.dataset.start==="A"){S.flow=FLOW_A;S.hist=["home"];S.page="a_nom";S.dir="f";S.res={outfit:S.res.outfit};render(true);return}
  if(t.dataset.go==="o_photo"){S.flow=FLOW_O;if(S.page!=="o_photo"){S.hist=["home"];S.page="o_photo";S.dir="f";render(true)}return}
  if(t.dataset.go){go(t.dataset.go);return}
