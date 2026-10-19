@@ -26,6 +26,7 @@ button:focus-visible,a:focus-visible,label:focus-within{outline:2px solid var(--
 header{display:flex;align-items:center;gap:12px;padding:14px 20px 6px;min-height:58px}
 .ib{width:40px;height:40px;border:0;background:none;border-radius:50%;display:grid;place-items:center;cursor:pointer;flex:none}
 #voice{border:1px solid var(--line);color:var(--accent)}
+#affbtn{border:1px solid var(--line);color:var(--accent)}#affbtn.on{background:var(--accent);color:var(--on);border-color:var(--accent);animation:breath 1.6s ease-in-out infinite}
 #voice.off{color:var(--muted);background:var(--soft)}
 .talk #voice{animation:breath 1.2s ease-in-out infinite}
 #toast{position:fixed;left:50%;top:calc(64px + env(safe-area-inset-top,0px));transform:translate(-50%,-8px);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:999px;font-size:14px;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:50}
@@ -239,7 +240,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 <ol id="instL"><li><span>Ouvert depuis <b>WhatsApp</b> ? Touche d’abord la <b>boussole Safari</b> <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg> en bas à droite</span></li><li><span>Touche <b>Partager</b> <svg viewBox="0 0 24 24"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M6 11H5v10h14V11h-1"/></svg> en bas de Safari</span></li><li><span>Fais défiler et choisis <b>Sur l’écran d’accueil</b> <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg></span></li><li><span>Touche <b>Ajouter</b>, puis ouvre l’icône My Style</span></li></ol>
 <button class="btn" id="instOk">J’ai compris</button></div></div>
 <div id="app">
-<header><button class="ib" id="back" aria-label="Retour"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div id="mid" class="brand"><span class="logo" role="img" aria-label="My Style"><span class="my" aria-hidden="true">My</span><span class="st" aria-hidden="true">STYLE</span></span></div><button class="ib" id="voice" aria-label="Couper la voix" aria-pressed="true"></button></header>
+<header><button class="ib" id="back" aria-label="Retour"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button class="ib" id="affbtn" aria-label="Écouter mes affirmations" aria-pressed="false"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M9 21h6"/></svg></button><div id="mid" class="brand"><span class="logo" role="img" aria-label="My Style"><span class="my" aria-hidden="true">My</span><span class="st" aria-hidden="true">STYLE</span></span></div><button class="ib" id="voice" aria-label="Couper la voix" aria-pressed="true"></button></header>
 <main id="page"></main>
 <footer id="foot"></footer>
 <nav class="dock" id="dock">
@@ -252,7 +253,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </nav>
 </div>
 <script>
-const VERSION="14";
+const VERSION="15";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -484,7 +485,7 @@ function render(sayIt){
  document.querySelectorAll("#dock button").forEach(b=>b.setAttribute("aria-current",String(b.dataset.go===S.page)));
  const fl=S.flow,ix=fl?fl.indexOf(S.page):-1;
  $("#mid").className=ix>=0?"bar":"brand";$("#mid").innerHTML=ix>=0?`<i style="width:${(ix+1)/fl.length*100}%"></i>`:`<span class="logo" role="img" aria-label="My Style"><span class="my" aria-hidden="true">My</span><span class="st" aria-hidden="true">STYLE</span></span>`;
- $("#back").hidden=p.dock||p.back===false;
+ $("#back").hidden=p.dock||p.back===false;$("#affbtn").hidden=!p.dock;if(!p.dock)affStop();
  if(p.count)countUp(p.count);
  if(window.onPage)window.onPage(S.page);
  if(sayIt&&p.say)say(p.say);
@@ -604,7 +605,7 @@ function talk(on){document.body.classList.toggle("talk",on)}
 let VOICES=[],KEEP=[];
 function loadVoices(){try{VOICES=window.speechSynthesis?speechSynthesis.getVoices():[]}catch(e){}}
 loadVoices();if(window.speechSynthesis)speechSynthesis.addEventListener?.("voiceschanged",loadVoices);
-function speak(t){const ss=window.speechSynthesis;if(!ss||!t)return;
+function speak(t){const ss=window.speechSynthesis;if(!ss||!t)return;affStop();
  const busy=ss.speaking||ss.pending;if(busy)ss.cancel();
  if(!VOICES.length)loadVoices();
  const lang=/[؀-ۿ]/.test(t)?"ar-SA":"fr-FR";const vs=VOICES.filter(x=>x.lang.toLowerCase().replace("_","-").startsWith(lang.slice(0,2)));
@@ -617,6 +618,18 @@ function speak(t){const ss=window.speechSynthesis;if(!ss||!t)return;
 function unlock(){const ss=window.speechSynthesis;if(!S.voice||!ss)return;try{ss.resume();const u=new SpeechSynthesisUtterance(".");u.volume=0.01;u.lang="fr-FR";ss.speak(u)}catch(e){}}
 function stopVoice(){if(window.speechSynthesis)speechSynthesis.cancel();talk(false)}
 /*ENDVOICE*/
+var AFFON=false,AFFT=null;
+function affStop(){if(!AFFON)return;AFFON=false;clearTimeout(AFFT);if(window.speechSynthesis)speechSynthesis.cancel();const b=$("#affbtn");if(b){b.classList.remove("on");b.setAttribute("aria-pressed","false");b.setAttribute("aria-label","Écouter mes affirmations")}}
+function affPlay(){const ss=window.speechSynthesis;if(!ss){toast("Voix non disponible sur ce téléphone");return}
+ ss.cancel();talk(false);if(!VOICES.length)loadVoices();
+ const vs=VOICES.filter(x=>x.lang.toLowerCase().startsWith("fr"));const v=vs.find(x=>/amélie|audrey|marie|julie|hortense|denise|female|femme|google/i.test(x.name))||vs[0];
+ AFFON=true;const b=$("#affbtn");b.classList.add("on");b.setAttribute("aria-pressed","true");b.setAttribute("aria-label","Arrêter les affirmations");toast("Respire… et écoute");
+ const el=document.getElementById("affirm");let i=0;
+ const one=()=>{if(!AFFON)return;if(i>=AFF.length){affStop();return}
+  const t=affTxt(i);if(el){el.textContent=t;el.classList.remove("off")}
+  const u=new SpeechSynthesisUtterance(t);u.lang="fr-FR";if(v)u.voice=v;u.rate=.82;u.pitch=1.05;u.volume=1;KEEP=[u];
+  u.onend=()=>{i++;AFFT=setTimeout(one,1800)};u.onerror=()=>{i++;AFFT=setTimeout(one,300)};ss.resume();ss.speak(u)};
+ AFFT=setTimeout(one,700)}
 function say(t){if(S.voice&&t)speak(t)}
 const IC_ON='<svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>',
 IC_OFF='<svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>';
@@ -627,7 +640,8 @@ voiceBtn();
 document.addEventListener("click",e=>{
  const t=e.target.closest("button,[data-go]");if(!t)return;
  if(t.id==="back")return back();
- if(t.id==="voice"){S.voice=!S.voice;try{localStorage.setItem("monstyle_voix",S.voice?"1":"0")}catch(e){}voiceBtn();if(!S.voice){stopVoice();toast("Voix coupée")}else{toast("Voix activée");unlock();const p=P[S.page]();say(p.say||"Je suis là, "+NOM+".")}return}
+ if(t.id==="affbtn"){AFFON?affStop():affPlay();return}
+ if(t.id==="voice"){if(AFFON)affStop();S.voice=!S.voice;try{localStorage.setItem("monstyle_voix",S.voice?"1":"0")}catch(e){}voiceBtn();if(!S.voice){stopVoice();toast("Voix coupée")}else{toast("Voix activée");unlock();const p=P[S.page]();say(p.say||"Je suis là, "+NOM+".")}return}
  if(t.dataset.mod)return startMod(t.dataset.mod);
  if(t.dataset.start==="A"){S.flow=FLOW_A;S.hist=["home"];S.page="a_nom";S.dir="f";S.res={outfit:S.res.outfit};S.wait={};S.rid++;render(true);return}
  if(t.dataset.go==="o_photo"){S.flow=FLOW_O;if(S.page!=="o_photo"){S.hist=["home"];S.page="o_photo";S.dir="f";render(true)}return}
@@ -660,7 +674,7 @@ document.addEventListener("keydown",e=>{if(e.target.id==="msg"&&e.key==="Enter")
 const AFF=[n=>n+", tu es belle, toujours.",()=>"Tu es rayonnante aujourd’hui.",n=>"N’oublie pas de sourire, "+n+".",()=>"Ton sourire est ta plus belle parure.",n=>n+", tu mérites de te sentir bien.",()=>"Ta beauté est unique.",n=>"Souris, "+n+", tu illumines la journée.",()=>"Tu es élégante, comme tu es.",n=>n+", aime-toi un peu plus aujourd’hui.",()=>"Ta confiance te rend magnifique.",n=>"Tu es une lumière, "+n+".",()=>"Prends soin de toi, tu le vaux bien."];
 const affTxt=k=>{const n=NOM==="ma belle"?"Ma belle":NOM;let t=AFF[k](n);return t.replace(/, Ma belle([.,])/,", ma belle$1")};
 (()=>{const el=document.getElementById("affirm");if(!el)return;let k=Math.floor(Math.random()*AFF.length);el.textContent=affTxt(k);
-setInterval(()=>{el.classList.add("off");setTimeout(()=>{k=(k+1)%AFF.length;el.textContent=affTxt(k);el.classList.remove("off")},600)},7000)})();
+setInterval(()=>{if(AFFON)return;el.classList.add("off");setTimeout(()=>{k=(k+1)%AFF.length;el.textContent=affTxt(k);el.classList.remove("off")},600)},7000)})();
 function typeInto(el,t,ms){return new Promise(r=>{let i=0;const h=setInterval(()=>{el.textContent=t.slice(0,++i);if(i>=t.length){clearInterval(h);r()}},ms)})}
 render(false);
 // Mise à jour automatique : si une nouvelle version est en ligne, l'app se recharge toute seule.
