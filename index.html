@@ -337,7 +337,7 @@ async function run(k){
 }
 
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;S.micMsg="";
-function SYS(){return REF+" Tu es la styliste personnelle de l’application Mon style. Parle comme une amie styliste chaleureuse, à l’oral : 2 à 4 phrases courtes, sans liste, sans emoji. Elle s’appelle "+(S.nom||"(prénom inconnu)")+" : appelle-la par son prénom et parfois « ma belle ». Commence ta toute première réponse par « Salut ma belle, ». Réponds en français, ou en arabe ou en anglais si elle écrit dans ces langues. Son profil : "+(PROFIL()||"pas encore analysé : invite-la à faire son analyse")+". Pour les achats, donne le type de pièce, la couleur et les mots-clés à chercher sur Zara, H&M, Mango, Shein, Namshi ou Ounass, sans inventer de lien ni de prix."}
+function SYS(){return REF+" Tu es la styliste personnelle de l’application Mon style. Parle comme une amie styliste chaleureuse, à l’oral : 2 à 4 phrases courtes, sans liste, sans emoji. Elle s’appelle "+(S.nom||"(prénom inconnu)")+" : dis « ma belle » une seule fois, dans ta toute première réponse (« Salut ma belle, »), puis ne le répète plus jamais ; ensuite utilise seulement son prénom, de temps en temps. Réponds en français, ou en arabe ou en anglais si elle écrit dans ces langues. Son profil : "+(PROFIL()||"pas encore analysé : invite-la à faire son analyse")+". Pour les achats, donne le type de pièce, la couleur et les mots-clés à chercher sur Zara, H&M, Mango, Shein, Namshi ou Ounass, sans inventer de lien ni de prix."}
 async function send(text){
  text=(text||"").trim();if(!text||S.busy)return;const sm=await getSample();
  if(!sm){S.chat.push({r:"u",t:text},{r:"a",t:"La styliste n’est pas disponible sur cette page."});S.draft="";render(false);return}
@@ -425,7 +425,7 @@ document.addEventListener("click",async e=>{
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){try{navigator.clipboard&&navigator.clipboard.writeText(location.href.split("?")[0])}catch(_){}throw new Error("["+(window.isSecureContext?"s":"ns")+(navigator.standalone?"-app":"-web")+"] cette fenêtre bloque le micro. Le lien est copié : ouvre Safari, colle-le dans la barre d’adresse, puis ajoute l’application à l’écran d’accueil.")};
   await navigator.mediaDevices.getUserMedia({audio:true});
   const {Conversation}=await import("https://esm.sh/@elevenlabs/client");
-  conv=await Conversation.startSession({agentId:AGENT_ID,connectionType:"websocket",
+  conv=await Conversation.startSession({agentId:AGENT_ID,connectionType:"websocket",dynamicVariables:{user_name:(typeof S!=="undefined"&&S.nom)||"",profil:(typeof PROFIL==="function"&&PROFIL())||"pas encore analysé"},
    onModeChange:({mode})=>st(mode==="speaking"?"Elle te parle…":"Je t’écoute, parle-moi"),
    onDisconnect:()=>{conv=null;live(false);st("Appel terminé. Appuie pour reparler.")},
    onError:m=>st("Petit souci : "+m)});
