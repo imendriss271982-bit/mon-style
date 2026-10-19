@@ -21,7 +21,8 @@ export default {
     try {
       if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
       if (req.method !== "POST" || !ALLOWED.includes(origin)) return json({ erreur: "Accès refusé." }, 403);
-      if (!env.GEMINI_KEY) return json({ erreur: "La clé Gemini n'est pas configurée sur Cloudflare." }, 500);
+      const KEY = String(env.GEMINI_KEY || "").replace(/[^\x21-\x7E]/g, "").replace(/^["']+|["']+$/g, "");
+      if (!KEY) return json({ erreur: "La clé Gemini n'est pas configurée sur Cloudflare." }, 500);
 
       let body;
       try { body = await req.json(); } catch { return json({ erreur: "Requête invalide." }, 400); }
@@ -42,13 +43,13 @@ export default {
         { text: prompt },
         ...images.map(i => ({ inline_data: { mime_type: i.mime || "image/jpeg", data: i.data } }))
       ];
-      const model = env.MODEL || "gemini-2.5-flash";
+      const model = String(env.MODEL || "").trim() || "gemini-2.5-flash";
 
       const r = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json", "x-goog-api-key": env.GEMINI_KEY },
+          headers: { "Content-Type": "application/json", "x-goog-api-key": KEY },
           body: JSON.stringify({
             contents: [{ role: "user", parts }],
             generationConfig: { responseMimeType: "application/json", temperature: 0.4 }
