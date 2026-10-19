@@ -159,6 +159,22 @@ nav.dock button[aria-current="true"]{color:var(--accent)}
 .mod span{display:block;color:var(--muted);font-size:13px;margin-top:3px}
 .mod span.done{color:var(--accent);font-weight:500}
 .mod .sw{display:flex;gap:4px;margin-top:6px}.mod .sw i{width:16px;height:16px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.dash{background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:18px 14px 16px;box-shadow:0 6px 24px rgba(125,46,74,.07);margin:4px 0 22px}
+.dash>.t{text-align:center;color:var(--muted);font-size:14px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.dg{display:grid;grid-template-columns:1fr 150px 1fr;align-items:center;gap:6px}
+.dc{display:flex;flex-direction:column;gap:14px}.dc.r{text-align:right}
+.di{border:0;background:none;padding:4px 2px;text-align:inherit;cursor:pointer;line-height:1.2}
+.di small{display:block;font-size:13px;color:var(--ink)}
+.di b{display:block;font-weight:500;font-size:15px;color:var(--accent);margin-top:3px}
+.di b.no{color:var(--muted);font-weight:400;font-size:13px}
+.di .sw{display:flex;gap:3px;margin-top:5px}.dc.r .sw{justify-content:flex-end}.di .sw i{width:13px;height:13px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.ring{width:150px;height:150px;border-radius:50%;border:10px solid var(--soft);background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.ring span{width:84px;height:84px;border-radius:50%;background:var(--accent);color:var(--on);display:grid;place-items:center}
+.ring svg{width:36px;height:36px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}
+.ring b{font:600 19px "Cormorant Garamond",Georgia,serif;margin-top:6px;color:var(--ink)}
+.adv{display:flex;gap:10px;overflow-x:auto;margin:0 -24px;padding:2px 24px 6px;scrollbar-width:none}
+.adv button{flex:none;width:140px;height:150px;border:1.5px solid var(--accent);border-radius:20px;background:var(--soft);text-align:left;padding:14px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer}
+.adv b{font:600 20px/1.1 "Cormorant Garamond",Georgia,serif}.adv span{font-size:13px;color:var(--muted)}
 .note{background:var(--soft);border-radius:16px;padding:14px 16px;color:var(--muted);font-size:15px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -181,7 +197,7 @@ nav.dock button[aria-current="true"]{color:var(--accent)}
 </nav>
 </div>
 <script>
-const VERSION="3";
+const VERSION="4";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -270,18 +286,19 @@ function photoPage(k,o){
 }
 
 const P={
-home:()=>{const v=ok("visage"),b=ok("corps"),c=season();
- const mod=(m,ic,t,r,extra)=>`<button class="mod" ${r?`data-view="${MOD_RES[m]}"`:`data-mod="${m}"`}>${MIC[ic]}<div><b>${t}</b><span class="${r?"done":""}">${esc(r?cap(r):"À analyser")}</span>${extra||""}</div></button>`;
- return {dock:1,html:`<h1>Salut ${NOM}.</h1><p class="sub">Que veux-tu faire aujourd’hui ?</p>
- <div class="sty"><button data-view="chat" aria-label="Parler à ma styliste"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><b>Ma styliste</b><span>Parle avec elle à voix haute</span></div>
- <div class="mods">
- ${mod("visage","face","Morpho visage",v&&v.forme)}
- ${mod("corps","body","Morpho corps",b&&b.forme)}
- ${mod("kibbe","kibbe","Kibbe",b&&b.kibbe)}
- ${mod("couleurs","pal","Colorimétrie",c,c?`<div class="sw">${SEASONS[c].c.slice(0,5).map(x=>`<i style="background:${x[0]}"></i>`).join("")}</div>`:"")}
- </div>
+home:()=>{const v=ok("visage"),bd=ok("corps"),c=season(),o=ok("outfit");
+ const it=(m,label,val,extra)=>`<button class="di" ${val?`data-view="${m}"`:`data-mod="${RES_MOD[m]||"couleurs"}"`}><small>${label}</small><b class="${val?"":"no"}">${esc(val?cap(val):"À analyser")}</b>${extra||""}</button>`;
+ const sw=c?`<div class="sw">${SEASONS[c].c.slice(0,6).map(x=>`<i style="background:${x[0]}"></i>`).join("")}</div>`:"";
+ return {dock:1,html:`<h1>Salut ${NOM}.</h1>
+ <div class="dash"><div class="t">Analyse</div><div class="dg">
+ <div class="dc">${it("r_visage","Morpho visage",v&&v.forme)}${it("r_corps","Morpho corps",bd&&bd.forme)}${it("r_kibbe","Kibbe",bd&&bd.kibbe)}</div>
+ <button class="ring" data-view="chat" aria-label="Parler à ma styliste"><span><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span><b>My Stylist</b></button>
+ <div class="dc r">${it("r_couleurs","Colorimétrie",c)}${it("r_couleurs","Ma palette",c?" ":"",sw).replace('<b class=""> </b>','')}${o?`<button class="di" data-view="o_res"><small>Outfit check</small><b>${esc(o.note)} / 10</b></button>`:`<button class="di" data-go="o_photo"><small>Outfit check</small><b class="no">À noter</b></button>`}</div>
+ </div></div>
+ <h2 style="margin-top:0">Pour toi aujourd’hui</h2>
+ <div class="adv"><button data-go="o_photo"><b>Note ma tenue</b><span>Outfit check</span></button><button data-go="news"><b>Les tendances du moment</b><span>Nouveautés</span></button><button data-go="boutique"><b>Pièces faites pour toi</b><span>Boutique</span></button><button data-go="profil"><b>Mon profil</b><span>Mes infos</span></button></div>
  <p class="note" style="text-align:center;margin-top:18px">Version ${VERSION}</p>`,
- say:"Bonjour "+NOM+". Parle avec ta styliste, ou choisis une analyse : morpho visage, morpho corps, Kibbe ou colorimétrie."}},
+ say:"Bonjour "+NOM+". Ta styliste est au milieu. Autour, tes analyses : morpho visage, morpho corps, Kibbe et colorimétrie."}},
 a_nom:()=>({html:`<p class="step">Ton analyse</p><h1>Comment tu t’appelles ?</h1><p class="sub">Ton prénom, pour que je puisse t’appeler par ton nom.</p>
  <input class="field" id="nom" autocomplete="given-name" placeholder="Ton prénom" value="${esc(S.nomDraft??S.nom??"")}" style="font-size:20px;padding:18px">`,
  say:"Avant de commencer, comment tu t’appelles ?",foot:`<button class="btn" data-nom ${(S.nomDraft??S.nom??"").trim()?"":"disabled"}>Continuer</button>`}),
