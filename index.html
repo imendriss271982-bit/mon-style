@@ -1353,7 +1353,7 @@ function askNom(){return new Promise(r=>{if(SKIP)return r(null);const box=$("#sp
  window.SKIPNOM=()=>r(null)})}
 const LG={fr:{hi:"Salut",t:"Je suis Aura, ta personal stylist. Je suis là pour révéler ta beauté.",talk:"Parler avec elle",hang:"Raccrocher",start:"Commencer",cont:"Continuer dans le navigateur"},
  en:{hi:"Hi",t:"I’m Aura, your personal stylist. I’m here to bring out your beauty.",talk:"Talk to her",hang:"Hang up",start:"Start",cont:"Continue in the browser"},
- ar:{hi:"هلا",t:"أنا أورا، الستايلست الخاصة فيكِ. أنا هنا عشان أبرز جمالكِ.",talk:"كلّميها",hang:"سكّري",start:"يلا نبدأ",cont:"كمّلي من المتصفح"}};
+ ar:{hi:"هلا والله",t:"أنا أورا، الستايلست الخاصة فيچ. موجودة عشان أطلّع جمالچ، وأخليچ تحسين بثقة كل يوم.",talk:"كلّميها",hang:"سكّري",start:"يلا نبدأ",cont:"كمّلي من المتصفح"}};
 const L=k=>(LG[S.lang]||LG.fr)[k];
 function applyLang(){const ar=S.lang==="ar";["hi","hi2"].forEach(i=>{const e=$("#"+i);if(e)e.dir=ar?"rtl":"auto"});
  document.querySelectorAll("#langs button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===(S.lang||"fr"))));
@@ -1369,9 +1369,10 @@ async function greetLang(){const lg=S.lang,gen=GEN;if(!LGV[lg]||!S.voice)return;
   const v=VOICES.find(x=>x.lang.replace("_","-").toLowerCase()===LGV[lg].toLowerCase())||VOICES.find(x=>x.lang.toLowerCase().startsWith(lg));if(v)u.voice=v;KEEP=[u];u.onstart=on;u.onend=u.onerror=off;ss.resume();ss.speak(u)}catch(e){}};
  let url=null;try{const r=await Promise.race([fetch(AI_URL+"/tts",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({nom:S.nom||"",type:"hello_"+lg})}),wait(6000).then(()=>null)]);
   if(r&&r.ok&&/audio/.test(r.headers.get("Content-Type")||""))url=URL.createObjectURL(await r.blob())}catch(e){}
- if(gen!==GEN)return;if(!url)return phone();
- AUDTOK++;AUD.onplay=on;AUD.onended=off;AUD.onerror=()=>{off();phone()};AUD.src=url;
- const play=()=>{try{const p=AUD.play();if(p&&p.catch)p.catch(e=>{off();if(e&&e.name==="NotAllowedError"&&!window.TAPDONE){const b=document.querySelector(".tapaura");if(b)b.hidden=false;TAPPED.then(()=>{if(gen===GEN){if(b)b.hidden=true;play()}})}else phone()})}catch(e){phone()}};play()}
+ if(gen!==GEN)return;if(!url&&lg==="ar")url="sons/aura-ar.mp3?v=1"; // voix khaleeji enregistrée, jamais la voix (masculine) du téléphone
+ if(!url)return phone();
+ AUDTOK++;AUD.onplay=on;AUD.onended=off;AUD.onerror=()=>{off();if(lg==="ar"&&!/aura-ar/.test(AUD.src)){AUD.src="sons/aura-ar.mp3?v=1";play()}else if(lg!=="ar")phone()};AUD.src=url;
+ const play=()=>{try{const p=AUD.play();if(p&&p.catch)p.catch(e=>{off();if(e&&e.name==="NotAllowedError"&&!window.TAPDONE){const b=document.querySelector(".tapaura");if(b)b.hidden=false;TAPPED.then(()=>{if(gen===GEN){if(b)b.hidden=true;play()}})}else if(lg!=="ar")phone()})}catch(e){if(lg!=="ar")phone()}};play()}
 function setLang(l){const was=S.lang||"fr";S.lang=l;save();applyLang();
  if(l==="fr"&&was==="fr"&&!SKIP&&INTRO_ON)return; // elle parle déjà en français
  hush();if(window.SKIPNOM)window.SKIPNOM();

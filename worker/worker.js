@@ -34,15 +34,16 @@ export default {
           enchantee: n => `Enchantée, ${n} ! Moi, c'est Aura.`,
           retour: n => `Salut ${n} ! C'est Aura, ta personal stylist. Je suis là pour révéler ta beauté.`,
           hello_en: n => `Hi${n ? " " + n : ""}! I'm Aura, your personal stylist. I'm here to bring out your beauty.`,
-          hello_ar: n => `هلا${n ? " " + n : ""}! أنا أورا، الستايلست الخاصة فيكِ. أنا هنا عشان أبرز جمالكِ.`
+          hello_ar: n => `هلا والله${n ? " " + n : ""}! أنا أورا، الستايلست الخاصة فيچ. موجودة عشان أطلّع جمالچ، وأخليچ تحسين بثقة كل يوم.`
         };
         const kind = PH[b2.type] ? b2.type : "enchantee";
         if (!nom && !kind.startsWith("hello_")) return json({ erreur: "Prénom manquant." }, 400);
-        const ck = new Request("https://cache.mon-style/tts/" + kind + "/" + encodeURIComponent(nom.toLowerCase() || "_"));
+        const ck = new Request("https://cache.mon-style/tts2/" + kind + "/" + encodeURIComponent(nom.toLowerCase() || "_"));
         const cache = caches.default;
         let hit = await cache.match(ck);
         if (!hit) {
-          const voice = env.VOICE_ID || "cgSgspJ2msm6clMCkdW9";
+          // Arabe : voix féminine khaleeji (Maryam Essa) ; sinon la voix habituelle d'Aura.
+          const voice = kind === "hello_ar" ? "w0uhBAmNIG5kUDeaFEsA" : (env.VOICE_ID || "cgSgspJ2msm6clMCkdW9");
           const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice}?output_format=mp3_44100_128`, {
             method: "POST",
             headers: { "xi-api-key": EK, "Content-Type": "application/json", "Accept": "audio/mpeg" },
