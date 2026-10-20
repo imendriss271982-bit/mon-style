@@ -36,6 +36,25 @@ export default {
           hello_en: n => `Hi${n ? " " + n : ""}! I'm Aura, your personal stylist. I'm here to bring out your beauty.`,
           hello_ar: n => `هلا والله${n ? " " + n : ""}! أنا أورا، الستايلست الخاصة فيچ. موجودة عشان أطلّع جمالچ، وأخليچ تحسين بثقة كل يوم.`
         };
+        // Arabe : Aura lit à voix haute les phrases de l'application (texte arabe uniquement, 480 caractères max).
+        if (b2.type === "say_ar") {
+          const texte = String(b2.texte || "").normalize("NFC").slice(0, 480).trim();
+          if (!texte || !/[؀-ۿ]/.test(texte)) return json({ erreur: "Texte invalide." }, 400);
+          const h = [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(texte)))].map(x => x.toString(16).padStart(2, "0")).join("");
+          const ck2 = new Request("https://cache.mon-style/say_ar/" + h);
+          let hit2 = await caches.default.match(ck2);
+          if (!hit2) {
+            const r = await fetch("https://api.elevenlabs.io/v1/text-to-speech/w0uhBAmNIG5kUDeaFEsA?output_format=mp3_44100_64", {
+              method: "POST",
+              headers: { "xi-api-key": EK, "Content-Type": "application/json", "Accept": "audio/mpeg" },
+              body: JSON.stringify({ text: texte, model_id: "eleven_multilingual_v2", voice_settings: { stability: 0.5, similarity_boost: 0.75 } })
+            });
+            if (!r.ok) return json({ erreur: "Erreur ElevenLabs " + r.status }, 502);
+            hit2 = new Response(await r.arrayBuffer(), { headers: { "Content-Type": "audio/mpeg", "Cache-Control": "public, max-age=31536000" } });
+            await caches.default.put(ck2, hit2.clone());
+          }
+          return new Response(hit2.body, { headers: { ...cors, "Content-Type": "audio/mpeg" } });
+        }
         const kind = PH[b2.type] ? b2.type : "enchantee";
         if (!nom && !kind.startsWith("hello_")) return json({ erreur: "Prénom manquant." }, 400);
         const ck = new Request("https://cache.mon-style/tts2/" + kind + "/" + encodeURIComponent(nom.toLowerCase() || "_"));

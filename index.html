@@ -459,6 +459,18 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 .yy b{color:var(--accent);min-width:30px;text-align:right}
 .ess{display:flex;align-items:center;gap:10px;margin:6px 0;font-size:14px}
 .ess span{width:110px;flex:none}.ess div{flex:1;height:8px;border-radius:99px;background:var(--soft);overflow:hidden}.ess i{display:block;height:100%;background:var(--accent);border-radius:99px}.ess b{width:40px;text-align:right;color:var(--accent);font-weight:600}
+
+/* Arabe : lecture de droite à gauche */
+[dir=rtl] .opt,[dir=rtl] .tile,[dir=rtl] .art,[dir=rtl] .mini,[dir=rtl] .mod,[dir=rtl] .mys,[dir=rtl] .ht,[dir=rtl] .hx-st,[dir=rtl] .hx-row,[dir=rtl] .hx-ms,[dir=rtl] .an-row>button.an-v,[dir=rtl] .hx-gr,[dir=rtl] .gr-occ button,[dir=rtl] .gr-it{text-align:right}
+[dir=rtl] #back svg{transform:scaleX(-1)}
+[dir=rtl] .hx-hanger{right:auto;left:-18px;transform:scaleX(-1)}
+[dir=rtl] .skip{right:auto;left:16px}
+[dir=rtl] .unit .field{padding-right:16px;padding-left:48px}
+[dir=rtl] .unit i{right:auto;left:16px}
+[dir=rtl] .yy,[dir=rtl] .big,[dir=rtl] .tile b{direction:ltr}
+[dir=rtl] .big,[dir=rtl] .tile b{text-align:right}
+[dir=rtl] .ess b,[dir=rtl] .yy b{text-align:left}
+[dir=rtl] .gr-bars small{direction:ltr;text-align:right}
 </style>
 </head>
 <body>
@@ -530,8 +542,9 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 <p class="affirm" id="affirm"></p>
 </nav>
 </div>
+<script src="i18n.js?v=1"></script>
 <script>
-const VERSION="62";
+const VERSION="63";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -666,6 +679,7 @@ try{const j=JSON.parse(localStorage.getItem("monstyle")||"null");if(j){S.res=j.r
 function save(){try{localStorage.setItem("monstyle",JSON.stringify({res:{visage:S.res.visage,corps:S.res.corps,couleurs:S.res.couleurs,outfit:S.res.outfit},ans:S.ans,nom:S.nom,info:S.info,later:S.later,lang:S.lang}))}catch(e){}}
 // Lien de test « nouvelle cliente » : ?nouvelle → Aura redemande le prénom, en français.
 try{if(/[?&]nouvelle\b/.test(location.search)){delete S.nom;NOM="ma belle";S.lang="fr";save();history.replaceState(null,"",location.pathname)}}catch(e){}
+if(window.i18nApply)i18nApply();
 const AGES=["18–24 ans","25–34 ans","35–44 ans","45–54 ans","55 ans et +"];
 const TAILLES=["XS","S","M","L","XL","XXL","3XL et +"];
 const BUDGETS=["Petit budget","Moyen","Haut de gamme"];
@@ -873,6 +887,7 @@ profil:()=>{const i=S.info||{},has=!!i.email,pick=(k,l)=>`<div class="row"><span
  ${has?`<h2 style="margin-top:0">Mes informations</h2>${pick(i.taille?i.taille+" cm":"","Taille")}${pick(i.poids?i.poids+" kg":"","Poids (privé)")}${pick(i.age,"Âge")}${pick(i.tvet,"Taille de vêtements")}${pick(i.budget,"Budget")}${pick((i.styles||[]).join(", "),"Styles préférés")}
  <button class="btn ghost" data-go="infos" style="margin:6px 0 4px">Modifier mes informations</button>`
  :`<button class="tile main" data-go="infos"><b>Créer mon profil</b><span>Ton email, ta taille, ton style : je m’en sers pour mieux te conseiller.</span></button>`}
+ <h2>Langue de l’application</h2><div class="pk">${[["fr","Français"],["en","English"],["ar","عربي"]].map(x=>`<button type="button" data-setlang="${x[0]}" aria-pressed="${(S.lang||"fr")===x[0]}">${x[1]}</button>`).join("")}</div>
  <h2>Mes analyses</h2><p class="hint" style="margin-top:-6px">Touche un résultat pour le revoir, ou refais l’analyse avec une nouvelle photo.</p>
  ${[["visage","Morpho visage",ok("visage")?cap(ok("visage").forme):"","r_visage"],["corps","Morpho & Kibbe",ok("corps")&&[ok("corps").forme,ok("corps").kibbe].filter(Boolean).join(" · "),"r_corps"],["couleurs","Colorimétrie",season(),"r_couleurs"]].map(x=>`<div class="an-row"><button class="an-v" ${x[2]?`data-view="${x[3]}"`:`data-mod="${x[0]}"`}><span>${x[1]}</span><b>${esc(x[2]||"À faire")}</b></button><button class="an-r" data-mod="${x[0]}">${x[2]?"Refaire":"Faire"}</button></div>`).join("")}
  ${ok("outfit")?`<h2>Dernier outfit check</h2><button class="tile" data-view="o_res"><span>Note</span><b>${esc(ok("outfit").note+" / 10")}</b></button>`:""}
@@ -997,7 +1012,10 @@ function next(){const ix=S.flow.indexOf(S.page);const n=S.flow[ix+1];if(/_run$/.
 function home(){S.flow=null;S.hist=[];S.page="home";S.dir="b";render(true)}
 function countUp(to){const el=$("#note");if(!el||isNaN(to))return;const t0=performance.now();(function f(n){const k=Math.min(1,(n-t0)/1000);el.textContent=k<1?(to*k).toFixed(1):String(to);if(k<1)requestAnimationFrame(f)})(t0)}
 
-const FMT="Réponds uniquement avec un objet JSON valide, en français, sans texte autour. ";
+// Langue des réponses de l'IA : celle choisie par la cliente. Les valeurs de référence restent en français (l'app les traduit à l'affichage).
+const LANGTXT={en:"en anglais",ar:"en arabe, dans un dialecte du Golfe (qatari) simple et chaleureux, en t’adressant à une femme"};
+Object.defineProperty(window,"FMT",{get(){const l=typeof S!=="undefined"&&S.lang;if(!LANGTXT[l])return "Réponds uniquement avec un objet JSON valide, en français, sans texte autour. ";
+ return "Réponds uniquement avec un objet JSON valide, sans texte autour. Écris tous les textes "+LANGTXT[l]+". Exception : les valeurs des champs « forme », « saison », « sous_ton », « kibbe », « somatotype », « categorie » et le « nom » des essences restent exactement en français (ou dans les listes données), sans traduction. "}});
 const SEAS_LIST=Object.keys(SEASONS).join(", ");
 const KIBBE_LIST="Dramatic, Soft Dramatic, Flamboyant Natural, Soft Natural, Dramatic Classic, Soft Classic, Pure Romantic, Theatrical Romantic, Soft Gamine";
 const REFL=REF.split("\n"),REFP=(...k)=>REFL[0]+"\n"+REFL.filter(l=>k.some(x=>l.startsWith(x))).join("\n")+"\n";
@@ -1116,7 +1134,7 @@ async function sendPhoto(text){
  S.busy=false;if(S.page==="chat")render(false);
 }
 function listen(){
- if(!SR||S.listen||S.busy)return;const r=new SR();r.lang="fr-FR";r.interimResults=false;
+ if(!SR||S.listen||S.busy)return;const r=new SR();r.lang={en:"en-US",ar:"ar-QA"}[S.lang]||"fr-FR";r.interimResults=false;
  unlock();S.listen=true;S.micMsg="";render(false);
  r.onresult=ev=>{S.listen=false;send(ev.results[0][0].transcript)};
  r.onerror=()=>{S.listen=false;S.micMsg="Le micro n’est pas disponible ici. Dicte avec le micro de ton clavier.";render(false)};
@@ -1143,15 +1161,15 @@ loadVoices();if(window.speechSynthesis)speechSynthesis.addEventListener?.("voice
 function speak(t){const ss=window.speechSynthesis;if(!ss||!t)return;affStop();
  const busy=ss.speaking||ss.pending;if(busy)ss.cancel();
  if(!VOICES.length)loadVoices();
- const lang=/[؀-ۿ]/.test(t)?"ar-SA":"fr-FR";const vs=VOICES.filter(x=>x.lang.toLowerCase().replace("_","-").startsWith(lang.slice(0,2)));
- const v=vs.find(x=>/amélie|audrey|marie|julie|hortense|denise|female|femme|google/i.test(x.name))||vs.find(x=>x.lang.replace("_","-")===lang)||vs[0];
+ const lang=/[؀-ۿ]/.test(t)?"ar-SA":S.lang==="en"?"en-US":"fr-FR";const vs=VOICES.filter(x=>x.lang.toLowerCase().replace("_","-").startsWith(lang.slice(0,2)));
+ const v=vs.find(x=>/amélie|audrey|marie|julie|hortense|denise|samantha|karen|serena|zira|aria|female|femme|google/i.test(x.name))||vs.find(x=>x.lang.replace("_","-")===lang)||vs[0];
  const parts=(t.match(/[^.!?…]+[.!?…]*/g)||[t]).map(x=>x.trim()).filter(Boolean);
  KEEP=parts.map((p,i)=>{const u=new SpeechSynthesisUtterance(p);u.lang=lang;if(v)u.voice=v;u.rate=1;u.volume=1;
   if(i===0)u.onstart=()=>talk(true);if(i===parts.length-1)u.onend=()=>talk(false);u.onerror=()=>talk(false);return u});
  const go=()=>{ss.resume();KEEP.forEach(u=>ss.speak(u))};
  if(busy)setTimeout(go,120);else go()}
 function unlock(){const ss=window.speechSynthesis;if(!S.voice||!ss)return;try{ss.resume();const u=new SpeechSynthesisUtterance(".");u.volume=0.01;u.lang="fr-FR";ss.speak(u)}catch(e){}}
-function stopVoice(){if(window.speechSynthesis)speechSynthesis.cancel();talk(false)}
+function stopVoice(){if(window.speechSynthesis)speechSynthesis.cancel();if(ARTOK){ARTOK++;try{if(S.lang==="ar")AUD.pause()}catch(e){}}talk(false)}
 /*ENDVOICE*/
 var AMB=null;
 function ambStart(){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const ac=new C();ac.resume&&ac.resume();
@@ -1165,22 +1183,33 @@ function ambStart(){try{const C=window.AudioContext||window.webkitAudioContext;i
  out.gain.linearRampToValueAtTime(.09,ac.currentTime+3);AMB={ac,out,t}}catch(e){AMB=null}}
 function ambStop(){if(!AMB)return;const a=AMB;AMB=null;clearInterval(a.t);try{const n=a.ac.currentTime;a.out.gain.cancelScheduledValues(n);a.out.gain.setValueAtTime(a.out.gain.value,n);a.out.gain.linearRampToValueAtTime(0,n+2);setTimeout(()=>a.ac.close(),2300)}catch(e){}}
 var AFFON=false,AFFT=null;
-function affStop(){if(!AFFON)return;AFFON=false;clearTimeout(AFFT);ambStop();if(window.speechSynthesis)speechSynthesis.cancel();const b=$("#affbtn");if(b){b.classList.remove("on");b.setAttribute("aria-pressed","false");b.setAttribute("aria-label","Écouter mes affirmations")}}
+function affStop(){if(!AFFON)return;AFFON=false;clearTimeout(AFFT);ambStop();if(window.speechSynthesis)speechSynthesis.cancel();if(S.lang==="ar"){ARTOK++;try{AUD.pause()}catch(e){}}const b=$("#affbtn");if(b){b.classList.remove("on");b.setAttribute("aria-pressed","false");b.setAttribute("aria-label","Écouter mes affirmations")}}
 function affPlay(){const ss=window.speechSynthesis;if(!ss){toast("Voix non disponible sur ce téléphone");return}
  ss.cancel();talk(false);if(!VOICES.length)loadVoices();
- const vs=VOICES.filter(x=>x.lang.toLowerCase().startsWith("fr"));const v=vs.find(x=>/amélie|audrey|marie|julie|hortense|denise|female|femme|google/i.test(x.name))||vs[0];
+ const AL=S.lang==="en"?"en":"fr",vs=VOICES.filter(x=>x.lang.toLowerCase().startsWith(AL));const v=vs.find(x=>/amélie|audrey|marie|julie|hortense|denise|samantha|karen|serena|female|femme|google/i.test(x.name))||vs[0];
  AFFON=true;const b=$("#affbtn");b.classList.add("on");b.setAttribute("aria-pressed","true");b.setAttribute("aria-label","Arrêter les affirmations");toast("Respire… et écoute");ambStart();
  const el=document.getElementById("affirm");let i=0;const ord=affMix();
  const one=()=>{if(!AFFON)return;if(i>=AFF.length){affStop();return}
   const t=affTxt(ord[i]);if(el){el.textContent=t;el.classList.remove("off")}
-  const u=new SpeechSynthesisUtterance(t);u.lang="fr-FR";if(v)u.voice=v;u.rate=.82;u.pitch=1.05;u.volume=1;KEEP=[u];
+  if(S.lang==="ar"){sayAR(t,()=>{if(!AFFON)return;i++;AFFT=setTimeout(one,2400)});return}
+  const u=new SpeechSynthesisUtterance(t);u.lang=AL==="en"?"en-US":"fr-FR";if(v)u.voice=v;u.rate=.82;u.pitch=1.05;u.volume=1;KEEP=[u];
   u.onend=()=>{i++;AFFT=setTimeout(one,2400)};u.onerror=()=>{i++;AFFT=setTimeout(one,300)};ss.resume();ss.speak(u)};
  AFFT=setTimeout(one,2500)}
-function say(t){if(S.voice&&t)speak(t)}
+function say(t){if(!S.voice||!t)return;t=tr(t);if(S.lang==="ar")return sayAR(t);speak(t)}
+// Arabe : voix féminine khaleeji d'Aura (ElevenLabs via le Worker), jamais la voix masculine du téléphone.
+let ARTOK=0;
+async function sayAR(t,onEnd){const tok=++ARTOK;try{if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}
+ const end=()=>{if(onEnd)onEnd()};
+ try{const r=await Promise.race([fetch(AI_URL+"/tts",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:"say_ar",texte:String(t).slice(0,480)})}),wait(9000).then(()=>null)]);
+  if(tok!==ARTOK)return;if(!r||!r.ok||!/audio/.test(r.headers.get("Content-Type")||""))return end();
+  const u=URL.createObjectURL(await r.blob());if(tok!==ARTOK)return;let iv=0;
+  AUDTOK++;AUD.onplay=()=>{talk(true);if(window.auraTalking)auraTalking(true);clearInterval(iv);iv=setInterval(()=>mouthKick(.3+Math.random()*.6),130)};
+  AUD.onended=AUD.onerror=()=>{clearInterval(iv);talk(false);if(window.auraTalking)auraTalking(false);end()};AUD.src=u;
+  const q=AUD.play();if(q&&q.catch)q.catch(()=>{clearInterval(iv);talk(false);end()})}catch(e){end()}}
 const IC_ON='<svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>',
 IC_OFF='<svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>';
 function voiceBtn(){const b=$("#voice");if(!b)return;b.innerHTML=S.voice?IC_ON:IC_OFF;b.classList.toggle("off",!S.voice);b.setAttribute("aria-pressed",String(S.voice));b.setAttribute("aria-label",S.voice?"Couper la voix":"Activer la voix")}
-let toastT;function toast(m){let t=$("#toast");if(!t){t=document.createElement("div");t.id="toast";t.setAttribute("role","status");document.body.appendChild(t)}t.textContent=m;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),1800)}
+let toastT;function toast(m){let t=$("#toast");if(!t){t=document.createElement("div");t.id="toast";t.setAttribute("role","status");document.body.appendChild(t)}t.textContent=tr(m);t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),1800)}
 voiceBtn();
 
 document.addEventListener("click",e=>{
@@ -1188,12 +1217,13 @@ document.addEventListener("click",e=>{
  if(t.id==="back")return back();
  if(t.id==="affbtn"){AFFON?affStop():affPlay();return}
  if(t.id==="voice"){if(AFFON)affStop();S.voice=!S.voice;try{localStorage.setItem("monstyle_voix",S.voice?"1":"0")}catch(e){}voiceBtn();if(!S.voice){stopVoice();toast("Voix coupée")}else{toast("Voix activée");unlock();const p=P[S.page]();say(p.say||"Je suis là, "+NOM+".")}return}
+ if(t.dataset.setlang){if(window.endCall)endCall();stopVoice();S.lang=t.dataset.setlang;save();if(TCONV){try{TCONV.endSession()}catch(e){}TCONV=null}if(window.i18nApply)i18nApply();render(true);return}
  if(t.dataset.mod)return startMod(t.dataset.mod);
  if(t.dataset.gocc){S.grOcc=t.dataset.gocc;S.grErr="";render(false);return}
  if(t.dataset.glooks)return grLooks(t.dataset.glooks);
  if(t.dataset.gitem){S.grItem=t.dataset.gitem;go("g_item");return}
  if(t.dataset.gcat){const x=GR.items.find(i=>i.id===S.grItem);if(x){x.cat=t.dataset.gcat;x.todo=0;GR.looks={};grSave();render(false)}return}
- if(t.dataset.gdel){if(!confirm("Supprimer cet article de ta garde-robe ?"))return;GR.items=GR.items.filter(i=>i.id!==t.dataset.gdel);GR.looks={};grSave();toast("Article supprimé");back();return}
+ if(t.dataset.gdel){if(!confirm(tr("Supprimer cet article de ta garde-robe ?")))return;GR.items=GR.items.filter(i=>i.id!==t.dataset.gdel);GR.looks={};grSave();toast("Article supprimé");back();return}
  if(t.dataset.occ){S.occ=t.dataset.occ;save();render(false);say({"Travail":"Une tenue pour le travail, parfait.","Casual":"Une tenue décontractée, j’adore.","Soirée":"Une soirée ! On va te rendre éblouissante.","Mariage":"Un mariage, il faut être élégante sans voler la vedette.","Rendez-vous":"Un rendez-vous, on veut te voir rayonner.","Voyage":"Un voyage, confort et style."}[S.occ]+" Montre-moi ta tenue.");return}
  if(t.dataset.start==="A"){S.flow=FLOW_A;S.hist=["home"];S.page="a_nom";S.dir="f";S.res={outfit:S.res.outfit};S.wait={};S.rid++;render(true);return}
  if(t.dataset.go==="o_photo"){S.flow=FLOW_O;if(S.page!=="o_photo"){S.hist=["home"];S.page="o_photo";S.dir="f";render(true)}return}
@@ -1209,7 +1239,7 @@ document.addEventListener("click",e=>{
   if(box.hasAttribute("data-multi")){const a=d[k]||(d[k]=[]),i=a.indexOf(t.dataset.pk);i<0?a.push(t.dataset.pk):a.splice(i,1);t.setAttribute("aria-pressed",String(i<0))}
   else{d[k]=d[k]===t.dataset.pk?"":t.dataset.pk;box.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.pk===d[k])))}return}
  if(t.hasAttribute("data-isave"))return saveInfo();
- if(t.hasAttribute("data-wipe")){if(!confirm("Effacer ton profil, tes résultats, ta garde-robe et ton email de ce téléphone ?"))return;
+ if(t.hasAttribute("data-wipe")){if(!confirm(tr("Effacer ton profil, tes résultats, ta garde-robe et ton email de ce téléphone ?")))return;
   try{localStorage.removeItem("monstyle");localStorage.removeItem("monstyle_gr")}catch(e){}GR={items:[],looks:{}};S.info={};S.res={};S.ans={};S.later=false;S.nom=undefined;NOM="ma belle";S.idraft=undefined;toast("Tes données sont effacées");home();return}
  if(t.hasAttribute("data-nom")){const v=(S.nomDraft??S.nom??"").trim();if(!v)return;S.nom=v;NOM=v;S.nomDraft=undefined;save();return next()}
  if(t.hasAttribute("data-retry")){run(S.page);S.err="";render(false);return}
@@ -1233,7 +1263,7 @@ document.addEventListener("input",e=>{if(e.target.dataset.gi){const x=GR.items.f
 document.addEventListener("keydown",e=>{if(e.target.id==="msg"&&e.key==="Enter"){e.preventDefault();send(e.target.value)}if(e.target.id==="nom"&&e.key==="Enter"){e.preventDefault();const b=document.querySelector("[data-nom]");if(b&&!b.disabled)b.click()}});
 
 const AFF=[n=>n+", tu es belle, toujours.",()=>"Tu es rayonnante aujourd’hui.",n=>"N’oublie pas de sourire, "+n+".",()=>"Ton sourire est ta plus belle parure.",n=>n+", tu mérites de te sentir bien.",()=>"Ta beauté est unique.",n=>"Souris, "+n+", tu illumines la journée.",()=>"Tu es élégante, comme tu es.",n=>n+", aime-toi un peu plus aujourd’hui.",()=>"Ta confiance te rend magnifique.",n=>"Tu es une lumière, "+n+".",()=>"Prends soin de toi, tu le vaux bien."];
-const affTxt=k=>{const n=NOM==="ma belle"?"Ma belle":NOM;let t=AFF[k](n);return t.replace(/, Ma belle([.,])/,", ma belle$1")};
+const affTxt=k=>{const n=NOM==="ma belle"?"Ma belle":NOM;let t=AFF[k](n);return tr(t.replace(/, Ma belle([.,])/,", ma belle$1"))};
 function affMix(last){const a=AFF.map((_,k)=>k);for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}if(a[0]===last)a.push(a.shift());return a}
 (()=>{const el=document.getElementById("affirm");if(!el)return;let ord=affMix(),k=0;el.textContent=affTxt(ord[0]);
 setInterval(()=>{if(AFFON)return;el.classList.add("off");setTimeout(()=>{k++;if(k>=ord.length){ord=affMix(ord[ord.length-1]);k=0}el.textContent=affTxt(ord[k]);el.classList.remove("off")},600)},7000)})();
@@ -1373,7 +1403,7 @@ async function greetLang(){const lg=S.lang,gen=GEN;if(!LGV[lg]||!S.voice)return;
  if(!url)return phone();
  AUDTOK++;AUD.onplay=on;AUD.onended=off;AUD.onerror=()=>{off();if(lg==="ar"&&!/aura-ar/.test(AUD.src)){AUD.src="sons/aura-ar.mp3?v=1";play()}else if(lg!=="ar")phone()};AUD.src=url;
  const play=()=>{try{const p=AUD.play();if(p&&p.catch)p.catch(e=>{off();if(e&&e.name==="NotAllowedError"&&!window.TAPDONE){const b=document.querySelector(".tapaura");if(b)b.hidden=false;TAPPED.then(()=>{if(gen===GEN){if(b)b.hidden=true;play()}})}else if(lg!=="ar")phone()})}catch(e){if(lg!=="ar")phone()}};play()}
-function setLang(l){const was=S.lang||"fr";S.lang=l;save();applyLang();
+function setLang(l){const was=S.lang||"fr";S.lang=l;save();if(window.i18nApply)i18nApply();applyLang();
  if(l==="fr"&&was==="fr"&&!SKIP&&INTRO_ON)return; // elle parle déjà en français
  hush();if(window.SKIPNOM)window.SKIPNOM();
  if(l==="fr"){SKIP=false;introFr()}else{SKIP=true;showBtns();greetLang()}}
