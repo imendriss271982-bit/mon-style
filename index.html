@@ -209,6 +209,11 @@ nav.dock button[aria-current="true"]{color:var(--accent)}
 .bub{max-width:86%;padding:12px 16px;border-radius:20px;white-space:pre-wrap}
 .bub.u{align-self:flex-end;background:var(--accent);color:var(--on);border-bottom-right-radius:6px}
 .bub.a{align-self:flex-start;background:var(--soft);border-bottom-left-radius:6px}
+.bub img{display:block;max-width:100%;max-height:260px;border-radius:14px;margin:-4px -8px 8px;width:calc(100% + 16px);object-fit:cover}
+.clip{width:52px;height:52px;flex:none;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--accent);display:grid;place-items:center;cursor:pointer}
+.clip svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.prev{position:relative;display:inline-block;margin-top:10px}.prev img{width:84px;height:84px;object-fit:cover;border-radius:14px;display:block}
+.prev button{position:absolute;top:-8px;right:-8px;width:26px;height:26px;border-radius:50%;border:0;background:var(--accent);color:var(--on);font-size:15px;line-height:26px;cursor:pointer}
 .mic{width:88px;height:88px;border-radius:50%;border:0;background:var(--accent);color:var(--on);display:grid;place-items:center;margin:8px auto 6px;cursor:pointer}
 .mic svg{width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}
 .mic.on{animation:breath 1.2s ease-in-out infinite}
@@ -370,7 +375,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </nav>
 </div>
 <script>
-const VERSION="35";
+const VERSION="36";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -564,9 +569,10 @@ news:()=>{const n=S.news,prof=PROFIL();
  <h2>À lire</h2><div class="chips">${MAGS.map(m=>`<a target="_blank" rel="noopener" href="${m[1]}">${m[0]}</a>`).join("")}</div>`,
  say:n&&n.resume?n.resume:"Voici les nouveautés fashion, "+NOM+". Touche Voir les tendances."}},
 chat:()=>({dock:1,html:`<div class="avatar small" id="ava2"><img src="stylist-face.jpg?v=2" alt=""></div><h1>Ta styliste</h1><button class="callbtn" id="callbtn" aria-label="Parler à ma styliste"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><p id="callst" class="sub" style="text-align:center">Appuie pour parler avec ta styliste</p><h2>Ou écris-lui</h2>
- <div class="chat">${S.chat.map((c,i)=>`<div class="bub ${c.r}" id="b${i}">${esc(c.t)||"…"}</div>`).join("")}</div>
+ <div class="chat">${S.chat.map((c,i)=>`<div class="bub ${c.r}" id="b${i}">${c.img?`<img src="${c.img}" alt="Photo envoyée">`:""}${esc(c.t)||(c.img?"":"…")}</div>`).join("")}</div>
+ ${S.cphoto?`<div class="prev"><img src="${S.cphoto.url}" alt="Photo à envoyer"><button data-unphoto aria-label="Retirer la photo">×</button></div>`:""}
 
- <div style="display:flex;gap:8px;margin-top:8px"><input class="field" id="msg" placeholder="Écris ta question" value="${esc(S.draft)}"><button class="btn" style="width:auto;padding:14px 20px" data-send ${S.busy?"disabled":""}>Envoyer</button></div>`,
+ <div style="display:flex;gap:8px;margin-top:8px;align-items:center"><label class="clip" aria-label="Ajouter une photo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><input type="file" accept="image/*" data-cphoto hidden></label><input class="field" id="msg" style="min-width:0" placeholder="${S.cphoto?"Que veux-tu savoir sur cette photo ?":"Écris ta question"}" value="${esc(S.draft)}"><button class="btn" style="width:auto;padding:14px 20px" data-send ${S.busy?"disabled":""}>Envoyer</button></div>`,
  say:S.chat.length?"":"Je t’écoute, "+NOM+". Pose-moi ta question."})
 };
 QS.forEach((q,i)=>{P["q_"+q.id]=()=>({step:"Colorimétrie",html:`<p class="step">Colorimétrie · ${i+1} sur ${QS.length}</p><h1>${q.q}</h1>${q.h?`<p class="sub">${q.h}</p>`:""}
@@ -699,7 +705,7 @@ async function textConv(){
  return TCONV;
 }
 async function send(text){
- text=(text||"").trim();if(!text||S.busy)return;const sm=await getSample();
+ text=(text||"").trim();if(S.cphoto&&!S.busy)return sendPhoto(text);if(!text||S.busy)return;const sm=await getSample();
  if(typeof sm!=="function"){S.chat.push({r:"u",t:text},{r:"a",t:""});S.draft="";S.busy=true;render(false);
   try{const c=await textConv();c.sendUserMessage(text)}catch(e){S.chat[S.chat.length-1].t="La styliste n’a pas pu répondre. Réessaie.";S.busy=false;if(S.page==="chat")render(false)}
   return}
@@ -708,6 +714,18 @@ async function send(text){
  const id="#b"+(S.chat.length-1);
  try{const r=await sm(h,{cache:false,onText:({text})=>{const b=$(id);if(b)b.textContent=text}});S.chat[S.chat.length-1].t=r.text;say(r.text)}
  catch(e){S.chat[S.chat.length-1].t=e&&e.code==="rate_limited"?"Trop de messages, réessaie dans un instant.":e&&e.code==="not_granted"?"Autorise la styliste pour discuter avec elle.":"Une erreur est survenue. Réessaie."}
+ S.busy=false;if(S.page==="chat")render(false);
+}
+const PR_CHATPH=q=>SYS()+" Elle t’envoie une photo dans la discussion. "+(S.chat.length>2?"Votre échange récent : "+S.chat.slice(-8,-2).map(c=>(c.r==="u"?"Elle : ":"Toi : ")+(c.t||"(photo)")).join(" | ")+". ":"")+"Sa question sur la photo : "+(q||"Qu’en penses-tu ?")+". Regarde bien la photo (vêtement, tenue, couleur, coiffure, maquillage, accessoire) et réponds-lui directement, en t’appuyant sur ce que tu vois et sur son profil. Si la photo est inutilisable, dis-lui gentiment pourquoi. "+FMT+"Format : {\"reponse\":\"ta réponse, 2 à 5 phrases\"}";
+async function sendPhoto(text){
+ const ph=S.cphoto;S.cphoto=null;S.chat.push({r:"u",t:text,img:ph.url},{r:"a",t:""});S.draft="";S.busy=true;render(false);unlock();
+ const last=S.chat[S.chat.length-1];
+ try{const sm=await getSample();if(!sm||!sm.json&&typeof sm!=="function")throw new Error("off");
+  let t="";
+  if(sm.json){const r=await sm.json(PR_CHATPH(text),{images:[ph.file]});t=(r&&(r.reponse||r.erreur))||""}
+  else{const r=await sm([{role:"user",content:[{type:"image",source:{type:"base64",media_type:"image/jpeg",data:await shrunk(ph.file)}},{type:"text",text:PR_CHATPH(text).replace(FMT,"").replace(/Format : .*$/,"Réponds en texte simple, 2 à 5 phrases.")}]}],{cache:false});t=r.text}
+  last.t=t||"Je n’ai pas réussi à bien voir la photo. Réessaie avec une autre.";say(last.t)}
+ catch(e){last.t=e&&e.message==="off"?"L’envoi de photos n’est pas disponible ici.":errMsg(e)}
  S.busy=false;if(S.page==="chat")render(false);
 }
 function listen(){
@@ -804,10 +822,12 @@ document.addEventListener("click",e=>{
  if(t.hasAttribute("data-shop")){S.shopQ=($("#shopq")||{}).value?.trim()||"";render(false);return}
  if(t.hasAttribute("data-news"))return loadNews();
  if(t.hasAttribute("data-mic"))return listen();
+ if(t.hasAttribute("data-unphoto")){S.cphoto=null;render(false);return}
  if(t.hasAttribute("data-send"))return send(($("#msg")||{}).value);
 });
 document.addEventListener("click",e=>{if(e.target.closest("[data-call]"))stopVoice()});
-document.addEventListener("change",e=>{const k=e.target.dataset.f,f=e.target.files&&e.target.files[0];if(!k||!f)return;
+document.addEventListener("change",e=>{if(e.target.hasAttribute("data-cphoto")){const f=e.target.files&&e.target.files[0];if(!f)return;S.cphoto={file:f,url:URL.createObjectURL(f)};render(false);const m=$("#msg");if(m)m.focus();say("Jolie photo ! Dis-moi ce que tu veux savoir, puis touche Envoyer.");return}
+ const k=e.target.dataset.f,f=e.target.files&&e.target.files[0];if(!k||!f)return;
  if(S.url[k])URL.revokeObjectURL(S.url[k]);S.file[k]=f;S.url[k]=URL.createObjectURL(f);render(false);say("Très bien, ta photo est prête.")});
 document.addEventListener("input",e=>{if(e.target.id==="msg")S.draft=e.target.value;if(e.target.dataset.i&&S.idraft){S.idraft[e.target.dataset.i]=e.target.value;e.target.classList.remove("bad")}if(e.target.id==="nom"){S.nomDraft=e.target.value;const b=document.querySelector("[data-nom]");if(b)b.disabled=!e.target.value.trim()}});
 document.addEventListener("keydown",e=>{if(e.target.id==="msg"&&e.key==="Enter"){e.preventDefault();send(e.target.value)}if(e.target.id==="nom"&&e.key==="Enter"){e.preventDefault();const b=document.querySelector("[data-nom]");if(b&&!b.disabled)b.click()}});
