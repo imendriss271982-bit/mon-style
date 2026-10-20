@@ -578,7 +578,20 @@ const ANS_TXT=a=>QS.map(q=>{const o=q.o.find(x=>x[0]===a[q.id]);return o?q.q+" "
 const CORPS={"Sablier":"Marque la taille : robes portefeuille, ceintures, tailles hautes.","Poire":"Attire le regard vers le haut : encolures bateau, couleurs claires en haut, pantalons droits ou évasés.","Pomme":"Tissus fluides, coupe empire, décolleté en V, et mets tes jambes en valeur.","Rectangle":"Crée des courbes : volants, ceintures, jupes évasées, superpositions.","Triangle inversé":"Équilibre en bas : jupes trapèze, pantalons larges, hauts à encolure simple."};
 const SHAPE=f=>{f=String(f||"");if(/Sablier|Poire|Pomme|Rectangle|Triangle inversé/.test(f))return(f.match(/Sablier|Poire|Pomme|Rectangle|Triangle inversé/)||[])[0];const l=(f.trim().match(/^[AVHXOI8]/)||[""])[0];return {X:"Sablier","8":"Sablier",A:"Poire",V:"Triangle inversé",H:"Rectangle",I:"Rectangle",O:"Pomme"}[l]||f};
 const SHOPCUT={"Sablier":["robe portefeuille","pantalon taille haute","chemisier cintré"],"Poire":["top encolure bateau","pantalon évasé","veste courte structurée"],"Pomme":["robe empire","blouse col V fluide","pantalon droit"],"Rectangle":["jupe évasée","top à volants","robe ceinturée"],"Triangle inversé":["pantalon large","jupe trapèze","top col V"]};
-const SHOPS=[["Zara","zara.com"],["H&M","hm.com"],["Mango","mango.com"],["Shein","shein.com"],["Namshi","namshi.com"],["Ounass","ounass.ae"]];
+/* Boutiques partenaires (affiliation, commandes du Qatar acceptées).
+   Quand un programme t'accepte, colle ton identifiant ou ton lien ici :
+   - Amazon.ae : "tag" = ton identifiant Associates (ex. "mystyle-21").
+   - Ounass, Namshi, The Luxury Closet : "deep" = ton lien de suivi ArabClicks/Optimise
+     qui se termine par "url=" ; le lien de la recherche y est ajouté automatiquement.
+   Tant que c'est vide, le bouton ouvre la boutique normalement (sans commission). */
+const SHOPS=[
+ {n:"Ounass",site:"ounass.com",deep:""},
+ {n:"Namshi",site:"namshi.com",deep:""},
+ {n:"Amazon",site:"amazon.ae",url:q=>"https://www.amazon.ae/s?k="+encodeURIComponent(q),tag:""},
+ {n:"The Luxury Closet",site:"theluxurycloset.com",deep:""}];
+function shopUrl(s,q){const direct=s.url?s.url(q)+(s.tag?"&tag="+encodeURIComponent(s.tag):""):null;
+ if(s.deep)return s.deep+encodeURIComponent(direct||"https://www."+s.site+"/");
+ return direct||"https://www.google.com/search?q="+encodeURIComponent("site:"+s.site+" "+q)}
 
 let S={rid:0,wait:{},page:"home",hist:[],dir:"f",ans:{},file:{},url:{},res:{},busy:false,err:"",voice:true,chat:[],draft:"",shopQ:"",listen:false,flow:null,news:null,newsBusy:false,newsErr:""};
 try{if(localStorage.getItem("monstyle_voix")==="0")S.voice=false}catch(e){}
@@ -827,9 +840,10 @@ o_res:()=>{const o=ok("outfit");if(!o)return missing("outfit",S.res.outfit);
 boutique:()=>{const b=ok("corps"),s=season(),cols=s?SEASONS[s].c.filter(x=>!/Noir|Blanc/.test(x[1])).map(x=>x[1].toLowerCase()):[];
  const ideas=(SHOPCUT[SHAPE(b?.forme)]||["blazer structuré","robe fluide","pantalon taille haute"]).map((c,i)=>cols.length?c+" "+cols[i%cols.length]:c);
  return {dock:1,html:`<h1>Ma boutique</h1><p class="sub">${b||s?"Des pièces choisies pour ta morphologie et ta saison.":"Fais ton analyse pour des pièces faites pour toi."}</p>
+ <div class="card"><b>Nos boutiques partenaires</b><p class="sub" style="font-size:14px;margin:6px 0 0">${SHOPS.map(s=>s.n).join(" · ")} — livraison au Qatar.</p></div>
  ${ideas.map(q=>`<div class="card"><b>${esc(cap(q))}</b>${links(q)}</div>`).join("")}
  <div class="card"><b>Je cherche autre chose</b><input class="field" id="shopq" placeholder="Par exemple : robe de soirée" value="${esc(S.shopQ)}"><button class="btn ghost" data-shop>Chercher</button>${S.shopQ?`<div style="margin-top:12px">${links(S.shopQ+(cols[0]?" "+cols[0]:""))}</div>`:""}</div>
- <p class="sub" style="font-size:14px">Chaque bouton ouvre une recherche Google limitée au site de la boutique.</p>`,
+ <p class="sub" style="font-size:14px">Chaque bouton t’emmène chez la boutique partenaire. My Style peut recevoir une commission sur tes achats, sans aucun coût en plus pour toi.</p>`,
  say:"Voici ta boutique, "+NOM+". J’ai choisi ces pièces pour toi. Touche une boutique pour voir les articles."}},
 news:()=>{const n=S.news,prof=PROFIL();
  const body=S.newsBusy?`<div class="note">Je cherche les tendances du moment pour toi…</div>`
@@ -872,7 +886,7 @@ async function loadNews(){
  catch(e){S.newsErr=ERRS[e&&e.code]||(e&&e.message&&e.message!=="erreur"?e.message:"Impossible de charger les tendances. Réessaie.")}
  S.newsBusy=false;if(S.page==="news"){render(false);if(S.news&&S.news.resume)say(S.news.resume);else if(S.newsErr)say(S.newsErr)}
 }
-function links(q){return `<div class="chips">${SHOPS.map(s=>`<a target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent("site:"+s[1]+" "+q)}">${s[0]}</a>`).join("")}</div>`}
+function links(q){return `<div class="chips">${SHOPS.map(s=>`<a target="_blank" rel="noopener sponsored" href="${shopUrl(s,q)}">${s.n}</a>`).join("")}</div>`}
 function lum(h){const n=parseInt(h.slice(1),16);return(0.299*(n>>16)+0.587*(n>>8&255)+0.114*(n&255))/255}
 
 function render(sayIt){
@@ -967,7 +981,7 @@ async function run(k){if(RUNS[k])return runMod(k);
 }
 
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;S.micMsg="";
-function SYS(){return REF+" Tu es la styliste personnelle de l’application Mon style. Parle comme une amie styliste chaleureuse, à l’oral : 2 à 4 phrases courtes, sans liste, sans emoji. Elle s’appelle "+(S.nom||"(prénom inconnu)")+" : dis « ma belle » une seule fois, dans ta toute première réponse (« Salut ma belle, »), puis ne le répète plus jamais ; ensuite utilise seulement son prénom, de temps en temps. Réponds en français, ou en arabe ou en anglais si elle écrit dans ces langues. Son profil : "+(PROFIL()||"pas encore analysé : invite-la à faire son analyse")+". Pour les achats, donne le type de pièce, la couleur et les mots-clés à chercher sur Zara, H&M, Mango, Shein, Namshi ou Ounass, sans inventer de lien ni de prix."}
+function SYS(){return REF+" Tu es la styliste personnelle de l’application Mon style. Parle comme une amie styliste chaleureuse, à l’oral : 2 à 4 phrases courtes, sans liste, sans emoji. Elle s’appelle "+(S.nom||"(prénom inconnu)")+" : dis « ma belle » une seule fois, dans ta toute première réponse (« Salut ma belle, »), puis ne le répète plus jamais ; ensuite utilise seulement son prénom, de temps en temps. Réponds en français, ou en arabe ou en anglais si elle écrit dans ces langues. Son profil : "+(PROFIL()||"pas encore analysé : invite-la à faire son analyse")+". Pour les achats, donne le type de pièce, la couleur et les mots-clés à chercher chez nos boutiques partenaires (Ounass, Namshi, Amazon, The Luxury Closet), dans l’onglet Boutique, sans inventer de lien ni de prix."}
 let TCONV=null;
 async function textConv(){
  if(TCONV)return TCONV;
