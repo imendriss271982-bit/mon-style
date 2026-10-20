@@ -3,6 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>/* Mise à jour automatique : si une nouvelle version est publiée, l'app se recharge toute seule */
+(function(){var B="__BUILD__";if(B.indexOf("__")===0)return;
+function chk(){fetch("version.txt?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(v){v=(v||"").trim();if(!v||v===B)return;
+ try{var k="ms_upd_"+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,"1")}catch(e){}
+ location.replace(location.pathname+"?v="+v.slice(0,7))}).catch(function(){})}
+chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <title>My Style</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
