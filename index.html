@@ -478,6 +478,9 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 [dir=rtl] .ess b,[dir=rtl] .yy b{text-align:left}
 [dir=rtl] .gr-bars small{direction:ltr;text-align:right}
 
+/* Accueil : la garde-robe se découvre en descendant */
+.hx-more{margin-top:64px}
+.hx>.hx-ms{margin-top:0}
 /* Micro collé à Aura (comme une pastille) */
 .micbadge{position:absolute;z-index:6;left:calc(50% + var(--ah)*.756*.24);bottom:calc(var(--ab) + var(--ah)*.80);width:62px;height:62px;padding:0;border-radius:50%;border:4px solid #fff;background:var(--accent);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 22px rgba(125,46,74,.45);opacity:0;transform:scale(.6);transition:opacity .5s,transform .5s,background .3s;pointer-events:none}
 .micbadge.show{opacity:1;transform:none;pointer-events:auto;animation:micP 2s ease-in-out infinite}
@@ -828,13 +831,6 @@ home:()=>{const v=ok("visage"),bd=ok("corps"),c=season(),oc=ok("outfit");
  const cam='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-2.5h6L17 8h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.6"/></svg>';
  return {dock:1,html:`<div class="hx">
  <div class="hm-h"><h1 class="hh">Salut <em>${esc(cap(NOM))}</em></h1><p>Qu’est-ce qu’on porte aujourd’hui ?</p></div>
- <section class="hx-oc" aria-label="Outfit check du jour">
-  <div class="hx-oc-t"><small>Chaque jour</small><b>Outfit check</b><p>${oc?`Ta dernière tenue : <strong>${esc(String(oc.note))}/10</strong>. Montre-moi celle d’aujourd’hui.`:"Montre-moi ta tenue : je te donne une note et ce qu’il faut changer."}</p></div>
-  <svg class="hx-hanger" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/></svg>
-  <button class="hx-oc-b" data-go="o_photo">${cam}Prendre ma tenue en photo</button>
-  ${oc?`<button class="hx-oc-l" data-view="o_res">Voir mon dernier résultat</button>`:""}
- </section>
- <button class="hx-st" data-view="chat"><img src="aura-bust.webp?v=1" alt="Aura, ta styliste" width="165" height="154"><span class="hx-st-t"><b>My Stylist</b><small>Parle avec Aura</small></span><span class="hx-mic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span></button>
 ${nd===3?`<button class="hx-ms" data-view="fiche" aria-label="Voir ma fiche style">
   <span class="hx-ms-h"><b>Mon style</b><small>Voir le détail ›</small></span>
   <span class="hx-ms-g"><span><small>Visage</small><em>${esc(cap(v.forme))}</em></span><span><small>Silhouette</small><em>${esc(bd.kibbe?bd.forme+" · "+bd.kibbe:bd.forme)}</em></span><span><small>Saison</small><em>${esc(c)}</em>${sw}</span></span>
@@ -842,7 +838,14 @@ ${nd===3?`<button class="hx-ms" data-view="fiche" aria-label="Voir ma fiche styl
   <span class="hx-ms-h"><b>${nd?"Termine ton analyse":"Ton analyse de style"}</b><small>${nd}/3 ›</small></span>
   <p>${nd?"Il reste "+(3-nd)+" étape"+(3-nd>1?"s":"")+". Ensuite, ta fiche complète s’affiche ici.":"Visage, silhouette, couleurs : on la fait une seule fois, ensemble."}</p>
  </button>`}
-${grHomeCard()}
+ <button class="hx-st" data-view="chat"><img src="aura-bust.webp?v=1" alt="Aura, ta styliste" width="165" height="154"><span class="hx-st-t"><b>My Stylist</b><small>Parle avec Aura</small></span><span class="hx-mic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg></span></button>
+ <section class="hx-oc" aria-label="Outfit check du jour">
+  <div class="hx-oc-t"><small>Chaque jour</small><b>Outfit check</b><p>${oc?`Ta dernière tenue : <strong>${esc(String(oc.note))}/10</strong>. Montre-moi celle d’aujourd’hui.`:"Montre-moi ta tenue : je te donne une note et ce qu’il faut changer."}</p></div>
+  <svg class="hx-hanger" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/></svg>
+  <button class="hx-oc-b" data-go="o_photo">${cam}Prendre ma tenue en photo</button>
+  ${oc?`<button class="hx-oc-l" data-view="o_res">Voir mon dernier résultat</button>`:""}
+ </section>
+<div class="hx-more">${grHomeCard()}</div>
  </div>`,
  say:"Bonjour "+NOM+", je suis contente de te voir. Touche le téléphone pour me parler, ou choisis une analyse."}},
 garde:()=>{const c=grCount(),rd=grReady(),occ=S.grOcc||"quotidien",looks=GR.looks[occ],by=id=>GR.items.find(x=>x.id===id);
