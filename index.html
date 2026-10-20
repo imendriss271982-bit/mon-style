@@ -12,7 +12,11 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#7D2E4A">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&family=Italiana&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="sons/aura-1.mp3" as="fetch" crossorigin>
+<link rel="preload" href="sons/aura-retour.mp3" as="fetch" crossorigin>
+<link rel="preload" href="aura-full.webp?v=2" as="image" fetchpriority="high">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&family=Italiana&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
 :root{--bg:#FFFFFF;--surface:#FFFFFF;--soft:#F7EEF0;--ink:#1E1A1D;--muted:#76696F;--line:#ECE3E6;--accent:#7D2E4A;--on:#FFFFFF;--gold:#B8935A}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141113;--surface:#1D181B;--soft:#271E23;--ink:#F4EEF0;--muted:#B3A6AC;--line:#33292E;--accent:#E7A6BC;--on:#141113;--gold:#D6B47E}}
@@ -365,7 +369,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </nav>
 </div>
 <script>
-const VERSION="25";
+const VERSION="26";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -817,6 +821,7 @@ render(false);
 // Mise à jour automatique : si une nouvelle version est en ligne, l'app se recharge toute seule.
 function checkUpdate(){fetch(location.pathname+"?v="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{const m=t.match(/const VERSION="([^"]+)"/);if(!m||m[1]===VERSION)return;
  try{if(sessionStorage.getItem("maj")===m[1])return;sessionStorage.setItem("maj",m[1])}catch(e){}
+ if(document.getElementById("splash")){try{sessionStorage.removeItem("maj")}catch(e){}return}
  if(!S.busy&&!/_run$/.test(S.page))location.replace(location.pathname+"?v="+m[1])}).catch(()=>{})}
 checkUpdate();document.addEventListener("visibilitychange",()=>{if(!document.hidden)checkUpdate()});
 // Accueil d'Aura : présentation, prénom, puis le style.
