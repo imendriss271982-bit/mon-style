@@ -141,17 +141,21 @@ footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg)
 #splash{--ah:min(56svh,calc((100vw - 20px)*1.3229));--ab:calc(13svh + env(safe-area-inset-bottom,0px))}
 #splash .avatar.aura{position:absolute;z-index:1;left:50%;bottom:var(--ab);margin:0;height:var(--ah);width:auto;aspect-ratio:480/635;transform:translateX(-50%);pointer-events:none}
 #splash .avatar.aura:before{display:none}
-#splash .avatar.aura .fig{position:absolute;inset:0;border-radius:0;overflow:visible;box-shadow:none;transform-origin:50% 100%;animation:auraIdle 4s ease-in-out infinite;filter:drop-shadow(0 18px 30px rgba(125,46,74,.22))}
-#splash .avatar.aura .fig img{position:absolute;border-radius:0;box-shadow:none;animation:none;object-fit:fill;transform:none}
-#splash .avatar.aura .fig img.body{inset:0;width:100%;height:100%}
-#splash .avatar.aura .fig img.bras{left:62.5%;top:68.504%;width:25%;height:31.496%;transform-origin:45.83% 15%;transition:transform .6s cubic-bezier(.3,.7,.3,1);animation:armIdle 6s ease-in-out infinite}
-#splash .avatar.aura .fig img.mf{left:43.333%;top:31.339%;width:14.167%;height:9.134%;opacity:0;-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 52%,#000 55%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 52%,#000 55%,transparent 100%)}
-#splash .avatar.aura .fig img.mf.on{opacity:1}
-#splash .avatar.aura .fig img.blink{left:35.833%;top:20.315%;width:28.75%;height:6.299%;opacity:0}
-#splash .avatar.aura.blk .fig img.blink{opacity:1}
-#splash .avatar.aura.speak .fig{animation:auraTalk 3.2s ease-in-out infinite}
-#splash .avatar.aura.speak .fig img.bras{animation:armTalk 2.4s ease-in-out infinite}
-#splash .avatar.aura.wave .fig img.bras{animation:armWave .5s ease-in-out 6 alternate}
+.avatar.aura.inchat{position:relative;left:auto;bottom:auto;transform:none;width:auto;aspect-ratio:480/635;pointer-events:none;height:min(50svh,calc((100vw - 40px)*1.3229));margin:4px auto 0}
+.avatar.aura.inchat:before{display:none}
+.avatar.aura.inchat+h1{text-align:center;margin-top:6px}
+.avatar.aura.inchat~.callbtn{margin-top:14px}
+#splash .avatar.aura .fig,.avatar.aura.inchat .fig{position:absolute;inset:0;border-radius:0;overflow:visible;box-shadow:none;transform-origin:50% 100%;animation:auraIdle 4s ease-in-out infinite;filter:drop-shadow(0 18px 30px rgba(125,46,74,.22))}
+#splash .avatar.aura .fig img,.avatar.aura.inchat .fig img{position:absolute;border-radius:0;box-shadow:none;animation:none;object-fit:fill;transform:none}
+#splash .avatar.aura .fig img.body,.avatar.aura.inchat .fig img.body{inset:0;width:100%;height:100%}
+#splash .avatar.aura .fig img.bras,.avatar.aura.inchat .fig img.bras{left:62.5%;top:68.504%;width:25%;height:31.496%;transform-origin:45.83% 15%;transition:transform .6s cubic-bezier(.3,.7,.3,1);animation:armIdle 6s ease-in-out infinite}
+#splash .avatar.aura .fig img.mf,.avatar.aura.inchat .fig img.mf{left:43.333%;top:31.339%;width:14.167%;height:9.134%;opacity:0;-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 52%,#000 55%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 52%,#000 55%,transparent 100%)}
+#splash .avatar.aura .fig img.mf.on,.avatar.aura.inchat .fig img.mf.on{opacity:1}
+#splash .avatar.aura .fig img.blink,.avatar.aura.inchat .fig img.blink{left:35.833%;top:20.315%;width:28.75%;height:6.299%;opacity:0}
+#splash .avatar.aura.blk .fig img.blink,.avatar.aura.inchat.blk .fig img.blink{opacity:1}
+#splash .avatar.aura.speak .fig,.avatar.aura.inchat.speak .fig{animation:auraTalk 3.2s ease-in-out infinite}
+#splash .avatar.aura.speak .fig img.bras,.avatar.aura.inchat.speak .fig img.bras{animation:armTalk 2.4s ease-in-out infinite}
+#splash .avatar.aura.wave .fig img.bras,.avatar.aura.inchat.wave .fig img.bras{animation:armWave .5s ease-in-out 6 alternate}
 @keyframes auraIdle{0%,100%{transform:rotate(0) translateY(0) scale(1,1)}25%{transform:rotate(-1deg) translateY(-2px) scale(1.006,1.016)}50%{transform:rotate(0) translateY(0) scale(1,1)}75%{transform:rotate(1deg) translateY(-2px) scale(1.006,1.016)}}
 @keyframes auraTalk{0%,100%{transform:rotate(0) translateY(0) scale(1,1)}20%{transform:rotate(-1deg) translateY(-3px) scale(1.004,1.012)}45%{transform:rotate(.4deg) translateY(0)}70%{transform:rotate(1deg) translateY(-2px) scale(1.004,1.01)}}
 @keyframes armIdle{0%,100%{transform:rotate(0)}50%{transform:rotate(-5deg)}}
@@ -168,7 +172,7 @@ footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg)
 #splash .tapaura{position:absolute;z-index:5;left:calc(50% + var(--ah)*.756*.29);bottom:calc(var(--ab) + var(--ah)*.70 - 22px);width:44px;height:44px;padding:0;display:grid;place-items:center;border:0;border-radius:50%;background:var(--accent);box-shadow:0 4px 14px rgba(125,46,74,.35);animation:tapPulse 1.6s ease-in-out infinite}#splash .tapaura svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}#splash .tapaura path:first-child{fill:#fff}
 #splash .tapaura[hidden]{display:none}
 @keyframes tapPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
-@media (prefers-reduced-motion:reduce){#splash .avatar.aura .fig,#splash .avatar.aura .fig img.bras,#splash .atelier *{animation:none!important}}
+@media (prefers-reduced-motion:reduce){#splash .avatar.aura .fig,#splash .avatar.aura .fig img.bras,#splash .atelier *,.avatar.aura.inchat .fig,.avatar.aura.inchat .fig img.bras{animation:none!important}}
 .spst{min-height:1.4em!important;margin:0 0 10px;font-size:14px;color:var(--accent)!important}
 .avatar img{transform-origin:50% 90%}
 .avatar.speak img{animation:none}
@@ -568,7 +572,7 @@ news:()=>{const n=S.news,prof=PROFIL();
  <button class="btn ghost" data-news ${S.newsBusy?"disabled":""}>${n?"Actualiser les tendances":"Voir les tendances"}</button>
  <h2>À lire</h2><div class="chips">${MAGS.map(m=>`<a target="_blank" rel="noopener" href="${m[1]}">${m[0]}</a>`).join("")}</div>`,
  say:n&&n.resume?n.resume:"Voici les nouveautés fashion, "+NOM+". Touche Voir les tendances."}},
-chat:()=>({dock:1,html:`<div class="avatar small" id="ava2"><img src="stylist-face.jpg?v=2" alt=""></div><h1>Ta styliste</h1><button class="callbtn" id="callbtn" aria-label="Parler à ma styliste"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><p id="callst" class="sub" style="text-align:center">Appuie pour parler avec ta styliste</p><h2>Ou écris-lui</h2>
+chat:()=>({dock:1,html:`<div class="avatar aura inchat" id="ava2"><div class="fig"><img class="body" src="aura-full.webp?v=2" alt="Aura, ta styliste"><img class="bras" src="aura-bras2.webp" alt=""><img class="mf" src="aura-m1.jpg" alt=""><img class="mf" src="aura-m2.jpg" alt=""><img class="mf" src="aura-m3.jpg" alt=""><img class="blink" src="aura-blink.webp" alt=""></div></div><h1>Ta styliste</h1><button class="callbtn" id="callbtn" aria-label="Parler à ma styliste"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><p id="callst" class="sub" style="text-align:center">Appuie pour parler avec ta styliste</p><h2>Ou écris-lui</h2>
  <div class="chat">${S.chat.map((c,i)=>`<div class="bub ${c.r}" id="b${i}">${c.img?`<img src="${c.img}" alt="Photo envoyée">`:""}${esc(c.t)||(c.img?"":"…")}</div>`).join("")}</div>
  ${S.cphoto?`<div class="prev"><img src="${S.cphoto.url}" alt="Photo à envoyer"><button data-unphoto aria-label="Retirer la photo">×</button></div>`:""}
 
@@ -748,7 +752,7 @@ function mouthTick(now){const dt=Math.min(80,now-(MLAST||now));MLAST=now;MP*=Mat
 requestAnimationFrame(mouthTick);
 window.auraMouth=v=>{if(v>.02)mouthKick(Math.min(1,.25+v*2.4))};
 // Aura cligne des yeux de temps en temps
-(function blinkLoop(){const go=()=>{const a=document.getElementById("ava");if(!a)return;a.classList.add("blk");setTimeout(()=>a.classList.remove("blk"),130);if(Math.random()<.25)setTimeout(()=>{a.classList.add("blk");setTimeout(()=>a.classList.remove("blk"),120)},300);setTimeout(go,2600+Math.random()*3200)};setTimeout(go,1800)})();
+(function blinkLoop(){const go=()=>{document.querySelectorAll(".avatar.aura").forEach(a=>{a.classList.add("blk");setTimeout(()=>a.classList.remove("blk"),130);if(Math.random()<.25)setTimeout(()=>{a.classList.add("blk");setTimeout(()=>a.classList.remove("blk"),120)},300)});setTimeout(go,2600+Math.random()*3200)};setTimeout(go,1800)})();
 function gesture(){document.querySelectorAll(".avatar.aura").forEach(a=>{a.classList.remove("wave");void a.offsetWidth;a.classList.add("wave");clearTimeout(a._g);a._g=setTimeout(()=>a.classList.remove("wave"),2600)})}
 let VOICES=[],KEEP=[];
 function loadVoices(){try{VOICES=window.speechSynthesis?speechSynthesis.getVoices():[]}catch(e){}}
