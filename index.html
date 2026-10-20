@@ -115,6 +115,7 @@ footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg)
 #splash .btn.ghost{background:none;color:var(--accent);border:1px solid var(--accent);margin-top:12px}
 #splash .btn[hidden]{display:none}
 #splash #talkbtn.live{background:#a33a5d}
+#splash .skip{position:absolute;top:calc(14px + env(safe-area-inset-top));right:16px;background:none;border:0;color:var(--accent);font:inherit;font-size:15px;padding:10px 12px;cursor:pointer}#splash .skip[hidden]{display:none}#spnom{width:100%;max-width:320px;margin-bottom:8px}#spnom[hidden]{display:none}
 .spst{min-height:1.4em!important;margin:0 0 10px;font-size:14px;color:var(--accent)!important}
 .avatar img{transform-origin:50% 90%}
 .avatar.speak img{animation:none}
@@ -247,7 +248,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </style>
 </head>
 <body>
-<div id="splash"><div class="avatar" id="ava"><img src="stylist.jpg" alt="Ta styliste personnelle"></div><h1 id="hi"></h1><p id="hi2"></p><button class="btn" id="install" hidden>Télécharger l’application</button><p id="spst" class="spst"></p><button class="btn" id="talkbtn">Parler avec elle</button><button class="btn ghost" id="start">Commencer</button></div>
+<div id="splash"><div class="avatar" id="ava"><img src="stylist.jpg" alt="Ta styliste personnelle"></div><h1 id="hi"></h1><p id="hi2"></p><button class="btn" id="install" hidden>Télécharger l’application</button><div id="spnom" hidden><input class="field" id="spnomI" autocomplete="given-name" placeholder="Ton prénom" style="font-size:20px;padding:16px;margin-bottom:12px;text-align:center"><button class="btn show" id="spnomB" disabled>Continuer</button></div><p id="spst" class="spst"></p><button class="btn" id="talkbtn">Parler avec elle</button><button class="btn ghost" id="start">Commencer</button><button id="skip" class="skip" type="button">Passer ›</button></div>
 <div id="inst" role="dialog" aria-modal="true" aria-labelledby="instT"><div class="sh"><h2 id="instT">Installer My Style</h2><p class="sub" id="instS">Quelques gestes dans Safari, et My Style s’ouvre comme une vraie application depuis ton écran d’accueil.</p>
 <ol id="instL"><li><span>Ouvert depuis <b>WhatsApp</b> ? Touche d’abord la <b>boussole Safari</b> <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg> en bas à droite</span></li><li><span>Touche <b>Partager</b> <svg viewBox="0 0 24 24"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M6 11H5v10h14V11h-1"/></svg> en bas de Safari</span></li><li><span>Fais défiler et choisis <b>Sur l’écran d’accueil</b> <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg></span></li><li><span>Touche <b>Ajouter</b>, puis ouvre l’icône My Style</span></li></ol>
 <button class="btn" id="instOk">J’ai compris</button></div></div>
@@ -265,7 +266,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </nav>
 </div>
 <script>
-const VERSION="22";
+const VERSION="23";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -708,14 +709,40 @@ function checkUpdate(){fetch(location.pathname+"?v="+Date.now(),{cache:"no-store
  try{if(sessionStorage.getItem("maj")===m[1])return;sessionStorage.setItem("maj",m[1])}catch(e){}
  if(!S.busy&&!/_run$/.test(S.page))location.replace(location.pathname+"?v="+m[1])}).catch(()=>{})}
 checkUpdate();document.addEventListener("visibilitychange",()=>{if(!document.hidden)checkUpdate()});
-(async()=>{const rm=matchMedia("(prefers-reduced-motion:reduce)").matches;
- await typeInto($("#hi"),"Salut"+(S.nom?" "+S.nom:"")+" !",rm?1:75);
- await typeInto($("#hi2"),"Je suis ta personal stylist. Je suis là pour révéler ta beauté.",rm?1:28);
- $("#talkbtn").classList.add("show");$("#start").classList.add("show");if(!$("#install").hidden)$("#install").classList.add("show")})();
+// Accueil d'Aura : présentation, prénom, puis le style.
+const INTRO=["Salut, je suis ta personal stylist.","Mon rôle, c’est de comprendre ce qui te met vraiment en valeur : tes couleurs, la forme de ton visage et ta silhouette.","Ensemble, on va construire un style qui te ressemble, pour que tu te sentes belle et sûre de toi chaque jour."];
+const ASKNOM="Mais d’abord, dis-moi… comment tu t’appelles ?";
+const OUTRO=n=>["Enchantée, "+n+" ! Moi, c’est Aura.","Commençons notre belle aventure de la beauté : chaque jour, on choisira ensemble ton outfit.","Je vais t’aider à trouver le style qui te va. Et commençons !"];
+const RETOUR=n=>["Salut "+n+" ! C’est Aura, ta personal stylist.","Je suis là pour révéler ta beauté."];
+let SKIP=false,CUR="",SPOKE=false;window.GREETED=false;
+const RM=matchMedia("(prefers-reduced-motion:reduce)").matches;
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+function voiceLine(t){return new Promise(r=>{const ss=window.speechSynthesis;let done=false;const fin=()=>{if(!done){done=true;talk(false);r()}};
+ setTimeout(fin,Math.max(2600,t.length*70));
+ if(!S.voice||!ss){return}
+ try{affStop();if(!VOICES.length)loadVoices();const vs=VOICES.filter(x=>x.lang.toLowerCase().startsWith("fr"));
+  const v=vs.find(x=>/amélie|audrey|marie|julie|hortense|denise|female|femme|google/i.test(x.name))||vs[0];
+  const u=new SpeechSynthesisUtterance(t);u.lang="fr-FR";if(v)u.voice=v;u.rate=1;KEEP=[u];
+  u.onstart=()=>{SPOKE=true;window.GREETED=true;talk(true)};u.onend=fin;u.onerror=()=>talk(false);ss.resume();ss.speak(u)}catch(e){}})}
+async function line(t){if(SKIP)return;CUR=t;const p=$("#hi2");p.textContent="";
+ await Promise.all([typeSkip(p,t,RM?1:28),voiceLine(t)]);if(!SKIP)await wait(350)}
+function typeSkip(el,t,ms){return new Promise(r=>{let i=0;const h=setInterval(()=>{if(SKIP){clearInterval(h);return r()}el.textContent=t.slice(0,++i);if(i>=t.length){clearInterval(h);r()}},ms)})}
+function showBtns(){$("#skip").hidden=true;$("#spnom").hidden=true;$("#talkbtn").classList.add("show");$("#start").classList.add("show");if(!$("#install").hidden)$("#install").classList.add("show")}
+function askNom(){return new Promise(r=>{if(SKIP)return r(null);const box=$("#spnom"),i=$("#spnomI"),b=$("#spnomB");box.hidden=false;setTimeout(()=>i.focus(),50);
+ i.oninput=()=>{b.disabled=!i.value.trim()};
+ const ok=()=>{const v=i.value.trim();if(!v)return;box.hidden=true;r(v)};b.onclick=ok;i.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();ok()}};
+ window.SKIPNOM=()=>r(null)})}
+(async()=>{await typeInto($("#hi"),"Salut"+(S.nom?" "+S.nom:"")+" !",RM?1:75);await wait(300);
+ if(S.nom){for(const t of RETOUR(S.nom))await line(t);return showBtns()}
+ for(const t of INTRO)await line(t);
+ await line(ASKNOM);const n=await askNom();
+ if(n){S.nom=n;NOM=n;save();$("#hi").textContent="Salut "+n+" !";for(const t of OUTRO(n))await line(t)}
+ showBtns()})();
 function HELLO(){return "Salut"+(S.nom?" "+S.nom:"")+" ! Je suis ta personal stylist. Je suis là pour révéler ta beauté."}
-function greet(force){if(window.GREETED||window.CALLED||!S.voice)return;const ss=window.speechSynthesis;if(!force&&ss&&ss.speaking)return;window.GREETED=!!force;if(force)unlock();say(HELLO())}
-setTimeout(()=>{greet(false);setTimeout(()=>{const ss=window.speechSynthesis;if(ss&&ss.speaking)window.GREETED=true},800)},700);
-document.getElementById("splash").addEventListener("pointerdown",e=>{if(!e.target.closest("#talkbtn,#start,#install"))greet(true)},{once:false});
+function skipIntro(){SKIP=true;stopVoice();$("#hi2").textContent="Je suis Aura, ta personal stylist. Je suis là pour révéler ta beauté.";if(window.SKIPNOM)window.SKIPNOM();showBtns()}
+$("#skip").addEventListener("click",skipIntro);
+// iPhone : la voix ne démarre qu'après un premier toucher ; on relit la phrase en cours.
+document.getElementById("splash").addEventListener("pointerdown",e=>{if(SPOKE||SKIP||e.target.closest("#skip,#talkbtn,#start,#install,#spnom"))return;unlock();if(CUR){SPOKE=true;voiceLine(CUR)}});
 const UA=navigator.userAgent,IOS=/iPhone|iPad|iPod/.test(UA)||(/Macintosh/.test(UA)&&navigator.maxTouchPoints>1);
 const APP=navigator.standalone===true||matchMedia("(display-mode: standalone)").matches;
 const NOT_SAFARI=/CriOS|FxiOS|EdgiOS|FBAN|FBAV|Instagram|Line\/|Snapchat|TikTok/.test(UA);
@@ -729,12 +756,12 @@ $("#install").addEventListener("click",async()=>{if(BIP){BIP.prompt();try{await 
 $("#instOk").addEventListener("click",()=>$("#inst").classList.remove("show"));
 $("#inst").addEventListener("click",e=>{if(e.target.id==="inst")$("#inst").classList.remove("show")});
 $("#start").addEventListener("click",()=>{if(window.endCall)window.endCall();unlock();$("#splash").classList.add("out");setTimeout(()=>$("#splash").remove(),800);
- if(!window.CALLED)say(window.GREETED?P.home().say:HELLO()+" "+P.home().say)});
+ SKIP=true;if(window.SKIPNOM)window.SKIPNOM();if(!window.CALLED)say(P.home().say)});
 </script>
 <script type="module">
 let conv=null,busy=false,raf=0;
 const $$=id=>document.getElementById(id);
-const live=on=>{["callbtn","talkbtn"].forEach(i=>{const b=$$(i);if(b)b.classList.toggle("live",on)});const t=$$("talkbtn");if(t)t.textContent=on?"Raccrocher":"Parler avec elle"};
+const live=on=>{if(on&&typeof skipIntro==="function"&&!SKIP)skipIntro();["callbtn","talkbtn"].forEach(i=>{const b=$$(i);if(b)b.classList.toggle("live",on)});const t=$$("talkbtn");if(t)t.textContent=on?"Raccrocher":"Parler avec elle"};
 let stFn=()=>{};
 const st=t=>{stFn(t);const e=$$("callst");if(e)e.textContent=t};
 function anim(){const v=conv&&conv.getOutputVolume?conv.getOutputVolume():0;
