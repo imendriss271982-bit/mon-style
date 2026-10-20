@@ -153,6 +153,11 @@ footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg)
 #splash .avatar.aura .fig img.mf.on,.avatar.aura.inchat .fig img.mf.on{opacity:1}
 #splash .avatar.aura .fig img.blink,.avatar.aura.inchat .fig img.blink{left:38.75%;top:16.063%;width:18.75%;height:3.78%;opacity:0}
 #splash .avatar.aura.blk .fig img.blink,.avatar.aura.inchat.blk .fig img.blink{opacity:1}
+.avatar.aura .fig canvas.idle{position:absolute;left:5%;top:-20.913%;width:90%;height:120.945%;display:none;pointer-events:none}
+.avatar.aura .fig.iplay canvas.idle{display:block}
+.avatar.aura .fig.iplay img{opacity:0!important}
+.avatar.aura .fig.vplay canvas.idle{display:none!important}
+.avatar.aura .fig.iplay,.avatar.aura .fig.vplay{animation:none!important}
 .avatar.aura .fig img.pose{position:absolute;left:5%;top:-20.913%;width:90%;height:120.945%;object-fit:fill;border-radius:0;box-shadow:none;animation:none}
 .avatar.aura .fig img.body,.avatar.aura .fig img.bras,.avatar.aura .fig img.mf,.avatar.aura .fig img.blink{display:none!important}
 #splash .avatar.aura .fig canvas.vid{position:absolute;left:5%;top:-20.913%;width:90%;height:120.945%;display:none;pointer-events:none}
@@ -384,7 +389,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </nav>
 </div>
 <script>
-const VERSION="41";
+const VERSION="42";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -901,6 +906,19 @@ function vidOn(name){if(RM||!VIDS[name])return;const a=document.querySelector("#
   if(!v.ended)requestAnimationFrame(draw)};
  window.VIDOFF=()=>{on=false;a.classList.remove("vplay");try{v.pause()}catch(e){}};v.onended=()=>window.VIDOFF();
  const q=v.play();if(q&&q.then)q.then(draw).catch(()=>window.VIDOFF());else draw()}
+// Aura au repos : vidéo en boucle (respire, cligne, sourit), fond vert retiré, sur toutes ses apparitions.
+const IDLE=document.createElement("video");IDLE.muted=true;IDLE.loop=true;IDLE.playsInline=true;IDLE.setAttribute("playsinline","");IDLE.setAttribute("muted","");IDLE.preload="auto";IDLE.src="videos/aura-idle.mp4?v=1";
+(()=>{if(RM)return;const K=document.createElement("canvas");K.width=450;K.height=800;const kc=K.getContext("2d",{willReadFrequently:true});let ok=false,last=-1;
+ const kick=()=>{const q=IDLE.play();if(q&&q.catch)q.catch(()=>{})};kick();document.addEventListener("touchend",kick,{once:true});document.addEventListener("click",kick,{once:true});
+ document.addEventListener("visibilitychange",()=>{if(document.hidden)IDLE.pause();else kick()});
+ const tick=()=>{requestAnimationFrame(tick);const figs=document.querySelectorAll(".avatar.aura .fig");if(!figs.length||IDLE.readyState<2)return;
+  if(IDLE.currentTime!==last){last=IDLE.currentTime;kc.drawImage(IDLE,0,0,450,800);const d=kc.getImageData(0,0,450,800),p=d.data;
+   for(let i=0;i<p.length;i+=4){const r=p[i],g=p[i+1],b=p[i+2],m=r>b?r:b,dm=g-m;if(dm>110)p[i+3]=0;else if(dm>25){p[i+3]=255*(110-dm)/85;p[i+1]=m}else if(dm>0)p[i+1]=m}
+   kc.putImageData(d,0,0);ok=true}
+  if(!ok)return;
+  figs.forEach(f=>{let c=f.querySelector("canvas.idle");if(!c){c=document.createElement("canvas");c.className="idle";c.width=450;c.height=800;f.insertBefore(c,f.firstChild)}
+   const x=c.getContext("2d");x.clearRect(0,0,450,800);x.drawImage(K,0,0);f.classList.add("iplay")})};
+ requestAnimationFrame(tick)})();
 const AUD=new Audio();AUD.preload="auto";const CLIPS={};["aura-1","aura-2","aura-3","aura-nom","aura-enchantee","aura-aventure","aura-go","aura-retour"].forEach(n=>{fetch("sons/"+n+".mp3").then(r=>r.ok?r.blob():null).then(b=>{if(b)CLIPS[n]=URL.createObjectURL(b)}).catch(()=>{})});
 function clipLine(name,t){return new Promise(r=>{let done=false,iv=0;const fin=v=>{if(done)return;done=true;clearInterval(iv);if(window.VIDOFF)VIDOFF();talk(false);r(v)};
  if(!S.voice||!name){(S.voice?voiceLine(t):wait(Math.max(2200,t.length*60))).then(()=>fin());return}
