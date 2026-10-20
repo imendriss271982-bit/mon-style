@@ -389,7 +389,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </nav>
 </div>
 <script>
-const VERSION="48";
+const VERSION="49";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -913,11 +913,17 @@ function vidOn(name){if(RM||!VIDS[name])return;const a=document.querySelector("#
  const q=v.play();if(q&&q.then)q.then(draw).catch(()=>window.VIDOFF());else draw()}
 // Aura au repos : vidéo en boucle (respire, cligne, sourit), fond vert retiré, sur toutes ses apparitions.
 const IDLE=document.createElement("video");IDLE.muted=true;IDLE.loop=true;IDLE.playsInline=true;IDLE.setAttribute("playsinline","");IDLE.setAttribute("muted","");IDLE.preload="auto";IDLE.src="videos/aura-idle.mp4?v=1";
+// Aura qui parle avec les mains (boucle) : utilisée pendant l'appel quand elle répond.
+const TALK=document.createElement("video");TALK.muted=true;TALK.loop=true;TALK.playsInline=true;TALK.setAttribute("playsinline","");TALK.setAttribute("muted","");TALK.preload="auto";TALK.src="videos/aura-talk.mp4?v=1";
+// iPhone : les vidéos doivent être dans la page (invisibles) pour être lues de façon fiable.
+(()=>{const h=document.createElement("div");h.style.cssText="position:fixed;left:0;top:0;width:2px;height:2px;opacity:0;pointer-events:none;overflow:hidden;z-index:-1";[IDLE,TALK,AVID].forEach(v=>{v.style.cssText="width:2px;height:2px";h.appendChild(v)});(document.body||document.documentElement).appendChild(h)})();
+window.AURA_TALK=false;window.auraTalking=on=>{if(on===window.AURA_TALK)return;window.AURA_TALK=on;try{if(on){const q=TALK.play();if(q&&q.catch)q.catch(()=>{})}else TALK.pause()}catch(e){}};
 (()=>{if(RM)return;const K=document.createElement("canvas");K.width=450;K.height=800;const kc=K.getContext("2d",{willReadFrequently:true});let ok=false,last=-1;
  const kick=()=>{const q=IDLE.play();if(q&&q.catch)q.catch(()=>{})};kick();document.addEventListener("touchend",kick,{once:true});document.addEventListener("click",kick,{once:true});
  document.addEventListener("visibilitychange",()=>{if(document.hidden)IDLE.pause();else kick()});
- const tick=()=>{requestAnimationFrame(tick);const figs=document.querySelectorAll(".avatar.aura .fig");if(!figs.length||IDLE.readyState<2)return;
-  if(IDLE.currentTime!==last){last=IDLE.currentTime;kc.drawImage(IDLE,0,0,450,800);const d=kc.getImageData(0,0,450,800),p=d.data;
+ let lastSrc=null;
+ const tick=()=>{requestAnimationFrame(tick);const figs=document.querySelectorAll(".avatar.aura .fig");const V=(window.AURA_TALK&&TALK.readyState>=2)?TALK:IDLE;if(!figs.length||V.readyState<2)return;
+  if(V.currentTime!==last||V!==lastSrc){last=V.currentTime;lastSrc=V;kc.drawImage(V,0,0,450,800);const d=kc.getImageData(0,0,450,800),p=d.data;
    for(let i=0;i<p.length;i+=4){const r=p[i],g=p[i+1],b=p[i+2],m=r>b?r:b,dm=g-m;if(dm>110)p[i+3]=0;else if(dm>25){p[i+3]=255*(110-dm)/85;p[i+1]=m}else if(dm>0)p[i+1]=m}
    kc.putImageData(d,0,0);ok=true}
   if(!ok)return;
@@ -986,7 +992,8 @@ const $$=id=>document.getElementById(id);
 const live=on=>{if(on&&typeof skipIntro==="function"&&!SKIP)skipIntro();["callbtn","talkbtn"].forEach(i=>{const b=$$(i);if(b)b.classList.toggle("live",on)});const t=$$("talkbtn");if(t)t.textContent=on?"Raccrocher":"Parler avec elle"};
 let stFn=()=>{};
 const st=t=>{stFn(t);const e=$$("callst");if(e)e.textContent=t};
-function anim(){const v=conv&&conv.getOutputVolume?conv.getOutputVolume():0;
+let LOUD=0;
+function anim(){const v=conv&&conv.getOutputVolume?conv.getOutputVolume():0;const now=performance.now();if(v>0.02)LOUD=now;if(window.auraTalking)auraTalking(!!conv&&now-LOUD<700);
  document.querySelectorAll(".avatar").forEach(a=>{const img=a.querySelector("img");a.classList.toggle("speak",v>0.02);if(window.auraMouth)auraMouth(v);
   if(img&&!a.classList.contains("aura"))img.style.transform=v>0.02?`translateY(${-v*10}px) scale(${1+v*0.06}) rotate(${Math.sin(performance.now()/180)*v*3}deg)`:""});
  raf=conv?requestAnimationFrame(anim):0;if(!conv)document.querySelectorAll(".avatar").forEach(a=>{a.classList.remove("speak");const i=a.querySelector("img");if(i)i.style.transform=""})}
