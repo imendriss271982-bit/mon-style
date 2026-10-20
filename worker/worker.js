@@ -37,14 +37,16 @@ export default {
           hello_ar: n => `هلا والله${n ? " " + n : ""}! أنا أورا، الستايلست الخاصة فيچ. موجودة عشان أطلّع جمالچ، وأخليچ تحسين بثقة كل يوم.`
         };
         // Arabe : Aura lit à voix haute les phrases de l'application (texte arabe uniquement, 480 caractères max).
-        if (b2.type === "say_ar") {
+        // Anglais : même principe, avec la voix habituelle d'Aura (texte latin uniquement).
+        if (b2.type === "say_ar" || b2.type === "say_en") {
+          const en = b2.type === "say_en";
           const texte = String(b2.texte || "").normalize("NFC").slice(0, 480).trim();
-          if (!texte || !/[؀-ۿ]/.test(texte)) return json({ erreur: "Texte invalide." }, 400);
+          if (!texte || (en ? !/^[\p{Script=Latin}\p{M}\p{N}\p{P}\p{Zs}’'…]+$/u.test(texte) : !/[؀-ۿ]/.test(texte))) return json({ erreur: "Texte invalide." }, 400);
           const h = [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(texte)))].map(x => x.toString(16).padStart(2, "0")).join("");
-          const ck2 = new Request("https://cache.mon-style/say_ar/" + h);
+          const ck2 = new Request("https://cache.mon-style/" + b2.type + "/" + h);
           let hit2 = await caches.default.match(ck2);
           if (!hit2) {
-            const r = await fetch("https://api.elevenlabs.io/v1/text-to-speech/w0uhBAmNIG5kUDeaFEsA?output_format=mp3_44100_64", {
+            const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${en ? (env.VOICE_ID || "cgSgspJ2msm6clMCkdW9") : "w0uhBAmNIG5kUDeaFEsA"}?output_format=mp3_44100_64`, {
               method: "POST",
               headers: { "xi-api-key": EK, "Content-Type": "application/json", "Accept": "audio/mpeg" },
               body: JSON.stringify({ text: texte, model_id: "eleven_multilingual_v2", voice_settings: { stability: 0.5, similarity_boost: 0.75 } })

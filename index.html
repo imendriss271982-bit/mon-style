@@ -566,7 +566,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </div>
 <script src="i18n.js?v=1"></script>
 <script>
-const VERSION="65";
+const VERSION="66";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -1390,7 +1390,7 @@ function mime(t){let to,iv;const p=new Promise(r=>{SPOKE=true;talk(true);iv=setI
  p.stop=()=>{clearTimeout(to);clearInterval(iv);if(window.VIDOFF)VIDOFF();talk(false)};return p}
 let GEN=0;
 async function line(t,clip,g,again){if(SKIP)return;const gen=GEN;CUR=t;const p=$("#hi2");p.textContent="";if(g)gesture();
- const [,res]=await Promise.all([typeSkip(p,t,RM?1:28),clipLine(clip,t)]);if(gen!==GEN)return;
+ const [,res]=await Promise.all([typeSkip(p,t,RM?1:28),clip==="say"?sayLine(t):clipLine(clip,t)]);if(gen!==GEN)return;
  if(res==="blocked"&&!SKIP){if(!again&&window.TAPDONE)return line(t,clip,g,true);
   const b=document.querySelector(".tapaura");if(b)b.hidden=false;
   // Son bloqué : Aura mime la phrase puis attend le premier toucher pour la redire à voix haute (on ne saute plus sa présentation).
@@ -1427,7 +1427,7 @@ async function greetLang(){const lg=S.lang,gen=GEN;if(!LGV[lg]||!S.voice)return;
 function setLang(l){const was=S.lang||"fr";S.lang=l;save();if(window.i18nApply)i18nApply();applyLang();
  if(l==="fr"&&was==="fr"&&!SKIP&&INTRO_ON)return; // elle parle déjà en français
  hush();if(window.SKIPNOM)window.SKIPNOM();
- if(l==="fr"){SKIP=false;introFr()}else{SKIP=true;showBtns();greetLang()}}
+ SKIP=false;introFr()}
 // Langue : globe + code (FR / EN / ع). Toucher = petit menu ; glisser = langue suivante.
 const LGS=["fr","en","ar"],LGC={fr:"FR",en:"EN",ar:"ع"};
 window.lgSync=()=>{document.querySelectorAll(".lgc").forEach(c=>c.textContent=LGC[S.lang||"fr"]);document.querySelectorAll("#lgmenu [data-pick]").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.pick===(S.lang||"fr"))))};
@@ -1443,17 +1443,52 @@ document.addEventListener("touchstart",e=>{const b=e.target.closest("[data-lgmen
 document.addEventListener("touchend",e=>{if(LGX==null)return;const dx=e.changedTouches[0].clientX-LGX;LGX=null;if(Math.abs(dx)<28)return;
  const i=LGS.indexOf(S.lang||"fr"),n=LGS[(i+(dx<0?1:LGS.length-1))%LGS.length];e.preventDefault();pickLang(n)});
 lgSync();
+// Le même script d'accueil dans les 3 langues : présentation, rôle, prénom, « enchantée », puis on choisit ensemble ses vêtements.
+// Arabe (dialecte qatari) et anglais : Aura lit chaque phrase avec sa voix (ElevenLabs via le Worker).
+const SCR={
+ ar:{INTRO:[["هلا والله! أنا الستايلست الخاصة فيچ.","say",1]],
+  SUITE:[["شغلي إني أفهم شنو اللي يطلّع جمالچ صدق: ألوانچ، شكل وجهچ، وقوامچ.","say"],["ومع بعض بنبني ستايل يشبهچ، عشان تحسين إنچ حلوة وواثقة من نفسچ كل يوم.","say",1]],
+  ASKNOM:["بس قبل كل شي، قوليلي… شنو اسمچ؟","say"],
+  OUTRO:n=>[["تشرفنا يا "+n+"! أنا أورا.","say",1]],
+  FIN:[["يلا نبدأ رحلتنا الحلوة مع الجمال: كل يوم بساعدچ تختارين ملابسچ، ونختار مع بعض اللوك.","say",1]]},
+ en:{INTRO:[["Hi, I’m your personal stylist.","say",1]],
+  SUITE:[["My role is to understand what truly brings out your beauty: your colours, your face shape and your silhouette.","say"],["Together, we’ll build a style that feels like you, so you feel beautiful and confident every day.","say",1]],
+  ASKNOM:["But first, tell me… what’s your name?","say"],
+  OUTRO:n=>[["Lovely to meet you, "+n+"! I’m Aura.","say",1]],
+  FIN:[["Let’s begin our beautiful beauty journey: every day, I’ll help you choose your clothes and we’ll pick your outfit together.","say",1]]}};
+const SAYC={};
+function sayUrl(t){const lg=S.lang;if(lg!=="ar"&&lg!=="en")return Promise.resolve(null);const k=lg+"|"+t;if(SAYC[k])return SAYC[k];
+ return SAYC[k]=Promise.race([fetch(AI_URL+"/tts",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:"say_"+lg,texte:t})})
+  .then(async r=>r&&r.ok&&/audio/.test(r.headers.get("Content-Type")||"")?URL.createObjectURL(await r.blob()):null).catch(()=>null),wait(9000).then(()=>null)])
+  .then(u=>{if(!u)delete SAYC[k];return u})}
+function sayLine(t){return new Promise(async r=>{let done=false,iv=0;const fin=v=>{if(done)return;done=true;clearInterval(iv);if(window.auraTalking)auraTalking(false);talk(false);r(v)};
+ if(!S.voice){wait(Math.max(2200,t.length*60)).then(()=>fin());return}
+ const tok=++AUDTOK;const url=await sayUrl(t);if(tok!==AUDTOK)return fin();
+ // Sans voix enregistrée : anglais avec la voix du téléphone ; arabe, Aura mime (jamais la voix masculine du téléphone).
+ const phone=()=>{clearInterval(iv);if(done)return;const ss=window.speechSynthesis;
+  if(S.lang!=="en"||!ss){mime(t).then(()=>fin());return}
+  try{ss.cancel();if(!VOICES.length)loadVoices();const u=new SpeechSynthesisUtterance(t);u.lang="en-US";const v=VOICES.find(x=>/^en/i.test(x.lang)&&/female|samantha|karen|victoria|google/i.test(x.name))||VOICES.find(x=>/^en/i.test(x.lang));if(v)u.voice=v;KEEP=[u];
+   u.onstart=()=>{SPOKE=true;window.GREETED=true;talk(true);iv=setInterval(()=>mouthKick(.3+Math.random()*.6),130)};u.onend=u.onerror=()=>fin();setTimeout(()=>fin(),Math.max(4000,t.length*90));ss.resume();ss.speak(u)}catch(e){fin()}};
+ if(!url)return phone();
+ try{affStop();if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}
+ AUD.onended=()=>fin();AUD.onerror=phone;
+ AUD.onplay=()=>{SPOKE=true;window.GREETED=true;talk(true);if(window.auraTalking)auraTalking(true);clearInterval(iv);iv=setInterval(()=>mouthKick(.3+Math.random()*.65),120)};
+ AUD.src=url;
+ try{const p=AUD.play();if(p&&p.catch)p.catch(e=>{if(e&&e.name==="NotAllowedError"){clearInterval(iv);done=true;r("blocked")}else phone()})}catch(e){phone()}})}
 let INTRO_ON=false;
 async function introFr(){INTRO_ON=true;try{await introRun()}finally{INTRO_ON=false}}
-async function introRun(){const gen=GEN,ok=()=>gen===GEN&&!SKIP;showBtns();applyLang();$("#hi").textContent="";typeInto($("#hi"),"Salut"+(S.nom?" "+S.nom:"")+" !",RM?1:45);
+async function introRun(){const gen=GEN,ok=()=>gen===GEN&&!SKIP,lg=SCR[S.lang]?S.lang:"fr";
+ const C=lg==="fr"?{INTRO,SUITE,ASKNOM,OUTRO,FIN}:SCR[lg];
+ if(lg!=="fr")[...C.INTRO,...C.SUITE,C.ASKNOM,...C.FIN].forEach(t=>sayUrl(t[0]));
+ showBtns();applyLang();$("#hi").textContent="";typeInto($("#hi"),L("hi")+(S.nom?" "+S.nom:"")+(lg==="fr"?" !":"!"),RM?1:45);
  // À chaque ouverture : présentation complète. Le prénom n'est demandé que si on ne le connaît pas encore.
  // Cliente déjà inscrite : « Salut, je suis ta personal stylist », puis son rôle et la suite (sans redemander le prénom).
- for(const t of INTRO){if(!ok())return;await line(...t)}
- if(S.nom){for(const t of [...SUITE,...FIN]){if(!ok())return;await line(...t)}return}
- if(!ok())return;await line(...ASKNOM);if(!ok())return;const n=await askNom();if(!ok())return;
- if(n){S.nom=n;NOM=n;save();$("#hi").textContent="Salut "+n+" !";await ttsNom(n,"enchantee");for(const t of OUTRO(n)){if(!ok())return;await line(...t)}}
- else for(const t of [...SUITE,...FIN]){if(!ok())return;await line(...t)}}
-if(S.lang&&S.lang!=="fr"){SKIP=true;showBtns();applyLang();greetLang()}else introFr();
+ for(const t of C.INTRO){if(!ok())return;await line(...t)}
+ if(S.nom){for(const t of [...C.SUITE,...C.FIN]){if(!ok())return;await line(...t)}return}
+ if(!ok())return;await line(...C.ASKNOM);if(!ok())return;const n=await askNom();if(!ok())return;
+ if(n){S.nom=n;NOM=n;save();$("#hi").textContent=L("hi")+" "+n+(lg==="fr"?" !":"!");if(lg==="fr")await ttsNom(n,"enchantee");else sayUrl(C.OUTRO(n)[0][0]);for(const t of C.OUTRO(n)){if(!ok())return;await line(...t)}if(lg!=="fr")for(const t of [...C.SUITE,...C.FIN]){if(!ok())return;await line(...t)}}
+ else for(const t of [...C.SUITE,...C.FIN]){if(!ok())return;await line(...t)}}
+introFr();
 function HELLO(){return "Salut"+(S.nom?" "+S.nom:"")+" ! Je suis ta personal stylist. Je suis là pour révéler ta beauté."}
 function skipIntro(){SKIP=true;stopVoice();try{AUD.pause()}catch(e){}const tb=document.querySelector(".tapaura");if(tb)tb.hidden=true;$("#hi2").textContent=L("t");if(window.SKIPNOM)window.SKIPNOM();showBtns()}
 $("#skip").addEventListener("click",skipIntro);
