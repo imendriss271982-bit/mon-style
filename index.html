@@ -370,6 +370,14 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 .cap-li svg{width:36px;height:36px}
 .cap-l small{display:block;color:var(--muted);font-size:12.5px;margin-bottom:6px}
 .cap-l p{margin:0;font-size:14px;line-height:1.45}
+
+/* ===== Outfit check : Aura demande l'occasion ===== */
+.occ{display:flex;align-items:center;gap:12px;margin:2px 0 12px}
+.occ img{width:44px;height:44px;border-radius:50%;object-fit:cover;flex:none;box-shadow:0 0 0 2px #fff,0 0 0 3px rgba(125,46,74,.25)}
+.occ p{margin:0;padding:10px 14px;border-radius:18px 18px 18px 4px;background:var(--soft);font-weight:500;font-size:15px}
+.occ-c{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.occ-b{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:9px 14px;font-size:14px;cursor:pointer}
+.occ-b[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
 </style>
 </head>
 <body>
@@ -442,7 +450,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </nav>
 </div>
 <script>
-const VERSION="57";
+const VERSION="58";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -523,6 +531,7 @@ const DOCK=["home","boutique","o_photo","news","profil","chat"];
 
 const IC={face:'<svg viewBox="0 0 24 24"><circle cx="12" cy="10" r="5"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>',body:'<svg viewBox="0 0 24 24"><circle cx="12" cy="4" r="2"/><path d="M12 6v8M8 9h8M12 14l-3 7M12 14l3 7"/></svg>',outfit:'<svg viewBox="0 0 24 24"><path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/></svg>'};
 
+const OCCS=[["Travail","💼"],["Casual","☕"],["Soirée","✨"],["Mariage","💍"],["Rendez-vous","🌹"],["Voyage","✈️"]];
 function photoPage(k,o){
  return {step:o.step,html:`<p class="step">${o.step}</p><h1>${o.t}</h1><p class="sub">${o.c}</p>
  <div class="photo ${S.busy===k?"scan":""}">${S.url[k]?`<img src="${S.url[k]}" alt="Ta photo">`:IC[o.ic]+`<span style="display:block;margin-top:10px">${o.ph}</span>`}</div>
@@ -655,11 +664,12 @@ infos:()=>{const d=S.idraft||(S.idraft={...S.info,nom:S.nom||"",styles:[...(S.in
 v_run:()=>runPage("face","Je regarde ton visage…","a_face"),
 c_run:()=>runPage("body","Je regarde ta silhouette…","a_body"),
 k_run:()=>runPage("face","Je regarde tes couleurs…","a_face"),
-o_photo:()=>photoPage("outfit",{step:"Outfit check",t:"Ta tenue",c:"En pied, de face, la tenue complète avec les chaussures, en lumière claire.",ph:"Ta photo de tenue",ic:"outfit",cam:"environment",b:"Noter ma tenue",say:"Montre-moi ta tenue, "+NOM+". Prends une photo en pied, avec les chaussures."}),
+o_photo:()=>{const p=photoPage("outfit",{step:"Outfit check",t:"Ta tenue",c:"En pied, de face, la tenue complète avec les chaussures, en lumière claire.",ph:"Ta photo de tenue",ic:"outfit",cam:"environment",b:"Noter ma tenue",say:S.occ?"Montre-moi ta tenue, "+NOM+". Prends une photo en pied, avec les chaussures.":"C’est pour quelle occasion aujourd’hui, "+NOM+" ? Choisis, puis montre-moi ta tenue."});
+ p.html=`<p class="step">Outfit check</p><div class="occ"><img src="aura-face.jpg?v=1" alt="Aura" width="44" height="44"><p>C’est pour quelle occasion aujourd’hui ?</p></div><div class="occ-c" role="group" aria-label="Occasion">${OCCS.map(o=>`<button class="occ-b" data-occ="${o[0]}" aria-pressed="${S.occ===o[0]}">${o[1]} ${o[0]}</button>`).join("")}</div>`+p.html.replace('<p class="step">Outfit check</p>','');return p},
 o_run:()=>({html:`<p class="step">Outfit check</p><h1>${S.err?"Un souci":"Je regarde ta tenue…"}</h1><div class="photo scan">${S.url.outfit?`<img src="${S.url.outfit}" alt="">`:""}</div><p class="sub">${esc(S.err||"Une seconde.")}</p>`,
  foot:S.err?`<button class="btn" data-retry>Réessayer</button><button class="link" data-go="o_photo">Changer ma photo</button>`:"",back:!!S.err}),
 o_res:()=>{const o=ok("outfit");if(!o)return missing("outfit",S.res.outfit);
- return {html:`<p class="step">Outfit check</p><div class="big"><span id="note">0</span><span style="font-size:28px"> / 10</span></div><p>${esc(o.resume)}</p>
+ return {html:`<p class="step">Outfit check${S.occ?" · "+esc(S.occ):""}</p><div class="big"><span id="note">0</span><span style="font-size:28px"> / 10</span></div><p>${esc(o.resume)}</p>
  <h2>Ce qui marche</h2><ul class="tips">${(o.points_forts||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
  <h2>À changer</h2><ul class="tips">${(o.changements||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`,
  say:"Ta tenue a "+o.note+" sur 10. "+o.resume+" Ce que je changerais : "+(o.changements||[]).join(". "),count:+o.note,
@@ -751,7 +761,7 @@ const REFL=REF.split("\n"),REFP=(...k)=>REFL[0]+"\n"+REFL.filter(l=>k.some(x=>l.
 const PR_VISAGE=()=>"Tu es styliste experte en morphologie du visage. Voici la photo de visage d’une cliente. Estime la longueur du visage, la largeur du front, des pommettes et de la mâchoire, calcule les ratios et déduis la forme (ovale, rond, carré, rectangle, cœur, diamant ou allongé). Si la photo est inutilisable (pas de visage, trop sombre, filtre), réponds {\"erreur\":\"explication courte et ce qu’il faut changer\"}. "+FMT+"Format : {\"forme\":\"\",\"pourquoi\":\"2 phrases\",\"coupes\":\"\",\"couleur_cheveux\":\"\",\"lunettes\":\"\",\"makeup\":\"\"}";
 const PR_COUL=()=>REFP("COLORIMÉTRIE")+" Tu es styliste experte en colorimétrie. Voici la photo de visage d’une cliente. Combine ce que tu vois (teint, sous-ton, yeux, cheveux, contraste) avec ses réponses au questionnaire : "+ANS_TXT(S.ans)+". Le questionnaire seul indique : "+seasonFromAnswers(S.ans)+". Choisis la saison exacte parmi : "+SEAS_LIST+". Si la photo est inutilisable, réponds {\"erreur\":\"explication courte\"}. "+FMT+"Format : {\"saison\":\"une des 12 saisons exactement\",\"sous_ton\":\"chaud|froid|neutre\",\"pourquoi\":\"2 phrases\"}";
 const PR_BODY=()=>REFP("MORPHOLOGIE","KIBBE")+" Tu es styliste experte en morphologie et en Kibbe. Voici la photo en pied d’une cliente. Analyse ses proportions (épaules, taille, hanches, buste, jambes) et sa structure (anguleuse ou douce). Reste bienveillante, ne juge jamais le poids ni les formes. Morphologie parmi : Sablier, Poire, Pomme, Rectangle, Triangle inversé. Kibbe parmi : "+KIBBE_LIST+". Si la photo est inutilisable, réponds {\"erreur\":\"explication courte et ce qu’il faut changer\"}. "+FMT+"Format : {\"forme\":\"\",\"proportions\":\"1 phrase\",\"kibbe\":\"\",\"kibbe_pourquoi\":\"2 phrases\",\"conseils\":\"\",\"a_eviter\":\"\"}";
-const PR_OUT=()=>REF+" Tu es styliste personnelle exigeante et bienveillante. Note la tenue de la photo de 0 à 10 : harmonie des couleurs, coupe, proportions, point focal, adéquation avec son profil ("+(PROFIL()||"inconnu")+"). Si la photo est inutilisable, réponds {\"erreur\":\"explication courte\"}. "+FMT+"Format : {\"note\":0,\"resume\":\"1 phrase\",\"points_forts\":[\"\"],\"changements\":[\"changement précis\"]}";
+const PR_OUT=()=>REF+" Tu es styliste personnelle exigeante et bienveillante. Note la tenue de la photo de 0 à 10 : harmonie des couleurs, coupe, proportions, point focal, adéquation avec son profil ("+(PROFIL()||"inconnu")+")"+(S.occ?" et avec l’occasion : "+S.occ+" (dis clairement si la tenue convient à cette occasion et quoi ajuster pour elle)":"")+". Si la photo est inutilisable, réponds {\"erreur\":\"explication courte\"}. "+FMT+"Format : {\"note\":0,\"resume\":\"1 phrase\",\"points_forts\":[\"\"],\"changements\":[\"changement précis\"]}";
 const ERRS={not_granted:"Autorise Claude à analyser tes photos, puis réessaie.",image_rejected:"Cette photo n’est pas acceptée. Essaie-en une autre.",rate_limited:"Trop de demandes. Réessaie dans un instant.",images_unavailable:"L’envoi de photos n’est pas disponible ici.",invalid_json:"La réponse n’a pas pu être lue. Réessaie."};
 let SAMPLE=null;
 const AI_URL="https://mon-style.imendriss271982.workers.dev";
@@ -932,6 +942,7 @@ document.addEventListener("click",e=>{
  if(t.id==="affbtn"){AFFON?affStop():affPlay();return}
  if(t.id==="voice"){if(AFFON)affStop();S.voice=!S.voice;try{localStorage.setItem("monstyle_voix",S.voice?"1":"0")}catch(e){}voiceBtn();if(!S.voice){stopVoice();toast("Voix coupée")}else{toast("Voix activée");unlock();const p=P[S.page]();say(p.say||"Je suis là, "+NOM+".")}return}
  if(t.dataset.mod)return startMod(t.dataset.mod);
+ if(t.dataset.occ){S.occ=t.dataset.occ;save();render(false);say({"Travail":"Une tenue pour le travail, parfait.","Casual":"Une tenue décontractée, j’adore.","Soirée":"Une soirée ! On va te rendre éblouissante.","Mariage":"Un mariage, il faut être élégante sans voler la vedette.","Rendez-vous":"Un rendez-vous, on veut te voir rayonner.","Voyage":"Un voyage, confort et style."}[S.occ]+" Montre-moi ta tenue.");return}
  if(t.dataset.start==="A"){S.flow=FLOW_A;S.hist=["home"];S.page="a_nom";S.dir="f";S.res={outfit:S.res.outfit};S.wait={};S.rid++;render(true);return}
  if(t.dataset.go==="o_photo"){S.flow=FLOW_O;if(S.page!=="o_photo"){S.hist=["home"];S.page="o_photo";S.dir="f";render(true)}return}
  if(t.dataset.go){go(t.dataset.go);return}
