@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Test voix Aura</title>
+<style>body{font-family:-apple-system,system-ui,sans-serif;padding:24px;background:#fff;color:#222}h1{font-size:22px}input,button{font-size:18px;padding:12px;border-radius:10px;border:1px solid #ccc;width:100%;box-sizing:border-box;margin:6px 0}button{background:#7d2e4a;color:#fff;border:0}#r{white-space:pre-wrap;font-size:15px;background:#f6f0f2;padding:12px;border-radius:10px;margin-top:12px}</style></head>
+<body><h1>Test : Aura dit ton prénom</h1>
+<input id="n" value="Imen"><button id="b">Tester la voix</button><div id="r">Appuie sur le bouton.</div>
+<script>
+const r=document.getElementById("r");
+document.getElementById("b").onclick=async()=>{r.textContent="Envoi…";const t0=Date.now();
+ try{const res=await fetch("https://mon-style.imendriss271982.workers.dev/tts",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({nom:document.getElementById("n").value,type:"enchantee"})});
+  const ct=res.headers.get("Content-Type")||"";const s=((Date.now()-t0)/1000).toFixed(1);
+  if(ct.includes("audio")){const b=await res.blob();r.textContent="✅ OK : voix reçue ("+Math.round(b.size/1024)+" Ko) en "+s+" s";const a=new Audio(URL.createObjectURL(b));a.play().catch(()=>{r.textContent+="\n(touche encore le bouton pour entendre)"})}
+  else{r.textContent="❌ Statut "+res.status+" en "+s+" s :\n"+await res.text()}}
+ catch(e){r.textContent="❌ Erreur réseau : "+e.message}};
+</script></body></html>
