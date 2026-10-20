@@ -49,6 +49,7 @@ nav.dock #affbtn.on{color:var(--accent)}nav.dock #affbtn.on svg{fill:var(--accen
 .avatar:before{content:"";position:absolute;inset:-8px;border-radius:128px 128px 36px 36px;border:2px solid var(--accent);opacity:.25}
 .talk .avatar:before{animation:ring 1.4s ease-out infinite;opacity:.6}
 @keyframes float{50%{transform:translateY(-6px)}}
+.avatar.small{width:120px;height:120px;margin:0 auto 12px}.avatar.small img{border-radius:50%}.avatar.small:before{border-radius:50%}
 .chatava{display:block;width:96px;height:96px;border-radius:50%;object-fit:cover;object-position:top;margin:0 auto 10px;box-shadow:0 6px 18px rgba(125,46,74,.2)}
 .splashlogo{width:200px;height:200px;border-radius:44px;margin-bottom:36px;box-shadow:0 10px 30px rgba(125,46,74,.18)}
 #splash .logo{margin-bottom:40px}
@@ -113,6 +114,11 @@ footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg)
 #splash .btn.show{opacity:1;transform:none;pointer-events:auto}
 #splash .btn.ghost{background:none;color:var(--accent);border:1px solid var(--accent);margin-top:12px}
 #splash .btn[hidden]{display:none}
+#splash #talkbtn.live{background:#a33a5d}
+.spst{min-height:1.4em!important;margin:0 0 10px;font-size:14px;color:var(--accent)!important}
+.avatar img{transform-origin:50% 90%}
+.avatar.speak img{animation:none}
+.avatar.speak:before{animation:ring 1.1s ease-out infinite;opacity:.7}
 #inst{position:fixed;inset:0;z-index:60;background:rgba(20,17,19,.45);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
 #inst.show{opacity:1;pointer-events:auto}
 #inst .sh{width:100%;max-width:480px;background:var(--surface);border-radius:28px 28px 0 0;padding:26px 24px calc(24px + env(safe-area-inset-bottom,0px));transform:translateY(30px);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
@@ -241,7 +247,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </style>
 </head>
 <body>
-<div id="splash"><div class="avatar" id="ava"><img src="stylist.jpg" alt="Ta styliste personnelle"></div><h1 id="hi"></h1><p id="hi2"></p><button class="btn" id="install" hidden>Télécharger l’application</button><button class="btn" id="start">Commencer</button></div>
+<div id="splash"><div class="avatar" id="ava"><img src="stylist.jpg" alt="Ta styliste personnelle"></div><h1 id="hi"></h1><p id="hi2"></p><button class="btn" id="install" hidden>Télécharger l’application</button><p id="spst" class="spst"></p><button class="btn" id="talkbtn">Parler avec elle</button><button class="btn ghost" id="start">Commencer</button></div>
 <div id="inst" role="dialog" aria-modal="true" aria-labelledby="instT"><div class="sh"><h2 id="instT">Installer My Style</h2><p class="sub" id="instS">Quelques gestes dans Safari, et My Style s’ouvre comme une vraie application depuis ton écran d’accueil.</p>
 <ol id="instL"><li><span>Ouvert depuis <b>WhatsApp</b> ? Touche d’abord la <b>boussole Safari</b> <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg> en bas à droite</span></li><li><span>Touche <b>Partager</b> <svg viewBox="0 0 24 24"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M6 11H5v10h14V11h-1"/></svg> en bas de Safari</span></li><li><span>Fais défiler et choisis <b>Sur l’écran d’accueil</b> <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg></span></li><li><span>Touche <b>Ajouter</b>, puis ouvre l’icône My Style</span></li></ol>
 <button class="btn" id="instOk">J’ai compris</button></div></div>
@@ -259,7 +265,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </nav>
 </div>
 <script>
-const VERSION="20";
+const VERSION="21";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -452,7 +458,7 @@ news:()=>{const n=S.news,prof=PROFIL();
  <button class="btn ghost" data-news ${S.newsBusy?"disabled":""}>${n?"Actualiser les tendances":"Voir les tendances"}</button>
  <h2>À lire</h2><div class="chips">${MAGS.map(m=>`<a target="_blank" rel="noopener" href="${m[1]}">${m[0]}</a>`).join("")}</div>`,
  say:n&&n.resume?n.resume:"Voici les nouveautés fashion, "+NOM+". Touche Voir les tendances."}},
-chat:()=>({dock:1,html:`<img src="stylist-face.jpg" alt="" class="chatava"><h1>Ta styliste</h1><button class="callbtn" id="callbtn" aria-label="Parler à ma styliste"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><p id="callst" class="sub" style="text-align:center">Appuie pour parler avec ta styliste</p><h2>Ou écris-lui</h2>
+chat:()=>({dock:1,html:`<div class="avatar small" id="ava2"><img src="stylist-face.jpg" alt=""></div><h1>Ta styliste</h1><button class="callbtn" id="callbtn" aria-label="Parler à ma styliste"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><p id="callst" class="sub" style="text-align:center">Appuie pour parler avec ta styliste</p><h2>Ou écris-lui</h2>
  <div class="chat">${S.chat.map((c,i)=>`<div class="bub ${c.r}" id="b${i}">${esc(c.t)||"…"}</div>`).join("")}</div>
 
  <div style="display:flex;gap:8px;margin-top:8px"><input class="field" id="msg" placeholder="Écris ta question" value="${esc(S.draft)}"><button class="btn" style="width:auto;padding:14px 20px" data-send ${S.busy?"disabled":""}>Envoyer</button></div>`,
@@ -705,7 +711,7 @@ checkUpdate();document.addEventListener("visibilitychange",()=>{if(!document.hid
 (async()=>{const rm=matchMedia("(prefers-reduced-motion:reduce)").matches;
  await typeInto($("#hi"),"Salut"+(S.nom?" "+S.nom:"")+" !",rm?1:75);
  await typeInto($("#hi2"),"Je suis ta personal stylist. Je veux t’aider à choisir ton outfit.",rm?1:28);
- $("#start").classList.add("show");if(!$("#install").hidden)$("#install").classList.add("show")})();
+ $("#talkbtn").classList.add("show");$("#start").classList.add("show");if(!$("#install").hidden)$("#install").classList.add("show")})();
 const UA=navigator.userAgent,IOS=/iPhone|iPad|iPod/.test(UA)||(/Macintosh/.test(UA)&&navigator.maxTouchPoints>1);
 const APP=navigator.standalone===true||matchMedia("(display-mode: standalone)").matches;
 const NOT_SAFARI=/CriOS|FxiOS|EdgiOS|FBAN|FBAV|Instagram|Line\/|Snapchat|TikTok/.test(UA);
@@ -718,31 +724,40 @@ $("#install").addEventListener("click",async()=>{if(BIP){BIP.prompt();try{await 
  $("#inst").classList.add("show");$("#instOk").focus()});
 $("#instOk").addEventListener("click",()=>$("#inst").classList.remove("show"));
 $("#inst").addEventListener("click",e=>{if(e.target.id==="inst")$("#inst").classList.remove("show")});
-$("#start").addEventListener("click",()=>{unlock();$("#splash").classList.add("out");setTimeout(()=>$("#splash").remove(),800);
- say("Salut"+(S.nom?" "+S.nom:"")+" ! Je suis ta personal stylist. Je veux t’aider à choisir ton outfit. "+P.home().say)});
+$("#start").addEventListener("click",()=>{if(window.endCall)window.endCall();unlock();$("#splash").classList.add("out");setTimeout(()=>$("#splash").remove(),800);
+ if(!window.CALLED)say("Salut"+(S.nom?" "+S.nom:"")+" ! Je suis ta personal stylist. Je veux t’aider à choisir ton outfit. "+P.home().say)});
 </script>
 <script type="module">
-let conv=null,busy=false;
-const st=t=>{const e=document.getElementById("callst");if(e)e.textContent=t};
-const live=on=>{const b=document.getElementById("callbtn");if(b)b.classList.toggle("live",on)};
-document.addEventListener("click",async e=>{
- if(!e.target.closest("#callbtn")||busy)return;
- busy=true;
- if(conv){try{await conv.endSession()}catch(_){}conv=null;live(false);st("Appuie pour parler avec ta styliste");busy=false;return}
+let conv=null,busy=false,raf=0;
+const $$=id=>document.getElementById(id);
+const live=on=>{["callbtn","talkbtn"].forEach(i=>{const b=$$(i);if(b)b.classList.toggle("live",on)});const t=$$("talkbtn");if(t)t.textContent=on?"Raccrocher":"Parler avec elle"};
+let stFn=()=>{};
+const st=t=>{stFn(t);const e=$$("callst");if(e)e.textContent=t};
+function anim(){const v=conv&&conv.getOutputVolume?conv.getOutputVolume():0;
+ document.querySelectorAll(".avatar").forEach(a=>{const img=a.querySelector("img");a.classList.toggle("speak",v>0.02);
+  if(img)img.style.transform=v>0.02?`translateY(${-v*10}px) scale(${1+v*0.06}) rotate(${Math.sin(performance.now()/180)*v*3}deg)`:""});
+ raf=conv?requestAnimationFrame(anim):0;if(!conv)document.querySelectorAll(".avatar").forEach(a=>{a.classList.remove("speak");const i=a.querySelector("img");if(i)i.style.transform=""})}
+async function startCall(){
+ if(busy)return;busy=true;
+ if(conv){try{await conv.endSession()}catch(_){}conv=null;live(false);st("Appel terminé.");busy=false;return}
  st("Connexion…");
  try{
   if(typeof stopVoice==="function")stopVoice();
-  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){try{navigator.clipboard&&navigator.clipboard.writeText(location.href.split("?")[0])}catch(_){}throw new Error("["+(window.isSecureContext?"s":"ns")+(navigator.standalone?"-app":"-web")+"] cette fenêtre bloque le micro. Le lien est copié : ouvre Safari, colle-le dans la barre d’adresse, puis ajoute l’application à l’écran d’accueil.")};
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){try{navigator.clipboard&&navigator.clipboard.writeText(location.href.split("?")[0])}catch(_){}throw new Error("cette fenêtre bloque le micro. Le lien est copié : ouvre Safari, colle-le dans la barre d’adresse, puis ajoute l’application à l’écran d’accueil.")};
   await navigator.mediaDevices.getUserMedia({audio:true});
   const {Conversation}=await import("https://esm.sh/@elevenlabs/client");
+  window.CALLED=true;
   conv=await Conversation.startSession({agentId:AGENT_ID,connectionType:"websocket",dynamicVariables:{user_name:(typeof S!=="undefined"&&S.nom)||"",profil:(typeof PROFIL==="function"&&PROFIL())||"pas encore analysé"},
    onModeChange:({mode})=>st(mode==="speaking"?"Elle te parle…":"Je t’écoute, parle-moi"),
    onDisconnect:()=>{conv=null;live(false);st("Appel terminé. Appuie pour reparler.")},
    onError:m=>st("Petit souci : "+m)});
-  live(true);st("Je t’écoute, parle-moi");
+  live(true);st("Elle arrive…");cancelAnimationFrame(raf);anim();
  }catch(err){conv=null;live(false);st(err&&err.name==="NotAllowedError"?"Autorise le micro : Réglages, Safari, Micro.":"Impossible de lancer l’appel : "+(err&&err.message||err))}
- busy=false;
-});
+ busy=false}
+window.endCall=()=>{if(conv){try{conv.endSession()}catch(_){}conv=null;live(false)}};
+document.addEventListener("click",e=>{
+ if(e.target.closest("#talkbtn")){stFn=t=>{const x=$$("spst");if(x)x.textContent=t};startCall()}
+ else if(e.target.closest("#callbtn")){stFn=()=>{};startCall()}});
 </script>
 </body>
 </html>
