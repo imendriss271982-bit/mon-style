@@ -665,7 +665,7 @@ S.info={};
 try{const j=JSON.parse(localStorage.getItem("monstyle")||"null");if(j){S.res=j.res||{};S.ans=j.ans||{};S.info=j.info||{};if(j.nom){S.nom=j.nom;NOM=j.nom}if(j.later)S.later=true;if(j.lang)S.lang=j.lang}}catch(e){}
 function save(){try{localStorage.setItem("monstyle",JSON.stringify({res:{visage:S.res.visage,corps:S.res.corps,couleurs:S.res.couleurs,outfit:S.res.outfit},ans:S.ans,nom:S.nom,info:S.info,later:S.later,lang:S.lang}))}catch(e){}}
 // Lien de test « nouvelle cliente » : ?nouvelle → Aura redemande le prénom, en français.
-try{if(/[?&]nouvelle\b/.test(location.search)){delete S.nom;NOM="";S.lang="fr";save();history.replaceState(null,"",location.pathname)}}catch(e){}
+try{if(/[?&]nouvelle\b/.test(location.search)){delete S.nom;NOM="ma belle";S.lang="fr";save();history.replaceState(null,"",location.pathname)}}catch(e){}
 const AGES=["18–24 ans","25–34 ans","35–44 ans","45–54 ans","55 ans et +"];
 const TAILLES=["XS","S","M","L","XL","XXL","3XL et +"];
 const BUDGETS=["Petit budget","Moyen","Haut de gamme"];
