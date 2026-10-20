@@ -78,7 +78,7 @@ const I18N_D=[
 ["Il reste {0} étape. Ensuite, ta fiche complète s’affiche ici.","{0} step left. Then your full profile will show here.","باقي خطوة وحدة. بعدها يطلع ملفچ كامل هني."],
 ["Il reste {0} étapes. Ensuite, ta fiche complète s’affiche ici.","{0} steps left. Then your full profile will show here.","باقي {0} خطوات. بعدها يطلع ملفچ كامل هني."],
 ["Visage, silhouette, couleurs : on la fait une seule fois, ensemble.","Face, silhouette, colours: we do it once, together.","الوجه، الجسم، الألوان: نسويه مرة وحدة بس، مع بعض."],
-["Bonjour {0}, je suis contente de te voir. Touche le micro pour me parler, ou choisis une analyse.","Hello {0}, I’m happy to see you. Tap the mic to talk to me, or choose an analysis.","هلا والله {0}، فرحانة إني أشوفچ. اضغطي على المايك عشان تكلميني، أو اختاري تحليل."],
+["Bonjour {0}, je suis contente de te voir. Touche le téléphone pour me parler, ou choisis une analyse.","Hello {0}, I’m happy to see you. Tap the phone to talk to me, or choose an analysis.","هلا والله {0}، فرحانة إني أشوفچ. اضغطي على التلفون عشان تكلميني، أو اختاري تحليل."],
 ["Ta forme de visage : coupes, lunettes, make-up","Your face shape: haircuts, glasses, make-up","شكل وجهچ: القصّات، النظارات، المكياج"],
 ["Ta silhouette et ton type Kibbe : les coupes qui te subliment","Your silhouette and Kibbe type: the cuts that flatter you","جسمچ ونوع كيبي: القصّات اللي تبرز جمالچ"],
 ["Ta saison : les teintes qui t’illuminent","Your season: the shades that light you up","موسمچ: الألوان اللي تنوّرچ"],

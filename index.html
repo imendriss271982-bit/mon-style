@@ -179,8 +179,14 @@ footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg)
 :root[data-theme="dark"] #splash .spbot:before{background:linear-gradient(to bottom,transparent,rgba(20,17,19,.85) 38%,#141113 100%)}
 #splash .spbot .btn{width:100%}
 #splash .skip{z-index:4;top:calc(10px + env(safe-area-inset-top));text-shadow:0 1px 8px rgba(255,255,255,.9)}
-#splash .tapaura{position:absolute;z-index:5;left:calc(50% + var(--ah)*.756*.29);bottom:calc(var(--ab) + var(--ah)*.70 - 22px);width:44px;height:44px;padding:0;display:grid;place-items:center;border:0;border-radius:50%;background:var(--accent);box-shadow:0 4px 14px rgba(125,46,74,.35);animation:tapPulse 1.6s ease-in-out infinite}#splash .tapaura svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}#splash .tapaura path:first-child{fill:#fff}
-#splash .tapaura[hidden]{display:none}
+/* Haut-parleur : toujours là, même taille et même axe que le téléphone, juste en dessous */
+#splash .tapaura{position:absolute;z-index:6;left:calc(50% + var(--ah)*.756*.24);bottom:calc(var(--ab) + var(--ah)*.80 - 76px);width:62px;height:62px;padding:0;display:grid;place-items:center;border:4px solid #fff;border-radius:50%;background:var(--accent);color:#fff;cursor:pointer;box-shadow:0 8px 22px rgba(125,46,74,.45);transition:background .3s,opacity .3s}
+#splash .tapaura svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}#splash .tapaura svg path:first-child{fill:currentColor}
+#splash .tapaura .coupe{display:none}
+body.talk #splash .tapaura{animation:tapPulse 1.6s ease-in-out infinite}
+/* Pendant l'appel, le haut-parleur est coupé : un seul des deux marche à la fois */
+#splash:has(#talkbtn.live) .tapaura{background:#B9A9AF;animation:none}
+#splash:has(#talkbtn.live) .tapaura .son{display:none}#splash:has(#talkbtn.live) .tapaura .coupe{display:block}
 @keyframes tapPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 @media (prefers-reduced-motion:reduce){#splash .avatar.aura .fig,#splash .avatar.aura .fig img.bras,#splash .atelier *,.avatar.aura.inchat .fig,.avatar.aura.inchat .fig img.bras{animation:none!important}}
 .spst{min-height:1.4em!important;margin:0 0 10px;font-size:14px;color:var(--accent)!important}
@@ -546,7 +552,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 <path class="s3" d="M148 70l1.4 4 4 1.4-4 1.4-1.4 4-1.4-4-4-1.4 4-1.4Z"/><path class="s2" d="M262 40l1.4 4 4 1.4-4 1.4-1.4 4-1.4-4-4-1.4 4-1.4Z"/>
 <path class="s3" d="M24 380l1.4 4 4 1.4-4 1.4-1.4 4-1.4-4-4-1.4 4-1.4Z"/><path d="M384 560l1.6 5 5 1.6-5 1.6-1.6 5-1.6-5-5-1.6 5-1.6Z"/></g>
 <ellipse cx="200" cy="830" rx="230" ry="40" fill="#E5BCC8" opacity=".55"/>
-</svg><div class="sptop"><h1 id="hi"></h1><p id="hi2"></p></div><div class="avatar aura" id="ava"><div class="fig"><img class="pose" src="aura-pose.webp?v=1" alt="Aura, ta styliste personnelle"><img class="body" src="aura-full.webp?v=3" alt="Aura, ta styliste personnelle"><img class="bras" src="aura-bras2.webp?v=3" alt=""><img class="mf" src="aura-m1.jpg?v=3" alt=""><img class="mf" src="aura-m2.jpg?v=3" alt=""><img class="mf" src="aura-m3.jpg?v=3" alt=""><img class="blink" src="aura-blink.webp?v=3" alt=""></div></div><button class="tapaura" type="button" hidden aria-label="Entends-moi"><svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg></button><div class="spbot"><button class="btn" id="install" hidden>Télécharger l’application</button><div id="spnom" hidden><input class="field" id="spnomI" autocomplete="given-name" placeholder="Ton prénom" style="font-size:20px;padding:16px;margin-bottom:12px;text-align:center"><button class="btn show" id="spnomB" disabled>Continuer</button></div><p id="spst" class="spst"></p><button class="btn ghost" id="start">Commencer</button></div><button id="skip" class="skip" type="button">Passer ›</button><button class="micbadge" id="talkbtn" type="button" aria-label="Parler avec elle"><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><svg class="hg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15.5c5.3-4.7 12.7-4.7 18 0l-2.6 2.6-3.2-1.6v-2.7c-2.7-.9-4.7-.9-6.4 0v2.7l-3.2 1.6z"/></svg></button><div class="splg"><button type="button" class="lgbtn" data-lgmenu aria-label="Langue" aria-haspopup="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></svg><b class="lgc">FR</b></button></div></div>
+</svg><div class="sptop"><h1 id="hi"></h1><p id="hi2"></p></div><div class="avatar aura" id="ava"><div class="fig"><img class="pose" src="aura-pose.webp?v=1" alt="Aura, ta styliste personnelle"><img class="body" src="aura-full.webp?v=3" alt="Aura, ta styliste personnelle"><img class="bras" src="aura-bras2.webp?v=3" alt=""><img class="mf" src="aura-m1.jpg?v=3" alt=""><img class="mf" src="aura-m2.jpg?v=3" alt=""><img class="mf" src="aura-m3.jpg?v=3" alt=""><img class="blink" src="aura-blink.webp?v=3" alt=""></div></div><button class="tapaura" type="button" aria-label="Entends-moi"><svg class="son" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><svg class="coupe" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg></button><div class="spbot"><button class="btn" id="install" hidden>Télécharger l’application</button><div id="spnom" hidden><input class="field" id="spnomI" autocomplete="given-name" placeholder="Ton prénom" style="font-size:20px;padding:16px;margin-bottom:12px;text-align:center"><button class="btn show" id="spnomB" disabled>Continuer</button></div><p id="spst" class="spst"></p><button class="btn ghost" id="start">Commencer</button></div><button id="skip" class="skip" type="button">Passer ›</button><button class="micbadge" id="talkbtn" type="button" aria-label="Parler avec elle"><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg><svg class="hg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15.5c5.3-4.7 12.7-4.7 18 0l-2.6 2.6-3.2-1.6v-2.7c-2.7-.9-4.7-.9-6.4 0v2.7l-3.2 1.6z"/></svg></button><div class="splg"><button type="button" class="lgbtn" data-lgmenu aria-label="Langue" aria-haspopup="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></svg><b class="lgc">FR</b></button></div></div>
 <div id="lgmenu" role="menu" hidden><button type="button" role="menuitem" data-pick="fr" data-noi18n>Français</button><button type="button" role="menuitem" data-pick="en" data-noi18n>English</button><button type="button" role="menuitem" data-pick="ar" data-noi18n>عربي</button></div>
 <div id="inst" role="dialog" aria-modal="true" aria-labelledby="instT"><div class="sh"><h2 id="instT">Installer My Style</h2><p class="sub" id="instS">Quelques gestes dans Safari, et My Style s’ouvre comme une vraie application depuis ton écran d’accueil.</p>
 <ol id="instL"><li><span>Ouvert depuis <b>WhatsApp</b> ? Touche d’abord la <b>boussole Safari</b> <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg> en bas à droite</span></li><li><span>Touche <b>Partager</b> <svg viewBox="0 0 24 24"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M6 11H5v10h14V11h-1"/></svg> en bas de Safari</span></li><li><span>Fais défiler et choisis <b>Sur l’écran d’accueil</b> <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg></span></li><li><span>Touche <b>Ajouter</b>, puis ouvre l’icône My Style</span></li></ol>
@@ -838,7 +844,7 @@ ${nd===3?`<button class="hx-ms" data-view="fiche" aria-label="Voir ma fiche styl
  </button>`}
 ${grHomeCard()}
  </div>`,
- say:"Bonjour "+NOM+", je suis contente de te voir. Touche le micro pour me parler, ou choisis une analyse."}},
+ say:"Bonjour "+NOM+", je suis contente de te voir. Touche le téléphone pour me parler, ou choisis une analyse."}},
 garde:()=>{const c=grCount(),rd=grReady(),occ=S.grOcc||"quotidien",looks=GR.looks[occ],by=id=>GR.items.find(x=>x.id===id);
  const prog=`<section class="gr-prog" aria-label="Progression">
   <div class="gr-pt"><span class="gr-ic">${GR_HANGER}</span><div><small>${Math.min(c.tot,GR_MIN)} / ${GR_MIN} articles importés</small><p>${rd?"Ta garde-robe est prête. Choisis une occasion, je coordonne tes vêtements en tenues.":"Ajoute au moins "+GR_MIN+" articles, et je les coordonne en tenues pour toi."}</p></div></div>
@@ -972,7 +978,7 @@ news:()=>{const n=S.news,prof=PROFIL();
  <button class="btn ghost" data-news ${S.newsBusy?"disabled":""}>${n?"Actualiser les tendances":"Voir les tendances"}</button>
  ${capsuleHTML()}`,
  say:n&&n.resume?n.resume:"Voici les nouveautés fashion, "+NOM+". Touche Voir les tendances."}},
-chat:()=>({dock:1,html:`<div class="avatar aura inchat" id="ava2"><div class="fig"><img class="pose" src="aura-pose.webp?v=1" alt="Aura, ta styliste personnelle"><img class="body" src="aura-full.webp?v=3" alt="Aura, ta styliste"><img class="bras" src="aura-bras2.webp?v=3" alt=""><img class="mf" src="aura-m1.jpg?v=3" alt=""><img class="mf" src="aura-m2.jpg?v=3" alt=""><img class="mf" src="aura-m3.jpg?v=3" alt=""><img class="blink" src="aura-blink.webp?v=3" alt=""></div><button class="micbadge show${window.liveConv&&window.liveConv()?" live":""}" id="callbtn" type="button" aria-label="Parler à ma styliste"><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><svg class="hg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15.5c5.3-4.7 12.7-4.7 18 0l-2.6 2.6-3.2-1.6v-2.7c-2.7-.9-4.7-.9-6.4 0v2.7l-3.2 1.6z"/></svg></button></div><h1>Ta styliste</h1><p id="callst" class="sub" style="text-align:center">Appuie pour parler avec ta styliste</p><h2>Ou écris-lui</h2>
+chat:()=>({dock:1,html:`<div class="avatar aura inchat" id="ava2"><div class="fig"><img class="pose" src="aura-pose.webp?v=1" alt="Aura, ta styliste personnelle"><img class="body" src="aura-full.webp?v=3" alt="Aura, ta styliste"><img class="bras" src="aura-bras2.webp?v=3" alt=""><img class="mf" src="aura-m1.jpg?v=3" alt=""><img class="mf" src="aura-m2.jpg?v=3" alt=""><img class="mf" src="aura-m3.jpg?v=3" alt=""><img class="blink" src="aura-blink.webp?v=3" alt=""></div><button class="micbadge show${window.liveConv&&window.liveConv()?" live":""}" id="callbtn" type="button" aria-label="Parler à ma styliste"><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg><svg class="hg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15.5c5.3-4.7 12.7-4.7 18 0l-2.6 2.6-3.2-1.6v-2.7c-2.7-.9-4.7-.9-6.4 0v2.7l-3.2 1.6z"/></svg></button></div><h1>Ta styliste</h1><p id="callst" class="sub" style="text-align:center">Appuie pour parler avec ta styliste</p><h2>Ou écris-lui</h2>
  <div class="chat">${S.chat.map((c,i)=>`<div class="bub ${c.r}" id="b${i}">${c.img?`<img src="${c.img}" alt="Photo envoyée">`:""}${esc(hideCodes(c.t))||(c.img?"":"…")}${c.r==="a"&&c.t?findArts(c.t).map(miniHTML).join(""):""}</div>`).join("")}</div>
  ${S.cphoto?`<div class="prev"><img src="${S.cphoto.url}" alt="Photo à envoyer"><button data-unphoto aria-label="Retirer la photo">×</button></div>`:""}
 
@@ -1384,7 +1390,7 @@ function clipLine(name,t){return new Promise(r=>{let done=false,iv=0;const fin=v
 // Si le téléphone bloque le son avant le premier toucher, Aura continue quand même :
 // elle bouge, sa bouche parle, et au premier toucher la voix démarre.
 let TAPR;const TAPPED=new Promise(r=>TAPR=r);
-(()=>{const go=()=>{document.removeEventListener("click",go,true);document.removeEventListener("touchend",go,true);const b=document.querySelector(".tapaura");if(b)b.hidden=true;try{if(AUD.paused){const t=AUDTOK;AUD.onplay=AUD.onended=AUD.onerror=null;const q=AUD.play();if(q&&q.then)q.then(()=>{if(AUDTOK===t)AUD.pause()}).catch(()=>{})}}catch(e){}unlock();window.TAPDONE=true;TAPR(true)};
+(()=>{const go=()=>{document.removeEventListener("click",go,true);document.removeEventListener("touchend",go,true);if(window.SNDBLOCK)window.TAPJUST=Date.now();window.SNDBLOCK=false;try{if(AUD.paused){const t=AUDTOK;AUD.onplay=AUD.onended=AUD.onerror=null;const q=AUD.play();if(q&&q.then)q.then(()=>{if(AUDTOK===t)AUD.pause()}).catch(()=>{})}}catch(e){}unlock();window.TAPDONE=true;TAPR(true)};
  document.addEventListener("click",go,true);document.addEventListener("touchend",go,true)})();
 function mime(t){let to,iv;const p=new Promise(r=>{SPOKE=true;talk(true);iv=setInterval(()=>mouthKick(.3+Math.random()*.65),120);to=setTimeout(()=>{clearInterval(iv);talk(false);r(false)},Math.max(1800,t.length*62))});
  p.stop=()=>{clearTimeout(to);clearInterval(iv);if(window.VIDOFF)VIDOFF();talk(false)};return p}
@@ -1392,7 +1398,7 @@ let GEN=0;
 async function line(t,clip,g,again){if(SKIP)return;const gen=GEN;CUR=t;const p=$("#hi2");p.textContent="";if(g)gesture();
  const [,res]=await Promise.all([typeSkip(p,t,RM?1:28),clip==="say"?sayLine(t):clipLine(clip,t)]);if(gen!==GEN)return;
  if(res==="blocked"&&!SKIP){if(!again&&window.TAPDONE)return line(t,clip,g,true);
-  const b=document.querySelector(".tapaura");if(b)b.hidden=false;
+  window.SNDBLOCK=true;
   // Son bloqué : Aura mime la phrase puis attend le premier toucher pour la redire à voix haute (on ne saute plus sa présentation).
   const m=mime(t);vidOn(clip);const tapped=again?await m:await TAPPED;
   if(gen!==GEN){m.stop();return}if(tapped&&!SKIP){m.stop();return line(t,clip,g,true)}}
@@ -1411,7 +1417,7 @@ function applyLang(){const ar=S.lang==="ar";["hi","hi2"].forEach(i=>{const e=$("
  const tb=$("#talkbtn");if(tb&&!tb.classList.contains("live"))tb.setAttribute("aria-label",L("talk"));if(window.lgSync)lgSync();const st=$("#start");if(st)st.textContent=L($("#install").hidden?"start":"cont");
  if(S.lang&&S.lang!=="fr"){$("#hi").textContent=L("hi")+(S.nom?" "+S.nom:"")+" !";$("#hi2").textContent=L("t")}}
 // Aura se tait net (changement de langue).
-function hush(){GEN++;try{stopVoice()}catch(e){}try{AUD.onplay=AUD.onended=AUD.onerror=null;AUD.pause()}catch(e){}if(window.VIDOFF)VIDOFF();if(window.auraTalking)auraTalking(false);talk(false);const b=document.querySelector(".tapaura");if(b)b.hidden=true}
+function hush(){GEN++;try{stopVoice()}catch(e){}try{AUD.onplay=AUD.onended=AUD.onerror=null;AUD.pause()}catch(e){}if(window.VIDOFF)VIDOFF();if(window.auraTalking)auraTalking(false);talk(false)}
 // Anglais / arabe : Aura dit sa présentation avec sa vraie voix (ElevenLabs), sinon avec la voix du téléphone.
 const LGV={en:"en-US",ar:"ar-SA"};
 async function greetLang(){const lg=S.lang,gen=GEN;if(!LGV[lg]||!S.voice)return;const t=L("hi")+(S.nom?" "+S.nom:"")+" ! "+L("t");
@@ -1423,7 +1429,7 @@ async function greetLang(){const lg=S.lang,gen=GEN;if(!LGV[lg]||!S.voice)return;
  if(gen!==GEN)return;if(!url&&lg==="ar")url="sons/aura-ar.mp3?v=1"; // voix khaleeji enregistrée, jamais la voix (masculine) du téléphone
  if(!url)return phone();
  AUDTOK++;AUD.onplay=on;AUD.onended=off;AUD.onerror=()=>{off();if(lg==="ar"&&!/aura-ar/.test(AUD.src)){AUD.src="sons/aura-ar.mp3?v=1";play()}else if(lg!=="ar")phone()};AUD.src=url;
- const play=()=>{try{const p=AUD.play();if(p&&p.catch)p.catch(e=>{off();if(e&&e.name==="NotAllowedError"&&!window.TAPDONE){const b=document.querySelector(".tapaura");if(b)b.hidden=false;TAPPED.then(()=>{if(gen===GEN){if(b)b.hidden=true;play()}})}else if(lg!=="ar")phone()})}catch(e){if(lg!=="ar")phone()}};play()}
+ const play=()=>{try{const p=AUD.play();if(p&&p.catch)p.catch(e=>{off();if(e&&e.name==="NotAllowedError"&&!window.TAPDONE){window.SNDBLOCK=true;TAPPED.then(()=>{if(gen===GEN)play()})}else if(lg!=="ar")phone()})}catch(e){if(lg!=="ar")phone()}};play()}
 function setLang(l){const was=S.lang||"fr";S.lang=l;save();if(window.i18nApply)i18nApply();applyLang();
  if(l==="fr"&&was==="fr"&&!SKIP&&INTRO_ON)return; // elle parle déjà en français
  hush();if(window.SKIPNOM)window.SKIPNOM();
@@ -1490,8 +1496,14 @@ async function introRun(){const gen=GEN,ok=()=>gen===GEN&&!SKIP,lg=SCR[S.lang]?S
  else for(const t of [...C.SUITE,...C.FIN]){if(!ok())return;await line(...t)}}
 introFr();
 function HELLO(){return "Salut"+(S.nom?" "+S.nom:"")+" ! Je suis ta personal stylist. Je suis là pour révéler ta beauté."}
-function skipIntro(){SKIP=true;stopVoice();try{AUD.pause()}catch(e){}const tb=document.querySelector(".tapaura");if(tb)tb.hidden=true;$("#hi2").textContent=L("t");if(window.SKIPNOM)window.SKIPNOM();showBtns()}
+function skipIntro(){SKIP=true;stopVoice();try{AUD.pause()}catch(e){}$("#hi2").textContent=L("t");if(window.SKIPNOM)window.SKIPNOM();showBtns()}
 $("#skip").addEventListener("click",skipIntro);
+// Haut-parleur : si Aura parle, elle se tait ; sinon elle redit sa présentation. Pendant un appel, il raccroche d'abord (jamais les deux en même temps).
+document.addEventListener("click",e=>{if(!e.target.closest("#splash .tapaura"))return;
+ if(window.TAPJUST&&Date.now()-window.TAPJUST<600)return; // premier toucher : la voix bloquée démarre toute seule
+ const call=window.liveConv&&window.liveConv();
+ if(call){window.endCall()}else if(document.body.classList.contains("talk")){hush();return}
+ hush();if(window.SKIPNOM)window.SKIPNOM();SKIP=false;unlock();introFr()});
 const UA=navigator.userAgent,IOS=/iPhone|iPad|iPod/.test(UA)||(/Macintosh/.test(UA)&&navigator.maxTouchPoints>1);
 const APP=navigator.standalone===true||matchMedia("(display-mode: standalone)").matches;
 const NOT_SAFARI=/CriOS|FxiOS|EdgiOS|FBAN|FBAV|Instagram|Line\/|Snapchat|TikTok/.test(UA);
@@ -1511,7 +1523,7 @@ $("#start").addEventListener("click",()=>{if(window.endCall)window.endCall();unl
 let conv=null,busy=false,raf=0;
 window.liveConv=()=>conv;
 const $$=id=>document.getElementById(id);
-const live=on=>{if(on&&typeof skipIntro==="function"&&!SKIP)skipIntro();["callbtn","talkbtn"].forEach(i=>{const b=$$(i);if(b)b.classList.toggle("live",on)});const t=$$("talkbtn");if(t)t.setAttribute("aria-label",typeof L==="function"?L(on?"hang":"talk"):(on?"Raccrocher":"Parler avec elle"))};
+const live=on=>{if(on&&typeof hush==="function")hush();if(on&&typeof skipIntro==="function"&&!SKIP)skipIntro();["callbtn","talkbtn"].forEach(i=>{const b=$$(i);if(b)b.classList.toggle("live",on)});const t=$$("talkbtn");if(t)t.setAttribute("aria-label",typeof L==="function"?L(on?"hang":"talk"):(on?"Raccrocher":"Parler avec elle"))};
 let stFn=()=>{};
 const st=t=>{stFn(t);const e=$$("callst");if(e)e.textContent=t};
 let LOUD=0;
