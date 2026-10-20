@@ -49,7 +49,7 @@ nav.dock #affbtn.on{color:var(--accent)}nav.dock #affbtn.on svg{fill:var(--accen
 .avatar:before{content:"";position:absolute;inset:-8px;border-radius:128px 128px 36px 36px;border:2px solid var(--accent);opacity:.25}
 .talk .avatar:before{animation:ring 1.4s ease-out infinite;opacity:.6}
 @keyframes float{50%{transform:translateY(-6px)}}
-.avatar.small{width:120px;height:120px;margin:0 auto 12px}.avatar.small img{border-radius:50%}.avatar.small:before{border-radius:50%}
+.avatar.small{width:120px;height:120px;margin:0 auto 12px}.avatar.small img{border-radius:50%;animation:none;object-position:center}.avatar.small:before{border-radius:50%}
 .chatava{display:block;width:96px;height:96px;border-radius:50%;object-fit:cover;object-position:top;margin:0 auto 10px;box-shadow:0 6px 18px rgba(125,46,74,.2)}
 .splashlogo{width:200px;height:200px;border-radius:44px;margin-bottom:36px;box-shadow:0 10px 30px rgba(125,46,74,.18)}
 #splash .logo{margin-bottom:40px}
@@ -557,7 +557,7 @@ news:()=>{const n=S.news,prof=PROFIL();
  <button class="btn ghost" data-news ${S.newsBusy?"disabled":""}>${n?"Actualiser les tendances":"Voir les tendances"}</button>
  <h2>À lire</h2><div class="chips">${MAGS.map(m=>`<a target="_blank" rel="noopener" href="${m[1]}">${m[0]}</a>`).join("")}</div>`,
  say:n&&n.resume?n.resume:"Voici les nouveautés fashion, "+NOM+". Touche Voir les tendances."}},
-chat:()=>({dock:1,html:`<div class="avatar small" id="ava2"><img src="stylist-face.jpg" alt=""></div><h1>Ta styliste</h1><button class="callbtn" id="callbtn" aria-label="Parler à ma styliste"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><p id="callst" class="sub" style="text-align:center">Appuie pour parler avec ta styliste</p><h2>Ou écris-lui</h2>
+chat:()=>({dock:1,html:`<div class="avatar small" id="ava2"><img src="stylist-face.jpg?v=2" alt=""></div><h1>Ta styliste</h1><button class="callbtn" id="callbtn" aria-label="Parler à ma styliste"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><p id="callst" class="sub" style="text-align:center">Appuie pour parler avec ta styliste</p><h2>Ou écris-lui</h2>
  <div class="chat">${S.chat.map((c,i)=>`<div class="bub ${c.r}" id="b${i}">${esc(c.t)||"…"}</div>`).join("")}</div>
 
  <div style="display:flex;gap:8px;margin-top:8px"><input class="field" id="msg" placeholder="Écris ta question" value="${esc(S.draft)}"><button class="btn" style="width:auto;padding:14px 20px" data-send ${S.busy?"disabled":""}>Envoyer</button></div>`,
