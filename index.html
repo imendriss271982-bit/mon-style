@@ -365,6 +365,49 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 .an-row>button.an-r{flex:none;border:1px solid var(--accent);color:var(--accent);background:none;border-radius:999px;padding:8px 14px;font:600 13.5px/1 inherit;cursor:pointer}
 .hx-sw{display:flex}.hx-sw i{width:14px;height:14px;border-radius:50%;margin-left:-4px;border:2px solid #fff}
 .hx-chev{color:var(--muted);font-size:22px;line-height:1}
+.hx-gr{display:block;width:100%;border:1px solid var(--line);text-align:left;cursor:pointer;margin-top:16px;padding:18px;border-radius:24px;background:var(--surface);color:var(--ink);transition:transform .15s}
+.hx-gr:active{transform:scale(.98)}
+.hx-gr-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.hx-gr-h b{font:500 24px/1.1 "Cormorant Garamond",Georgia,serif}
+.hx-gr-h small{color:var(--accent);font-size:13px;font-weight:600;white-space:nowrap}
+.hx-gr-ph{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:12px}
+.hx-gr-ph img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:14px;background:var(--soft)}
+.hx-gr-t{display:block;margin:12px 0 10px}.hx-gr-t b{display:block;font-size:16px;font-weight:600}.hx-gr-t small{color:var(--muted);font-size:14px}
+.gr-bar{display:block;height:6px;border-radius:9px;background:#F2D3DA;overflow:hidden}.gr-bar i{display:block;height:100%;border-radius:inherit;background:var(--accent);transition:width .5s}
+.gr-bar.rb{background:var(--soft)}.gr-bar.rb i{background:linear-gradient(90deg,#D9D4F5,#F2C9D6,#FBE7C6)}
+.gr-prog{background:var(--soft);border-radius:24px;padding:20px 18px;margin-top:8px}
+.gr-pt{display:flex;gap:14px;align-items:flex-start}
+.gr-ic{flex:none;width:58px;height:58px;border-radius:50%;border:5px solid #F2D3DA;display:grid;place-items:center}
+.gr-ic svg{width:28px;height:28px;fill:none;stroke:#D9506B;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.gr-pt small{display:block;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:13px}
+.gr-pt p{margin:4px 0 0;font-size:16px;line-height:1.35}
+.gr-add{display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;margin:18px 0 16px;border-radius:999px;background:var(--ink);color:var(--bg);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:15px;cursor:pointer}
+.gr-bars{display:grid;grid-template-columns:1fr 1fr;gap:16px}.gr-bars b{display:block;font-weight:500;font-size:17px;margin-bottom:6px}.gr-bars small{display:block;color:var(--muted);margin-top:6px;font-size:15px}
+.gr-tip{margin:14px 0 0;color:var(--muted);font-size:13.5px}
+.gr-occ{display:flex;gap:10px;overflow-x:auto;margin:0 -16px;padding:0 16px 4px;scrollbar-width:none}.gr-occ::-webkit-scrollbar{display:none}
+.gr-occ button{flex:none;display:flex;align-items:center;gap:10px;padding:12px 16px 12px 12px;border-radius:20px;border:2px solid transparent;background:var(--soft);color:var(--ink);text-align:left;cursor:pointer}
+.gr-occ button[aria-selected="true"]{border-color:var(--accent)}
+.gr-oi{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:20px}
+.gr-occ b{display:block;font-size:16px;font-weight:600}.gr-occ small{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.gr-empty{margin-top:16px;border-radius:24px;background:var(--soft);padding:18px;text-align:center;color:var(--muted)}
+.gr-ex{display:flex;justify-content:center;gap:10px}.gr-ex svg{width:48px;height:48px;fill:none;stroke:var(--muted);stroke-width:1.2;stroke-linejoin:round;opacity:.6}
+.gr-empty p{margin:10px 0 0;font-size:14.5px}
+.gr-looks{display:grid;gap:14px;margin:16px 0}
+.gr-look{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:12px 12px 14px}
+.gr-col{display:grid;gap:6px;grid-template-columns:1fr 1fr;border-radius:16px;overflow:hidden;background:var(--soft);padding:6px;margin-bottom:10px}
+.gr-col img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;background:#fff}
+.gr-col.n3 img:first-child{grid-row:span 2;aspect-ratio:auto;height:100%}
+.gr-look b{display:block;font:500 22px/1.15 "Cormorant Garamond",Georgia,serif}
+.gr-look small{display:block;color:var(--muted);font-size:13px;margin:2px 0 6px}
+.gr-look p{margin:0;font-size:14.5px}.gr-look .gr-miss{margin-top:8px;color:var(--accent);font-weight:600}
+.gr-n{font:600 14px/1 inherit;color:var(--muted);margin-left:6px}
+.gr-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.gr-it{border:0;background:none;padding:0;text-align:left;color:var(--ink);cursor:pointer;min-width:0}
+.gr-it img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:16px;background:var(--soft)}
+.gr-it span{display:block;font-size:12.5px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gr-it.wait img{opacity:.5;animation:grp 1.2s ease-in-out infinite alternate}.gr-it.todo span{color:var(--accent);font-weight:600}
+@keyframes grp{to{opacity:.85}}
+.gr-big img{display:block;width:100%;max-height:52vh;object-fit:contain;border-radius:22px;background:var(--soft)}
 .hx-ill{flex:none;width:84px;height:62px;border-radius:16px;background:var(--soft);display:grid;place-items:center}
 .hx-ill svg{width:70px;height:44px}
 .hx-rt small{display:block;color:var(--muted);font-size:12.5px;line-height:1.35;margin:2px 0 3px}
@@ -473,7 +516,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </nav>
 </div>
 <script>
-const VERSION="61";
+const VERSION="62";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -607,6 +650,48 @@ function capsuleHTML(){const c=season(),pal=c?SEASONS[c].c.slice(0,6):null;
  <h2>Les tenues avec ta capsule</h2><p class="sub">${LOOKS.length} looks avec seulement ces pièces.</p>
  <div class="cap-looks">${LOOKS.map(l=>`<div class="cap-l"><b>${l[0]}</b><div class="cap-li">${l[1].map(k=>`<span title="${CAP[k][0]}">${capIco(k)}</span>`).join("")}</div><small>${l[1].map(k=>CAP[k][0]).join(" · ")}</small><p>${l[2]}</p></div>`).join("")}</div>
  </section>`}
+// Ma garde-robe : la cliente ajoute ses vêtements en photo, Aura les reconnaît puis crée des tenues avec.
+const GR_CATS=[["haut","Haut"],["bas","Bas"],["robe","Robe"],["veste","Veste"],["chaussures","Chaussures"],["sac","Sac"],["accessoire","Accessoire"]];
+const GR_MIN=7,GR_HAUTS=4,GR_BAS=3;
+const GR_OCC=[["quotidien","Quotidien","Travail ou journée de tous les jours, confortable et soignée","#DCEFC9"],["weekend","Week-end","Décontracté, sorties, courses, café entre amies","#F9D5DA"],["soiree","Soirée","Dîner, sortie le soir, élégante","#E6DAF5"],["voyage","Voyage","Pratique, confortable, ne se froisse pas","#FBE7C6"]];
+let GR={items:[],looks:{}};
+try{const g=JSON.parse(localStorage.getItem("monstyle_gr")||"null");if(g&&Array.isArray(g.items))GR={items:g.items,looks:g.looks||{}}}catch(e){}
+function grSave(){try{localStorage.setItem("monstyle_gr",JSON.stringify(GR));return true}catch(e){toast("Le téléphone est plein : supprime quelques articles");return false}}
+const grCount=()=>{const it=GR.items.filter(x=>!x.wait);return{tot:it.length,hauts:it.filter(x=>x.cat==="haut"||x.cat==="robe").length,bas:it.filter(x=>x.cat==="bas"||x.cat==="robe").length}};
+const grReady=()=>{const c=grCount();return c.tot>=GR_MIN&&c.hauts>=1&&c.bas>=1};
+const grCat=k=>(GR_CATS.find(c=>c[0]===k)||["","Article"])[1];
+function grThumb(file){return new Promise((res,rej)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{const k=Math.min(1,420/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL("image/jpeg",0.72))};im.onerror=()=>{URL.revokeObjectURL(u);rej(new Error("photo"))};im.src=u})}
+const PR_ITEM=()=>"Tu es styliste. Voici la photo d’un vêtement ou accessoire de la garde-robe d’une cliente. Identifie la pièce principale. Si ce n’est pas un vêtement, réponds {\"erreur\":\"Je ne vois pas de vêtement sur cette photo.\"}. "+FMT+"Catégorie parmi : haut, bas, robe, veste, chaussures, sac, accessoire (une combinaison compte comme robe, un gilet ou manteau comme veste). Format : {\"categorie\":\"\",\"nom\":\"2 à 4 mots, ex. Chemise en lin\",\"couleur\":\"1 à 2 mots\",\"hex\":\"#RRGGBB couleur dominante\",\"style\":\"1 mot : classique, casual, chic, sport, romantique, bohème…\"}";
+async function grAdd(files){const sm=await getSample();
+ for(const f of files){let img;try{img=await grThumb(f)}catch(e){toast("Cette photo n’a pas pu être lue");continue}
+  const it={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),img,cat:"",nom:"",couleur:"",hex:"",wait:1};
+  GR.items.unshift(it);if(!grSave()){GR.items.shift();break}
+  if(S.page==="garde")render(false);
+  const fin=r=>{it.wait=0;if(r&&!r.erreur){it.cat=GR_CATS.some(c=>c[0]===r.categorie)?r.categorie:"haut";it.nom=String(r.nom||"").slice(0,40);it.couleur=String(r.couleur||"").slice(0,24);it.hex=/^#[0-9a-f]{6}$/i.test(r.hex||"")?r.hex:"";it.style=String(r.style||"").slice(0,20)}else{it.cat="haut";it.nom="Article";it.todo=1;if(r&&r.erreur)toast(r.erreur)}
+   GR.looks={};grSave();if(S.page==="garde"||S.page==="g_item")render(false);
+   if(S.page==="garde"&&!GR.items.some(x=>x.wait)){const c=grCount();say(c.tot>=GR_MIN?"Super, ta garde-robe est prête. Choisis une occasion et je crée tes tenues.":"C’est noté. Encore "+(GR_MIN-c.tot)+" article"+(GR_MIN-c.tot>1?"s":"")+" et je coordonne tes tenues.")}};
+  if(!sm||!sm.json){fin(null);continue}
+  sm.json(PR_ITEM(),{images:[f]}).then(fin,()=>fin(null))}
+}
+function grItemsTxt(){return GR.items.filter(x=>!x.wait).map(x=>x.id+" : "+grCat(x.cat).toLowerCase()+", "+(x.nom||"")+(x.couleur?", "+x.couleur:"")+(x.style?", style "+x.style:"")).join("\n")}
+async function grLooks(occ){const o=GR_OCC.find(x=>x[0]===occ);if(!o||S.grBusy)return;const sm=await getSample();
+ if(!sm||!sm.json){toast("La création de tenues n’est pas disponible ici.");return}
+ S.grBusy=occ;S.grErr="";render(false);say("Je coordonne tes vêtements, une seconde.");
+ const pr=REF+" Tu es styliste personnelle. Crée 4 tenues différentes pour l’occasion « "+o[1]+" » ("+o[2]+") UNIQUEMENT avec les pièces de sa garde-robe ci-dessous (utilise leurs identifiants). Chaque tenue : un haut et un bas, ou une robe, plus si possible veste, chaussures, sac ou accessoire. Respecte son profil : "+(PROFIL()||"inconnu")+" (morphologie, couleurs de saison). Varie les pièces d’une tenue à l’autre. N’invente aucune pièce. Si une pièce manque pour bien finir la tenue, dis-le dans « manque ».\nGarde-robe :\n"+grItemsTxt()+"\n"+FMT+'Format : {"tenues":[{"titre":"2 à 4 mots","pieces":["id"],"conseil":"1 phrase de styliste","manque":"pièce à acheter, ou vide"}]}';
+ try{const r=await sm.json(pr);if(r&&r.erreur)throw new Error(r.erreur);
+  const ids=new Set(GR.items.map(x=>x.id));const t=(r&&r.tenues||[]).map(x=>({titre:String(x.titre||"Tenue"),pieces:(x.pieces||[]).map(String).filter(i=>ids.has(i)),conseil:String(x.conseil||""),manque:String(x.manque||"")})).filter(x=>x.pieces.length>=2);
+  if(!t.length)throw new Error("Je n’ai pas réussi à composer de tenue. Ajoute quelques pièces et réessaie.");
+  GR.looks[occ]=t;grSave();S.grBusy=null;S.grOcc=occ;if(S.page==="garde"){render(false);say("Voilà "+t.length+" tenues "+o[1].toLowerCase()+" avec tes vêtements, "+NOM+". "+t[0].titre+" : "+t[0].conseil)}}
+ catch(e){S.grBusy=null;S.grErr=errMsg(e);if(S.page==="garde"){render(false);say(S.grErr)}}
+}
+const grImg=(x,cls)=>x?`<img class="${cls||""}" src="${x.img}" alt="${esc(x.nom||grCat(x.cat))}">`:"";
+const GR_HANGER='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/></svg>';
+function grHomeCard(){const c=grCount(),n=GR.items.filter(x=>!x.wait).slice(0,4),nl=Object.values(GR.looks).reduce((a,l)=>a+l.length,0),pct=Math.min(100,c.tot/GR_MIN*100);
+ return `<button class="hx-gr" data-view="garde" aria-label="Ma garde-robe">
+ <span class="hx-gr-h"><b>Ma garde-robe</b><small>${c.tot?c.tot+" article"+(c.tot>1?"s":"")+" ›":"Commencer ›"}</small></span>
+ ${n.length?`<span class="hx-gr-ph">${n.map(x=>grImg(x)).join("")}</span>`:""}
+ <span class="hx-gr-t"><b>Des tenues avec tes vêtements</b><small>${grReady()?(nl?nl+" tenue"+(nl>1?"s":"")+" créée"+(nl>1?"s":"")+" pour toi":"Ta garde-robe est prête : je crée tes tenues"):"Ajoute encore "+(GR_MIN-c.tot>0?GR_MIN-c.tot:1)+" article"+(GR_MIN-c.tot>1?"s":"")+" pour des idées chaque jour"}</small></span>
+ <span class="gr-bar rb"><i style="width:${grReady()?100:pct}%"></i></span></button>`}
 const P={
 home:()=>{const v=ok("visage"),bd=ok("corps"),c=season(),oc=ok("outfit");
  const nd=[v,bd,c].filter(Boolean).length;
@@ -634,8 +719,31 @@ ${nd===3?`<button class="hx-ms" data-view="fiche" aria-label="Voir ma fiche styl
   <span class="hx-ms-h"><b>${nd?"Termine ton analyse":"Ton analyse de style"}</b><small>${nd}/3 ›</small></span>
   <p>${nd?"Il reste "+(3-nd)+" étape"+(3-nd>1?"s":"")+". Ensuite, ta fiche complète s’affiche ici.":"Visage, silhouette, couleurs : on la fait une seule fois, ensemble."}</p>
  </button>`}
+${grHomeCard()}
  </div>`,
  say:"Bonjour "+NOM+", je suis contente de te voir. Touche le micro pour me parler, ou choisis une analyse."}},
+garde:()=>{const c=grCount(),rd=grReady(),occ=S.grOcc||"quotidien",looks=GR.looks[occ],by=id=>GR.items.find(x=>x.id===id);
+ const prog=`<section class="gr-prog" aria-label="Progression">
+  <div class="gr-pt"><span class="gr-ic">${GR_HANGER}</span><div><small>${Math.min(c.tot,GR_MIN)} / ${GR_MIN} articles importés</small><p>${rd?"Ta garde-robe est prête. Choisis une occasion, je coordonne tes vêtements en tenues.":"Ajoute au moins "+GR_MIN+" articles, et je les coordonne en tenues pour toi."}</p></div></div>
+  <label class="gr-add">Ajouter un article <span aria-hidden="true">→</span><input type="file" accept="image/*" multiple data-gadd hidden></label>
+  <div class="gr-bars"><div><b>Hauts</b><span class="gr-bar"><i style="width:${Math.min(100,c.hauts/GR_HAUTS*100)}%"></i></span><small>${Math.min(c.hauts,GR_HAUTS)} / ${GR_HAUTS}</small></div><div><b>Bas</b><span class="gr-bar"><i style="width:${Math.min(100,c.bas/GR_BAS*100)}%"></i></span><small>${Math.min(c.bas,GR_BAS)} / ${GR_BAS}</small></div></div>
+  <p class="gr-tip">Astuce : photographie chaque pièce à plat ou sur cintre, sur un fond clair. Tu peux en choisir plusieurs d’un coup dans ta galerie.</p>
+ </section>`;
+ const occs=`<h2>Tenues de ma garde-robe</h2><div class="gr-occ" role="tablist">${GR_OCC.map(o=>{const n=(GR.looks[o[0]]||[]).length;return `<button role="tab" data-gocc="${o[0]}" aria-selected="${occ===o[0]}"><span class="gr-oi" style="background:${o[3]}">${{quotidien:"📅",weekend:"☀️",soiree:"✨",voyage:"✈️"}[o[0]]}</span><span><b>${o[1]}</b><small>${n} tenue${n>1?"s":""}</small></span></button>`}).join("")}</div>`;
+ let body;
+ if(S.grBusy===occ)body=`<div class="note">Je coordonne tes vêtements…</div>`;
+ else if(!rd)body=`<div class="gr-empty"><span class="gr-ex">${["blazer","jupe","sac","escarpins"].map(k=>capIco(k)).join("")}</span><p>Ajoute tes articles : ton styliste les coordonne en tenues ${esc(GR_OCC.find(o=>o[0]===occ)[1].toLowerCase())}.</p></div>`;
+ else if(looks&&looks.length)body=`<div class="gr-looks">${looks.map(l=>{const it=l.pieces.map(by).filter(Boolean);return `<article class="gr-look"><div class="gr-col n${Math.min(it.length,4)}">${it.slice(0,4).map(x=>grImg(x)).join("")}</div><b>${esc(l.titre)}</b><small>${it.map(x=>esc(x.nom||grCat(x.cat))).join(" · ")}</small><p>${esc(l.conseil)}</p>${l.manque?`<p class="gr-miss">À ajouter : ${esc(l.manque)}</p>${links(l.manque)}`:""}</article>`}).join("")}</div><button class="btn ghost" data-glooks="${occ}">Créer d’autres tenues</button>`;
+ else body=`${S.grErr?`<div class="note">${esc(S.grErr)}</div>`:""}<button class="btn" data-glooks="${occ}">Créer mes tenues ${esc(GR_OCC.find(o=>o[0]===occ)[1].toLowerCase())}</button>`;
+ const list=GR.items.length?`<h2>Mes articles <small class="gr-n">${GR.items.length}</small></h2><div class="gr-grid">${GR.items.map(x=>`<button class="gr-it${x.wait?" wait":""}${x.todo?" todo":""}" ${x.wait?"disabled":`data-gitem="${x.id}"`} aria-label="${esc(x.nom||"Article")}">${grImg(x)}<span>${x.wait?"Je regarde…":esc(x.nom||grCat(x.cat))}</span></button>`).join("")}</div>`:"";
+ return {back:true,html:`<h1>Ma garde-robe</h1>${prog}${occs}${body}${list}`,
+  say:rd?"Voici ta garde-robe, "+NOM+". Choisis une occasion et je crée des tenues avec tes vêtements.":"Voici ta garde-robe, "+NOM+". Ajoute au moins "+GR_MIN+" articles en photo, et je les coordonne en tenues pour toi."}},
+g_item:()=>{const x=GR.items.find(i=>i.id===S.grItem);if(!x)return {back:true,html:`<h1>Article supprimé</h1>`,foot:`<button class="btn" data-view="garde">Retour à ma garde-robe</button>`};
+ return {back:true,html:`<p class="step">Ma garde-robe</p><div class="gr-big">${grImg(x)}</div>
+ <label class="lbl" for="g_nom">Nom</label><input class="field" id="g_nom" data-gi="nom" value="${esc(x.nom)}" placeholder="Par exemple : chemise en lin">
+ <label class="lbl" for="g_coul">Couleur</label><input class="field" id="g_coul" data-gi="couleur" value="${esc(x.couleur)}" placeholder="Par exemple : beige">
+ <span class="lbl">Catégorie</span><div class="pk">${GR_CATS.map(c=>`<button type="button" data-gcat="${c[0]}" aria-pressed="${x.cat===c[0]}">${c[1]}</button>`).join("")}</div>`,
+ say:x.todo?"Je n’ai pas reconnu cet article. Choisis sa catégorie.":"",foot:`<button class="btn" data-back>Enregistrer</button><button class="link" data-gdel="${x.id}">Supprimer cet article</button>`}},
 a_nom:()=>({html:`<p class="step">Ton analyse</p><h1>Comment tu t’appelles ?</h1><p class="sub">Ton prénom, pour que je puisse t’appeler par ton nom.</p>
  <input class="field" id="nom" autocomplete="given-name" placeholder="Ton prénom" value="${esc(S.nomDraft??S.nom??"")}" style="font-size:20px;padding:18px">`,
  say:"Avant de commencer, comment tu t’appelles ?",foot:`<button class="btn" data-nom ${(S.nomDraft??S.nom??"").trim()?"":"disabled"}>Continuer</button>`}),
@@ -987,6 +1095,11 @@ document.addEventListener("click",e=>{
  if(t.id==="affbtn"){AFFON?affStop():affPlay();return}
  if(t.id==="voice"){if(AFFON)affStop();S.voice=!S.voice;try{localStorage.setItem("monstyle_voix",S.voice?"1":"0")}catch(e){}voiceBtn();if(!S.voice){stopVoice();toast("Voix coupée")}else{toast("Voix activée");unlock();const p=P[S.page]();say(p.say||"Je suis là, "+NOM+".")}return}
  if(t.dataset.mod)return startMod(t.dataset.mod);
+ if(t.dataset.gocc){S.grOcc=t.dataset.gocc;S.grErr="";render(false);return}
+ if(t.dataset.glooks)return grLooks(t.dataset.glooks);
+ if(t.dataset.gitem){S.grItem=t.dataset.gitem;go("g_item");return}
+ if(t.dataset.gcat){const x=GR.items.find(i=>i.id===S.grItem);if(x){x.cat=t.dataset.gcat;x.todo=0;GR.looks={};grSave();render(false)}return}
+ if(t.dataset.gdel){if(!confirm("Supprimer cet article de ta garde-robe ?"))return;GR.items=GR.items.filter(i=>i.id!==t.dataset.gdel);GR.looks={};grSave();toast("Article supprimé");back();return}
  if(t.dataset.occ){S.occ=t.dataset.occ;save();render(false);say({"Travail":"Une tenue pour le travail, parfait.","Casual":"Une tenue décontractée, j’adore.","Soirée":"Une soirée ! On va te rendre éblouissante.","Mariage":"Un mariage, il faut être élégante sans voler la vedette.","Rendez-vous":"Un rendez-vous, on veut te voir rayonner.","Voyage":"Un voyage, confort et style."}[S.occ]+" Montre-moi ta tenue.");return}
  if(t.dataset.start==="A"){S.flow=FLOW_A;S.hist=["home"];S.page="a_nom";S.dir="f";S.res={outfit:S.res.outfit};S.wait={};S.rid++;render(true);return}
  if(t.dataset.go==="o_photo"){S.flow=FLOW_O;if(S.page!=="o_photo"){S.hist=["home"];S.page="o_photo";S.dir="f";render(true)}return}
@@ -1002,8 +1115,8 @@ document.addEventListener("click",e=>{
   if(box.hasAttribute("data-multi")){const a=d[k]||(d[k]=[]),i=a.indexOf(t.dataset.pk);i<0?a.push(t.dataset.pk):a.splice(i,1);t.setAttribute("aria-pressed",String(i<0))}
   else{d[k]=d[k]===t.dataset.pk?"":t.dataset.pk;box.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.pk===d[k])))}return}
  if(t.hasAttribute("data-isave"))return saveInfo();
- if(t.hasAttribute("data-wipe")){if(!confirm("Effacer ton profil, tes résultats et ton email de ce téléphone ?"))return;
-  try{localStorage.removeItem("monstyle")}catch(e){}S.info={};S.res={};S.ans={};S.later=false;S.nom=undefined;NOM="ma belle";S.idraft=undefined;toast("Tes données sont effacées");home();return}
+ if(t.hasAttribute("data-wipe")){if(!confirm("Effacer ton profil, tes résultats, ta garde-robe et ton email de ce téléphone ?"))return;
+  try{localStorage.removeItem("monstyle");localStorage.removeItem("monstyle_gr")}catch(e){}GR={items:[],looks:{}};S.info={};S.res={};S.ans={};S.later=false;S.nom=undefined;NOM="ma belle";S.idraft=undefined;toast("Tes données sont effacées");home();return}
  if(t.hasAttribute("data-nom")){const v=(S.nomDraft??S.nom??"").trim();if(!v)return;S.nom=v;NOM=v;S.nomDraft=undefined;save();return next()}
  if(t.hasAttribute("data-retry")){run(S.page);S.err="";render(false);return}
  if(t.dataset.ans){S.ans[t.dataset.ans]=t.dataset.v;render(false);setTimeout(()=>{if(S.page==="q_"+t.dataset.ans)next()},380);return}
@@ -1015,9 +1128,10 @@ document.addEventListener("click",e=>{
 });
 document.addEventListener("click",e=>{if(e.target.closest("[data-call]"))stopVoice()});
 document.addEventListener("change",e=>{if(e.target.hasAttribute("data-cphoto")){const f=e.target.files&&e.target.files[0];if(!f)return;S.cphoto={file:f,url:URL.createObjectURL(f)};render(false);if(window.liveConv&&window.liveConv()){voicePhoto((S.draft||"").trim());return}const m=$("#msg");if(m)m.focus();say("Jolie photo ! Dis-moi ce que tu veux savoir, puis touche Envoyer.");return}
+ if(e.target.hasAttribute("data-gadd")){const fs=[...(e.target.files||[])];e.target.value="";if(fs.length)grAdd(fs);return}
  const k=e.target.dataset.f,f=e.target.files&&e.target.files[0];if(!k||!f)return;
  if(S.url[k])URL.revokeObjectURL(S.url[k]);S.file[k]=f;S.url[k]=URL.createObjectURL(f);render(false);say("Très bien, ta photo est prête.")});
-document.addEventListener("input",e=>{if(e.target.id==="msg")S.draft=e.target.value;if(e.target.dataset.i&&S.idraft){S.idraft[e.target.dataset.i]=e.target.value;e.target.classList.remove("bad")}if(e.target.id==="nom"){S.nomDraft=e.target.value;const b=document.querySelector("[data-nom]");if(b)b.disabled=!e.target.value.trim()}});
+document.addEventListener("input",e=>{if(e.target.dataset.gi){const x=GR.items.find(i=>i.id===S.grItem);if(x){x[e.target.dataset.gi]=e.target.value.slice(0,40);GR.looks={};grSave()}}if(e.target.id==="msg")S.draft=e.target.value;if(e.target.dataset.i&&S.idraft){S.idraft[e.target.dataset.i]=e.target.value;e.target.classList.remove("bad")}if(e.target.id==="nom"){S.nomDraft=e.target.value;const b=document.querySelector("[data-nom]");if(b)b.disabled=!e.target.value.trim()}});
 document.addEventListener("keydown",e=>{if(e.target.id==="msg"&&e.key==="Enter"){e.preventDefault();send(e.target.value)}if(e.target.id==="nom"&&e.key==="Enter"){e.preventDefault();const b=document.querySelector("[data-nom]");if(b&&!b.disabled)b.click()}});
 
 const AFF=[n=>n+", tu es belle, toujours.",()=>"Tu es rayonnante aujourd’hui.",n=>"N’oublie pas de sourire, "+n+".",()=>"Ton sourire est ta plus belle parure.",n=>n+", tu mérites de te sentir bien.",()=>"Ta beauté est unique.",n=>"Souris, "+n+", tu illumines la journée.",()=>"Tu es élégante, comme tu es.",n=>n+", aime-toi un peu plus aujourd’hui.",()=>"Ta confiance te rend magnifique.",n=>"Tu es une lumière, "+n+".",()=>"Prends soin de toi, tu le vaux bien."];
