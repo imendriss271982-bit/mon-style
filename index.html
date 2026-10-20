@@ -389,7 +389,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </nav>
 </div>
 <script>
-const VERSION="42";
+const VERSION="43";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -877,9 +877,11 @@ function checkUpdate(){fetch(location.pathname+"?v="+Date.now(),{cache:"no-store
  if(!S.busy&&!/_run$/.test(S.page))location.replace(location.pathname+"?v="+m[1])}).catch(()=>{})}
 checkUpdate();document.addEventListener("visibilitychange",()=>{if(!document.hidden)checkUpdate()});
 // Accueil d'Aura : présentation, prénom, puis le style.
-const INTRO=[["Salut, je suis ta personal stylist.","aura-1",1],["Mon rôle, c’est de comprendre ce qui te met vraiment en valeur : tes couleurs, la forme de ton visage et ta silhouette.","aura-2"],["Ensemble, on va construire un style qui te ressemble, pour que tu te sentes belle et sûre de toi chaque jour.","aura-3",1]];
+const INTRO=[["Salut, je suis ta personal stylist.","aura-1",1]];
+const SUITE=[["Mon rôle, c’est de comprendre ce qui te met vraiment en valeur : tes couleurs, la forme de ton visage et ta silhouette.","aura-2"],["Ensemble, on va construire un style qui te ressemble, pour que tu te sentes belle et sûre de toi chaque jour.","aura-3",1]];
 const ASKNOM=["Mais d’abord, dis-moi… comment tu t’appelles ?","aura-nom"];
-const OUTRO=n=>[["Enchantée, "+n+" ! Moi, c’est Aura.","aura-enchantee",1],["Commençons notre belle aventure de la beauté : chaque jour, on choisira ensemble ton outfit.","aura-aventure"],["Je vais t’aider à trouver le style qui te va. Et commençons !","aura-go",1]];
+const FIN=[["Commençons notre belle aventure de la beauté : chaque jour, on choisira ensemble ton outfit.","aura-aventure"],["Je vais t’aider à trouver le style qui te va. Et commençons !","aura-go",1]];
+const OUTRO=n=>[["Enchantée, "+n+" ! Moi, c’est Aura.","aura-enchantee",1],...SUITE,...FIN];
 const RETOUR=n=>[["Salut "+n+" ! C’est Aura, ta personal stylist. Je suis là pour révéler ta beauté.","aura-retour",1]];
 let SKIP=false,CUR="",SPOKE=false;window.GREETED=false;
 const RM=matchMedia("(prefers-reduced-motion:reduce)").matches;
@@ -952,6 +954,7 @@ function askNom(){return new Promise(r=>{if(SKIP)return r(null);const box=$("#sp
  for(const t of INTRO)await line(...t);
  await line(...ASKNOM);const n=await askNom();
  if(n){S.nom=n;NOM=n;save();$("#hi").textContent="Salut "+n+" !";for(const t of OUTRO(n))await line(...t)}
+ else for(const t of [...SUITE,...FIN])await line(...t);
  showBtns()})();
 function HELLO(){return "Salut"+(S.nom?" "+S.nom:"")+" ! Je suis ta personal stylist. Je suis là pour révéler ta beauté."}
 function skipIntro(){SKIP=true;stopVoice();try{AUD.pause()}catch(e){}const tb=document.querySelector(".tapaura");if(tb)tb.hidden=true;$("#hi2").textContent="Je suis Aura, ta personal stylist. Je suis là pour révéler ta beauté.";if(window.SKIPNOM)window.SKIPNOM();showBtns()}
