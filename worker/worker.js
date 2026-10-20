@@ -1,6 +1,7 @@
 // My Style — Worker corrigé : répond toujours avec les en-têtes CORS,
 // même en cas de plantage, pour que l'app affiche la vraie erreur.
 const ALLOWED = ["https://imendriss271982-bit.github.io"];
+let GOOD_MODEL = "";
 
 export default {
   async fetch(req, env) {
@@ -74,7 +75,7 @@ export default {
         { text: prompt },
         ...images.map(i => ({ inline_data: { mime_type: i.mime || "image/jpeg", data: i.data } }))
       ];
-      const models = [String(env.MODEL || "").trim(), "gemini-3.8-flash", "gemini-flash-latest"].filter(Boolean);
+      const models = [String(env.MODEL || "").trim(), "gemini-3.8-flash", "gemini-3.6-flash", "gemini-flash-latest", "gemini-3.5-flash-lite"].filter(Boolean);
       // Réflexion courte : l'analyse arrive beaucoup plus vite.
       const gen = { responseMimeType: "application/json", temperature: 0.4 };
       const fast = JSON.stringify({ contents: [{ role: "user", parts }], generationConfig: { ...gen, thinkingConfig: { thinkingLevel: "low" } } });
@@ -84,11 +85,31 @@ export default {
         { method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": KEY }, body }
       );
       let r;
-      for (const model of models) {
-        r = await call(model, fast);
-        // Si ce modèle ne connaît pas le réglage de réflexion, on réessaie sans.
-        if (r.status === 400) r = await call(model, plain);
-        if (r.status !== 404) break;
+      const tryModels = async list => {
+        for (const model of list) {
+          r = await call(model, fast);
+          // Si ce modèle ne connaît pas le réglage de réflexion, on réessaie sans.
+          if (r.status === 400) r = await call(model, plain);
+          // Modèle surchargé (503/500) : une nouvelle tentative rapide, puis on passe au modèle suivant.
+          if (r.status === 503 || r.status === 500) { await new Promise(z => setTimeout(z, 900)); r = await call(model, fast); if (r.status === 400) r = await call(model, plain); }
+          if (r.status === 503 || r.status === 500) continue;
+          if (r.status !== 404) { if (r.ok) GOOD_MODEL = model; return true; }
+        }
+        return false;
+      };
+      if (GOOD_MODEL) models.unshift(GOOD_MODEL);
+      if (!(await tryModels([...new Set(models)]))) {
+        // Les noms de modèles Gemini changent : on demande à Google la liste actuelle et on prend un modèle « flash » qui accepte les images.
+        try {
+          const lr = await fetch("https://generativelanguage.googleapis.com/v1beta/models?pageSize=200", { headers: { "x-goog-api-key": KEY } });
+          const lj = await lr.json();
+          const names = (lj.models || [])
+            .filter(m => (m.supportedGenerationMethods || []).includes("generateContent"))
+            .map(m => String(m.name || "").replace(/^models\//, ""))
+            .filter(n => /flash/i.test(n) && !/(image|tts|audio|live|embedding|thinking-exp|lite-preview)/i.test(n));
+          names.sort((a, b) => (b.match(/\d+(\.\d+)?/) || [0])[0] - (a.match(/\d+(\.\d+)?/) || [0])[0]);
+          await tryModels(names.slice(0, 5));
+        } catch {}
       }
 
       let data = {};
@@ -96,6 +117,7 @@ export default {
 
       if (!r.ok) {
         if (r.status === 429) return json({ erreur: "Trop de demandes. Réessaie dans un instant.", code: "rate_limited" }, 429);
+        if (r.status === 503 || r.status === 500) return json({ erreur: "L’analyse est très demandée en ce moment. Réessaie dans une minute.", code: "busy" }, 503);
         const msg = (data.error && data.error.message) || "inconnue";
         return json({ erreur: "Erreur Gemini " + r.status + " : " + msg, code: "ai_error" }, 502);
       }
