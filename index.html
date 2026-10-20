@@ -1129,7 +1129,7 @@ async function startCall(){
   window.CALLED=true;
   conv=await Conversation.startSession({agentId:AGENT_ID,connectionType:"websocket",dynamicVariables:{user_name:(typeof S!=="undefined"&&S.nom)||"",profil:(typeof PROFIL==="function"&&PROFIL())||"pas encore analysé"},
    onModeChange:({mode})=>{st(mode==="speaking"?"Elle te parle…":"Je t’écoute, parle-moi");if(window.auraTalking)auraTalking(mode==="speaking")},
-   onDisconnect:()=>{conv=null;live(false);st("Appel terminé. Appuie pour reparler.")},
+   onDisconnect:()=>{conv=null;live(false);if(window.auraTalking)auraTalking(false);st("Appel terminé. Appuie pour reparler.")},
    onError:m=>st("Petit souci : "+m)});
   live(true);st("Elle arrive…");cancelAnimationFrame(raf);anim();
   window.callStatus=st;if(typeof S!=="undefined"&&S.cphoto&&typeof voicePhoto==="function")setTimeout(()=>voicePhoto((S.draft||"").trim()),2500);
