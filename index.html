@@ -153,6 +153,9 @@ footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg)
 #splash .avatar.aura .fig img.mf.on,.avatar.aura.inchat .fig img.mf.on{opacity:1}
 #splash .avatar.aura .fig img.blink,.avatar.aura.inchat .fig img.blink{left:38.75%;top:16.063%;width:18.75%;height:3.78%;opacity:0}
 #splash .avatar.aura.blk .fig img.blink,.avatar.aura.inchat.blk .fig img.blink{opacity:1}
+#splash .avatar.aura .fig canvas.vid{position:absolute;left:5%;top:-20.913%;width:90%;height:120.945%;display:none;pointer-events:none}
+#splash .avatar.aura .fig.vplay canvas.vid{display:block}
+#splash .avatar.aura .fig.vplay img{opacity:0!important}
 #splash .avatar.aura.speak .fig,.avatar.aura.inchat.speak .fig{animation:auraTalk 3.2s ease-in-out infinite}
 #splash .avatar.aura.speak .fig img.bras,.avatar.aura.inchat.speak .fig img.bras{animation:armTalk 2.4s ease-in-out infinite}
 #splash .avatar.aura.wave .fig img.bras,.avatar.aura.inchat.wave .fig img.bras{animation:armWave .5s ease-in-out 6 alternate}
@@ -379,7 +382,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </nav>
 </div>
 <script>
-const VERSION="36";
+const VERSION="37";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -882,13 +885,26 @@ function voiceLine(t){return new Promise(r=>{const ss=window.speechSynthesis;let
   const u=new SpeechSynthesisUtterance(t);u.lang="fr-FR";if(v)u.voice=v;u.rate=1;KEEP=[u];
   let iv=0;u.onstart=()=>{SPOKE=true;window.GREETED=true;talk(true);iv=setInterval(()=>mouthKick(.3+Math.random()*.6),130)};u.onend=()=>{clearInterval(iv);fin()};u.onerror=()=>{clearInterval(iv);talk(false)};ss.resume();ss.speak(u)}catch(e){}})}
 // Voix enregistrée d'Aura (ElevenLabs) ; si le fichier manque, voix du téléphone.
+// Vidéos d'Aura (fond vert retiré en direct) : remplacent l'image pendant la phrase correspondante.
+const VIDS={"aura-1":"videos/aura-1.mp4?v=1"};
+const AVID=document.createElement("video");AVID.muted=true;AVID.playsInline=true;AVID.setAttribute("playsinline","");AVID.setAttribute("muted","");AVID.preload="auto";AVID.src=VIDS["aura-1"];
+function vidOn(name){if(RM||!VIDS[name])return;const a=document.querySelector("#ava .fig");if(!a)return;
+ let c=a.querySelector("canvas.vid");if(!c){c=document.createElement("canvas");c.className="vid";c.width=450;c.height=800;a.appendChild(c)}
+ const v=AVID;if(!v.src.includes(VIDS[name].split("?")[0]))v.src=VIDS[name];try{v.currentTime=0}catch(e){}
+ const ctx=c.getContext("2d",{willReadFrequently:true});let on=true;
+ const draw=()=>{if(!on)return;if(v.readyState>=2){ctx.drawImage(v,0,0,450,800);const d=ctx.getImageData(0,0,450,800),p=d.data;
+   for(let i=0;i<p.length;i+=4){const r=p[i],g=p[i+1],b=p[i+2],m=r>b?r:b,dm=g-m;if(dm>110)p[i+3]=0;else if(dm>25){p[i+3]=255*(110-dm)/85;p[i+1]=m}else if(dm>0)p[i+1]=m}
+   ctx.putImageData(d,0,0);a.classList.add("vplay")}
+  if(!v.ended)requestAnimationFrame(draw)};
+ window.VIDOFF=()=>{on=false;a.classList.remove("vplay");try{v.pause()}catch(e){}};v.onended=()=>window.VIDOFF();
+ const q=v.play();if(q&&q.then)q.then(draw).catch(()=>window.VIDOFF());else draw()}
 const AUD=new Audio();AUD.preload="auto";const CLIPS={};["aura-1","aura-2","aura-3","aura-nom","aura-enchantee","aura-aventure","aura-go","aura-retour"].forEach(n=>{fetch("sons/"+n+".mp3").then(r=>r.ok?r.blob():null).then(b=>{if(b)CLIPS[n]=URL.createObjectURL(b)}).catch(()=>{})});
-function clipLine(name,t){return new Promise(r=>{let done=false,iv=0;const fin=v=>{if(done)return;done=true;clearInterval(iv);talk(false);r(v)};
+function clipLine(name,t){return new Promise(r=>{let done=false,iv=0;const fin=v=>{if(done)return;done=true;clearInterval(iv);if(window.VIDOFF)VIDOFF();talk(false);r(v)};
  if(!S.voice||!name){(S.voice?voiceLine(t):wait(Math.max(2200,t.length*60))).then(()=>fin());return}
  try{affStop();if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}
  const dev=()=>{clearInterval(iv);if(!done)voiceLine(t).then(()=>fin())};
  AUD.onended=()=>fin();AUD.onerror=dev;
- AUD.onplay=()=>{SPOKE=true;window.GREETED=true;talk(true);clearInterval(iv);iv=setInterval(()=>mouthKick(.3+Math.random()*.65),120)};
+ AUD.onplay=()=>{SPOKE=true;window.GREETED=true;talk(true);vidOn(name);clearInterval(iv);iv=setInterval(()=>mouthKick(.3+Math.random()*.65),120)};
  AUD.src=CLIPS[name]||("sons/"+name+".mp3");
  try{const p=AUD.play();if(p&&p.catch)p.catch(e=>{if(e&&e.name==="NotAllowedError"){clearInterval(iv);done=true;r("blocked")}else dev()})}catch(e){dev()}})}
 // Si le téléphone bloque le son avant le premier toucher, Aura continue quand même :
@@ -897,11 +913,11 @@ let TAPR;const TAPPED=new Promise(r=>TAPR=r);
 (()=>{const go=()=>{document.removeEventListener("click",go,true);document.removeEventListener("touchend",go,true);const b=document.querySelector(".tapaura");if(b)b.hidden=true;try{AUD.onplay=AUD.onended=AUD.onerror=null;const q=AUD.play();if(q&&q.then)q.then(()=>AUD.pause()).catch(()=>{})}catch(e){}unlock();TAPR(true)};
  document.addEventListener("click",go,true);document.addEventListener("touchend",go,true)})();
 function mime(t){let to,iv;const p=new Promise(r=>{SPOKE=true;talk(true);iv=setInterval(()=>mouthKick(.3+Math.random()*.65),120);to=setTimeout(()=>{clearInterval(iv);talk(false);r(false)},Math.max(1800,t.length*62))});
- p.stop=()=>{clearTimeout(to);clearInterval(iv);talk(false)};return p}
+ p.stop=()=>{clearTimeout(to);clearInterval(iv);if(window.VIDOFF)VIDOFF();talk(false)};return p}
 async function line(t,clip,g,again){if(SKIP)return;CUR=t;const p=$("#hi2");p.textContent="";if(g)gesture();
  const [,res]=await Promise.all([typeSkip(p,t,RM?1:28),clipLine(clip,t)]);
  if(res==="blocked"&&!SKIP){const b=document.querySelector(".tapaura");if(b)b.hidden=false;
-  const m=mime(t);const tapped=again?await m:await Promise.race([m,TAPPED]);
+  const m=mime(t);vidOn(clip);const tapped=again?await m:await Promise.race([m,TAPPED]);
   if(tapped&&!SKIP){m.stop();return line(t,clip,g,true)}}
  if(!SKIP)await wait(350)}
 function typeSkip(el,t,ms){return new Promise(r=>{let i=0;const h=setInterval(()=>{if(SKIP){clearInterval(h);return r()}el.textContent=t.slice(0,++i);if(i>=t.length){clearInterval(h);r()}},ms)})}
