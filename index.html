@@ -486,6 +486,13 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 
 /* Pas d’appel depuis l’écran d’ouverture : on appelle Aura une fois entrée (My Stylist) */
 #splash #talkbtn{display:none!important}
+/* Événements à Doha */
+.evl{display:flex;flex-direction:column;gap:10px;margin:0 0 22px}
+.ev{display:flex;gap:14px;align-items:flex-start;padding:14px;border-radius:20px;background:var(--surface);border:1px solid var(--line);color:var(--ink);text-decoration:none}
+.ev-d{flex:none;width:54px;height:58px;border-radius:14px;background:var(--accent);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05}
+.ev-d b{font-size:22px}.ev-d small{font-size:11px;opacity:.9;text-align:center}
+.ev-t{flex:1;min-width:0}.ev-t b{display:block;font-size:16px}.ev-t small{display:block;color:var(--gold);font-size:13px;margin:2px 0 4px}.ev-t p{margin:0;font-size:14px;color:var(--muted)}
+.ev-go{flex:none;align-self:center;color:var(--accent);font-weight:600;font-size:14px}
 /* Accueil : la garde-robe se découvre en descendant */
 .hx-more{margin-top:64px}
 .hx>.hx-ms{margin-top:0}
@@ -983,11 +990,12 @@ news:()=>{const n=S.news,prof=PROFIL();
   :n&&n.tendances?n.tendances.map(t=>`<div class="card"><b>${esc(t.titre||"")}</b><p style="margin:0 0 8px">${esc(t.description||"")}</p>${t.pour_toi?`<p class="sub" style="font-size:14px;margin:0 0 10px">Pour toi : ${esc(t.pour_toi)}</p>`:""}${t.recherche?links(t.recherche):""}</div>`).join("")
   :`<div class="note">${S.newsErr?esc(S.newsErr):"Découvre les tendances mode de la saison, adaptées à ton profil."}</div>`;
  return {dock:1,html:`<h1>Nouveautés fashion</h1>
- <h2>À lire</h2><p class="sub">Les magazines qui font les tendances.</p><div class="chips">${MAGS.map(m=>`<a target="_blank" rel="noopener" href="${m[1]}">${m[0]}</a>`).join("")}</div>
+ <h2>Événements à Doha</h2><p class="sub">Mode et beauté au Qatar, mis à jour chaque semaine.</p>
+ ${evHTML()}
  <h2>Tendances du moment</h2><p class="sub">${prof?"Choisies pour ta saison et ta morphologie.":"Fais ton analyse pour des conseils sur mesure."}</p>
  ${body}
  <button class="btn ghost" data-news ${S.newsBusy?"disabled":""}>${n?"Actualiser les tendances":"Voir les tendances"}</button>
- ${capsuleHTML()}`,
+ <h2>À lire</h2><p class="sub">Les magazines qui font les tendances.</p><div class="chips">${MAGS.map(m=>`<a target="_blank" rel="noopener" href="${m[1]}">${m[0]}</a>`).join("")}</div>`,
  say:n&&n.resume?n.resume:"Voici les nouveautés fashion, "+NOM+". Touche Voir les tendances."}},
 chat:()=>({dock:1,html:`<div class="avatar aura inchat" id="ava2"><div class="fig"><img class="pose" src="aura-pose.webp?v=1" alt="Aura, ta styliste personnelle"><img class="body" src="aura-full.webp?v=3" alt="Aura, ta styliste"><img class="bras" src="aura-bras2.webp?v=3" alt=""><img class="mf" src="aura-m1.jpg?v=3" alt=""><img class="mf" src="aura-m2.jpg?v=3" alt=""><img class="mf" src="aura-m3.jpg?v=3" alt=""><img class="blink" src="aura-blink.webp?v=3" alt=""></div><button class="micbadge show${window.liveConv&&window.liveConv()?" live":""}" id="callbtn" type="button" aria-label="Parler à ma styliste"><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg><svg class="hg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15.5c5.3-4.7 12.7-4.7 18 0l-2.6 2.6-3.2-1.6v-2.7c-2.7-.9-4.7-.9-6.4 0v2.7l-3.2 1.6z"/></svg></button></div><h1>Ta styliste</h1><p id="callst" class="sub" style="text-align:center">Appuie pour parler avec ta styliste</p><h2>Ou écris-lui</h2>
  <div class="chat">${S.chat.map((c,i)=>`<div class="bub ${c.r}" id="b${i}">${c.img?`<img src="${c.img}" alt="Photo envoyée">`:""}${esc(hideCodes(c.t))||(c.img?"":"…")}${c.r==="a"&&c.t?findArts(c.t).map(miniHTML).join(""):""}</div>`).join("")}</div>
@@ -1009,6 +1017,19 @@ function runPage(f,t,redo){return {html:`<p class="step">Analyse</p><h1>${S.err?
 function nextBtn(){if(S.flow){const last=S.flow.indexOf(S.page)===S.flow.length-1;return `<button class="btn" data-next>${last?(S.from==="profil"?"Retour à mon profil":"Retour à l’accueil"):"Continuer"}</button>`}
  const m=RES_MOD[S.page];return `<button class="btn" data-back>Retour</button>${m?`<button class="link" data-mod="${m}">Refaire cette analyse</button>`:""}`}
 function missing(k,r){const m=RES_MOD[S.page]||k;return {html:`<h1>Pas encore de résultat</h1><p class="sub">${esc(r&&r.erreur?r.erreur:"Cette analyse n’est pas encore faite.")}</p>`,foot:`<button class="btn" data-mod="${m}">Faire cette analyse</button>`}}
+// Événements mode & beauté à Doha : liste dans events.json (mise à jour chaque semaine).
+let EVTS=null;
+fetch("events.json?t="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>{EVTS=j&&Array.isArray(j.evenements)?j.evenements:[];if(S.page==="news")render(false)}).catch(()=>{EVTS=[]});
+const EV_M={fr:["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."],en:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],ar:["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"]};
+function evHTML(){const lg=EV_M[S.lang]?S.lang:"fr",M=EV_M[lg],today=new Date().toISOString().slice(0,10);
+ if(EVTS===null)return `<div class="note">Je cherche les événements à Doha…</div>`;
+ const list=EVTS.filter(e=>(e.fin||e.debut)>=today).sort((a,b)=>a.debut<b.debut?-1:1);
+ if(!list.length)return `<div class="note">Aucun événement annoncé pour le moment.</div>`;
+ const d=x=>{const t=x.split("-");return{j:+t[2],m:M[+t[1]-1],y:t[0]}};
+ const per=e=>{const a=d(e.debut),b=d(e.fin||e.debut);if(e.debut===(e.fin||e.debut))return a.j+" "+a.m+" "+a.y;if(a.m===b.m&&a.y===b.y)return a.j+"–"+b.j+" "+b.m+" "+b.y;return a.j+" "+a.m+(a.y!==b.y?" "+a.y:"")+" – "+b.j+" "+b.m+" "+b.y};
+ const tbc={fr:"date à confirmer",en:"date to be confirmed",ar:"التاريخ بيتأكد"}[lg],see={fr:"Voir",en:"See",ar:"شوفي"}[lg],now={fr:"En ce moment",en:"On now",ar:"الحين"}[lg];
+ return `<div class="evl" data-noi18n>${list.map(e=>{const a=d(e.debut),on=e.debut<=today;const L=o=>o&&(o[lg]||o.fr)||"";
+  return `<a class="ev" ${e.lien?`href="${esc(e.lien)}" target="_blank" rel="noopener"`:""}><span class="ev-d"><b>${on?"•":a.j}</b><small>${on?now:a.m}</small></span><span class="ev-t"><b>${esc(L(e.titre))}</b><small>${esc(per(e))}${e.date_a_confirmer?" · "+tbc:""} · ${esc(e.lieu||"")}</small><p>${esc(L(e.desc))}</p></span>${e.lien?`<span class="ev-go">${see} ${lg==="ar"?"‹":"›"}</span>`:""}</a>`}).join("")}</div>`}
 const MAGS=[["Vogue Arabia","https://www.vogue.me/fashion/"],["Harper’s Bazaar Arabia","https://www.harpersbazaararabia.com/fashion"],["Elle Arabia","https://www.ellearabia.com/fashion/"],["Vogue France","https://www.vogue.fr/mode"]];
 async function loadNews(){
  const sm=await getSample();if(!sm){S.newsErr="Les tendances ne sont pas disponibles ici.";render(false);return}
@@ -1441,7 +1462,7 @@ async function greetLang(){const lg=S.lang,gen=GEN;if(!LGV[lg]||!S.voice)return;
  if(!url)return phone();
  AUDTOK++;AUD.onplay=on;AUD.onended=off;AUD.onerror=()=>{off();if(lg==="ar"&&!/aura-ar/.test(AUD.src)){AUD.src="sons/aura-ar.mp3?v=1";play()}else if(lg!=="ar")phone()};AUD.src=url;
  const play=()=>{try{const p=AUD.play();if(p&&p.catch)p.catch(e=>{off();if(e&&e.name==="NotAllowedError"&&!window.TAPDONE){window.SNDBLOCK=true;TAPPED.then(()=>{if(gen===GEN)play()})}else if(lg!=="ar")phone()})}catch(e){if(lg!=="ar")phone()}};play()}
-function setLang(l){const was=S.lang||"fr";S.lang=l;save();if(window.i18nApply)i18nApply();applyLang();
+function setLang(l){const was=S.lang||"fr";S.lang=l;save();if(window.i18nApply)i18nApply();if(S.page==="news"&&typeof render==="function")try{render(false)}catch(e){}applyLang();
  if(l==="fr"&&was==="fr"&&!SKIP&&INTRO_ON)return; // elle parle déjà en français
  hush();if(window.SKIPNOM)window.SKIPNOM();
  SKIP=false;introFr()}

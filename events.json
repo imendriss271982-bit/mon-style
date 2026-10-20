@@ -1,0 +1,53 @@
+{
+  "maj": "2026-10-20",
+  "evenements": [
+    {
+      "debut": "2026-10-27", "fin": "2026-12-26",
+      "lieu": "M7, Msheireb",
+      "titre": {"fr": "ERDEM : About Time, About Her", "en": "ERDEM: About Time, About Her", "ar": "إرديم: About Time, About Her"},
+      "desc": {"fr": "Exposition sur 20 ans de la maison ERDEM : robes, croquis et archives.", "en": "Exhibition on 20 years of the ERDEM label: gowns, sketches and archives.", "ar": "معرض عن ٢٠ سنة من دار إرديم: فساتين ورسومات وأرشيف."},
+      "type": "mode",
+      "lien": "https://qm.org.qa/en/stories/all-stories/fall-2026-exhibitions/"
+    },
+    {
+      "debut": "2026-10-27", "fin": "2026-12-26",
+      "lieu": "M7, Msheireb",
+      "titre": {"fr": "Around the World in Jewellery", "en": "Around the World in Jewellery", "ar": "حول العالم في المجوهرات"},
+      "desc": {"fr": "Plus de 500 bijoux des collections de Qatar Museums.", "en": "More than 500 jewellery pieces from the Qatar Museums collections.", "ar": "أكثر من ٥٠٠ قطعة مجوهرات من مجموعات متاحف قطر."},
+      "type": "bijoux",
+      "lien": "https://qm.org.qa/en/stories/all-stories/fall-2026-exhibitions/"
+    },
+    {
+      "debut": "2026-11-05", "fin": "2027-01-31",
+      "lieu": "Doha",
+      "titre": {"fr": "Design Doha 2026", "en": "Design Doha 2026", "ar": "تصميم الدوحة ٢٠٢٦"},
+      "desc": {"fr": "Biennale du design du Moyen-Orient : expositions et rencontres dans plusieurs lieux.", "en": "Middle East design biennial: exhibitions and talks across several venues.", "ar": "بينالي التصميم في الشرق الأوسط: معارض ولقاءات في أكثر من مكان."},
+      "type": "design",
+      "lien": "https://qm.org.qa/en/stories/all-stories/fall-2026-exhibitions/"
+    },
+    {
+      "debut": "2026-11-27", "fin": "2026-11-27", "date_a_confirmer": true,
+      "lieu": "M7, Msheireb",
+      "titre": {"fr": "Fashion Trust Arabia Awards 2026", "en": "Fashion Trust Arabia Awards 2026", "ar": "جوائز فاشن تراست أرابيا ٢٠٢٦"},
+      "desc": {"fr": "Les prix des jeunes créateurs arabes, avec les finalistes à Doha.", "en": "Awards for young Arab designers, with the finalists in Doha.", "ar": "جوائز المصممين العرب الشباب، والمتأهلين في الدوحة."},
+      "type": "mode",
+      "lien": "https://babble-up.com/luxury-events/fashion-trust-arabia-awards-2026-doha"
+    },
+    {
+      "debut": "2026-12-14", "fin": "2026-12-16",
+      "lieu": "DECC",
+      "titre": {"fr": "Qatar Beauty & Wellcare 2026", "en": "Qatar Beauty & Wellcare 2026", "ar": "معرض قطر للجمال والعناية ٢٠٢٦"},
+      "desc": {"fr": "Salon beauté : soins de la peau, maquillage, spa et bien-être.", "en": "Beauty show: skincare, make-up, spa and wellness.", "ar": "معرض الجمال: العناية بالبشرة، المكياج، السبا والعافية."},
+      "type": "beaute",
+      "lien": "https://www.decc.qa/decc_events/qatar-beauty-and-wellcare-2026/"
+    },
+    {
+      "debut": "2027-04-26", "fin": "2027-05-01",
+      "lieu": "DECC",
+      "titre": {"fr": "Doha Jewellery & Watches Exhibition", "en": "Doha Jewellery & Watches Exhibition", "ar": "معرض الدوحة للمجوهرات والساعات"},
+      "desc": {"fr": "Le grand salon de la joaillerie et des montres de luxe au Qatar.", "en": "Qatar's big show for fine jewellery and luxury watches.", "ar": "أكبر معرض للمجوهرات والساعات الفاخرة في قطر."},
+      "type": "bijoux",
+      "lien": "https://www.qatarliving.com/en/article/doha-jewellery-watches-exhibition-2026-successfully-concludes-22nd-edition-and-announces-2027-dates"
+    }
+  ]
+}

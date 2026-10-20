@@ -531,6 +531,10 @@ const I18N_D=[
 ["Bureau, journée","Office, daytime","دوام، نهار"],["Quotidien, week-end","Everyday, weekend","يومي، ويكند"],["Quotidien, bureau","Everyday, office","يومي، دوام"],["Bureau, soirée","Office, evening","دوام، سهرة"],["Soirée, vacances","Evening, holidays","سهرة، إجازة"],["Journée, invitations","Daytime, invitations","نهار، عزايم"],
 // ——— Nouveautés + capsule ———
 ["Nouveautés fashion","Fashion news","جديد الموضة"],
+["Événements à Doha","Events in Doha","فعاليات في الدوحة"],
+["Mode et beauté au Qatar, mis à jour chaque semaine.","Fashion and beauty in Qatar, updated every week.","موضة وجمال في قطر، نحدّثها كل أسبوع."],
+["Je cherche les événements à Doha…","Looking for events in Doha…","أدوّر على الفعاليات في الدوحة…"],
+["Aucun événement annoncé pour le moment.","No events announced yet.","ما في فعاليات معلنة الحين."],
 ["À lire","To read","للقراءة"],
 ["Les magazines qui font les tendances.","The magazines that set the trends.","المجلات اللي تصنع الترندات."],
 ["Tendances du moment","Current trends","ترندات الحين"],
