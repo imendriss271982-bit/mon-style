@@ -140,7 +140,7 @@ footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg)
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #splash .sptop h1,:root:not([data-theme="light"]) #splash .sptop p{text-shadow:0 2px 14px rgba(0,0,0,.8)}:root:not([data-theme="light"]) #splash .sptop p{color:#e9dbe0}}
 #splash .avatar.aura{position:absolute;z-index:1;left:50%;bottom:0;margin:0;height:min(70svh,148vw);width:auto;aspect-ratio:480/635;transform:translateX(-50%);pointer-events:none}
 #splash .avatar.aura:before{display:none}
-#splash .avatar.aura .fig{position:absolute;inset:0;border-radius:0;overflow:visible;box-shadow:none;transform-origin:50% 100%;animation:auraIdle 5s ease-in-out infinite;filter:drop-shadow(0 18px 30px rgba(125,46,74,.22))}
+#splash .avatar.aura .fig{position:absolute;inset:0;border-radius:0;overflow:visible;box-shadow:none;transform-origin:50% 100%;animation:auraIdle 4s ease-in-out infinite;filter:drop-shadow(0 18px 30px rgba(125,46,74,.22))}
 #splash .avatar.aura .fig img{position:absolute;border-radius:0;box-shadow:none;animation:none;object-fit:fill;transform:none}
 #splash .avatar.aura .fig img.body{inset:0;width:100%;height:100%}
 #splash .avatar.aura .fig img.bras{left:62.5%;top:68.504%;width:25%;height:31.496%;transform-origin:45.83% 15%;transition:transform .6s cubic-bezier(.3,.7,.3,1);animation:armIdle 6s ease-in-out infinite}
@@ -151,9 +151,9 @@ footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg)
 #splash .avatar.aura.speak .fig{animation:auraTalk 3.2s ease-in-out infinite}
 #splash .avatar.aura.speak .fig img.bras{animation:armTalk 2.4s ease-in-out infinite}
 #splash .avatar.aura.wave .fig img.bras{animation:armWave .5s ease-in-out 6 alternate}
-@keyframes auraIdle{0%,100%{transform:rotate(0) scale(1,1)}25%{transform:rotate(-.5deg) scale(1.004,1.01)}50%{transform:rotate(0) scale(1,1)}75%{transform:rotate(.5deg) scale(1.004,1.01)}}
+@keyframes auraIdle{0%,100%{transform:rotate(0) translateY(0) scale(1,1)}25%{transform:rotate(-1deg) translateY(-2px) scale(1.006,1.016)}50%{transform:rotate(0) translateY(0) scale(1,1)}75%{transform:rotate(1deg) translateY(-2px) scale(1.006,1.016)}}
 @keyframes auraTalk{0%,100%{transform:rotate(0) translateY(0) scale(1,1)}20%{transform:rotate(-1deg) translateY(-3px) scale(1.004,1.012)}45%{transform:rotate(.4deg) translateY(0)}70%{transform:rotate(1deg) translateY(-2px) scale(1.004,1.01)}}
-@keyframes armIdle{0%,100%{transform:rotate(0)}50%{transform:rotate(-2.5deg)}}
+@keyframes armIdle{0%,100%{transform:rotate(0)}50%{transform:rotate(-5deg)}}
 @keyframes armTalk{0%,100%{transform:rotate(0)}25%{transform:rotate(-9deg)}50%{transform:rotate(-3deg)}75%{transform:rotate(-11deg)}}
 @keyframes armWave{from{transform:rotate(-11deg)}to{transform:rotate(1deg)}}
 #splash .spbot{position:absolute;z-index:3;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;padding:60px 24px calc(22px + env(safe-area-inset-bottom,0px));pointer-events:none}
@@ -351,7 +351,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 <path class="s3" d="M148 70l1.4 4 4 1.4-4 1.4-1.4 4-1.4-4-4-1.4 4-1.4Z"/><path class="s2" d="M262 40l1.4 4 4 1.4-4 1.4-1.4 4-1.4-4-4-1.4 4-1.4Z"/>
 <path class="s3" d="M24 380l1.4 4 4 1.4-4 1.4-1.4 4-1.4-4-4-1.4 4-1.4Z"/><path d="M384 560l1.6 5 5 1.6-5 1.6-1.6 5-1.6-5-5-1.6 5-1.6Z"/></g>
 <ellipse cx="200" cy="830" rx="230" ry="40" fill="#E5BCC8" opacity=".55"/>
-</svg><div class="sptop"><h1 id="hi"></h1><p id="hi2"></p></div><div class="avatar aura" id="ava"><div class="fig"><img class="body" src="aura-full.webp?v=2" alt="Aura, ta styliste personnelle"><img class="bras" src="aura-bras2.webp" alt=""><img class="mf" src="aura-m1.jpg" alt=""><img class="mf" src="aura-m2.jpg" alt=""><img class="mf" src="aura-m3.jpg" alt=""><img class="blink" src="aura-blink.webp" alt=""></div></div><button class="tapaura" type="button" hidden>🔊 Touche pour entendre Aura</button><div class="spbot"><button class="btn" id="install" hidden>Télécharger l’application</button><div id="spnom" hidden><input class="field" id="spnomI" autocomplete="given-name" placeholder="Ton prénom" style="font-size:20px;padding:16px;margin-bottom:12px;text-align:center"><button class="btn show" id="spnomB" disabled>Continuer</button></div><p id="spst" class="spst"></p><button class="btn" id="talkbtn">Parler avec elle</button><button class="btn ghost" id="start">Commencer</button></div><button id="skip" class="skip" type="button">Passer ›</button></div>
+</svg><div class="sptop"><h1 id="hi"></h1><p id="hi2"></p></div><div class="avatar aura" id="ava"><div class="fig"><img class="body" src="aura-full.webp?v=2" alt="Aura, ta styliste personnelle"><img class="bras" src="aura-bras2.webp" alt=""><img class="mf" src="aura-m1.jpg" alt=""><img class="mf" src="aura-m2.jpg" alt=""><img class="mf" src="aura-m3.jpg" alt=""><img class="blink" src="aura-blink.webp" alt=""></div></div><button class="tapaura" type="button" hidden>🔊 Touche pour le son</button><div class="spbot"><button class="btn" id="install" hidden>Télécharger l’application</button><div id="spnom" hidden><input class="field" id="spnomI" autocomplete="given-name" placeholder="Ton prénom" style="font-size:20px;padding:16px;margin-bottom:12px;text-align:center"><button class="btn show" id="spnomB" disabled>Continuer</button></div><p id="spst" class="spst"></p><button class="btn" id="talkbtn">Parler avec elle</button><button class="btn ghost" id="start">Commencer</button></div><button id="skip" class="skip" type="button">Passer ›</button></div>
 <div id="inst" role="dialog" aria-modal="true" aria-labelledby="instT"><div class="sh"><h2 id="instT">Installer My Style</h2><p class="sub" id="instS">Quelques gestes dans Safari, et My Style s’ouvre comme une vraie application depuis ton écran d’accueil.</p>
 <ol id="instL"><li><span>Ouvert depuis <b>WhatsApp</b> ? Touche d’abord la <b>boussole Safari</b> <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg> en bas à droite</span></li><li><span>Touche <b>Partager</b> <svg viewBox="0 0 24 24"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M6 11H5v10h14V11h-1"/></svg> en bas de Safari</span></li><li><span>Fais défiler et choisis <b>Sur l’écran d’accueil</b> <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg></span></li><li><span>Touche <b>Ajouter</b>, puis ouvre l’icône My Style</span></li></ol>
 <button class="btn" id="instOk">J’ai compris</button></div></div>
@@ -369,7 +369,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </nav>
 </div>
 <script>
-const VERSION="26";
+const VERSION="27";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -849,12 +849,18 @@ function clipLine(name,t){return new Promise(r=>{let done=false,iv=0;const fin=v
  AUD.onplay=()=>{SPOKE=true;window.GREETED=true;talk(true);clearInterval(iv);iv=setInterval(()=>mouthKick(.3+Math.random()*.65),120)};
  AUD.src=CLIPS[name]||("sons/"+name+".mp3");
  try{const p=AUD.play();if(p&&p.catch)p.catch(e=>{if(e&&e.name==="NotAllowedError"){clearInterval(iv);done=true;r("blocked")}else dev()})}catch(e){dev()}})}
-function waitTap(){return new Promise(r=>{const b=document.querySelector(".tapaura");if(b)b.hidden=false;
- const go=()=>{document.removeEventListener("click",go,true);document.removeEventListener("touchend",go,true);if(b)b.hidden=true;try{AUD.play().catch(()=>{})}catch(e){}r()};
- document.addEventListener("click",go,true);document.addEventListener("touchend",go,true)})}
-async function line(t,clip,g){if(SKIP)return;CUR=t;const p=$("#hi2");p.textContent="";if(g)gesture();
+// Si le téléphone bloque le son avant le premier toucher, Aura continue quand même :
+// elle bouge, sa bouche parle, et au premier toucher la voix démarre.
+let TAPR;const TAPPED=new Promise(r=>TAPR=r);
+(()=>{const go=()=>{document.removeEventListener("click",go,true);document.removeEventListener("touchend",go,true);const b=document.querySelector(".tapaura");if(b)b.hidden=true;try{AUD.onplay=AUD.onended=AUD.onerror=null;const q=AUD.play();if(q&&q.then)q.then(()=>AUD.pause()).catch(()=>{})}catch(e){}unlock();TAPR(true)};
+ document.addEventListener("click",go,true);document.addEventListener("touchend",go,true)})();
+function mime(t){let to,iv;const p=new Promise(r=>{SPOKE=true;talk(true);iv=setInterval(()=>mouthKick(.3+Math.random()*.65),120);to=setTimeout(()=>{clearInterval(iv);talk(false);r(false)},Math.max(1800,t.length*62))});
+ p.stop=()=>{clearTimeout(to);clearInterval(iv);talk(false)};return p}
+async function line(t,clip,g,again){if(SKIP)return;CUR=t;const p=$("#hi2");p.textContent="";if(g)gesture();
  const [,res]=await Promise.all([typeSkip(p,t,RM?1:28),clipLine(clip,t)]);
- if(res==="blocked"&&!SKIP){await waitTap();if(!SKIP)return line(t,clip,g)}
+ if(res==="blocked"&&!SKIP){const b=document.querySelector(".tapaura");if(b)b.hidden=false;
+  const m=mime(t);const tapped=again?await m:await Promise.race([m,TAPPED]);
+  if(tapped&&!SKIP){m.stop();return line(t,clip,g,true)}}
  if(!SKIP)await wait(350)}
 function typeSkip(el,t,ms){return new Promise(r=>{let i=0;const h=setInterval(()=>{if(SKIP){clearInterval(h);return r()}el.textContent=t.slice(0,++i);if(i>=t.length){clearInterval(h);r()}},ms)})}
 function showBtns(){$("#skip").hidden=true;$("#spnom").hidden=true;$("#talkbtn").classList.add("show");$("#start").classList.add("show");if(!$("#install").hidden)$("#install").classList.add("show")}
