@@ -265,7 +265,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </nav>
 </div>
 <script>
-const VERSION="21";
+const VERSION="22";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -710,8 +710,12 @@ function checkUpdate(){fetch(location.pathname+"?v="+Date.now(),{cache:"no-store
 checkUpdate();document.addEventListener("visibilitychange",()=>{if(!document.hidden)checkUpdate()});
 (async()=>{const rm=matchMedia("(prefers-reduced-motion:reduce)").matches;
  await typeInto($("#hi"),"Salut"+(S.nom?" "+S.nom:"")+" !",rm?1:75);
- await typeInto($("#hi2"),"Je suis ta personal stylist. Je veux t’aider à choisir ton outfit.",rm?1:28);
+ await typeInto($("#hi2"),"Je suis ta personal stylist. Je suis là pour révéler ta beauté.",rm?1:28);
  $("#talkbtn").classList.add("show");$("#start").classList.add("show");if(!$("#install").hidden)$("#install").classList.add("show")})();
+function HELLO(){return "Salut"+(S.nom?" "+S.nom:"")+" ! Je suis ta personal stylist. Je suis là pour révéler ta beauté."}
+function greet(force){if(window.GREETED||window.CALLED||!S.voice)return;const ss=window.speechSynthesis;if(!force&&ss&&ss.speaking)return;window.GREETED=!!force;if(force)unlock();say(HELLO())}
+setTimeout(()=>{greet(false);setTimeout(()=>{const ss=window.speechSynthesis;if(ss&&ss.speaking)window.GREETED=true},800)},700);
+document.getElementById("splash").addEventListener("pointerdown",e=>{if(!e.target.closest("#talkbtn,#start,#install"))greet(true)},{once:false});
 const UA=navigator.userAgent,IOS=/iPhone|iPad|iPod/.test(UA)||(/Macintosh/.test(UA)&&navigator.maxTouchPoints>1);
 const APP=navigator.standalone===true||matchMedia("(display-mode: standalone)").matches;
 const NOT_SAFARI=/CriOS|FxiOS|EdgiOS|FBAN|FBAV|Instagram|Line\/|Snapchat|TikTok/.test(UA);
@@ -725,7 +729,7 @@ $("#install").addEventListener("click",async()=>{if(BIP){BIP.prompt();try{await 
 $("#instOk").addEventListener("click",()=>$("#inst").classList.remove("show"));
 $("#inst").addEventListener("click",e=>{if(e.target.id==="inst")$("#inst").classList.remove("show")});
 $("#start").addEventListener("click",()=>{if(window.endCall)window.endCall();unlock();$("#splash").classList.add("out");setTimeout(()=>$("#splash").remove(),800);
- if(!window.CALLED)say("Salut"+(S.nom?" "+S.nom:"")+" ! Je suis ta personal stylist. Je veux t’aider à choisir ton outfit. "+P.home().say)});
+ if(!window.CALLED)say(window.GREETED?P.home().say:HELLO()+" "+P.home().say)});
 </script>
 <script type="module">
 let conv=null,busy=false,raf=0;
