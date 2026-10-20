@@ -206,6 +206,18 @@ nav.dock button[aria-current="true"]{color:var(--accent)}
 .card{border:1px solid var(--line);border-radius:20px;padding:16px 18px;margin-bottom:10px}
 .card b{display:block;margin-bottom:8px;font-weight:500}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
+.vit{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.art{display:flex;flex-direction:column;align-items:flex-start;border:1px solid var(--line);border-radius:18px;padding:10px;background:var(--surface);color:var(--ink);font:inherit;text-align:left;cursor:pointer;min-width:0}
+.art .ill,.mini .ill{display:flex;align-items:center;justify-content:center;background:var(--soft);border-radius:12px}
+.art .ill{width:100%;aspect-ratio:1/1.05}.art svg{height:84%}
+.art b{font-size:14px;line-height:1.25;margin-top:8px}.art small{color:var(--muted);font-size:12.5px;margin-top:2px}
+.tag{background:var(--accent);color:var(--on);font-size:11.5px;border-radius:999px;padding:2px 9px;margin-top:6px}.tag.soft{background:var(--soft);color:var(--accent)}
+.fchips{display:flex;gap:8px;overflow-x:auto;margin:6px 0 12px;padding-bottom:2px}
+.fchips button{border:1px solid var(--line);border-radius:999px;padding:7px 13px;background:none;color:var(--ink);font:inherit;font-size:14px;white-space:nowrap;cursor:pointer}
+.fchips button[aria-pressed="true"]{background:var(--accent);color:var(--on);border-color:var(--accent)}
+.artbig{display:flex;justify-content:center;background:var(--soft);border-radius:22px;padding:18px;margin-bottom:14px}.artbig svg{height:200px}
+.mini{display:flex;gap:10px;align-items:center;width:100%;border:1px solid var(--line);border-radius:14px;padding:7px;margin-top:8px;background:var(--surface);color:var(--ink);font:inherit;text-align:left;cursor:pointer;white-space:normal}
+.mini .ill{width:44px;height:50px;flex:none}.mini svg{height:42px}.mini b{display:block;font-size:14px}.mini small{color:var(--accent);font-size:12.5px}
 .chips a{border:1px solid var(--line);border-radius:999px;padding:7px 13px;color:var(--accent);text-decoration:none;font-size:14px}
 .field{width:100%;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:16px Jost,sans-serif}
 .chat{display:flex;flex-direction:column;gap:10px;margin:6px 0 14px}
@@ -592,6 +604,57 @@ const SHOPS=[
 function shopUrl(s,q){const direct=s.url?s.url(q)+(s.tag?"&tag="+encodeURIComponent(s.tag):""):null;
  if(s.deep)return s.deep+encodeURIComponent(direct||"https://www."+s.site+"/");
  return direct||"https://www.google.com/search?q="+encodeURIComponent("site:"+s.site+" "+q)}
+/* Vitrine démo : pièces types que la cliente retrouve chez les boutiques partenaires. */
+const VCATS=[["","Tout"],["robe","Robes"],["top","Hauts"],["pantalon","Pantalons"],["jupe","Jupes"],["veste","Vestes"],["abaya","Abayas"]];
+const ALLF=["Sablier","Poire","Pomme","Rectangle","Triangle inversé"];
+const CATALOGUE=[
+["MS01","Robe portefeuille terracotta","robe","Terracotta","#C5603B",["Sablier","Pomme","Poire"],"Bureau, journée"],
+["MS02","Robe empire bleu nuit","robe","Bleu nuit","#14213D",["Pomme","Rectangle"],"Soirée"],
+["MS03","Robe fourreau rouge vif","robe","Rouge vif","#D7192D",["Sablier"],"Soirée"],
+["MS04","Robe chemise vert sauge","robe","Vert sauge","#9AAE9B",["Rectangle","Pomme","Triangle inversé"],"Quotidien"],
+["MS05","Robe trapèze corail","robe","Corail","#F27D5E",["Triangle inversé","Rectangle","Pomme"],"Quotidien, week-end"],
+["MS06","Blouse col V fluide lavande","top","Lavande","#C7B8E0",["Pomme","Triangle inversé","Sablier"],"Bureau"],
+["MS07","Top encolure bateau marine","top","Marine","#1C2D5A",["Poire"],"Quotidien"],
+["MS08","Chemisier cintré crème","top","Crème","#F3E7D3",["Sablier","Rectangle"],"Bureau"],
+["MS09","Top à volants rose dragée","top","Rose dragée","#F2B8C6",["Rectangle","Poire"],"Quotidien"],
+["MS10","Pull col V camel","top","Camel","#C19A6B",["Pomme","Triangle inversé","Sablier"],"Quotidien, bureau"],
+["MS11","Pantalon large taille haute noir","pantalon","Noir","#141414",["Sablier","Triangle inversé","Rectangle"],"Bureau"],
+["MS12","Pantalon évasé bordeaux","pantalon","Bordeaux","#6E1230",["Poire","Sablier"],"Bureau, soirée"],
+["MS13","Pantalon droit fluide écru","pantalon","Écru","#E6E0D8",["Pomme","Rectangle"],"Quotidien"],
+["MS14","Pantalon palazzo émeraude","pantalon","Émeraude","#009A6E",["Triangle inversé","Rectangle"],"Soirée, vacances"],
+["MS15","Jupe trapèze moutarde","jupe","Moutarde","#D29F2E",["Triangle inversé","Rectangle","Poire"],"Quotidien"],
+["MS16","Jupe crayon anthracite","jupe","Anthracite","#3A3D42",["Sablier"],"Bureau"],
+["MS17","Jupe plissée midi vieux rose","jupe","Vieux rose","#C48B95",["Rectangle","Triangle inversé"],"Quotidien, bureau"],
+["MS18","Veste courte structurée olive","veste","Olive","#6B7A2E",["Poire"],"Quotidien"],
+["MS19","Blazer cintré fuchsia","veste","Fuchsia","#E0218A",["Rectangle","Sablier"],"Bureau, soirée"],
+["MS20","Trench ceinturé beige","veste","Beige chaud","#E5D3B8",["Rectangle","Sablier","Poire"],"Quotidien"],
+["MS21","Veste longue fluide prune","veste","Prune","#5E2E46",["Pomme","Triangle inversé"],"Bureau"],
+["MS22","Abaya kimono vert bouteille","abaya","Vert bouteille","#0F3B2E",ALLF,"Toutes occasions"],
+["MS23","Abaya ceinturée taupe rosé","abaya","Taupe rosé","#A89490",["Sablier","Rectangle","Poire"],"Journée, invitations"],
+["MS24","Abaya évasée bleu ciel","abaya","Bleu ciel","#A9C8E8",["Pomme","Triangle inversé","Poire"],"Journée"]
+].map(a=>({id:a[0],nom:a[1],cat:a[2],coul:a[3],hex:a[4],formes:a[5],occ:a[6]}));
+const ART=id=>CATALOGUE.find(x=>x.id===id);
+const GARP={robe:"M40 6L60 6L64 16L74 22L70 40L64 38L84 112L16 112L36 38L30 40L26 22L36 16Z",
+ top:"M38 14L62 14L66 20L86 30L80 50L70 46L70 96L30 96L30 46L20 50L14 30L34 20Z",
+ pantalon:"M30 8L70 8L75 112L56 112L50 42L44 112L25 112Z",
+ jupe:"M34 14L66 14L84 104L16 104Z",
+ veste:"M38 6L62 6L68 12L88 24L82 62L74 58L74 110L26 110L26 58L18 62L12 24L32 12Z",
+ abaya:"M40 4L60 4L66 12L92 36L84 52L70 42L82 116L18 116L30 42L16 52L8 36L34 12Z"};
+const GARL={jupe:"M34 22H66",veste:"M38 6L50 34L62 6M50 34V110",abaya:"M50 14V116",robe:"M36 38H64",top:"M44 14Q50 22 56 14"};
+const garSVG=a=>`<svg viewBox="0 0 100 120" aria-hidden="true"><path d="${GARP[a.cat]}" fill="${a.hex}" stroke="rgba(0,0,0,.22)" stroke-width="1.5" stroke-linejoin="round"/><path d="${GARL[a.cat]||""}" fill="none" stroke="rgba(0,0,0,.25)" stroke-width="1.5"/></svg>`;
+const hexRGB=h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16));
+function artFit(a){const b=ok("corps"),s=season(),sh=b?SHAPE(b.forme):null;let sc=0,why=[];
+ if(sh&&a.formes.includes(sh)){sc+=2;why.push("sa coupe met en valeur ta silhouette "+sh)}
+ if(s){const c=hexRGB(a.hex),d=Math.min(...SEASONS[s].c.map(x=>{const r=hexRGB(x[0]);return Math.hypot(c[0]-r[0],c[1]-r[1],c[2]-r[2])}));
+  if(d<50){sc+=2;why.push("le "+a.coul.toLowerCase()+" fait partie de ta palette "+s)}else if(d<85){sc+=1;why.push("le "+a.coul.toLowerCase()+" est proche de ta palette")}}
+ return {sc,why,known:!!(sh||s)}}
+const hideCodes=s=>String(s??"").replace(/\s*\[MS\d{2}\]/g,"");
+const norm=s=>String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+function findArts(txt){const n=norm(txt),out=[];CATALOGUE.forEach(a=>{if((n.includes(a.id.toLowerCase())||n.includes(norm(a.nom)))&&out.length<3)out.push(a)});return out}
+const miniHTML=a=>`<button class="mini" data-art="${a.id}"><span class="ill">${garSVG(a)}</span><span><b>${esc(a.nom)}</b><small>Voir chez nos boutiques</small></span></button>`;
+function CATCTX(voice){return "VITRINE MY STYLE (pièces types disponibles chez nos boutiques partenaires Ounass, Namshi, Amazon et The Luxury Closet, dans l’onglet Boutique) : "+CATALOGUE.map(a=>a.id+" "+a.nom+" (coupes idéales : "+a.formes.join(", ")+" ; "+a.occ.toLowerCase()+")").join(" ; ")+". Quand elle cherche une tenue ou te demande quoi acheter, choisis en priorité dans cette vitrine les pièces qui vont à sa morphologie et à sa saison de couleurs, explique pourquoi en une phrase, et cite chaque pièce avec son nom exact"+(voice?" (à l’oral, sans le code)":" suivi de son code entre crochets, par exemple « Robe portefeuille terracotta [MS01] »")+". Dis-lui qu’elle la retrouve dans l’onglet Boutique. N’invente ni prix ni stock."}
+window.addAuraBubble=txt=>{if(!txt||!findArts(txt).length)return;S.chat.push({r:"a",t:txt});try{save()}catch(_){}
+ const c=S.page==="chat"&&document.querySelector(".chat");if(c){c.insertAdjacentHTML("beforeend",`<div class="bub a">${esc(hideCodes(txt))}${findArts(txt).map(miniHTML).join("")}</div>`);c.lastElementChild.scrollIntoView({behavior:"smooth",block:"nearest"})}};
 
 let S={rid:0,wait:{},page:"home",hist:[],dir:"f",ans:{},file:{},url:{},res:{},busy:false,err:"",voice:true,chat:[],draft:"",shopQ:"",listen:false,flow:null,news:null,newsBusy:false,newsErr:""};
 try{if(localStorage.getItem("monstyle_voix")==="0")S.voice=false}catch(e){}
@@ -837,14 +900,25 @@ o_res:()=>{const o=ok("outfit");if(!o)return missing("outfit",S.res.outfit);
  <h2>À changer</h2><ul class="tips">${(o.changements||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`,
  say:"Ta tenue a "+o.note+" sur 10. "+o.resume+" Ce que je changerais : "+(o.changements||[]).join(". "),count:+o.note,
  foot:`<button class="btn" data-profil>Retour à mon profil</button><button class="link" data-go="o_photo">Noter une autre tenue</button>`}},
-boutique:()=>{const b=ok("corps"),s=season(),cols=s?SEASONS[s].c.filter(x=>!/Noir|Blanc/.test(x[1])).map(x=>x[1].toLowerCase()):[];
- const ideas=(SHOPCUT[SHAPE(b?.forme)]||["blazer structuré","robe fluide","pantalon taille haute"]).map((c,i)=>cols.length?c+" "+cols[i%cols.length]:c);
- return {dock:1,html:`<h1>Ma boutique</h1><p class="sub">${b||s?"Des pièces choisies pour ta morphologie et ta saison.":"Fais ton analyse pour des pièces faites pour toi."}</p>
+boutique:()=>{const s=season(),cols=s?SEASONS[s].c.filter(x=>!/Noir|Blanc/.test(x[1])).map(x=>x[1].toLowerCase()):[];
+ const fits=CATALOGUE.map(a=>({a,f:artFit(a)})),known=fits[0].f.known,top=known?fits.filter(x=>x.f.sc>=2).sort((x,y)=>y.f.sc-x.f.sc).slice(0,4):[];
+ const list=fits.filter(x=>!S.vcat||x.a.cat===S.vcat).sort((x,y)=>y.f.sc-x.f.sc);
+ const card=x=>`<button class="art" data-art="${x.a.id}"><span class="ill">${garSVG(x.a)}</span><b>${esc(x.a.nom)}</b><small>${esc(x.a.occ)}</small>${x.f.sc>=4?`<span class="tag">Parfait pour toi</span>`:x.f.sc>=2?`<span class="tag soft">Te va bien</span>`:""}</button>`;
+ return {dock:1,html:`<h1>Ma boutique</h1><p class="sub">${known?"Des pièces choisies pour ta morphologie et ta saison.":"Fais ton analyse pour que je choisisse les pièces faites pour toi."}</p>
  <div class="card"><b>Nos boutiques partenaires</b><p class="sub" style="font-size:14px;margin:6px 0 0">${SHOPS.map(s=>s.n).join(" · ")} — livraison au Qatar.</p></div>
- ${ideas.map(q=>`<div class="card"><b>${esc(cap(q))}</b>${links(q)}</div>`).join("")}
- <div class="card"><b>Je cherche autre chose</b><input class="field" id="shopq" placeholder="Par exemple : robe de soirée" value="${esc(S.shopQ)}"><button class="btn ghost" data-shop>Chercher</button>${S.shopQ?`<div style="margin-top:12px">${links(S.shopQ+(cols[0]?" "+cols[0]:""))}</div>`:""}</div>
+ ${top.length?`<h2>La sélection d’Aura</h2><div class="vit">${top.map(card).join("")}</div>`:""}
+ <button class="btn" data-askaura style="margin:14px 0 6px">Demander à Aura de choisir pour moi</button>
+ <h2>La vitrine</h2><div class="fchips">${VCATS.map(c=>`<button data-vcat="${c[0]}" aria-pressed="${(S.vcat||"")===c[0]}">${c[1]}</button>`).join("")}</div>
+ <div class="vit">${list.map(card).join("")}</div>
+ <div class="card" style="margin-top:14px"><b>Je cherche autre chose</b><input class="field" id="shopq" placeholder="Par exemple : robe de soirée" value="${esc(S.shopQ)}"><button class="btn ghost" data-shop>Chercher</button>${S.shopQ?`<div style="margin-top:12px">${links(S.shopQ+(cols[0]?" "+cols[0]:""))}</div>`:""}</div>
  <p class="sub" style="font-size:14px">Chaque bouton t’emmène chez la boutique partenaire. My Style peut recevoir une commission sur tes achats, sans aucun coût en plus pour toi.</p>`,
- say:"Voici ta boutique, "+NOM+". J’ai choisi ces pièces pour toi. Touche une boutique pour voir les articles."}},
+ say:"Voici ta boutique, "+NOM+". "+(top.length?"J’ai mis en haut les pièces qui te vont le mieux.":"Touche une pièce pour la voir chez nos boutiques.")}},
+art:()=>{const a=ART(S.art)||CATALOGUE[0],f=artFit(a);
+ return {dock:1,html:`<div class="artbig">${garSVG(a)}</div><h1>${esc(a.nom)}</h1><p class="sub">${esc(a.coul)} · ${esc(a.occ)}</p>
+ <div class="card"><b>L’avis d’Aura</b><p style="margin:6px 0 0">${f.why.length?cap(f.why.join(" et "))+".":f.known?"Ce n’est pas la pièce la plus flatteuse pour toi : demande-moi une alternative.":"Fais ton analyse et je te dirai si elle te va."}</p></div>
+ <div class="card"><b>La trouver chez nos partenaires</b><div style="margin-top:10px">${links(a.nom)}</div></div>
+ <button class="btn" data-askart="${a.id}">Demander à Aura avec quoi la porter</button>`,
+ say:f.why.length?cap(f.why.join(" et "))+".":"Voici la pièce. Demande-moi si elle te va."}},
 news:()=>{const n=S.news,prof=PROFIL();
  const body=S.newsBusy?`<div class="note">Je cherche les tendances du moment pour toi…</div>`
   :n&&n.tendances?n.tendances.map(t=>`<div class="card"><b>${esc(t.titre||"")}</b><p style="margin:0 0 8px">${esc(t.description||"")}</p>${t.pour_toi?`<p class="sub" style="font-size:14px;margin:0 0 10px">Pour toi : ${esc(t.pour_toi)}</p>`:""}${t.recherche?links(t.recherche):""}</div>`).join("")
@@ -857,7 +931,7 @@ news:()=>{const n=S.news,prof=PROFIL();
  ${capsuleHTML()}`,
  say:n&&n.resume?n.resume:"Voici les nouveautés fashion, "+NOM+". Touche Voir les tendances."}},
 chat:()=>({dock:1,html:`<div class="avatar aura inchat" id="ava2"><div class="fig"><img class="pose" src="aura-pose.webp?v=1" alt="Aura, ta styliste personnelle"><img class="body" src="aura-full.webp?v=3" alt="Aura, ta styliste"><img class="bras" src="aura-bras2.webp?v=3" alt=""><img class="mf" src="aura-m1.jpg?v=3" alt=""><img class="mf" src="aura-m2.jpg?v=3" alt=""><img class="mf" src="aura-m3.jpg?v=3" alt=""><img class="blink" src="aura-blink.webp?v=3" alt=""></div></div><h1>Ta styliste</h1><button class="callbtn" id="callbtn" aria-label="Parler à ma styliste"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><p id="callst" class="sub" style="text-align:center">Appuie pour parler avec ta styliste</p><h2>Ou écris-lui</h2>
- <div class="chat">${S.chat.map((c,i)=>`<div class="bub ${c.r}" id="b${i}">${c.img?`<img src="${c.img}" alt="Photo envoyée">`:""}${esc(c.t)||(c.img?"":"…")}</div>`).join("")}</div>
+ <div class="chat">${S.chat.map((c,i)=>`<div class="bub ${c.r}" id="b${i}">${c.img?`<img src="${c.img}" alt="Photo envoyée">`:""}${esc(hideCodes(c.t))||(c.img?"":"…")}${c.r==="a"&&c.t?findArts(c.t).map(miniHTML).join(""):""}</div>`).join("")}</div>
  ${S.cphoto?`<div class="prev"><img src="${S.cphoto.url}" alt="Photo à envoyer"><button data-unphoto aria-label="Retirer la photo">×</button></div>`:""}
 
  <div style="display:flex;gap:8px;margin-top:8px;align-items:center"><label class="clip" aria-label="Ajouter une photo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><input type="file" accept="image/*" data-cphoto hidden></label><input class="field" id="msg" style="min-width:0" placeholder="${S.cphoto?"Que veux-tu savoir sur cette photo ?":"Écris ta question"}" value="${esc(S.draft)}"><button class="btn" style="width:auto;padding:14px 20px" data-send ${S.busy?"disabled":""}>Envoyer</button></div>`})
@@ -981,7 +1055,7 @@ async function run(k){if(RUNS[k])return runMod(k);
 }
 
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;S.micMsg="";
-function SYS(){return REF+" Tu es la styliste personnelle de l’application Mon style. Parle comme une amie styliste chaleureuse, à l’oral : 2 à 4 phrases courtes, sans liste, sans emoji. Elle s’appelle "+(S.nom||"(prénom inconnu)")+" : dis « ma belle » une seule fois, dans ta toute première réponse (« Salut ma belle, »), puis ne le répète plus jamais ; ensuite utilise seulement son prénom, de temps en temps. Réponds en français, ou en arabe ou en anglais si elle écrit dans ces langues. Son profil : "+(PROFIL()||"pas encore analysé : invite-la à faire son analyse")+". Pour les achats, donne le type de pièce, la couleur et les mots-clés à chercher chez nos boutiques partenaires (Ounass, Namshi, Amazon, The Luxury Closet), dans l’onglet Boutique, sans inventer de lien ni de prix."}
+function SYS(){return REF+" Tu es la styliste personnelle de l’application Mon style. Parle comme une amie styliste chaleureuse, à l’oral : 2 à 4 phrases courtes, sans liste, sans emoji. Elle s’appelle "+(S.nom||"(prénom inconnu)")+" : dis « ma belle » une seule fois, dans ta toute première réponse (« Salut ma belle, »), puis ne le répète plus jamais ; ensuite utilise seulement son prénom, de temps en temps. Réponds en français, ou en arabe ou en anglais si elle écrit dans ces langues. Son profil : "+(PROFIL()||"pas encore analysé : invite-la à faire son analyse")+". Pour les achats, donne le type de pièce, la couleur et les mots-clés à chercher chez nos boutiques partenaires (Ounass, Namshi, Amazon, The Luxury Closet), dans l’onglet Boutique, sans inventer de lien ni de prix. "+CATCTX()}
 let TCONV=null;
 async function textConv(){
  if(TCONV)return TCONV;
@@ -992,6 +1066,7 @@ async function textConv(){
    if(l&&l.r==="a"&&!l.t)l.t=message;else S.chat.push({r:"a",t:message});
    S.busy=false;save&&save();if(S.page==="chat")render(false)},
   onDisconnect:()=>{TCONV=null}});
+ try{TCONV.sendContextualUpdate(CATCTX())}catch(_){}
  return TCONV;
 }
 async function send(text){
@@ -1134,6 +1209,10 @@ document.addEventListener("click",e=>{
  if(t.hasAttribute("data-nom")){const v=(S.nomDraft??S.nom??"").trim();if(!v)return;S.nom=v;NOM=v;S.nomDraft=undefined;save();return next()}
  if(t.hasAttribute("data-retry")){run(S.page);S.err="";render(false);return}
  if(t.dataset.ans){S.ans[t.dataset.ans]=t.dataset.v;render(false);setTimeout(()=>{if(S.page==="q_"+t.dataset.ans)next()},380);return}
+ if(t.dataset.vcat!==undefined){S.vcat=t.dataset.vcat;render(false);return}
+ if(t.dataset.art){S.art=t.dataset.art;go("art");return}
+ if(t.dataset.askart){const a=ART(t.dataset.askart);go("chat");setTimeout(()=>send("Est-ce que la pièce « "+a.nom+" » ["+a.id+"] me va ? Avec quoi je peux la porter ?"),350);return}
+ if(t.hasAttribute("data-askaura")){go("chat");setTimeout(()=>send("Choisis-moi 3 pièces de la vitrine My Style qui me vont le mieux, et dis-moi pourquoi."),350);return}
  if(t.hasAttribute("data-shop")){S.shopQ=($("#shopq")||{}).value?.trim()||"";render(false);return}
  if(t.hasAttribute("data-news"))return loadNews();
  if(t.hasAttribute("data-mic"))return listen();
@@ -1318,7 +1397,9 @@ async function startCall(){
   conv=await Conversation.startSession({agentId:AGENT_ID,connectionType:"websocket",dynamicVariables:{user_name:(typeof S!=="undefined"&&S.nom)||"",profil:(typeof PROFIL==="function"&&PROFIL())||"pas encore analysé"},
    onModeChange:({mode})=>{st(mode==="speaking"?"Elle te parle…":"Je t’écoute, parle-moi");if(window.auraTalking)auraTalking(mode==="speaking")},
    onDisconnect:()=>{conv=null;live(false);if(window.auraTalking)auraTalking(false);st("Appel terminé. Appuie pour reparler.")},
-   onError:m=>st("Petit souci : "+m)});
+   onError:m=>st("Petit souci : "+m),
+   onMessage:({message,source})=>{if(source==="ai"&&window.addAuraBubble)addAuraBubble(message)}});
+  try{if(typeof CATCTX==="function")conv.sendContextualUpdate(CATCTX(true))}catch(_){}
   live(true);st("Elle arrive…");cancelAnimationFrame(raf);anim();
   window.callStatus=st;if(typeof S!=="undefined"&&S.cphoto&&typeof voicePhoto==="function")setTimeout(()=>voicePhoto((S.draft||"").trim()),2500);
  }catch(err){conv=null;live(false);st(err&&err.name==="NotAllowedError"?"Autorise le micro : Réglages, Safari, Micro.":"Impossible de lancer l’appel : "+(err&&err.message||err))}
