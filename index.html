@@ -442,7 +442,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </nav>
 </div>
 <script>
-const VERSION="54";
+const VERSION="55";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -1000,34 +1000,55 @@ function voiceLine(t){return new Promise(r=>{const ss=window.speechSynthesis;let
 const VIDS={"aura-1":"videos/aura-1.mp4?v=2","aura-2":"videos/aura-2.mp4?v=1","aura-nom":"videos/aura-nom.mp4?v=1","aura-go":"videos/aura-go.mp4?v=1","aura-retour":"videos/aura-retour.mp4?v=1","aura-3":"videos/aura-3.mp4?v=1","aura-enchantee":"videos/aura-enchantee.mp4?v=1","aura-aventure":"videos/aura-aventure.mp4?v=1"};
 Object.keys(VIDS).filter(n=>n!=="aura-1").forEach(n=>{fetch(VIDS[n]).then(r=>r.ok?r.blob():null).then(b=>{if(b)VIDS[n]=URL.createObjectURL(b)}).catch(()=>{})});
 const AVID=document.createElement("video");AVID.muted=true;AVID.playsInline=true;AVID.setAttribute("playsinline","");AVID.setAttribute("muted","");AVID.preload="auto";{AVID.src=VIDS["aura-1"];AVID.dataset.n="aura-1"}
+// Détourage du fond vert sur la carte graphique (WebGL) : fluide même pendant l'appel. Deux vidéos peuvent se fondre l'une dans l'autre.
+function glKey(c){let gl=null;try{gl=c.getContext("webgl",{premultipliedAlpha:false,alpha:true,antialias:false,preserveDrawingBuffer:false})}catch(e){}
+ if(!gl)return null;
+ const sh=(t,src)=>{const o=gl.createShader(t);gl.shaderSource(o,src);gl.compileShader(o);return o};
+ const pr=gl.createProgram();
+ gl.attachShader(pr,sh(gl.VERTEX_SHADER,"attribute vec2 p;varying vec2 uv;void main(){uv=vec2((p.x+1.)*.5,(1.-p.y)*.5);gl_Position=vec4(p,0.,1.);}"));
+ gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,"precision mediump float;varying vec2 uv;uniform sampler2D A;uniform sampler2D B;uniform float T;vec4 k(vec3 c){float m=max(c.r,c.b);float d=c.g-m;float al=clamp((.431-d)/.333,0.,1.);if(d>0.)c.g=m;return vec4(c,al);}void main(){vec4 x=k(texture2D(A,uv).rgb);vec4 y=k(texture2D(B,uv).rgb);vec4 o=mix(x,y,T);gl_FragColor=vec4(o.rgb*o.a,o.a);}"));
+ gl.linkProgram(pr);if(!gl.getProgramParameter(pr,gl.LINK_STATUS))return null;gl.useProgram(pr);
+ const bf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,bf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+ const loc=gl.getAttribLocation(pr,"p");gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+ gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
+ const tex=n=>{const t=gl.createTexture();gl.activeTexture(gl.TEXTURE0+n);gl.bindTexture(gl.TEXTURE_2D,t);[gl.TEXTURE_WRAP_S,gl.TEXTURE_WRAP_T].forEach(w=>gl.texParameteri(gl.TEXTURE_2D,w,gl.CLAMP_TO_EDGE));gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);return t};
+ const tA=tex(0),tB=tex(1);gl.uniform1i(gl.getUniformLocation(pr,"A"),0);gl.uniform1i(gl.getUniformLocation(pr,"B"),1);const uT=gl.getUniformLocation(pr,"T");
+ const up=(n,t,v)=>{if(!v||v.readyState<2)return false;gl.activeTexture(gl.TEXTURE0+n);gl.bindTexture(gl.TEXTURE_2D,t);try{gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,v);return true}catch(e){return false}};
+ return (va,vb,t)=>{const okA=up(0,tA,va);let okB=false;if(t>0)okB=up(1,tB,vb);if(!okA&&!okB)return false;if(!okB){t=0}if(!okA&&okB){up(0,tA,vb);t=0}
+  gl.viewport(0,0,c.width,c.height);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.uniform1f(uT,t);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);return true}}
+// Repli sans WebGL : détourage classique pixel par pixel.
+function cpuKey(c){const x=c.getContext("2d",{willReadFrequently:true});return (va,vb,t)=>{const v=t>.5&&vb&&vb.readyState>=2?vb:va;if(!v||v.readyState<2)return false;
+ x.drawImage(v,0,0,c.width,c.height);const d=x.getImageData(0,0,c.width,c.height),p=d.data;
+ for(let i=0;i<p.length;i+=4){const r=p[i],g=p[i+1],b=p[i+2],m=r>b?r:b,dm=g-m;if(dm>110)p[i+3]=0;else if(dm>25){p[i+3]=255*(110-dm)/85;p[i+1]=m}else if(dm>0)p[i+1]=m}
+ x.putImageData(d,0,0);return true}}
+const keyer=c=>c._k||(c._k=glKey(c)||cpuKey(c));
 function vidOn(name){if(RM||!VIDS[name])return;const a=document.querySelector("#ava .fig");if(!a)return;
  let c=a.querySelector("canvas.vid");if(!c){c=document.createElement("canvas");c.className="vid";c.width=450;c.height=800;a.appendChild(c)}
  const v=AVID;if(v.dataset.n!==name){v.src=VIDS[name];v.dataset.n=name}try{v.currentTime=0}catch(e){}
- const ctx=c.getContext("2d",{willReadFrequently:true});let on=true;
- const draw=()=>{if(!on)return;if(v.readyState>=2){ctx.drawImage(v,0,0,450,800);const d=ctx.getImageData(0,0,450,800),p=d.data;
-   for(let i=0;i<p.length;i+=4){const r=p[i],g=p[i+1],b=p[i+2],m=r>b?r:b,dm=g-m;if(dm>110)p[i+3]=0;else if(dm>25){p[i+3]=255*(110-dm)/85;p[i+1]=m}else if(dm>0)p[i+1]=m}
-   ctx.putImageData(d,0,0);a.classList.add("vplay")}
-  if(!v.ended)requestAnimationFrame(draw)};
+ const k=keyer(c);let on=true;
+ const draw=()=>{if(!on)return;if(k(v,null,0))a.classList.add("vplay");if(!v.ended)requestAnimationFrame(draw)};
  window.VIDOFF=()=>{on=false;a.classList.remove("vplay");try{v.pause()}catch(e){}};v.onended=()=>window.VIDOFF();
  const q=v.play();if(q&&q.then)q.then(draw).catch(()=>window.VIDOFF());else draw()}
 // Aura au repos : vidéo en boucle (respire, cligne, sourit), fond vert retiré, sur toutes ses apparitions.
 const IDLE=document.createElement("video");IDLE.muted=true;IDLE.loop=true;IDLE.playsInline=true;IDLE.setAttribute("playsinline","");IDLE.setAttribute("muted","");IDLE.preload="auto";IDLE.src="videos/aura-idle.mp4?v=1";
 // Aura qui parle avec les mains (boucle) : utilisée pendant l'appel quand elle répond.
-const TALK=document.createElement("video");TALK.muted=true;TALK.loop=true;TALK.playsInline=true;TALK.setAttribute("playsinline","");TALK.setAttribute("muted","");TALK.preload="auto";TALK.src="videos/aura-talk.mp4?v=1";
+const TALK=document.createElement("video");TALK.muted=true;TALK.loop=true;TALK.playsInline=true;TALK.setAttribute("playsinline","");TALK.setAttribute("muted","");TALK.preload="auto";TALK.src="videos/aura-talk.mp4?v=2";
 // iPhone : les vidéos doivent être dans la page (invisibles) pour être lues de façon fiable.
 (()=>{const h=document.createElement("div");h.style.cssText="position:fixed;left:0;top:0;width:2px;height:2px;opacity:0;pointer-events:none;overflow:hidden;z-index:-1";[IDLE,TALK,AVID].forEach(v=>{v.style.cssText="width:2px;height:2px";h.appendChild(v)});(document.body||document.documentElement).appendChild(h)})();
-window.AURA_TALK=false;window.auraTalking=on=>{if(on===window.AURA_TALK)return;window.AURA_TALK=on;try{if(on){const q=TALK.play();if(q&&q.catch)q.catch(()=>{})}else TALK.pause()}catch(e){}};
-(()=>{if(RM)return;const K=document.createElement("canvas");K.width=450;K.height=800;const kc=K.getContext("2d",{willReadFrequently:true});let ok=false,last=-1;
+// Passage repos ↔ parole en fondu ; elle reste « en train de parler » pendant les petites pauses pour éviter les à-coups.
+window.AURA_TALK=false;let TALK_OFF=0;
+window.auraTalking=on=>{if(on){clearTimeout(TALK_OFF);TALK_OFF=0;if(!window.AURA_TALK){window.AURA_TALK=true;try{const q=TALK.play();if(q&&q.catch)q.catch(()=>{})}catch(e){}}}
+ else if(window.AURA_TALK&&!TALK_OFF){TALK_OFF=setTimeout(()=>{TALK_OFF=0;window.AURA_TALK=false},1400)}};
+(()=>{if(RM)return;let mixT=0,prev=performance.now(),pauseAt=0;
  const kick=()=>{const q=IDLE.play();if(q&&q.catch)q.catch(()=>{})};kick();document.addEventListener("touchend",kick,{once:true});document.addEventListener("click",kick,{once:true});
- document.addEventListener("visibilitychange",()=>{if(document.hidden)IDLE.pause();else kick()});
- let lastSrc=null;
- const tick=()=>{requestAnimationFrame(tick);const figs=document.querySelectorAll(".avatar.aura .fig");const V=(window.AURA_TALK&&TALK.readyState>=2)?TALK:IDLE;if(!figs.length||V.readyState<2)return;
-  if(V.currentTime!==last||V!==lastSrc){last=V.currentTime;lastSrc=V;kc.drawImage(V,0,0,450,800);const d=kc.getImageData(0,0,450,800),p=d.data;
-   for(let i=0;i<p.length;i+=4){const r=p[i],g=p[i+1],b=p[i+2],m=r>b?r:b,dm=g-m;if(dm>110)p[i+3]=0;else if(dm>25){p[i+3]=255*(110-dm)/85;p[i+1]=m}else if(dm>0)p[i+1]=m}
-   kc.putImageData(d,0,0);ok=true}
-  if(!ok)return;
+ document.addEventListener("visibilitychange",()=>{if(document.hidden){IDLE.pause();TALK.pause()}else{kick();if(window.AURA_TALK)TALK.play().catch(()=>{})}});
+ const tick=now=>{requestAnimationFrame(tick);const dt=Math.min(100,now-prev);prev=now;
+  const target=window.AURA_TALK&&TALK.readyState>=2?1:0;mixT+=(target-mixT)*Math.min(1,dt/220);if(Math.abs(target-mixT)<.01)mixT=target;
+  if(mixT===0&&!window.AURA_TALK&&!TALK.paused){if(!pauseAt)pauseAt=now;else if(now-pauseAt>400){TALK.pause();pauseAt=0}}else pauseAt=0;
+  const figs=document.querySelectorAll(".avatar.aura .fig");if(!figs.length)return;
   figs.forEach(f=>{let c=f.querySelector("canvas.idle");if(!c){c=document.createElement("canvas");c.className="idle";c.width=450;c.height=800;f.insertBefore(c,f.firstChild)}
-   const x=c.getContext("2d");x.clearRect(0,0,450,800);x.drawImage(K,0,0);f.classList.add("iplay")})};
+   if(f.classList.contains("vplay"))return;
+   if(keyer(c)(IDLE,TALK,mixT))f.classList.add("iplay")})};
  requestAnimationFrame(tick)})();
 const AUD=new Audio();AUD.preload="auto";const CLIPS={};["aura-1","aura-2","aura-3","aura-nom","aura-enchantee","aura-aventure","aura-go","aura-retour"].forEach(n=>{fetch("sons/"+n+".mp3").then(r=>r.ok?r.blob():null).then(b=>{if(b&&!CLIPS[n])CLIPS[n]=URL.createObjectURL(b)}).catch(()=>{})});
 function clipLine(name,t){return new Promise(r=>{let done=false,iv=0;const fin=v=>{if(done)return;done=true;clearInterval(iv);if(window.VIDOFF)VIDOFF();talk(false);r(v)};
@@ -1092,7 +1113,7 @@ const live=on=>{if(on&&typeof skipIntro==="function"&&!SKIP)skipIntro();["callbt
 let stFn=()=>{};
 const st=t=>{stFn(t);const e=$$("callst");if(e)e.textContent=t};
 let LOUD=0;
-function anim(){const v=conv&&conv.getOutputVolume?conv.getOutputVolume():0;const now=performance.now();if(v>0.02)LOUD=now;if(window.auraTalking)auraTalking(!!conv&&now-LOUD<700);
+function anim(){const v=conv&&conv.getOutputVolume?conv.getOutputVolume():0;const now=performance.now();if(v>0.02)LOUD=now;if(window.auraTalking)auraTalking(!!conv&&now-LOUD<350);
  document.querySelectorAll(".avatar").forEach(a=>{const img=a.querySelector("img");a.classList.toggle("speak",v>0.02);if(window.auraMouth)auraMouth(v);
   if(img&&!a.classList.contains("aura"))img.style.transform=v>0.02?`translateY(${-v*10}px) scale(${1+v*0.06}) rotate(${Math.sin(performance.now()/180)*v*3}deg)`:""});
  raf=conv?requestAnimationFrame(anim):0;if(!conv)document.querySelectorAll(".avatar").forEach(a=>{a.classList.remove("speak");const i=a.querySelector("img");if(i)i.style.transform=""})}
