@@ -442,7 +442,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </nav>
 </div>
 <script>
-const VERSION="56";
+const VERSION="57";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -1038,7 +1038,7 @@ const TALK=document.createElement("video");TALK.muted=true;TALK.loop=true;TALK.p
 // Passage repos ↔ parole en fondu ; elle reste « en train de parler » pendant les petites pauses pour éviter les à-coups.
 window.AURA_TALK=false;let TALK_OFF=0;
 window.auraTalking=on=>{if(on){clearTimeout(TALK_OFF);TALK_OFF=0;if(!window.AURA_TALK){window.AURA_TALK=true;try{const q=TALK.play();if(q&&q.catch)q.catch(()=>{})}catch(e){}}}
- else if(window.AURA_TALK&&!TALK_OFF){TALK_OFF=setTimeout(()=>{TALK_OFF=0;window.AURA_TALK=false},300)}};
+ else if(window.AURA_TALK&&!TALK_OFF){TALK_OFF=setTimeout(()=>{TALK_OFF=0;window.AURA_TALK=false},700)}};
 (()=>{if(RM)return;let mixT=0,prev=performance.now(),pauseAt=0;
  const kick=()=>{const q=IDLE.play();if(q&&q.catch)q.catch(()=>{})};kick();document.addEventListener("touchend",kick,{once:true});document.addEventListener("click",kick,{once:true});
  document.addEventListener("visibilitychange",()=>{if(document.hidden){IDLE.pause();TALK.pause()}else{kick();if(window.AURA_TALK)TALK.play().catch(()=>{})}});
@@ -1113,7 +1113,7 @@ const live=on=>{if(on&&typeof skipIntro==="function"&&!SKIP)skipIntro();["callbt
 let stFn=()=>{};
 const st=t=>{stFn(t);const e=$$("callst");if(e)e.textContent=t};
 let LOUD=0;
-function anim(){const v=conv&&conv.getOutputVolume?conv.getOutputVolume():0;const now=performance.now();if(v>0.02)LOUD=now;if(window.auraTalking)auraTalking(!!conv);
+function anim(){const v=conv&&conv.getOutputVolume?conv.getOutputVolume():0;const now=performance.now();if(v>0.02)LOUD=now;if(window.auraTalking&&!conv)auraTalking(false);
  document.querySelectorAll(".avatar").forEach(a=>{const img=a.querySelector("img");a.classList.toggle("speak",v>0.02);if(window.auraMouth)auraMouth(v);
   if(img&&!a.classList.contains("aura"))img.style.transform=v>0.02?`translateY(${-v*10}px) scale(${1+v*0.06}) rotate(${Math.sin(performance.now()/180)*v*3}deg)`:""});
  raf=conv?requestAnimationFrame(anim):0;if(!conv)document.querySelectorAll(".avatar").forEach(a=>{a.classList.remove("speak");const i=a.querySelector("img");if(i)i.style.transform=""})}
@@ -1128,7 +1128,7 @@ async function startCall(){
   const {Conversation}=await import("https://esm.sh/@elevenlabs/client");
   window.CALLED=true;
   conv=await Conversation.startSession({agentId:AGENT_ID,connectionType:"websocket",dynamicVariables:{user_name:(typeof S!=="undefined"&&S.nom)||"",profil:(typeof PROFIL==="function"&&PROFIL())||"pas encore analysé"},
-   onModeChange:({mode})=>st(mode==="speaking"?"Elle te parle…":"Je t’écoute, parle-moi"),
+   onModeChange:({mode})=>{st(mode==="speaking"?"Elle te parle…":"Je t’écoute, parle-moi");if(window.auraTalking)auraTalking(mode==="speaking")},
    onDisconnect:()=>{conv=null;live(false);st("Appel terminé. Appuie pour reparler.")},
    onError:m=>st("Petit souci : "+m)});
   live(true);st("Elle arrive…");cancelAnimationFrame(raf);anim();
