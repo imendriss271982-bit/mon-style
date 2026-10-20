@@ -317,6 +317,39 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 .ht-b em{font:italic 500 15px/1.2 "Cormorant Garamond",Georgia,serif;color:var(--accent)}
 .ht-sw{display:flex;gap:3px;margin-top:4px}.ht-sw i{width:12px;height:12px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
 .hm .mys{margin:0;min-height:72px;padding:12px 24px 12px 12px}.hm .mys>span{width:48px;height:48px}.hm .mys b{font-size:22px}.hm .mys small{font-size:13px}
+
+/* ===== Accueil v2 : Outfit check et My Stylist en vedette ===== */
+.hx{display:flex;flex-direction:column;gap:20px;margin:auto 0}
+.hx-oc{position:relative;overflow:hidden;border-radius:28px;padding:24px 22px 22px;color:#fff;background:linear-gradient(150deg,#9A3F61 0%,#7D2E4A 55%,#5E1F37 100%);box-shadow:0 14px 34px rgba(125,46,74,.28);display:flex;flex-direction:column;gap:16px}
+.hx-oc-t small{display:block;font-size:12px;letter-spacing:.18em;text-transform:uppercase;opacity:.8}
+.hx-oc-t b{display:block;font:500 38px/1.05 "Cormorant Garamond",Georgia,serif;margin:4px 0 8px}
+.hx-oc-t p{margin:0;max-width:78%;font-size:15px;line-height:1.45;opacity:.92}
+.hx-oc-t strong{font-weight:700;color:#F3D9A4}
+.hx-hanger{position:absolute;right:-18px;top:6px;width:150px;height:150px;fill:none;stroke:rgba(255,255,255,.14);stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.hx-oc-b{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:56px;border:0;border-radius:999px;background:#fff;color:var(--accent);font:600 16px/1 inherit;letter-spacing:.02em;cursor:pointer;transition:transform .15s}
+.hx-oc-b svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linejoin:round}
+.hx-oc-l{align-self:center;border:0;background:none;color:#fff;opacity:.85;font-size:14px;text-decoration:underline;text-underline-offset:3px;padding:2px;cursor:pointer}
+.hx-st{display:flex;align-items:center;gap:14px;width:100%;border:1px solid var(--line);border-radius:24px;background:var(--soft);padding:12px 14px 12px 12px;text-align:left;color:var(--ink);cursor:pointer;transition:transform .15s}
+.hx-st img{width:64px;height:64px;border-radius:50%;object-fit:cover;flex:none;box-shadow:0 0 0 3px #fff,0 0 0 4px rgba(125,46,74,.25)}
+.hx-st-t{flex:1;min-width:0}
+.hx-st-t b{display:block;font:500 26px/1.1 "Cormorant Garamond",Georgia,serif}
+.hx-st-t small{color:var(--muted);font-size:14px}
+.hx-mic{flex:none;width:52px;height:52px;border-radius:50%;background:var(--accent);display:grid;place-items:center;box-shadow:0 6px 16px rgba(125,46,74,.3)}
+.hx-mic svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:1.7;stroke-linecap:round}
+.hx-pf{display:flex;flex-direction:column;gap:2px;padding:16px 4px 0}
+.hx-pf-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:0 4px 8px}
+.hx-pf-h b{font:500 22px/1.1 "Cormorant Garamond",Georgia,serif;white-space:nowrap}
+.hx-pf-h small{color:var(--muted);font-size:12.5px;text-align:right}
+.hx-row{display:flex;align-items:center;gap:12px;width:100%;border:0;border-top:1px solid var(--line);background:none;padding:12px 4px;text-align:left;color:var(--ink);cursor:pointer}
+.hx-ri{flex:none;width:38px;height:38px;border-radius:50%;background:var(--soft);display:grid;place-items:center}
+.hx-ri svg{width:20px;height:20px;fill:none;stroke:var(--accent);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.hx-rt{flex:1;min-width:0}
+.hx-rt b{display:block;font-size:15.5px;font-weight:500}
+.hx-rt em{font:italic 15px/1.3 "Cormorant Garamond",Georgia,serif;color:var(--muted)}
+.hx-row.ok .hx-rt em{color:var(--accent);font-style:normal;font-family:inherit;font-size:13.5px;font-weight:600}
+.hx-sw{display:flex}.hx-sw i{width:14px;height:14px;border-radius:50%;margin-left:-4px;border:2px solid #fff}
+.hx-chev{color:var(--muted);font-size:22px;line-height:1}
+.hx-oc-b:active,.hx-st:active{transform:scale(.98)}
 </style>
 </head>
 <body>
@@ -389,7 +422,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </nav>
 </div>
 <script>
-const VERSION="50";
+const VERSION="51";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -478,20 +511,27 @@ function photoPage(k,o){
 }
 
 const P={
-home:()=>{const v=ok("visage"),bd=ok("corps"),c=season();
- const oc=ok("outfit"),nd=[v,bd,c,oc].filter(Boolean).length,todo=!v?"visage":!bd?"corps":!c?"couleurs":!oc?"outfit":"";
- const NEXT={visage:["Étape 1","Commence par ton visage"],corps:["Étape 2","Continue avec ta silhouette"],couleurs:["Étape 3","Découvre tes couleurs"],outfit:["Étape 4","Fais ton premier outfit check"]};
- const R=34,L=2*Math.PI*R,seg=L/4;
- const ring=`<svg viewBox="0 0 80 80" class="hp-r" aria-hidden="true">${[0,1,2,3].map(k=>`<circle cx="40" cy="40" r="${R}" stroke-dasharray="${seg-9} ${L-seg+9}" stroke-dashoffset="${-k*seg-4.5}" class="${k<nd?"on":""}"/>`).join("")}</svg>`;
- const ICO={visage:'<ellipse cx="12" cy="12" rx="6.5" ry="8.5"/><path d="M9.5 10.5h.01M14.5 10.5h.01M10 15c1.2.8 2.8.8 4 0"/>',corps:'<circle cx="12" cy="4.5" r="2"/><path d="M8 9h8l-2 6 2 6M8 9l2 6-2 6M12 9v6"/>',couleurs:'<path d="M12 3a9 9 0 1 0 0 18c1.5 0 2-1 2-2 0-1.5-1-2 0-3s3 0 4.5-1.5C20 13 21 11 21 10c0-4-4-7-9-7z"/><path d="M7.5 11h.01M10 7.5h.01M15 7.5h.01"/>',kibbe:'<path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z"/>',outfit:'<path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/>'};
- const tile=(n,m,ic,label,val,extra)=>`<button class="ht ${val?"ok":""}" ${val?`data-view="${m}"`:m==="o_res"?'data-go="o_photo"':`data-mod="${RES_MOD[m]}"`}><span class="ht-top"><span class="ht-i"><svg viewBox="0 0 24 24">${ICO[ic]}</svg></span><small>${n}</small></span><span class="ht-b"><b>${label}</b><em>${esc(val?cap(val):"À analyser")}</em>${extra||""}</span></button>`;
- const sw=c?`<span class="ht-sw">${SEASONS[c].c.slice(0,6).map(x=>`<i style="background:${x[0]}"></i>`).join("")}</span>`:"";
- const card=todo?`<div class="hp-t"><small>${NEXT[todo][0]}</small><b>${NEXT[todo][1]}</b></div><button class="hp-b" ${todo==="outfit"?'data-go="o_photo"':`data-mod="${todo}"`}>Commencer</button>`:`<div class="hp-t"><small>Bravo</small><b>Ton profil style est complet</b></div><button class="hp-b" data-go="profil">Voir mon profil</button>`;
- return {dock:1,html:`<div class="hm">
- <div class="hm-h"><h1 class="hh">Salut <em>${esc(cap(NOM))}</em></h1><p>${nd?`${nd} analyse${nd>1?"s":""} sur 4 terminée${nd>1?"s":""}`:"Découvre ton style en 4 analyses"}</p></div>
- <section class="hp" aria-label="Analyse du style"><div class="hp-o">${ring}<b>${nd}/4</b></div><div class="hp-c">${card}</div></section>
- <section class="hg" aria-label="Mes analyses">${tile("01","r_visage","visage","Morpho visage",v&&v.forme)}${tile("02","r_corps","corps","Morpho & Kibbe",bd&&(bd.kibbe?bd.forme+" · "+bd.kibbe:bd.forme))}${tile("03","o_res","outfit","Outfit check",oc&&oc.note+" / 10")}${tile("04","r_couleurs","couleurs","Colorimétrie",c,sw)}</section>
- <button class="mys" data-view="chat"><span><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span><div><b>My Stylist</b><small>Parle avec ta styliste</small></div></button>
+home:()=>{const v=ok("visage"),bd=ok("corps"),c=season(),oc=ok("outfit");
+ const nd=[v,bd,c].filter(Boolean).length;
+ const ICO={visage:'<ellipse cx="12" cy="12" rx="6.5" ry="8.5"/><path d="M9.5 10.5h.01M14.5 10.5h.01M10 15c1.2.8 2.8.8 4 0"/>',corps:'<circle cx="12" cy="4.5" r="2"/><path d="M8 9h8l-2 6 2 6M8 9l2 6-2 6M12 9v6"/>',couleurs:'<path d="M12 3a9 9 0 1 0 0 18c1.5 0 2-1 2-2 0-1.5-1-2 0-3s3 0 4.5-1.5C20 13 21 11 21 10c0-4-4-7-9-7z"/><path d="M7.5 11h.01M10 7.5h.01M15 7.5h.01"/>'};
+ const row=(m,ic,label,val,mod,extra)=>`<button class="hx-row ${val?"ok":""}" ${val?`data-view="${m}"`:`data-mod="${mod}"`}><span class="hx-ri"><svg viewBox="0 0 24 24">${ICO[ic]}</svg></span><span class="hx-rt"><b>${label}</b><em>${esc(val?cap(val):"À faire une fois")}</em></span>${extra||""}<span class="hx-chev" aria-hidden="true">›</span></button>`;
+ const sw=c?`<span class="hx-sw">${SEASONS[c].c.slice(0,4).map(x=>`<i style="background:${x[0]}"></i>`).join("")}</span>`:"";
+ const cam='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-2.5h6L17 8h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.6"/></svg>';
+ return {dock:1,html:`<div class="hx">
+ <div class="hm-h"><h1 class="hh">Salut <em>${esc(cap(NOM))}</em></h1><p>Qu’est-ce qu’on porte aujourd’hui ?</p></div>
+ <section class="hx-oc" aria-label="Outfit check du jour">
+  <div class="hx-oc-t"><small>Chaque jour</small><b>Outfit check</b><p>${oc?`Ta dernière tenue : <strong>${esc(String(oc.note))}/10</strong>. Montre-moi celle d’aujourd’hui.`:"Montre-moi ta tenue : je te donne une note et ce qu’il faut changer."}</p></div>
+  <svg class="hx-hanger" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/></svg>
+  <button class="hx-oc-b" data-go="o_photo">${cam}Prendre ma tenue en photo</button>
+  ${oc?`<button class="hx-oc-l" data-view="o_res">Voir mon dernier résultat</button>`:""}
+ </section>
+ <button class="hx-st" data-view="chat"><img src="aura-face.jpg?v=1" alt="" width="64" height="64"><span class="hx-st-t"><b>My Stylist</b><small>Demande conseil à Aura</small></span><span class="hx-mic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span></button>
+ <section class="hx-pf" aria-label="Mon profil de style">
+  <div class="hx-pf-h"><b>Mon profil de style</b><small>${nd}/3 ${nd===3?"· à jour":"· une seule fois"}</small></div>
+  ${row("r_visage","visage","Morpho visage",v&&v.forme,"visage")}
+  ${row("r_corps","corps","Morpho & Kibbe",bd&&(bd.kibbe?bd.forme+" · "+bd.kibbe:bd.forme),"corps")}
+  ${row("r_couleurs","couleurs","Colorimétrie",c,"couleurs",sw)}
+ </section>
  </div>`,
  say:"Bonjour "+NOM+", je suis contente de te voir. Touche le micro pour me parler, ou choisis une analyse."}},
 a_nom:()=>({html:`<p class="step">Ton analyse</p><h1>Comment tu t’appelles ?</h1><p class="sub">Ton prénom, pour que je puisse t’appeler par ton nom.</p>
