@@ -116,6 +116,22 @@ footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg)
 #splash .btn[hidden]{display:none}
 #splash #talkbtn.live{background:#a33a5d}
 #splash .skip{position:absolute;top:calc(14px + env(safe-area-inset-top));right:16px;background:none;border:0;color:var(--accent);font:inherit;font-size:15px;padding:10px 12px;cursor:pointer}#splash .skip[hidden]{display:none}#spnom{width:100%;max-width:320px;margin-bottom:8px}#spnom[hidden]{display:none}
+.avatar.aura .fig{position:absolute;inset:0;border-radius:120px 120px 28px 28px;overflow:hidden;box-shadow:0 12px 34px rgba(125,46,74,.25);animation:float 4s ease-in-out infinite;transform-origin:50% 92%}
+.avatar.aura .fig img{position:absolute;border-radius:0;box-shadow:none;animation:none;object-fit:fill}
+.avatar.aura .fig img:first-child{inset:0;width:100%;height:100%;object-fit:cover}
+.avatar.aura .fig img.bras{left:62.5%;top:68.85%;width:25%;height:31.15%;transform-origin:41.67% 10.53%;transition:transform .5s ease}
+.avatar.aura .fig img.mf{left:43.333%;top:28.525%;width:14.167%;height:9.508%;opacity:0}
+.avatar.aura .fig img.mf.on{opacity:1}
+.avatar.aura.speak .fig{animation:auraTalk 2.6s ease-in-out infinite}
+.avatar.aura.speak .fig img.bras{animation:auraArm 2s ease-in-out infinite}
+.avatar.aura.wave .fig img.bras{animation:auraWave .42s ease-in-out 6 alternate}
+@keyframes auraTalk{0%,100%{transform:rotate(0) translateY(0)}25%{transform:rotate(-.9deg) translateY(-2px)}50%{transform:rotate(0) translateY(0)}75%{transform:rotate(.9deg) translateY(-2px)}}
+@keyframes auraArm{0%,100%{transform:rotate(0)}30%{transform:rotate(-3.2deg)}65%{transform:rotate(1.8deg)}}
+@keyframes auraWave{from{transform:rotate(-4.5deg)}to{transform:rotate(2.5deg)}}
+.tapaura{position:absolute;z-index:3;left:50%;bottom:-14px;transform:translateX(-50%);white-space:nowrap;border:0;border-radius:99px;padding:8px 14px;font:inherit;font-size:14px;font-weight:600;color:#fff;background:var(--accent);box-shadow:0 6px 18px rgba(125,46,74,.35);animation:tapPulse 1.6s ease-in-out infinite}
+.tapaura[hidden]{display:none}
+@keyframes tapPulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.07)}}
+@media (prefers-reduced-motion:reduce){.avatar.aura .fig,.avatar.aura .fig img.bras{animation:none!important}}
 .spst{min-height:1.4em!important;margin:0 0 10px;font-size:14px;color:var(--accent)!important}
 .avatar img{transform-origin:50% 90%}
 .avatar.speak img{animation:none}
@@ -248,7 +264,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </style>
 </head>
 <body>
-<div id="splash"><div class="avatar" id="ava"><img src="stylist.jpg" alt="Ta styliste personnelle"></div><h1 id="hi"></h1><p id="hi2"></p><button class="btn" id="install" hidden>Télécharger l’application</button><div id="spnom" hidden><input class="field" id="spnomI" autocomplete="given-name" placeholder="Ton prénom" style="font-size:20px;padding:16px;margin-bottom:12px;text-align:center"><button class="btn show" id="spnomB" disabled>Continuer</button></div><p id="spst" class="spst"></p><button class="btn" id="talkbtn">Parler avec elle</button><button class="btn ghost" id="start">Commencer</button><button id="skip" class="skip" type="button">Passer ›</button></div>
+<div id="splash"><div class="avatar aura" id="ava"><div class="fig"><img src="stylist-body.jpg" alt="Aura, ta styliste personnelle"><img class="bras" src="aura-bras.png" alt=""><img class="mf" src="aura-m1.jpg" alt=""><img class="mf" src="aura-m2.jpg" alt=""><img class="mf" src="aura-m3.jpg" alt=""></div><button class="tapaura" type="button" hidden>🔊 Touche pour entendre Aura</button></div><h1 id="hi"></h1><p id="hi2"></p><button class="btn" id="install" hidden>Télécharger l’application</button><div id="spnom" hidden><input class="field" id="spnomI" autocomplete="given-name" placeholder="Ton prénom" style="font-size:20px;padding:16px;margin-bottom:12px;text-align:center"><button class="btn show" id="spnomB" disabled>Continuer</button></div><p id="spst" class="spst"></p><button class="btn" id="talkbtn">Parler avec elle</button><button class="btn ghost" id="start">Commencer</button><button id="skip" class="skip" type="button">Passer ›</button></div>
 <div id="inst" role="dialog" aria-modal="true" aria-labelledby="instT"><div class="sh"><h2 id="instT">Installer My Style</h2><p class="sub" id="instS">Quelques gestes dans Safari, et My Style s’ouvre comme une vraie application depuis ton écran d’accueil.</p>
 <ol id="instL"><li><span>Ouvert depuis <b>WhatsApp</b> ? Touche d’abord la <b>boussole Safari</b> <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg> en bas à droite</span></li><li><span>Touche <b>Partager</b> <svg viewBox="0 0 24 24"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M6 11H5v10h14V11h-1"/></svg> en bas de Safari</span></li><li><span>Fais défiler et choisis <b>Sur l’écran d’accueil</b> <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg></span></li><li><span>Touche <b>Ajouter</b>, puis ouvre l’icône My Style</span></li></ol>
 <button class="btn" id="instOk">J’ai compris</button></div></div>
@@ -266,7 +282,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </nav>
 </div>
 <script>
-const VERSION="23";
+const VERSION="24";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -616,7 +632,16 @@ function listen(){
 }
 
 /*VOICE*/
-function talk(on){document.body.classList.toggle("talk",on)}
+function talk(on){document.body.classList.toggle("talk",on);document.querySelectorAll(".avatar.aura").forEach(a=>a.classList.toggle("speak",!!on))}
+// Bouche d'Aura : 4 positions, pilotées par la voix
+let MP=0,MLAST=0,MF=-1;
+function mouthKick(v){MP=Math.max(MP,v||.4)}
+function mouthTick(now){const dt=Math.min(80,now-(MLAST||now));MLAST=now;MP*=Math.pow(.86,dt/16);
+ const f=MP>.62?3:MP>.36?2:MP>.13?1:0;if(f!==MF){MF=f;document.querySelectorAll(".avatar.aura .mf").forEach((m,k)=>m.classList.toggle("on",k===f-1))}
+ requestAnimationFrame(mouthTick)}
+requestAnimationFrame(mouthTick);
+window.auraMouth=v=>{if(v>.02)mouthKick(Math.min(1,.25+v*2.4))};
+function gesture(){document.querySelectorAll(".avatar.aura").forEach(a=>{a.classList.remove("wave");void a.offsetWidth;a.classList.add("wave");clearTimeout(a._g);a._g=setTimeout(()=>a.classList.remove("wave"),2600)})}
 let VOICES=[],KEEP=[];
 function loadVoices(){try{VOICES=window.speechSynthesis?speechSynthesis.getVoices():[]}catch(e){}}
 loadVoices();if(window.speechSynthesis)speechSynthesis.addEventListener?.("voiceschanged",loadVoices);
@@ -710,10 +735,10 @@ function checkUpdate(){fetch(location.pathname+"?v="+Date.now(),{cache:"no-store
  if(!S.busy&&!/_run$/.test(S.page))location.replace(location.pathname+"?v="+m[1])}).catch(()=>{})}
 checkUpdate();document.addEventListener("visibilitychange",()=>{if(!document.hidden)checkUpdate()});
 // Accueil d'Aura : présentation, prénom, puis le style.
-const INTRO=["Salut, je suis ta personal stylist.","Mon rôle, c’est de comprendre ce qui te met vraiment en valeur : tes couleurs, la forme de ton visage et ta silhouette.","Ensemble, on va construire un style qui te ressemble, pour que tu te sentes belle et sûre de toi chaque jour."];
-const ASKNOM="Mais d’abord, dis-moi… comment tu t’appelles ?";
-const OUTRO=n=>["Enchantée, "+n+" ! Moi, c’est Aura.","Commençons notre belle aventure de la beauté : chaque jour, on choisira ensemble ton outfit.","Je vais t’aider à trouver le style qui te va. Et commençons !"];
-const RETOUR=n=>["Salut "+n+" ! C’est Aura, ta personal stylist.","Je suis là pour révéler ta beauté."];
+const INTRO=[["Salut, je suis ta personal stylist.","aura-1",1],["Mon rôle, c’est de comprendre ce qui te met vraiment en valeur : tes couleurs, la forme de ton visage et ta silhouette.","aura-2"],["Ensemble, on va construire un style qui te ressemble, pour que tu te sentes belle et sûre de toi chaque jour.","aura-3",1]];
+const ASKNOM=["Mais d’abord, dis-moi… comment tu t’appelles ?","aura-nom"];
+const OUTRO=n=>[["Enchantée, "+n+" ! Moi, c’est Aura.","aura-enchantee",1],["Commençons notre belle aventure de la beauté : chaque jour, on choisira ensemble ton outfit.","aura-aventure"],["Je vais t’aider à trouver le style qui te va. Et commençons !","aura-go",1]];
+const RETOUR=n=>[["Salut "+n+" ! C’est Aura, ta personal stylist. Je suis là pour révéler ta beauté.","aura-retour",1]];
 let SKIP=false,CUR="",SPOKE=false;window.GREETED=false;
 const RM=matchMedia("(prefers-reduced-motion:reduce)").matches;
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
@@ -723,9 +748,24 @@ function voiceLine(t){return new Promise(r=>{const ss=window.speechSynthesis;let
  try{affStop();if(!VOICES.length)loadVoices();const vs=VOICES.filter(x=>x.lang.toLowerCase().startsWith("fr"));
   const v=vs.find(x=>/amélie|audrey|marie|julie|hortense|denise|female|femme|google/i.test(x.name))||vs[0];
   const u=new SpeechSynthesisUtterance(t);u.lang="fr-FR";if(v)u.voice=v;u.rate=1;KEEP=[u];
-  u.onstart=()=>{SPOKE=true;window.GREETED=true;talk(true)};u.onend=fin;u.onerror=()=>talk(false);ss.resume();ss.speak(u)}catch(e){}})}
-async function line(t){if(SKIP)return;CUR=t;const p=$("#hi2");p.textContent="";
- await Promise.all([typeSkip(p,t,RM?1:28),voiceLine(t)]);if(!SKIP)await wait(350)}
+  let iv=0;u.onstart=()=>{SPOKE=true;window.GREETED=true;talk(true);iv=setInterval(()=>mouthKick(.3+Math.random()*.6),130)};u.onend=()=>{clearInterval(iv);fin()};u.onerror=()=>{clearInterval(iv);talk(false)};ss.resume();ss.speak(u)}catch(e){}})}
+// Voix enregistrée d'Aura (ElevenLabs) ; si le fichier manque, voix du téléphone.
+const AUD=new Audio();AUD.preload="auto";
+function clipLine(name,t){return new Promise(r=>{let done=false,iv=0;const fin=v=>{if(done)return;done=true;clearInterval(iv);talk(false);r(v)};
+ if(!S.voice||!name){(S.voice?voiceLine(t):wait(Math.max(2200,t.length*60))).then(()=>fin());return}
+ try{affStop();if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}
+ const dev=()=>{clearInterval(iv);if(!done)voiceLine(t).then(()=>fin())};
+ AUD.onended=()=>fin();AUD.onerror=dev;
+ AUD.onplay=()=>{SPOKE=true;window.GREETED=true;talk(true);clearInterval(iv);iv=setInterval(()=>mouthKick(.3+Math.random()*.65),120)};
+ AUD.src="sons/"+name+".mp3";
+ try{const p=AUD.play();if(p&&p.catch)p.catch(e=>{if(e&&e.name==="NotAllowedError"){clearInterval(iv);done=true;r("blocked")}else dev()})}catch(e){dev()}})}
+function waitTap(){return new Promise(r=>{const b=document.querySelector(".tapaura");if(b)b.hidden=false;
+ const go=()=>{document.removeEventListener("click",go,true);document.removeEventListener("touchend",go,true);if(b)b.hidden=true;try{AUD.play().catch(()=>{})}catch(e){}r()};
+ document.addEventListener("click",go,true);document.addEventListener("touchend",go,true)})}
+async function line(t,clip,g){if(SKIP)return;CUR=t;const p=$("#hi2");p.textContent="";if(g)gesture();
+ const [,res]=await Promise.all([typeSkip(p,t,RM?1:28),clipLine(clip,t)]);
+ if(res==="blocked"&&!SKIP){await waitTap();if(!SKIP)return line(t,clip,g)}
+ if(!SKIP)await wait(350)}
 function typeSkip(el,t,ms){return new Promise(r=>{let i=0;const h=setInterval(()=>{if(SKIP){clearInterval(h);return r()}el.textContent=t.slice(0,++i);if(i>=t.length){clearInterval(h);r()}},ms)})}
 function showBtns(){$("#skip").hidden=true;$("#spnom").hidden=true;$("#talkbtn").classList.add("show");$("#start").classList.add("show");if(!$("#install").hidden)$("#install").classList.add("show")}
 function askNom(){return new Promise(r=>{if(SKIP)return r(null);const box=$("#spnom"),i=$("#spnomI"),b=$("#spnomB");box.hidden=false;setTimeout(()=>i.focus(),50);
@@ -733,16 +773,14 @@ function askNom(){return new Promise(r=>{if(SKIP)return r(null);const box=$("#sp
  const ok=()=>{const v=i.value.trim();if(!v)return;box.hidden=true;r(v)};b.onclick=ok;i.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();ok()}};
  window.SKIPNOM=()=>r(null)})}
 (async()=>{await typeInto($("#hi"),"Salut"+(S.nom?" "+S.nom:"")+" !",RM?1:75);await wait(300);
- if(S.nom){for(const t of RETOUR(S.nom))await line(t);return showBtns()}
- for(const t of INTRO)await line(t);
- await line(ASKNOM);const n=await askNom();
- if(n){S.nom=n;NOM=n;save();$("#hi").textContent="Salut "+n+" !";for(const t of OUTRO(n))await line(t)}
+ if(S.nom){for(const t of RETOUR(S.nom))await line(...t);return showBtns()}
+ for(const t of INTRO)await line(...t);
+ await line(...ASKNOM);const n=await askNom();
+ if(n){S.nom=n;NOM=n;save();$("#hi").textContent="Salut "+n+" !";for(const t of OUTRO(n))await line(...t)}
  showBtns()})();
 function HELLO(){return "Salut"+(S.nom?" "+S.nom:"")+" ! Je suis ta personal stylist. Je suis là pour révéler ta beauté."}
-function skipIntro(){SKIP=true;stopVoice();$("#hi2").textContent="Je suis Aura, ta personal stylist. Je suis là pour révéler ta beauté.";if(window.SKIPNOM)window.SKIPNOM();showBtns()}
+function skipIntro(){SKIP=true;stopVoice();try{AUD.pause()}catch(e){}const tb=document.querySelector(".tapaura");if(tb)tb.hidden=true;$("#hi2").textContent="Je suis Aura, ta personal stylist. Je suis là pour révéler ta beauté.";if(window.SKIPNOM)window.SKIPNOM();showBtns()}
 $("#skip").addEventListener("click",skipIntro);
-// iPhone : la voix ne démarre qu'après un premier toucher ; on relit la phrase en cours.
-document.getElementById("splash").addEventListener("pointerdown",e=>{if(SPOKE||SKIP||e.target.closest("#skip,#talkbtn,#start,#install,#spnom"))return;unlock();if(CUR){SPOKE=true;voiceLine(CUR)}});
 const UA=navigator.userAgent,IOS=/iPhone|iPad|iPod/.test(UA)||(/Macintosh/.test(UA)&&navigator.maxTouchPoints>1);
 const APP=navigator.standalone===true||matchMedia("(display-mode: standalone)").matches;
 const NOT_SAFARI=/CriOS|FxiOS|EdgiOS|FBAN|FBAV|Instagram|Line\/|Snapchat|TikTok/.test(UA);
@@ -765,8 +803,8 @@ const live=on=>{if(on&&typeof skipIntro==="function"&&!SKIP)skipIntro();["callbt
 let stFn=()=>{};
 const st=t=>{stFn(t);const e=$$("callst");if(e)e.textContent=t};
 function anim(){const v=conv&&conv.getOutputVolume?conv.getOutputVolume():0;
- document.querySelectorAll(".avatar").forEach(a=>{const img=a.querySelector("img");a.classList.toggle("speak",v>0.02);
-  if(img)img.style.transform=v>0.02?`translateY(${-v*10}px) scale(${1+v*0.06}) rotate(${Math.sin(performance.now()/180)*v*3}deg)`:""});
+ document.querySelectorAll(".avatar").forEach(a=>{const img=a.querySelector("img");a.classList.toggle("speak",v>0.02);if(window.auraMouth)auraMouth(v);
+  if(img&&!a.classList.contains("aura"))img.style.transform=v>0.02?`translateY(${-v*10}px) scale(${1+v*0.06}) rotate(${Math.sin(performance.now()/180)*v*3}deg)`:""});
  raf=conv?requestAnimationFrame(anim):0;if(!conv)document.querySelectorAll(".avatar").forEach(a=>{a.classList.remove("speak");const i=a.querySelector("img");if(i)i.style.transform=""})}
 async function startCall(){
  if(busy)return;busy=true;
