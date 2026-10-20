@@ -21,6 +21,37 @@ export default {
     try {
       if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
       if (req.method !== "POST" || !ALLOWED.includes(origin)) return json({ erreur: "Accès refusé." }, 403);
+
+      // Voix d'Aura qui dit le prénom de la cliente (ElevenLabs), avec phrases fixes uniquement.
+      if (new URL(req.url).pathname === "/tts") {
+        const EK = String(env.ELEVEN_KEY || "").replace(/[^\x21-\x7E]/g, "").replace(/^["']+|["']+$/g, "");
+        if (!EK) return json({ erreur: "La clé ElevenLabs n'est pas configurée." }, 500);
+        let b2 = {};
+        try { b2 = await req.json(); } catch {}
+        const nom = String(b2.nom || "").normalize("NFC").replace(/[^\p{L}\p{M} '\-]/gu, "").trim().slice(0, 30);
+        const PH = {
+          enchantee: n => `Enchantée, ${n} ! Moi, c'est Aura.`,
+          retour: n => `Salut ${n} ! C'est Aura, ta personal stylist. Je suis là pour révéler ta beauté.`
+        };
+        const kind = PH[b2.type] ? b2.type : "enchantee";
+        if (!nom) return json({ erreur: "Prénom manquant." }, 400);
+        const ck = new Request("https://cache.mon-style/tts/" + kind + "/" + encodeURIComponent(nom.toLowerCase()));
+        const cache = caches.default;
+        let hit = await cache.match(ck);
+        if (!hit) {
+          const voice = env.VOICE_ID || "cgSgspJ2msm6clMCkdW9";
+          const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice}?output_format=mp3_44100_128`, {
+            method: "POST",
+            headers: { "xi-api-key": EK, "Content-Type": "application/json", "Accept": "audio/mpeg" },
+            body: JSON.stringify({ text: PH[kind](nom), model_id: "eleven_multilingual_v2", voice_settings: { stability: 0.5, similarity_boost: 0.75 } })
+          });
+          if (!r.ok) return json({ erreur: "Erreur ElevenLabs " + r.status }, 502);
+          const buf = await r.arrayBuffer();
+          hit = new Response(buf, { headers: { "Content-Type": "audio/mpeg", "Cache-Control": "public, max-age=31536000" } });
+          await cache.put(ck, hit.clone());
+        }
+        return new Response(hit.body, { headers: { ...cors, "Content-Type": "audio/mpeg" } });
+      }
       const KEY = String(env.GEMINI_KEY || "").replace(/[^\x21-\x7E]/g, "").replace(/^["']+|["']+$/g, "");
       if (!KEY) return json({ erreur: "La clé Gemini n'est pas configurée sur Cloudflare." }, 500);
 
