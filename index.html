@@ -1334,13 +1334,14 @@ let TAPR;const TAPPED=new Promise(r=>TAPR=r);
  document.addEventListener("click",go,true);document.addEventListener("touchend",go,true)})();
 function mime(t){let to,iv;const p=new Promise(r=>{SPOKE=true;talk(true);iv=setInterval(()=>mouthKick(.3+Math.random()*.65),120);to=setTimeout(()=>{clearInterval(iv);talk(false);r(false)},Math.max(1800,t.length*62))});
  p.stop=()=>{clearTimeout(to);clearInterval(iv);if(window.VIDOFF)VIDOFF();talk(false)};return p}
-async function line(t,clip,g,again){if(SKIP)return;CUR=t;const p=$("#hi2");p.textContent="";if(g)gesture();
- const [,res]=await Promise.all([typeSkip(p,t,RM?1:28),clipLine(clip,t)]);
+let GEN=0;
+async function line(t,clip,g,again){if(SKIP)return;const gen=GEN;CUR=t;const p=$("#hi2");p.textContent="";if(g)gesture();
+ const [,res]=await Promise.all([typeSkip(p,t,RM?1:28),clipLine(clip,t)]);if(gen!==GEN)return;
  if(res==="blocked"&&!SKIP){if(!again&&window.TAPDONE)return line(t,clip,g,true);
   const b=document.querySelector(".tapaura");if(b)b.hidden=false;
   // Son bloqué : Aura mime la phrase puis attend le premier toucher pour la redire à voix haute (on ne saute plus sa présentation).
   const m=mime(t);vidOn(clip);const tapped=again?await m:await TAPPED;
-  if(tapped&&!SKIP){m.stop();return line(t,clip,g,true)}}
+  if(gen!==GEN){m.stop();return}if(tapped&&!SKIP){m.stop();return line(t,clip,g,true)}}
  if(!SKIP)await wait(350)}
 function typeSkip(el,t,ms){return new Promise(r=>{let i=0;const h=setInterval(()=>{if(SKIP){clearInterval(h);return r()}el.textContent=t.slice(0,++i);if(i>=t.length){clearInterval(h);r()}},ms)})}
 function showBtns(){$("#skip").hidden=true;$("#spnom").hidden=true;$("#talkbtn").classList.add("show");$("#start").classList.add("show");if(!$("#install").hidden)$("#install").classList.add("show")}
@@ -1350,24 +1351,41 @@ function askNom(){return new Promise(r=>{if(SKIP)return r(null);const box=$("#sp
  window.SKIPNOM=()=>r(null)})}
 const LG={fr:{hi:"Salut",t:"Je suis Aura, ta personal stylist. Je suis là pour révéler ta beauté.",talk:"Parler avec elle",hang:"Raccrocher",start:"Commencer",cont:"Continuer dans le navigateur"},
  en:{hi:"Hi",t:"I’m Aura, your personal stylist. I’m here to bring out your beauty.",talk:"Talk to her",hang:"Hang up",start:"Start",cont:"Continue in the browser"},
- ar:{hi:"هلا",t:"أنا أورا، الستايلست الخاصة فيچ. موجودة عشان أطلع جمالچ.",talk:"كلّميها",hang:"سكّري",start:"يلا نبدأ",cont:"كمّلي من المتصفح"}};
+ ar:{hi:"هلا",t:"أنا أورا، الستايلست الخاصة فيكِ. أنا هنا عشان أبرز جمالكِ.",talk:"كلّميها",hang:"سكّري",start:"يلا نبدأ",cont:"كمّلي من المتصفح"}};
 const L=k=>(LG[S.lang]||LG.fr)[k];
 function applyLang(){const ar=S.lang==="ar";["hi","hi2"].forEach(i=>{const e=$("#"+i);if(e)e.dir=ar?"rtl":"auto"});
  document.querySelectorAll("#langs button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===(S.lang||"fr"))));
- const tb=$("#talkbtn");if(tb&&!tb.classList.contains("live"))tb.textContent=L("talk");const st=$("#start");if(st)st.textContent=L(st.classList.contains("ghost")?"cont":"start");
+ const tb=$("#talkbtn");if(tb&&!tb.classList.contains("live"))tb.textContent=L("talk");const st=$("#start");if(st)st.textContent=L($("#install").hidden?"start":"cont");
  if(S.lang&&S.lang!=="fr"){$("#hi").textContent=L("hi")+(S.nom?" "+S.nom:"")+" !";$("#hi2").textContent=L("t")}}
-function setLang(l){S.lang=l;save();if(l!=="fr"){SKIP=true;try{stopVoice()}catch(e){}try{AUD.pause()}catch(e){}if(window.SKIPNOM)window.SKIPNOM();showBtns()}
- else if(SKIP){$("#hi").textContent=L("hi")+(S.nom?" "+S.nom:"")+" !";$("#hi2").textContent=L("t")}applyLang()}
+// Aura se tait net (changement de langue).
+function hush(){GEN++;try{stopVoice()}catch(e){}try{AUD.onplay=AUD.onended=AUD.onerror=null;AUD.pause()}catch(e){}if(window.VIDOFF)VIDOFF();if(window.auraTalking)auraTalking(false);talk(false);const b=document.querySelector(".tapaura");if(b)b.hidden=true}
+// Anglais / arabe : Aura dit sa présentation avec sa vraie voix (ElevenLabs), sinon avec la voix du téléphone.
+const LGV={en:"en-US",ar:"ar-SA"};
+async function greetLang(){const lg=S.lang,gen=GEN;if(!LGV[lg]||!S.voice)return;const t=L("hi")+(S.nom?" "+S.nom:"")+" ! "+L("t");
+ const on=()=>{SPOKE=true;window.GREETED=true;talk(true);if(window.auraTalking)auraTalking(true);gesture()},off=()=>{talk(false);if(window.auraTalking)auraTalking(false)};
+ const phone=()=>{if(gen!==GEN)return;const ss=window.speechSynthesis;if(!ss)return;try{ss.cancel();if(!VOICES.length)loadVoices();const u=new SpeechSynthesisUtterance(t);u.lang=LGV[lg];
+  const v=VOICES.find(x=>x.lang.replace("_","-").toLowerCase()===LGV[lg].toLowerCase())||VOICES.find(x=>x.lang.toLowerCase().startsWith(lg));if(v)u.voice=v;KEEP=[u];u.onstart=on;u.onend=u.onerror=off;ss.resume();ss.speak(u)}catch(e){}};
+ let url=null;try{const r=await Promise.race([fetch(AI_URL+"/tts",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({nom:S.nom||"",type:"hello_"+lg})}),wait(6000).then(()=>null)]);
+  if(r&&r.ok&&/audio/.test(r.headers.get("Content-Type")||""))url=URL.createObjectURL(await r.blob())}catch(e){}
+ if(gen!==GEN)return;if(!url)return phone();
+ AUDTOK++;AUD.onplay=on;AUD.onended=off;AUD.onerror=()=>{off();phone()};AUD.src=url;
+ const play=()=>{try{const p=AUD.play();if(p&&p.catch)p.catch(e=>{off();if(e&&e.name==="NotAllowedError"&&!window.TAPDONE){const b=document.querySelector(".tapaura");if(b)b.hidden=false;TAPPED.then(()=>{if(gen===GEN){if(b)b.hidden=true;play()}})}else phone()})}catch(e){phone()}};play()}
+function setLang(l){const was=S.lang||"fr";S.lang=l;save();applyLang();
+ if(l==="fr"&&was==="fr"&&!SKIP&&INTRO_ON)return; // elle parle déjà en français
+ hush();if(window.SKIPNOM)window.SKIPNOM();
+ if(l==="fr"){SKIP=false;introFr()}else{SKIP=true;showBtns();greetLang()}}
 document.addEventListener("click",e=>{const b=e.target.closest("#langs [data-lang]");if(b)setLang(b.dataset.lang)});
-(async()=>{showBtns();if(S.lang&&S.lang!=="fr"){SKIP=true;applyLang();return}applyLang();typeInto($("#hi"),"Salut"+(S.nom?" "+S.nom:"")+" !",RM?1:45);
+let INTRO_ON=false;
+async function introFr(){INTRO_ON=true;try{await introRun()}finally{INTRO_ON=false}}
+async function introRun(){const gen=GEN,ok=()=>gen===GEN&&!SKIP;showBtns();applyLang();$("#hi").textContent="";typeInto($("#hi"),"Salut"+(S.nom?" "+S.nom:"")+" !",RM?1:45);
  // À chaque ouverture : présentation complète. Le prénom n'est demandé que si on ne le connaît pas encore.
  // Cliente déjà inscrite : « Salut, je suis ta personal stylist », puis son rôle et la suite (sans redemander le prénom).
- for(const t of INTRO)await line(...t);
- if(S.nom){for(const t of [...SUITE,...FIN])await line(...t);return showBtns()}
- await line(...ASKNOM);const n=await askNom();
- if(n){S.nom=n;NOM=n;save();$("#hi").textContent="Salut "+n+" !";await ttsNom(n,"enchantee");for(const t of OUTRO(n))await line(...t)}
- else for(const t of [...SUITE,...FIN])await line(...t);
- showBtns()})();
+ for(const t of INTRO){if(!ok())return;await line(...t)}
+ if(S.nom){for(const t of [...SUITE,...FIN]){if(!ok())return;await line(...t)}return}
+ if(!ok())return;await line(...ASKNOM);if(!ok())return;const n=await askNom();if(!ok())return;
+ if(n){S.nom=n;NOM=n;save();$("#hi").textContent="Salut "+n+" !";await ttsNom(n,"enchantee");for(const t of OUTRO(n)){if(!ok())return;await line(...t)}}
+ else for(const t of [...SUITE,...FIN]){if(!ok())return;await line(...t)}}
+if(S.lang&&S.lang!=="fr"){SKIP=true;showBtns();applyLang();greetLang()}else introFr();
 function HELLO(){return "Salut"+(S.nom?" "+S.nom:"")+" ! Je suis ta personal stylist. Je suis là pour révéler ta beauté."}
 function skipIntro(){SKIP=true;stopVoice();try{AUD.pause()}catch(e){}const tb=document.querySelector(".tapaura");if(tb)tb.hidden=true;$("#hi2").textContent=L("t");if(window.SKIPNOM)window.SKIPNOM();showBtns()}
 $("#skip").addEventListener("click",skipIntro);
@@ -1375,7 +1393,7 @@ const UA=navigator.userAgent,IOS=/iPhone|iPad|iPod/.test(UA)||(/Macintosh/.test(
 const APP=navigator.standalone===true||matchMedia("(display-mode: standalone)").matches;
 const NOT_SAFARI=/CriOS|FxiOS|EdgiOS|FBAN|FBAV|Instagram|Line\/|Snapchat|TikTok/.test(UA);
 let BIP=null;
-function showInstall(){if(APP)return;const b=$("#install");b.hidden=false;$("#start").textContent="Continuer dans le navigateur";$("#start").classList.add("ghost");if($("#start").classList.contains("show"))b.classList.add("show")}
+function showInstall(){if(APP)return;const b=$("#install");b.hidden=false;$("#start").textContent=L("cont");$("#start").classList.add("ghost");if($("#start").classList.contains("show"))b.classList.add("show")}
 if(IOS&&!APP){showInstall();if(NOT_SAFARI){$("#instS").textContent="Ce lien est ouvert hors de Safari. Copie-le, ouvre Safari, colle-le dans la barre d’adresse, puis :";}}
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();BIP=e;showInstall()});
 $("#install").addEventListener("click",async()=>{if(BIP){BIP.prompt();try{await BIP.userChoice}catch(_){}BIP=null;return}

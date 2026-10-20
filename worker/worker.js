@@ -32,11 +32,13 @@ export default {
         const nom = String(b2.nom || "").normalize("NFC").replace(/[^\p{L}\p{M} '\-]/gu, "").trim().slice(0, 30);
         const PH = {
           enchantee: n => `Enchantée, ${n} ! Moi, c'est Aura.`,
-          retour: n => `Salut ${n} ! C'est Aura, ta personal stylist. Je suis là pour révéler ta beauté.`
+          retour: n => `Salut ${n} ! C'est Aura, ta personal stylist. Je suis là pour révéler ta beauté.`,
+          hello_en: n => `Hi${n ? " " + n : ""}! I'm Aura, your personal stylist. I'm here to bring out your beauty.`,
+          hello_ar: n => `هلا${n ? " " + n : ""}! أنا أورا، الستايلست الخاصة فيكِ. أنا هنا عشان أبرز جمالكِ.`
         };
         const kind = PH[b2.type] ? b2.type : "enchantee";
-        if (!nom) return json({ erreur: "Prénom manquant." }, 400);
-        const ck = new Request("https://cache.mon-style/tts/" + kind + "/" + encodeURIComponent(nom.toLowerCase()));
+        if (!nom && !kind.startsWith("hello_")) return json({ erreur: "Prénom manquant." }, 400);
+        const ck = new Request("https://cache.mon-style/tts/" + kind + "/" + encodeURIComponent(nom.toLowerCase() || "_"));
         const cache = caches.default;
         let hit = await cache.match(ck);
         if (!hit) {
