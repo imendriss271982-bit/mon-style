@@ -457,7 +457,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </nav>
 </div>
 <script>
-const VERSION="59";
+const VERSION="60";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -784,7 +784,10 @@ const AI_URL="https://mon-style.imendriss271982.workers.dev";
 function shrink(file,max=1024){return new Promise((ok,ko)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL("image/jpeg",0.85).split(",")[1])};im.onerror=()=>{URL.revokeObjectURL(u);ko(Object.assign(new Error("photo"),{code:"image_rejected"}))};im.src=u})}
 const SHR=new WeakMap();function shrunk(f){if(!SHR.has(f))SHR.set(f,shrink(f));return SHR.get(f)}
 const WORKER_AI={json:async(prompt,o={})=>{const images=[];for(const f of o.images||[])images.push({mime:"image/jpeg",data:await shrunk(f)});
- const r=await fetch(AI_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt,images})});let d={};try{d=await r.json()}catch(e){}
+ const send=()=>fetch(AI_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt,images})});
+ let r;try{r=await send()}catch(e){await new Promise(z=>setTimeout(z,1200));try{r=await send()}catch(e2){throw Object.assign(new Error("La connexion a été coupée. Vérifie ton internet et réessaie."),{code:"net"})}}
+ if(r.status===503){await new Promise(z=>setTimeout(z,2500));try{r=await send()}catch(e){}}
+ let d={};try{d=await r.json()}catch(e){}
  if(!r.ok)throw Object.assign(new Error(d.erreur||"erreur"),{code:d.code||(r.status===429?"rate_limited":"ai_error")});return d}};
 async function getSample(){if(SAMPLE!==null)return SAMPLE;try{SAMPLE=window.claude?(await window.claude.use("sample"))||false:false}catch(e){SAMPLE=false}if(!SAMPLE&&AI_URL)SAMPLE=WORKER_AI;return SAMPLE}
 function errMsg(e){return ERRS[e&&e.code]||(e&&e.message&&e.message!=="erreur"&&e.message!=="photo"?e.message:"L’analyse a échoué. Réessaie.")}

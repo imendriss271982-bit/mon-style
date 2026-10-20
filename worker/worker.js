@@ -80,19 +80,24 @@ export default {
       const gen = { responseMimeType: "application/json", temperature: 0.4 };
       const fast = JSON.stringify({ contents: [{ role: "user", parts }], generationConfig: { ...gen, thinkingConfig: { thinkingLevel: "low" } } });
       const plain = JSON.stringify({ contents: [{ role: "user", parts }], generationConfig: gen });
-      const call = (model, body) => fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
-        { method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": KEY }, body }
-      );
+      const T0 = Date.now();
+      const call = async (model, body) => {
+        // Chaque essai est limité dans le temps, pour que la cliente n'attende jamais trop.
+        const left = 50000 - (Date.now() - T0);
+        if (left < 4000) return new Response(JSON.stringify({ error: { message: "timeout" } }), { status: 504 });
+        try {
+          return await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+            { method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": KEY }, body, signal: AbortSignal.timeout(Math.min(28000, left)) });
+        } catch { return new Response(JSON.stringify({ error: { message: "timeout" } }), { status: 504 }); }
+      };
       let r;
       const tryModels = async list => {
         for (const model of list) {
           r = await call(model, fast);
           // Si ce modèle ne connaît pas le réglage de réflexion, on réessaie sans.
           if (r.status === 400) r = await call(model, plain);
-          // Modèle surchargé (503/500) : une nouvelle tentative rapide, puis on passe au modèle suivant.
-          if (r.status === 503 || r.status === 500) { await new Promise(z => setTimeout(z, 900)); r = await call(model, fast); if (r.status === 400) r = await call(model, plain); }
-          if (r.status === 503 || r.status === 500) continue;
+          // Modèle surchargé ou trop lent : on passe tout de suite au modèle suivant.
+          if (r.status === 503 || r.status === 500 || r.status === 504) continue;
           if (r.status !== 404) { if (r.ok) GOOD_MODEL = model; return true; }
         }
         return false;
@@ -117,7 +122,7 @@ export default {
 
       if (!r.ok) {
         if (r.status === 429) return json({ erreur: "Trop de demandes. Réessaie dans un instant.", code: "rate_limited" }, 429);
-        if (r.status === 503 || r.status === 500) return json({ erreur: "L’analyse est très demandée en ce moment. Réessaie dans une minute.", code: "busy" }, 503);
+        if (r.status === 503 || r.status === 500 || r.status === 504) return json({ erreur: "L’analyse est très demandée en ce moment. Réessaie dans une minute.", code: "busy" }, 503);
         const msg = (data.error && data.error.message) || "inconnue";
         return json({ erreur: "Erreur Gemini " + r.status + " : " + msg, code: "ai_error" }, 502);
       }
