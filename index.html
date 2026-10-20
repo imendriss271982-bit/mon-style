@@ -382,7 +382,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </nav>
 </div>
 <script>
-const VERSION="37";
+const VERSION="38";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -886,7 +886,7 @@ function voiceLine(t){return new Promise(r=>{const ss=window.speechSynthesis;let
   let iv=0;u.onstart=()=>{SPOKE=true;window.GREETED=true;talk(true);iv=setInterval(()=>mouthKick(.3+Math.random()*.6),130)};u.onend=()=>{clearInterval(iv);fin()};u.onerror=()=>{clearInterval(iv);talk(false)};ss.resume();ss.speak(u)}catch(e){}})}
 // Voix enregistrée d'Aura (ElevenLabs) ; si le fichier manque, voix du téléphone.
 // Vidéos d'Aura (fond vert retiré en direct) : remplacent l'image pendant la phrase correspondante.
-const VIDS={"aura-1":"videos/aura-1.mp4?v=1"};
+const VIDS={"aura-1":"videos/aura-1.mp4?v=2"};
 const AVID=document.createElement("video");AVID.muted=true;AVID.playsInline=true;AVID.setAttribute("playsinline","");AVID.setAttribute("muted","");AVID.preload="auto";AVID.src=VIDS["aura-1"];
 function vidOn(name){if(RM||!VIDS[name])return;const a=document.querySelector("#ava .fig");if(!a)return;
  let c=a.querySelector("canvas.vid");if(!c){c=document.createElement("canvas");c.className="vid";c.width=450;c.height=800;a.appendChild(c)}
