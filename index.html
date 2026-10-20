@@ -582,15 +582,14 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 <nav class="dock" id="dock">
 <button data-go="boutique"><svg viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>Boutique</button>
 <button data-go="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Accueil</button>
-<button id="affbtn" aria-label="Écouter mes affirmations" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/><path d="M9.5 10.5c.4-1 1.3-1.5 2.5-1.5"/></svg>Affirmations</button>
+<button data-go="beaute"><svg viewBox="0 0 24 24"><path d="M10 21h6v-9h-6z"/><path d="M11 12V7.5L15 4v8"/><path d="M8 21h10"/></svg>Beauté</button>
 <button data-go="news"><svg viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>Nouveautés</button>
 <button data-go="profil"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.4-4 4.4-6 8-6s6.6 2 8 6"/></svg>Profil</button>
-<p class="affirm" id="affirm"></p>
 </nav>
 </div>
 <script src="i18n.js?v=1"></script>
 <script>
-const VERSION="66";
+const VERSION="67";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -745,7 +744,7 @@ const ONB={visage:["a_face","v_run","r_visage"],corps:["a_body","c_run","r_corps
 const todoMods=()=>["visage","corps","couleurs"].filter(k=>k==="couleurs"?!season():!ok(k));
 function startOnb(){const m=todoMods();if(!m.length)return home();let f=[];m.forEach(k=>{let st=ONB[k];if(k==="couleurs"&&f.includes("a_face"))st=st.slice(1);f=f.concat(st)});
  S.flow=[...(S.nom?[]:["a_nom"]),"a_intro",...f,"r_fin"];S.from="home";S.hist=["home"];S.page=S.flow[0];S.dir="f";S.err="";S.rid++;render(true)}
-const DOCK=["home","boutique","o_photo","news","profil","chat"];
+const DOCK=["home","boutique","o_photo","news","profil","chat","beaute"];
 
 const IC={face:'<svg viewBox="0 0 24 24"><circle cx="12" cy="10" r="5"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>',body:'<svg viewBox="0 0 24 24"><circle cx="12" cy="4" r="2"/><path d="M12 6v8M8 9h8M12 14l-3 7M12 14l3 7"/></svg>',outfit:'<svg viewBox="0 0 24 24"><path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/></svg>'};
 
@@ -833,6 +832,89 @@ function grHomeCard(){const c=grCount(),n=GR.items.filter(x=>!x.wait).slice(0,4)
  ${n.length?`<span class="hx-gr-ph">${n.map(x=>grImg(x)).join("")}</span>`:""}
  <span class="hx-gr-t"><b>Des tenues avec tes vêtements</b><small>${grReady()?(nl?nl+" tenue"+(nl>1?"s":"")+" créée"+(nl>1?"s":"")+" pour toi":"Ta garde-robe est prête : je crée tes tenues"):"Ajoute encore "+(GR_MIN-c.tot>0?GR_MIN-c.tot:1)+" article"+(GR_MIN-c.tot>1?"s":"")+" pour des idées chaque jour"}</small></span>
  <span class="gr-bar rb"><i style="width:${grReady()?100:pct}%"></i></span></button>`}
+// Beauté : make-up selon la forme du visage et la saison, et étiquette (assise, marche, parole). Textes en 3 langues.
+const BL=o=>o?(o[S.lang]||o.fr):"";
+const BX={
+ titre:{fr:"Beauté",en:"Beauty",ar:"الجمال"},
+ sous:{fr:"Ton make-up sur mesure et l’art de te tenir avec élégance.",en:"Your made-to-measure make-up and the art of carrying yourself with elegance.",ar:"مكياجچ على مقاسچ، وفن الإتيكيت والأناقة."},
+ tMk:{fr:"Mon make-up",en:"My make-up",ar:"مكياجي"},tEt:{fr:"Étiquette",en:"Etiquette",ar:"الإتيكيت"},
+ noFace:{fr:"Fais d’abord l’analyse de ton visage : je te dis ensuite où poser ton contouring, ton blush et ton highlighter.",en:"First do your face analysis: then I’ll tell you where to put your contour, blush and highlighter.",ar:"سوّي أول تحليل وجهچ، وبعدين أقولچ وين تحطين الكونتور والبلاشر والهايلايتر."},
+ doFace:{fr:"Analyser mon visage",en:"Analyse my face",ar:"حلّلي وجهي"},
+ forme:{fr:"Pour ton visage",en:"For your face",ar:"حسب شكل وجهچ"},
+ contour:{fr:"Contouring",en:"Contour",ar:"الكونتور"},blush:{fr:"Blush",en:"Blush",ar:"البلاشر"},hl:{fr:"Highlighter",en:"Highlighter",ar:"الهايلايتر"},sourcils:{fr:"Sourcils",en:"Brows",ar:"الحواجب"},
+ coul:{fr:"Tes couleurs make-up",en:"Your make-up colours",ar:"ألوان مكياجچ"},noSeas:{fr:"Fais ta colorimétrie pour connaître tes couleurs de rouge à lèvres, de blush et de fards.",en:"Do your colour analysis to discover your lipstick, blush and eyeshadow colours.",ar:"سوّي تحليل الألوان عشان تعرفين ألوان الروج والبلاشر والظلال اللي تناسبچ."},doSeas:{fr:"Faire ma colorimétrie",en:"Do my colour analysis",ar:"سوّي تحليل ألواني"},
+ levres:{fr:"Lèvres",en:"Lips",ar:"الشفايف"},yeux:{fr:"Yeux",en:"Eyes",ar:"العيون"},teint:{fr:"Teint",en:"Complexion",ar:"البشرة"},
+ analyse:{fr:"Le conseil de ton analyse",en:"Advice from your analysis",ar:"نصيحة تحليلچ"},
+ routine:{fr:"Ma routine pas à pas",en:"My step-by-step routine",ar:"روتيني خطوة بخطوة"},routineS:{fr:"Aura crée ta routine make-up, geste par geste, pour ton visage et ta saison.",en:"Aura creates your make-up routine, step by step, for your face and your season.",ar:"أورا تسوي لچ روتين مكياج خطوة بخطوة، على شكل وجهچ وألوانچ."},
+ jour:{fr:"Make-up de jour",en:"Day make-up",ar:"مكياج النهار"},soir:{fr:"Make-up de soirée",en:"Evening make-up",ar:"مكياج السهرة"},
+ busy:{fr:"Aura prépare ta routine…",en:"Aura is preparing your routine…",ar:"أورا تجهّز روتينچ…"},
+ ask:{fr:"Poser une question make-up à Aura",en:"Ask Aura a make-up question",ar:"اسألي أورا عن المكياج"},
+ etS:{fr:"Les gestes qui donnent de l’allure, partout : au travail, en soirée, dans un majlis.",en:"The gestures that give you poise everywhere: at work, at a party, in a majlis.",ar:"الحركات اللي تعطيچ هيبة وأناقة في كل مكان: الدوام، السهرة، المجلس."},
+ bien:{fr:"Les bons gestes",en:"Do",ar:"الصح"},eviter:{fr:"À éviter",en:"Avoid",ar:"تجنّبي"},ecoute:{fr:"Aura m’explique",en:"Aura explains",ar:"أورا تشرح لي"},
+ pour:{fr:"Pour",en:"For",ar:"لـ"},
+ achat:{fr:"Trouver le produit",en:"Find the product",ar:"لقي المنتج"}
+};
+// Formes de visage (les 9 formes de la méthode) → où poser contouring, blush, highlighter, et la ligne des sourcils.
+const MK_FACE={
+ ovale:{fr:["Très léger, juste sous les pommettes, pour sculpter sans changer tes proportions.","Sur le haut des pommettes, en remontant vers les tempes.","Haut des pommettes, arête du nez et creux de l’arc de Cupidon.","Arc doux et naturel : ton visage équilibré permet presque tout."],en:["Very light, just under the cheekbones, to sculpt without changing your proportions.","On the top of the cheekbones, sweeping up towards the temples.","Top of the cheekbones, bridge of the nose and Cupid’s bow.","Soft, natural arch: your balanced face can carry almost anything."],ar:["خفيف جداً تحت عظمة الخد، بس عشان تبرزين الملامح.","فوق عظمة الخد وطالع للصدغ.","فوق عظمة الخد، خط الأنف، وفوق الشفة.","قوس ناعم وطبيعي، وجهچ المتوازن يتحمل أي شكل."]},
+ rond:{fr:["Sur les côtés du front et en diagonale sous les pommettes, vers le coin de la bouche : le visage s’allonge.","En diagonale, au-dessus des pommettes, vers les tempes. Évite le rond sur la pomme.","Une ligne verticale : centre du front, arête du nez, pointe du menton.","Arc haut et bien marqué : il ajoute de la verticalité."],en:["On the sides of the forehead and diagonally under the cheekbones towards the corner of the mouth: the face looks longer.","Diagonally, above the cheekbones, towards the temples. Avoid circles on the apples.","A vertical line: centre of the forehead, bridge of the nose, tip of the chin.","High, well-defined arch: it adds height."],ar:["على جوانب الجبهة وبشكل مايل تحت عظمة الخد لين زاوية الفم، عشان يطوّل الوجه.","مايل فوق عظمة الخد لين الصدغ، ولا تحطينه دائري على الخد.","خط عمودي: نص الجبهة، خط الأنف، وطرف الذقن.","قوس عالي وواضح، يعطي طول للوجه."]},
+ carre:{fr:["Sur les angles de la mâchoire et les tempes, bien estompé, pour adoucir les angles.","Arrondi sur la pomme des joues, en souriant.","Centre du front et pointe du menton.","Arrondis et doux, sans angle marqué."],en:["On the corners of the jaw and the temples, well blended, to soften the angles.","Rounded on the apples of the cheeks, while smiling.","Centre of the forehead and tip of the chin.","Rounded and soft, with no sharp angle."],ar:["على زوايا الفك والصدغ، وامسحيه زين عشان ينعّم الزوايا.","دائري على الخد وإنتي تبتسمين.","نص الجبهة وطرف الذقن.","مدورة وناعمة، بدون زاوية حادة."]},
+ rect:{fr:["Le long de la racine des cheveux et sous le menton pour raccourcir, et sur les angles de la mâchoire.","À l’horizontale, des pommettes vers les oreilles.","Une touche horizontale sur le haut des pommettes.","Plutôt droits et horizontaux : ils élargissent le visage."],en:["Along the hairline and under the chin to shorten, and on the corners of the jaw.","Horizontally, from the cheekbones towards the ears.","A horizontal touch on top of the cheekbones.","Rather straight and horizontal: they widen the face."],ar:["على حدود الشعر فوق الجبهة وتحت الذقن عشان يقصّر الوجه، وعلى زوايا الفك.","بشكل أفقي، من الخد لين الأذن.","لمسة أفقية فوق عظمة الخد.","مستقيمة وأفقية، توسّع الوجه."]},
+ oblong:{fr:["Le long de la racine des cheveux et sous le menton : le visage paraît moins long.","À l’horizontale, sur la pomme des joues vers les oreilles.","Une touche horizontale sur le haut des pommettes.","Plutôt droits : ils cassent la longueur."],en:["Along the hairline and under the chin: the face looks less long.","Horizontally, on the apples of the cheeks towards the ears.","A horizontal touch on top of the cheekbones.","Rather straight: they break the length."],ar:["على حدود الشعر فوق الجبهة وتحت الذقن، يبين الوجه أقصر.","أفقي، على الخد لين الأذن.","لمسة أفقية فوق عظمة الخد.","مستقيمة، تكسر طول الوجه."]},
+ coeur:{fr:["Sur les tempes et les côtés du front pour l’affiner, un peu sous les pommettes.","Sous les pommettes, vers l’arrière.","Pointe du menton et léger au centre du front.","Arc doux et arrondi, pas trop haut."],en:["On the temples and the sides of the forehead to slim it, a little under the cheekbones.","Under the cheekbones, towards the back.","Tip of the chin and lightly in the centre of the forehead.","Soft, rounded arch, not too high."],ar:["على الصدغ وجوانب الجبهة عشان تنحفها، وشوي تحت عظمة الخد.","تحت عظمة الخد لورا.","طرف الذقن وشوي في نص الجبهة.","قوس ناعم مدوّر، مو عالي وايد."]},
+ diamant:{fr:["Sur la pointe des pommettes et le bout du menton, pour adoucir les pommettes saillantes.","Juste sous la pommette, légèrement vers l’arrière.","Centre du front et menton, pour élargir le haut et le bas.","Arrondis et doux, pas trop arqués."],en:["On the point of the cheekbones and the tip of the chin, to soften prominent cheekbones.","Just under the cheekbone, slightly towards the back.","Centre of the forehead and chin, to widen the top and bottom.","Rounded and soft, not too arched."],ar:["على أعلى نقطة في عظمة الخد وطرف الذقن، عشان تنعّم الخد البارز.","تحت عظمة الخد شوي لورا.","نص الجبهة والذقن، عشان توسّع فوق وتحت.","مدورة وناعمة، مو مقوّسة وايد."]},
+ hexa:{fr:["Sur l’extérieur des pommettes et les angles de la mâchoire, bien estompé.","Sur la pomme des joues, arrondi.","Centre du front et pointe du menton.","Doux et légèrement arrondis."],en:["On the outer cheekbones and the corners of the jaw, well blended.","On the apples of the cheeks, rounded.","Centre of the forehead and tip of the chin.","Soft and slightly rounded."],ar:["على أطراف عظمة الخد وزوايا الفك، وامسحيه زين.","دائري على الخد.","نص الجبهة وطرف الذقن.","ناعمة ومدوّرة شوي."]},
+ poire:{fr:["Sur les côtés de la mâchoire, pour l’affiner.","Haut sur les pommettes, en remontant vers les tempes.","Sur le front et les tempes, pour élargir le haut du visage.","Bien étirés vers l’extérieur, légèrement arqués."],en:["On the sides of the jaw, to slim it.","High on the cheekbones, sweeping up towards the temples.","On the forehead and temples, to widen the top of the face.","Extended outwards, slightly arched."],ar:["على جوانب الفك عشان تنحفه.","عالي على عظمة الخد وطالع للصدغ.","على الجبهة والصدغ، عشان توسّع فوق الوجه.","ممدودة لبرّا ومقوّسة شوي."]}
+};
+function mkFaceKey(f){f=String(f||"").toLowerCase();
+ if(/ovale/.test(f))return "ovale";if(/rond/.test(f))return "rond";if(/carr/.test(f))return "carre";if(/rect/.test(f))return "rect";if(/oblong|allong/.test(f))return "oblong";
+ if(/c(œ|oe)ur|triangle invers/.test(f))return "coeur";if(/diamant/.test(f))return "diamant";if(/hexa/.test(f))return "hexa";if(/poire|triangle/.test(f))return "poire";return null}
+// Couleurs de make-up par famille de saison : [lèvres, blush, yeux, teint].
+const MK_SEAS={
+ Printemps:{fr:["Corail, pêche, rose chaud lumineux.","Pêche ou abricot.","Bronze doré, champagne, touche de turquoise.","Fond de teint sous-ton doré, fini lumineux."],en:["Coral, peach, bright warm pink.","Peach or apricot.","Golden bronze, champagne, a touch of turquoise.","Golden-undertone foundation, luminous finish."],ar:["مرجاني، خوخي، وردي دافي فاتح.","خوخي أو مشمشي.","برونزي ذهبي، شامبين، ولمسة تركواز.","كريم أساس بأندرتون ذهبي ولمعة طبيعية."],q:"rouge à lèvres corail"},
+ "Été":{fr:["Rose dragée, framboise douce, mauve.","Rose froid poudré.","Taupe, gris doux, lavande, prune légère.","Fond de teint sous-ton rosé, fini satiné."],en:["Sugared-almond pink, soft raspberry, mauve.","Cool powdery pink.","Taupe, soft grey, lavender, light plum.","Pink-undertone foundation, satin finish."],ar:["وردي فاتح، توتي ناعم، موف.","وردي بارد بودري.","توب، رمادي ناعم، لافندر، برقوقي خفيف.","كريم أساس بأندرتون وردي ولمسة ساتان."],q:"rouge à lèvres rose framboise"},
+ Automne:{fr:["Terracotta, brique, nude caramel.","Pêche bronze ou terracotta.","Bronze, cuivre, kaki, brun chaud.","Fond de teint sous-ton doré ou olive, fini naturel."],en:["Terracotta, brick, caramel nude.","Bronze peach or terracotta.","Bronze, copper, khaki, warm brown.","Golden or olive-undertone foundation, natural finish."],ar:["تيراكوتا، طوبي، نود كراميل.","خوخي برونزي أو تيراكوتا.","برونزي، نحاسي، كاكي، بني دافي.","كريم أساس بأندرتون ذهبي أو زيتوني ولمسة طبيعية."],q:"rouge à lèvres terracotta"},
+ Hiver:{fr:["Rouge bleuté, fuchsia, bordeaux.","Rose froid ou framboise.","Charbon, argent, prune, liner noir intense.","Fond de teint sous-ton rosé ou neutre, fini net."],en:["Blue-red, fuchsia, burgundy.","Cool pink or raspberry.","Charcoal, silver, plum, intense black liner.","Pink or neutral-undertone foundation, crisp finish."],ar:["أحمر مزرّق، فوشيا، عنابي.","وردي بارد أو توتي.","فحمي، فضي، برقوقي، وآيلاينر أسود قوي.","كريم أساس بأندرتون وردي أو محايد ولمسة واضحة."],q:"rouge à lèvres rouge bleuté"}
+};
+// Étiquette : assise, marche, parole. [bons gestes], [à éviter].
+const ETQ=[
+ {k:"assise",t:{fr:"S’asseoir",en:"Sitting",ar:"إتيكيت الجلوس"},
+  ok:{fr:["Le dos droit, les épaules relâchées vers l’arrière.","Genoux et chevilles serrés, jambes inclinées sur le côté, ou chevilles croisées.","Une main guide ta robe ou ton abaya quand tu t’assois.","Les mains posées sur les genoux, l’une sur l’autre."],en:["Back straight, shoulders relaxed and back.","Knees and ankles together, legs slanted to the side, or ankles crossed.","One hand guides your dress or abaya as you sit down.","Hands resting on your knees, one over the other."],ar:["ظهرچ مستقيم، وكتوفچ مرتاحة لورا.","الركب والكعوب مضمومة، والرجول مايلة على جنب، أو الكعوب متقاطعة.","بإيدچ رتّبي الفستان أو العباية وإنتي تقعدين.","إيدچ على ركبچ، وحدة فوق الثانية."]},
+  no:{fr:["S’affaler dans le fauteuil.","Les jambes écartées.","Le genou croisé haut, la semelle tournée vers quelqu’un.","Le sac ou le téléphone posé sur la table."],en:["Slumping in the chair.","Legs apart.","Knee crossed high, the sole of your shoe facing someone.","Bag or phone placed on the table."],ar:["تنسدحين على الكرسي.","الرجول مفتوحة.","رجل على رجل عالي، وجزمتچ مواجهة أحد.","الشنطة أو التلفون على الطاولة."]}},
+ {k:"marche",t:{fr:"Marcher",en:"Walking",ar:"إتيكيت المشي"},
+  ok:{fr:["Tête haute, regard droit devant, menton parallèle au sol.","Épaules en arrière, détendues, le ventre légèrement rentré.","Des pas réguliers, le talon puis la pointe, les pieds sur une même ligne.","Les bras suivent ton pas naturellement. En talons, raccourcis le pas."],en:["Head high, eyes forward, chin parallel to the floor.","Shoulders back and relaxed, stomach slightly drawn in.","Steady steps, heel then toe, feet on one line.","Arms follow your stride naturally. In heels, shorten your step."],ar:["راسچ مرفوع، نظرچ قدام، وذقنچ مستوي.","كتوفچ لورا ومرتاحة، وبطنچ مشدود شوي.","خطوات منتظمة، الكعب وبعدين مقدمة الرجل، على خط واحد.","إيدچ تتحرك طبيعي مع مشيتچ. بالكعب العالي قصّري خطوتچ."]},
+  no:{fr:["Regarder tes pieds.","Traîner les pieds ou faire claquer les talons.","Marcher les yeux sur ton téléphone.","Courir en talons."],en:["Looking at your feet.","Dragging your feet or clicking your heels loudly.","Walking with your eyes on your phone.","Running in heels."],ar:["تطالعين رجولچ.","تجرّين رجولچ أو تطقطقين بالكعب.","تمشين وعيونچ في التلفون.","تركضين بالكعب العالي."]}},
+ {k:"parole",t:{fr:"Parler",en:"Speaking",ar:"إتيكيت الكلام"},
+  ok:{fr:["Une voix posée, un débit calme, sans te presser.","Regarde la personne dans les yeux et souris.","Écoute jusqu’au bout avant de répondre.","Appelle la personne par son prénom, dis merci et s’il te plaît."],en:["A steady voice, calm pace, never rushed.","Look the person in the eyes and smile.","Listen to the end before answering.","Call the person by their name, say thank you and please."],ar:["صوت هادي وكلام على مهل، بدون عجلة.","طالعي الشخص في عيونه وابتسمي.","اسمعي لين النهاية قبل لا تردين.","ناديه باسمه، وقولي شكراً ولو سمحت."]},
+  no:{fr:["Parler fort ou couper la parole.","Les mots de remplissage : « euh », « genre », « en fait ».","Regarder ton téléphone pendant que l’autre parle.","Les sujets sensibles en public : argent, poids, vie privée."],en:["Talking loudly or interrupting.","Filler words: “um”, “like”, “actually”.","Looking at your phone while the other person is talking.","Sensitive topics in public: money, weight, private life."],ar:["ترفعين صوتچ أو تقاطعين.","كلمات الحشو: «يعني»، «اممم»، «أصلاً».","تطالعين التلفون والثاني يكلمچ.","المواضيع الحساسة قدام الناس: الفلوس، الوزن، الخصوصيات."]}}
+];
+let MKR=null;try{MKR=JSON.parse(localStorage.getItem("monstyle_mk")||"null")}catch(e){}
+async function mkRoutine(kind){const sm=await getSample();if(!sm||!sm.json){toast("La routine n’est pas disponible ici.");return}
+ S.mkBusy=kind;S.mkErr="";render(false);say(BL(BX.busy));const v=ok("visage");
+ const pr="Tu es maquilleuse professionnelle et styliste. Crée une routine de "+(kind==="soir"?"maquillage de soirée":"maquillage de jour")+" pas à pas, adaptée à la forme de son visage et à sa saison de couleurs. Profil : "+(PROFIL()||"inconnu")+(v&&v.micro?". Micro-morphologie : "+v.micro:"")+". 6 à 8 étapes, du soin au fixateur, chaque geste précis (où, comment, avec quoi) et la teinte conseillée pour sa saison. Reste simple, réaliste et pour le climat du Golfe (chaleur). "+FMT+'Format : {"resume":"1 phrase à dire à voix haute","etapes":[{"titre":"2 à 4 mots","geste":"1 à 2 phrases","recherche":"2 à 4 mots en français pour chercher le produit en boutique"}]}';
+ try{const r=await sm.json(pr);if(!r||r.erreur||!Array.isArray(r.etapes)||!r.etapes.length)throw new Error(r&&r.erreur||"Je n’ai pas réussi à créer ta routine. Réessaie.");
+  MKR={kind,resume:String(r.resume||""),etapes:r.etapes.slice(0,9).map(x=>({titre:String(x.titre||""),geste:String(x.geste||""),recherche:String(x.recherche||"")})),lang:S.lang||"fr"};
+  try{localStorage.setItem("monstyle_mk",JSON.stringify(MKR))}catch(e){}
+  S.mkBusy=null;if(S.page==="beaute"){render(false);say(MKR.resume)}}
+ catch(e){S.mkBusy=null;S.mkErr=errMsg(e);if(S.page==="beaute"){render(false);say(S.mkErr)}}}
+function beauteMk(){const v=ok("visage"),s=season(),fk=v&&mkFaceKey(v.forme),F=fk&&MK_FACE[fk],fam=s&&SEASONS[s].f,C=fam&&MK_SEAS[fam];
+ const li=(lab,txt)=>`<li><b>${BL(lab)}${(S.lang||"fr")==="fr"?" :":":"}</b> ${esc(txt)}</li>`;
+ let h="";
+ if(!v)h+=`<div class="card"><p style="margin:0 0 10px">${BL(BX.noFace)}</p><button class="btn" data-mod="visage">${BL(BX.doFace)}</button></div>`;
+ else if(F){const a=BL(F);h+=`<h2>${BL(BX.forme)} · ${esc(tr(cap(v.forme)))}</h2><ul class="tips">${li(BX.contour,a[0])}${li(BX.blush,a[1])}${li(BX.hl,a[2])}${li(BX.sourcils,a[3])}</ul>`}
+ if(v&&v.makeup)h+=`<div class="card"><b>${BL(BX.analyse)}</b><p style="margin:6px 0 0">${esc(v.makeup)}</p></div>`;
+ if(C){const a=BL(C),pal=SEASONS[s].c.slice(0,6);h+=`<h2>${BL(BX.coul)} · ${esc(tr(s))}</h2><div class="cap-pal">${pal.map(x=>`<i style="background:${x[0]}"></i>`).join("")}</div><ul class="tips">${li(BX.levres,a[0])}${li(BX.blush,a[1])}${li(BX.yeux,a[2])}${li(BX.teint,a[3])}</ul>${links(C.q)}`}
+ else h+=`<div class="card"><p style="margin:0 0 10px">${BL(BX.noSeas)}</p><button class="btn ghost" data-mod="couleurs">${BL(BX.doSeas)}</button></div>`;
+ h+=`<h2>${BL(BX.routine)}</h2><p class="sub">${BL(BX.routineS)}</p><div class="fchips"><button data-mkr="jour" ${S.mkBusy?"disabled":""}>${BL(BX.jour)}</button><button data-mkr="soir" ${S.mkBusy?"disabled":""}>${BL(BX.soir)}</button></div>`;
+ if(S.mkBusy)h+=`<div class="note">${BL(BX.busy)}</div>`;
+ else if(S.mkErr)h+=`<div class="note">${esc(S.mkErr)}</div>`;
+ else if(MKR)h+=`<p class="sub">${esc(MKR.resume)}</p>${MKR.etapes.map((e,i)=>`<div class="card"><b>${i+1}. ${esc(e.titre)}</b><p style="margin:6px 0 8px">${esc(e.geste)}</p>${e.recherche?`<details><summary>${BL(BX.achat)}</summary>${links(e.recherche)}</details>`:""}</div>`).join("")}`;
+ h+=`<button class="btn ghost" data-askmk style="margin-top:14px">${BL(BX.ask)}</button>`;
+ return h}
+function beauteEt(){return `<p class="sub">${BL(BX.etS)}</p>`+ETQ.map(e=>`<div class="card"><h2 style="margin-top:0">${BL(e.t)}</h2>
+ <b>✅ ${BL(BX.bien)}</b><ul class="tips">${BL(e.ok).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+ <b>❌ ${BL(BX.eviter)}</b><ul class="tips">${BL(e.no).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+ <button class="btn ghost" data-etq="${e.k}">${BL(BX.ecoute)}</button></div>`).join("")}
 const P={
 home:()=>{const v=ok("visage"),bd=ok("corps"),c=season(),oc=ok("outfit");
  const nd=[v,bd,c].filter(Boolean).length;
@@ -997,6 +1079,11 @@ news:()=>{const n=S.news,prof=PROFIL();
  <button class="btn ghost" data-news ${S.newsBusy?"disabled":""}>${n?"Actualiser les tendances":"Voir les tendances"}</button>
  <h2>À lire</h2><p class="sub">Les magazines qui font les tendances.</p><div class="chips">${MAGS.map(m=>`<a target="_blank" rel="noopener" href="${m[1]}">${m[0]}</a>`).join("")}</div>`,
  say:n&&n.resume?n.resume:"Voici les nouveautés fashion, "+NOM+". Touche Voir les tendances."}},
+beaute:()=>{const tab=S.btab||"mk",v=ok("visage");
+ return {dock:1,html:`<div data-noi18n><h1>${BL(BX.titre)}</h1><p class="sub">${BL(BX.sous)}</p>
+ <div class="fchips" role="tablist"><button role="tab" data-btab="mk" aria-pressed="${tab==="mk"}">💄 ${BL(BX.tMk)}</button><button role="tab" data-btab="et" aria-pressed="${tab==="et"}">👑 ${BL(BX.tEt)}</button></div>
+ ${tab==="et"?beauteEt():beauteMk()}</div>`,
+ say:tab==="et"?BL(BX.etS):(v?{fr:"Voici ton make-up sur mesure, ",en:"Here is your made-to-measure make-up, ",ar:"هذا مكياجچ على مقاسچ يا "}[S.lang||"fr"]+NOM+".":BL(BX.noFace))}},
 chat:()=>({dock:1,html:`<div class="avatar aura inchat" id="ava2"><div class="fig"><img class="pose" src="aura-pose.webp?v=1" alt="Aura, ta styliste personnelle"><img class="body" src="aura-full.webp?v=3" alt="Aura, ta styliste"><img class="bras" src="aura-bras2.webp?v=3" alt=""><img class="mf" src="aura-m1.jpg?v=3" alt=""><img class="mf" src="aura-m2.jpg?v=3" alt=""><img class="mf" src="aura-m3.jpg?v=3" alt=""><img class="blink" src="aura-blink.webp?v=3" alt=""></div><button class="micbadge show${window.liveConv&&window.liveConv()?" live":""}" id="callbtn" type="button" aria-label="Parler à ma styliste"><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg><svg class="hg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15.5c5.3-4.7 12.7-4.7 18 0l-2.6 2.6-3.2-1.6v-2.7c-2.7-.9-4.7-.9-6.4 0v2.7l-3.2 1.6z"/></svg></button></div><h1>Ta styliste</h1><p id="callst" class="sub" style="text-align:center">Appuie pour parler avec ta styliste</p><h2>Ou écris-lui</h2>
  <div class="chat">${S.chat.map((c,i)=>`<div class="bub ${c.r}" id="b${i}">${c.img?`<img src="${c.img}" alt="Photo envoyée">`:""}${esc(hideCodes(c.t))||(c.img?"":"…")}${c.r==="a"&&c.t?findArts(c.t).map(miniHTML).join(""):""}</div>`).join("")}</div>
  ${S.cphoto?`<div class="prev"><img src="${S.cphoto.url}" alt="Photo à envoyer"><button data-unphoto aria-label="Retirer la photo">×</button></div>`:""}
@@ -1310,6 +1397,10 @@ document.addEventListener("click",e=>{
  if(t.hasAttribute("data-askaura")){go("chat");setTimeout(()=>send("Choisis-moi 3 pièces de la vitrine My Style qui me vont le mieux, et dis-moi pourquoi."),350);return}
  if(t.hasAttribute("data-shop")){S.shopQ=($("#shopq")||{}).value?.trim()||"";render(false);return}
  if(t.hasAttribute("data-news"))return loadNews();
+ if(t.dataset.btab){S.btab=t.dataset.btab;stopVoice();render(true);return}
+ if(t.dataset.mkr)return mkRoutine(t.dataset.mkr);
+ if(t.dataset.etq){const e=ETQ.find(x=>x.k===t.dataset.etq);if(e){stopVoice();say(BL(e.t)+". "+BL(e.ok).join(" ")+" "+BL(BX.eviter)+" : "+BL(e.no).join(" "))}return}
+ if(t.hasAttribute("data-askmk")){go("chat");setTimeout(()=>send("J’ai une question make-up : quel maquillage me va selon la forme de mon visage et ma saison ?"),350);return}
  if(t.hasAttribute("data-mic"))return listen();
  if(t.hasAttribute("data-unphoto")){S.cphoto=null;render(false);return}
  if(t.hasAttribute("data-send"))return send(($("#msg")||{}).value);

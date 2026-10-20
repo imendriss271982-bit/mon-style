@@ -32,6 +32,7 @@ const I18N_D=[
 ["Boutique","Shop","المتجر"],
 ["Accueil","Home","الرئيسية"],
 ["Affirmations","Affirmations","توكيدات"],
+["Beauté","Beauty","الجمال"],
 ["Nouveautés","What’s new","الجديد"],
 ["Profil","Profile","حسابي"],
 ["Écouter mes affirmations","Listen to my affirmations","اسمعي توكيداتي"],
