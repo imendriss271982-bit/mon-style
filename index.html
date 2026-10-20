@@ -347,6 +347,22 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 .hx-rt b{display:block;font-size:15.5px;font-weight:500}
 .hx-rt em{font:italic 15px/1.3 "Cormorant Garamond",Georgia,serif;color:var(--muted)}
 .hx-row.ok .hx-rt em{color:var(--accent);font-style:normal;font-family:inherit;font-size:13.5px;font-weight:600}
+.hx-ms{display:block;width:100%;border:0;text-align:left;cursor:pointer;margin-top:16px;padding:18px 18px 16px;border-radius:24px;background:var(--soft);color:var(--ink);transition:transform .15s}
+.hx-ms:active{transform:scale(.98)}
+.hx-ms-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:12px}
+.hx-ms-h b{font:500 24px/1.1 "Cormorant Garamond",Georgia,serif}
+.hx-ms-h small{color:var(--accent);font-size:13px;font-weight:600;white-space:nowrap}
+.hx-ms-g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.hx-ms-g span{background:var(--surface);border-radius:16px;padding:10px 8px;min-width:0}
+.hx-ms-g small{display:block;color:var(--muted);font-size:11.5px;margin-bottom:3px}
+.hx-ms-g em{display:block;font-style:normal;font-weight:600;font-size:13.5px;line-height:1.25;color:var(--accent);overflow-wrap:anywhere}
+.hx-ms-g .hx-sw{margin:6px 0 0 4px}
+.hx-ms.todo{background:var(--accent);color:var(--on)}.hx-ms.todo .hx-ms-h small,.hx-ms.todo p{color:inherit;opacity:.88}.hx-ms.todo p{margin:0;font-size:14.5px}
+.fiche-h{font:600 15px/1.2 inherit;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin:30px 0 6px;padding-top:22px;border-top:1px solid var(--line)}
+.an-row{display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);padding:14px 2px}
+.an-row>button.an-v{flex:1;min-width:0;border:0;background:none;text-align:left;color:var(--ink);cursor:pointer;padding:0}
+.an-v span{display:block;color:var(--muted);font-size:13px}.an-v b{display:block;font-size:16px;font-weight:600;margin-top:2px}
+.an-row>button.an-r{flex:none;border:1px solid var(--accent);color:var(--accent);background:none;border-radius:999px;padding:8px 14px;font:600 13.5px/1 inherit;cursor:pointer}
 .hx-sw{display:flex}.hx-sw i{width:14px;height:14px;border-radius:50%;margin-left:-4px;border:2px solid #fff}
 .hx-chev{color:var(--muted);font-size:22px;line-height:1}
 .hx-ill{flex:none;width:84px;height:62px;border-radius:16px;background:var(--soft);display:grid;place-items:center}
@@ -524,8 +540,8 @@ const SHOPS=[["Zara","zara.com"],["H&M","hm.com"],["Mango","mango.com"],["Shein"
 let S={rid:0,wait:{},page:"home",hist:[],dir:"f",ans:{},file:{},url:{},res:{},busy:false,err:"",voice:true,chat:[],draft:"",shopQ:"",listen:false,flow:null,news:null,newsBusy:false,newsErr:""};
 try{if(localStorage.getItem("monstyle_voix")==="0")S.voice=false}catch(e){}
 S.info={};
-try{const j=JSON.parse(localStorage.getItem("monstyle")||"null");if(j){S.res=j.res||{};S.ans=j.ans||{};S.info=j.info||{};if(j.nom){S.nom=j.nom;NOM=j.nom}}}catch(e){}
-function save(){try{localStorage.setItem("monstyle",JSON.stringify({res:{visage:S.res.visage,corps:S.res.corps,couleurs:S.res.couleurs,outfit:S.res.outfit},ans:S.ans,nom:S.nom,info:S.info}))}catch(e){}}
+try{const j=JSON.parse(localStorage.getItem("monstyle")||"null");if(j){S.res=j.res||{};S.ans=j.ans||{};S.info=j.info||{};if(j.nom){S.nom=j.nom;NOM=j.nom}if(j.later)S.later=true}}catch(e){}
+function save(){try{localStorage.setItem("monstyle",JSON.stringify({res:{visage:S.res.visage,corps:S.res.corps,couleurs:S.res.couleurs,outfit:S.res.outfit},ans:S.ans,nom:S.nom,info:S.info,later:S.later}))}catch(e){}}
 const AGES=["18–24 ans","25–34 ans","35–44 ans","45–54 ans","55 ans et +"];
 const TAILLES=["XS","S","M","L","XL","XXL","3XL et +"];
 const BUDGETS=["Petit budget","Moyen","Haut de gamme"];
@@ -541,6 +557,10 @@ function PROFIL(){const v=ok("visage"),b=ok("corps"),s=season(),p=[];
 
 const FLOW_A=["a_nom","a_intro","a_face",...QS.map(q=>"q_"+q.id),"a_body","a_run","r_visage","r_corps","r_couleurs","r_fin"];
 const FLOW_O=["o_photo","o_run","o_res"];
+const ONB={visage:["a_face","v_run","r_visage"],corps:["a_body","c_run","r_corps"],couleurs:["a_face",...QS.map(q=>"q_"+q.id),"k_run","r_couleurs"]};
+const todoMods=()=>["visage","corps","couleurs"].filter(k=>k==="couleurs"?!season():!ok(k));
+function startOnb(){const m=todoMods();if(!m.length)return home();let f=[];m.forEach(k=>{let st=ONB[k];if(k==="couleurs"&&f.includes("a_face"))st=st.slice(1);f=f.concat(st)});
+ S.flow=[...(S.nom?[]:["a_nom"]),"a_intro",...f,"r_fin"];S.from="home";S.hist=["home"];S.page=S.flow[0];S.dir="f";S.err="";S.rid++;render(true)}
 const DOCK=["home","boutique","o_photo","news","profil","chat"];
 
 const IC={face:'<svg viewBox="0 0 24 24"><circle cx="12" cy="10" r="5"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>',body:'<svg viewBox="0 0 24 24"><circle cx="12" cy="4" r="2"/><path d="M12 6v8M8 9h8M12 14l-3 7M12 14l3 7"/></svg>',outfit:'<svg viewBox="0 0 24 24"><path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/></svg>'};
@@ -607,22 +627,23 @@ home:()=>{const v=ok("visage"),bd=ok("corps"),c=season(),oc=ok("outfit");
   ${oc?`<button class="hx-oc-l" data-view="o_res">Voir mon dernier résultat</button>`:""}
  </section>
  <button class="hx-st" data-view="chat"><img src="aura-bust.webp?v=1" alt="Aura, ta styliste" width="165" height="154"><span class="hx-st-t"><b>My Stylist</b><small>Parle avec Aura</small></span><span class="hx-mic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span></button>
- <section class="hx-pf" aria-label="Mon profil de style">
-  <div class="hx-pf-h"><b>Mon profil de style</b><small>${nd}/3 ${nd===3?"· à jour":"· une seule fois"}</small></div>
-  ${row("r_visage","visage","Morpho visage",v&&v.forme,"visage")}
-  ${row("r_corps","corps","Morpho & Kibbe",bd&&(bd.kibbe?bd.forme+" · "+bd.kibbe:bd.forme),"corps")}
-  ${row("r_couleurs","couleurs","Colorimétrie",c,"couleurs",sw)}
- </section>
+${nd===3?`<button class="hx-ms" data-view="fiche" aria-label="Voir ma fiche style">
+  <span class="hx-ms-h"><b>Mon style</b><small>Voir le détail ›</small></span>
+  <span class="hx-ms-g"><span><small>Visage</small><em>${esc(cap(v.forme))}</em></span><span><small>Silhouette</small><em>${esc(bd.kibbe?bd.forme+" · "+bd.kibbe:bd.forme)}</em></span><span><small>Saison</small><em>${esc(c)}</em>${sw}</span></span>
+ </button>`:`<button class="hx-ms todo" data-onb>
+  <span class="hx-ms-h"><b>${nd?"Termine ton analyse":"Ton analyse de style"}</b><small>${nd}/3 ›</small></span>
+  <p>${nd?"Il reste "+(3-nd)+" étape"+(3-nd>1?"s":"")+". Ensuite, ta fiche complète s’affiche ici.":"Visage, silhouette, couleurs : on la fait une seule fois, ensemble."}</p>
+ </button>`}
  </div>`,
  say:"Bonjour "+NOM+", je suis contente de te voir. Touche le micro pour me parler, ou choisis une analyse."}},
 a_nom:()=>({html:`<p class="step">Ton analyse</p><h1>Comment tu t’appelles ?</h1><p class="sub">Ton prénom, pour que je puisse t’appeler par ton nom.</p>
  <input class="field" id="nom" autocomplete="given-name" placeholder="Ton prénom" value="${esc(S.nomDraft??S.nom??"")}" style="font-size:20px;padding:18px">`,
  say:"Avant de commencer, comment tu t’appelles ?",foot:`<button class="btn" data-nom ${(S.nomDraft??S.nom??"").trim()?"":"disabled"}>Continuer</button>`}),
-a_intro:()=>({html:`<p class="step">Ton analyse</p><h1>On commence, ${NOM}.</h1><p class="sub">Trois étapes, quelques minutes.</p>
- <ul class="tips"><li>Une photo de ton visage</li><li>Quelques questions sur tes couleurs</li><li>Une photo de ta silhouette</li></ul>
+a_intro:()=>({html:`<p class="step">Ton analyse</p><h1>On commence, ${NOM}.</h1><p class="sub">On le fait une seule fois. Ensuite, ton profil de style reste sur l’accueil, et tu peux le modifier dans ton profil.</p>
+ <ul class="tips"><li>1. Ton visage : une photo</li><li>2. Ta silhouette et ton Kibbe : une photo</li><li>3. Tes couleurs : quelques questions</li></ul>
  <h2>Pour une analyse juste</h2><ul class="tips"><li>Lumière du jour, près d’une fenêtre</li><li>Visage sans maquillage, cheveux attachés</li><li>Sans lunettes, sans filtre</li></ul>`,
- say:"On commence, "+NOM+". Mets-toi près d’une fenêtre, en lumière du jour, sans maquillage et les cheveux attachés.",foot:`<button class="btn" data-next>C’est parti</button>`}),
-a_face:()=>photoPage("face",{step:S.flow&&S.flow.includes("k_run")?"Colorimétrie · ta photo":"Morpho visage",t:"Ton visage",c:"De face, le téléphone à hauteur des yeux, à bout de bras tendu.",ph:"Ta photo de visage",ic:"face",cam:"user",b:S.flow&&S.flow.includes("k_run")?"Continuer":"Analyser mon visage",say:"Prends une photo de ton visage, bien de face, le téléphone à hauteur des yeux."}),
+ say:"On commence, "+NOM+". On fait ton analyse une seule fois : ton visage, ta silhouette, puis tes couleurs. Mets-toi près d’une fenêtre, en lumière du jour, sans maquillage et les cheveux attachés.",foot:`<button class="btn" data-next>C’est parti</button><button class="link" data-later>Plus tard</button>`}),
+a_face:()=>photoPage("face",{step:S.flow&&S.flow.includes("k_run")&&!S.flow.includes("v_run")?"Colorimétrie · ta photo":"Morpho visage",t:"Ton visage",c:"De face, le téléphone à hauteur des yeux, à bout de bras tendu.",ph:"Ta photo de visage",ic:"face",cam:"user",b:S.flow&&S.flow.includes("k_run")&&!S.flow.includes("v_run")?"Continuer":"Analyser mon visage",say:"Prends une photo de ton visage, bien de face, le téléphone à hauteur des yeux."}),
 a_body:()=>photoPage("body",{step:"Morpho & Kibbe",t:"Ta silhouette",c:"En pied, de face, bras le long du corps, vêtements près du corps. Pose le téléphone à 2 mètres et utilise le minuteur.",ph:"Ta photo en pied",ic:"body",cam:"environment",b:"Lancer l’analyse",say:"Prends une photo de toi en pied, de face, avec des vêtements près du corps."}),
 a_run:()=>({html:`<p class="step">Analyse</p><h1>${S.err?"Un souci":"Je t’analyse…"}</h1>
  <div class="photo scan">${S.url.face?`<img src="${S.url.face}" alt="">`:""}</div>
@@ -653,14 +674,19 @@ r_couleurs:()=>{if(S.wait&&S.wait.couleurs)return waitPage("couleurs");const s=s
 r_fin:()=>({html:`<p class="step">C’est prêt</p><h1>Ton profil est prêt, ${NOM}.</h1><p class="sub">${esc(PROFIL())}</p>`,
  say:"Ton profil est prêt, "+NOM+". Je le garde pour toi : tu le retrouves sur la page d’accueil.",
  foot:`<button class="btn" data-home>Retour à l’accueil</button>`}),
+fiche:()=>{const keep=S.flow;S.flow=null;const part=(f,t)=>{const r=P[f]();return `<p class="fiche-h">${t}</p>`+r.html.replace(/<p class="step"[^>]*>[^<]*<\/p>/,"")};
+ const h=(ok("visage")?part("r_visage","Ton visage"):"")+(ok("corps")?part("r_corps","Ta silhouette"):"")+(season()?part("r_couleurs","Tes couleurs"):"");S.flow=keep;
+ return {back:true,html:`<p class="step">Ma fiche</p><h1>Mon style, ${esc(cap(NOM))}</h1><p class="sub">${esc(PROFIL())}</p>${h.replace('<p class="fiche-h">','<p class="fiche-h" style="border:0;padding-top:0;margin-top:20px">')}`,
+ say:"Voici ta fiche style, "+NOM+". "+PROFIL()+".",foot:`<button class="btn ghost" data-profil>Modifier dans mon profil</button>`}},
 profil:()=>{const i=S.info||{},has=!!i.email,pick=(k,l)=>`<div class="row"><span>${l}</span>${esc(k||"—")}</div>`;
  return {dock:1,html:`<h1>Mon profil</h1>
  <div class="who"><div class="av">${esc((S.nom||"M").charAt(0).toUpperCase())}</div><div><b>${esc(S.nom||"Ma belle")}</b><span>${esc(i.email||"Ajoute ton email pour créer ton compte")}</span></div></div>
  ${has?`<h2 style="margin-top:0">Mes informations</h2>${pick(i.taille?i.taille+" cm":"","Taille")}${pick(i.poids?i.poids+" kg":"","Poids (privé)")}${pick(i.age,"Âge")}${pick(i.tvet,"Taille de vêtements")}${pick(i.budget,"Budget")}${pick((i.styles||[]).join(", "),"Styles préférés")}
  <button class="btn ghost" data-go="infos" style="margin:6px 0 4px">Modifier mes informations</button>`
  :`<button class="tile main" data-go="infos"><b>Créer mon profil</b><span>Ton email, ta taille, ton style : je m’en sers pour mieux te conseiller.</span></button>`}
- <h2>Mes résultats</h2>
- ${[["visage","Visage",ok("visage")?.forme,"r_visage"],["corps","Morpho & Kibbe",ok("corps")&&[ok("corps").forme,ok("corps").kibbe].filter(Boolean).join(" · "),"r_corps"],["couleurs","Saison",season(),"r_couleurs"],["outfit","Dernière tenue",ok("outfit")?ok("outfit").note+" / 10":"","o_res"]].map(x=>`<button class="tile" data-view="${x[3]}"><span>${x[1]}</span><b>${esc(x[2]||"À analyser")}</b></button>`).join("")}
+ <h2>Mes analyses</h2><p class="hint" style="margin-top:-6px">Touche un résultat pour le revoir, ou refais l’analyse avec une nouvelle photo.</p>
+ ${[["visage","Morpho visage",ok("visage")?cap(ok("visage").forme):"","r_visage"],["corps","Morpho & Kibbe",ok("corps")&&[ok("corps").forme,ok("corps").kibbe].filter(Boolean).join(" · "),"r_corps"],["couleurs","Colorimétrie",season(),"r_couleurs"]].map(x=>`<div class="an-row"><button class="an-v" ${x[2]?`data-view="${x[3]}"`:`data-mod="${x[0]}"`}><span>${x[1]}</span><b>${esc(x[2]||"À faire")}</b></button><button class="an-r" data-mod="${x[0]}">${x[2]?"Refaire":"Faire"}</button></div>`).join("")}
+ ${ok("outfit")?`<h2>Dernier outfit check</h2><button class="tile" data-view="o_res"><span>Note</span><b>${esc(ok("outfit").note+" / 10")}</b></button>`:""}
  <button class="link" data-wipe>Effacer toutes mes données</button>`,
  say:has?"Voici ton profil, "+NOM+". Touche une carte pour réécouter le détail.":"Crée ton profil, "+NOM+". Ton email, ta taille et ton style m’aident à mieux te conseiller."}},
 infos:()=>{const d=S.idraft||(S.idraft={...S.info,nom:S.nom||"",styles:[...(S.info.styles||[])]});
@@ -722,10 +748,10 @@ const MOD_RES={visage:"r_visage",corps:"r_corps",kibbe:"r_kibbe",couleurs:"r_cou
 const RES_MOD={r_visage:"visage",r_corps:"corps",r_kibbe:"kibbe",r_couleurs:"couleurs"};
 const MODS={visage:["a_face","v_run","r_visage"],corps:["a_body","c_run","r_corps"],kibbe:["a_body","c_run","r_kibbe"],couleurs:["a_face",...QS.map(q=>"q_"+q.id),"k_run","r_couleurs"]};
 const MIC={face:IC.face,body:IC.body,kibbe:'<svg viewBox="0 0 24 24"><path d="M12 3l7 9-7 9-7-9z"/><path d="M5 12h14"/></svg>',pal:'<svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.2 0 1.8-.9 1.4-1.9-.5-1.1.3-2.1 1.5-2.1H17a4 4 0 0 0 4-4c0-5.5-4-10-9-10z"/><circle cx="7.5" cy="11" r="1.2"/><circle cx="10" cy="7" r="1.2"/><circle cx="15" cy="7.5" r="1.2"/></svg>'};
-function startMod(m){const F=MODS[m];if(!F)return;S.flow=S.nom?F:["a_nom",...F];S.hist=["home"];S.page=S.flow[0];S.dir="f";S.err="";S.rid++;render(true)}
+function startMod(m){const F=MODS[m];if(!F)return;S.from=S.page==="profil"||/^r_/.test(S.page)?"profil":"home";S.flow=S.nom?F:["a_nom",...F];S.hist=[S.from];S.page=S.flow[0];S.dir="f";S.err="";S.rid++;render(true)}
 function runPage(f,t,redo){return {html:`<p class="step">Analyse</p><h1>${S.err?"Un souci":t}</h1><div class="photo scan">${S.url[f]?`<img src="${S.url[f]}" alt="">`:""}</div><p class="sub">${esc(S.err||"Une seconde.")}</p>`,
  foot:S.err?`<button class="btn" data-retry>Réessayer</button><button class="link" data-go="${redo}">Changer ma photo</button>`:"",back:!!S.err}}
-function nextBtn(){if(S.flow){const last=S.flow.indexOf(S.page)===S.flow.length-1;return `<button class="btn" data-next>${last?"Retour à l’accueil":"Continuer"}</button>`}
+function nextBtn(){if(S.flow){const last=S.flow.indexOf(S.page)===S.flow.length-1;return `<button class="btn" data-next>${last?(S.from==="profil"?"Retour à mon profil":"Retour à l’accueil"):"Continuer"}</button>`}
  const m=RES_MOD[S.page];return `<button class="btn" data-back>Retour</button>${m?`<button class="link" data-mod="${m}">Refaire cette analyse</button>`:""}`}
 function missing(k,r){const m=RES_MOD[S.page]||k;return {html:`<h1>Pas encore de résultat</h1><p class="sub">${esc(r&&r.erreur?r.erreur:"Cette analyse n’est pas encore faite.")}</p>`,foot:`<button class="btn" data-mod="${m}">Faire cette analyse</button>`}}
 const MAGS=[["Vogue Arabia","https://www.vogue.me/fashion/"],["Harper’s Bazaar Arabia","https://www.harpersbazaararabia.com/fashion"],["Elle Arabia","https://www.ellearabia.com/fashion/"],["Vogue France","https://www.vogue.fr/mode"]];
@@ -766,7 +792,7 @@ function saveInfo(){const d=S.idraft;if(!d)return;const bad=(id,m)=>{const f=$("
  save();S.idraft=undefined;toast("Profil enregistré");S.hist=S.hist.filter(h=>h!=="infos");if(S.hist[S.hist.length-1]==="profil")S.hist.pop();S.page="profil";S.dir="b";render(true)}
 function go(page,dir){if(page==="infos")S.idraft=undefined;if(page!==S.page&&!/_run$/.test(S.page))S.hist.push(S.page);S.page=page;S.dir=dir||"f";S.err="";if(DOCK.includes(page)&&page!=="o_photo"){S.flow=null}render(true)}
 function back(){stopVoice();const p=S.hist.pop();if(!p){S.page="home";S.flow=null}else S.page=p;S.dir="b";S.err="";if(S.flow&&!S.flow.includes(S.page))S.flow=null;render(false)}
-function next(){const ix=S.flow.indexOf(S.page);const n=S.flow[ix+1];if(/_run$/.test(n)){go(n);run(n)}else if(n)go(n);else home()}
+function next(){const ix=S.flow.indexOf(S.page);const n=S.flow[ix+1];if(/_run$/.test(n)){go(n);run(n)}else if(n)go(n);else if(S.from==="profil"){S.from=null;S.flow=null;S.hist=["home"];S.page="profil";S.dir="b";render(true)}else home()}
 function home(){S.flow=null;S.hist=[];S.page="home";S.dir="b";render(true)}
 function countUp(to){const el=$("#note");if(!el||isNaN(to))return;const t0=performance.now();(function f(n){const k=Math.min(1,(n-t0)/1000);el.textContent=k<1?(to*k).toFixed(1):String(to);if(k<1)requestAnimationFrame(f)})(t0)}
 
@@ -967,6 +993,8 @@ document.addEventListener("click",e=>{
  if(t.dataset.go){go(t.dataset.go);return}
  if(t.dataset.view){S.flow=null;go(t.dataset.view);return}
  if(t.hasAttribute("data-next"))return next();
+ if(t.hasAttribute("data-onb"))return startOnb();
+ if(t.hasAttribute("data-later")){S.later=true;save();home();return}
  if(t.hasAttribute("data-back"))return back();
  if(t.hasAttribute("data-home"))return home();
  if(t.hasAttribute("data-profil")){S.flow=null;S.hist=["home"];S.page="profil";S.dir="b";render(true);return}
@@ -975,7 +1003,7 @@ document.addEventListener("click",e=>{
   else{d[k]=d[k]===t.dataset.pk?"":t.dataset.pk;box.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.pk===d[k])))}return}
  if(t.hasAttribute("data-isave"))return saveInfo();
  if(t.hasAttribute("data-wipe")){if(!confirm("Effacer ton profil, tes résultats et ton email de ce téléphone ?"))return;
-  try{localStorage.removeItem("monstyle")}catch(e){}S.info={};S.res={};S.ans={};S.nom=undefined;NOM="ma belle";S.idraft=undefined;toast("Tes données sont effacées");home();return}
+  try{localStorage.removeItem("monstyle")}catch(e){}S.info={};S.res={};S.ans={};S.later=false;S.nom=undefined;NOM="ma belle";S.idraft=undefined;toast("Tes données sont effacées");home();return}
  if(t.hasAttribute("data-nom")){const v=(S.nomDraft??S.nom??"").trim();if(!v)return;S.nom=v;NOM=v;S.nomDraft=undefined;save();return next()}
  if(t.hasAttribute("data-retry")){run(S.page);S.err="";render(false);return}
  if(t.dataset.ans){S.ans[t.dataset.ans]=t.dataset.v;render(false);setTimeout(()=>{if(S.page==="q_"+t.dataset.ans)next()},380);return}
@@ -1135,7 +1163,7 @@ $("#install").addEventListener("click",async()=>{if(BIP){BIP.prompt();try{await 
 $("#instOk").addEventListener("click",()=>$("#inst").classList.remove("show"));
 $("#inst").addEventListener("click",e=>{if(e.target.id==="inst")$("#inst").classList.remove("show")});
 $("#start").addEventListener("click",()=>{if(window.endCall)window.endCall();unlock();$("#splash").classList.add("out");setTimeout(()=>$("#splash").remove(),800);
- SKIP=true;if(window.SKIPNOM)window.SKIPNOM();if(!window.CALLED)say(P.home().say)});
+ SKIP=true;if(window.SKIPNOM)window.SKIPNOM();if(!window.CALLED){if(todoMods().length===3&&!S.later&&S.page==="home")startOnb();else say(P.home().say)}});
 </script>
 <script type="module">
 let conv=null,busy=false,raf=0;
