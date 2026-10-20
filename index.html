@@ -1433,7 +1433,8 @@ async function startCall(){
    onModeChange:({mode})=>{st(mode==="speaking"?"Elle te parle…":"Je t’écoute, parle-moi");if(window.auraTalking)auraTalking(mode==="speaking")},
    onDisconnect:()=>{conv=null;live(false);if(window.auraTalking)auraTalking(false);st("Appel terminé. Appuie pour reparler.")},
    onError:m=>st("Petit souci : "+m),
-   onMessage:({message,source})=>{if(source==="ai"&&window.addAuraBubble)addAuraBubble(message)}});
+   onMessage:({message,source})=>{if(source==="ai"&&window.addAuraBubble)addAuraBubble(message);
+    if(source==="user"&&message){const lg=typeof S!=="undefined"&&S.lang;st((lg==="ar"?"سمعتچ: «":lg==="en"?"I heard you: “":"Je t’ai entendue : « ")+message.slice(0,60)+(lg==="ar"?"» لحظة…":lg==="en"?"” one moment…":" » Un instant…"))}}});
   try{if(typeof CATCTX==="function")conv.sendContextualUpdate(CATCTX(true))}catch(_){}
   live(true);st("Elle arrive…");cancelAnimationFrame(raf);anim();
   window.callStatus=st;if(typeof S!=="undefined"&&S.cphoto&&typeof voicePhoto==="function")setTimeout(()=>voicePhoto((S.draft||"").trim()),2500);
