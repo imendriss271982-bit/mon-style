@@ -353,6 +353,23 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 .hx-ill svg{width:70px;height:44px}
 .hx-rt small{display:block;color:var(--muted);font-size:12.5px;line-height:1.35;margin:2px 0 3px}
 .hx-oc-b:active,.hx-st:active{transform:scale(.98)}
+
+/* ===== Capsule garde-robe ===== */
+.cap h2{margin-top:8px}
+.cap-pal{display:flex;gap:6px;margin:-4px 0 14px}.cap-pal i{width:24px;height:24px;border-radius:50%;box-shadow:0 0 0 2px #fff,0 0 0 3px var(--line)}
+.cap-row{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 10px;margin:0 -2px 18px;-webkit-overflow-scrolling:touch}
+.cap-p{flex:none;scroll-snap-align:start;width:96px;border-radius:18px;background:var(--soft);padding:14px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.cap-p svg,.cap-li svg{fill:none;stroke:var(--accent);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;color:var(--accent)}
+.cap-p svg{width:52px;height:52px}
+.cap-p span{font-size:12.5px;line-height:1.25;color:var(--ink)}
+.cap-looks{display:grid;gap:12px;margin-bottom:22px}
+.cap-l{border:1px solid var(--line);border-radius:20px;padding:16px;background:#fff}
+.cap-l b{display:block;font:500 22px/1.15 "Cormorant Garamond",Georgia,serif;margin-bottom:10px}
+.cap-li{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.cap-li span{width:52px;height:52px;border-radius:14px;background:var(--soft);display:grid;place-items:center}
+.cap-li svg{width:36px;height:36px}
+.cap-l small{display:block;color:var(--muted);font-size:12.5px;margin-bottom:6px}
+.cap-l p{margin:0;font-size:14px;line-height:1.45}
 </style>
 </head>
 <body>
@@ -425,7 +442,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </nav>
 </div>
 <script>
-const VERSION="52";
+const VERSION="53";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -513,6 +530,40 @@ function photoPage(k,o){
  say:o.say,foot:`<button class="btn" data-next ${S.file[k]?"":"disabled"}>${o.b}</button>`};
 }
 
+// Capsule garde-robe : les pièces essentielles et les tenues qu'on peut faire avec.
+const CAP={
+ chemise:["Chemise blanche",'<path d="M17 8l7-3 7 3 8 5-4 7-4-2v24H17V18l-4 2-4-7z"/><path d="M24 5l0 6m0 0l-4-3m4 3l4-3M24 11v31"/><path d="M24 16h.01M24 22h.01M24 28h.01"/>'],
+ tee:["T-shirt",'<path d="M17 8c2 3 12 3 14 0l8 5-4 7-4-2v24H17V18l-4 2-4-7z"/>'],
+ pull:["Pull fin",'<path d="M17 8c2 2 12 2 14 0l7 4 3 22h-5l-2-14v22H14V20l-2 14H7l3-22z"/><path d="M14 40h20"/>'],
+ blazer:["Blazer",'<path d="M16 7l8 4 8-4 7 4 2 30H7l2-30z"/><path d="M16 7l8 17 8-17M24 24v18M20 30h.01M28 34h4"/>'],
+ trench:["Trench",'<path d="M16 6l8 5 8-5 6 4 3 33H7l3-33z"/><path d="M12 24h24M24 11v32M19 16h.01M19 30h.01M29 16h.01M29 30h.01"/>'],
+ jean:["Jean droit",'<path d="M14 6h20l2 37h-8l-4-24-4 24h-8z"/><path d="M14 11h20M18 11c0 4 2 6 6 6"/>'],
+ pantalon:["Pantalon tailleur",'<path d="M14 6h20l3 37h-8l-5-26-5 26h-8z"/><path d="M14 10h20M19 10l1 31M29 10l-1 31"/>'],
+ jupe:["Jupe midi",'<path d="M16 8h16l7 34H9z"/><path d="M16 12h16M21 12l-4 30M27 12l4 30"/>'],
+ robe:["Petite robe noire",'<path d="M18 5h12l-1 9 3 6-1 4 7 19H9l7-19-1-4 3-6z" fill="currentColor" fill-opacity=".85"/>'],
+ escarpins:["Escarpins",'<path d="M6 34c6 0 10-6 16-6 5 0 7 4 12 4 3 0 6-3 8-1v4H8z"/><path d="M40 36l1 8"/>'],
+ baskets:["Baskets blanches",'<path d="M5 34c0-6 3-10 6-10 4 0 6 5 12 5s9-2 13 1c4 2 7 3 7 6v3H5z"/><path d="M5 38h38M16 26l2 4M20 26l2 4"/>'],
+ sac:["Sac structuré",'<rect x="8" y="17" width="32" height="24" rx="4"/><path d="M17 17c0-6 3-9 7-9s7 3 7 9M8 26h32M24 26v4"/>']
+};
+const LOOKS=[
+ ["Bureau chic",["chemise","pantalon","blazer","escarpins","sac"],"Rentre la chemise et ajoute une ceinture fine pour marquer la taille."],
+ ["Week-end décontracté",["tee","jean","trench","baskets"],"Retrousse les manches du trench et du jean pour un effet facile."],
+ ["Déjeuner élégant",["pull","jupe","escarpins","sac"],"Rentre le pull devant seulement : la silhouette s’allonge."],
+ ["Dîner",["robe","blazer","escarpins"],"Le blazer posé sur les épaules, un bijou doré : c’est prêt."],
+ ["Smart casual",["blazer","tee","jean","escarpins"],"Le blazer transforme un jean en tenue de rendez-vous pro."],
+ ["Voyage confortable",["tee","pantalon","trench","baskets","sac"],"Des pièces qui ne se froissent pas et qui vont avec tout."],
+ ["Rendez-vous",["chemise","jupe","escarpins"],"Ouvre un bouton de plus et ajoute ton rouge à lèvres préféré."],
+ ["Jour frais",["pull","jean","trench","baskets"],"Superpose : pull, trench, et une écharpe dans ta couleur de saison."]
+];
+const capIco=k=>`<svg viewBox="0 0 48 48" aria-hidden="true">${CAP[k][1]}</svg>`;
+function capsuleHTML(){const c=season(),pal=c?SEASONS[c].c.slice(0,6):null;
+ return `<section class="cap" aria-label="Capsule garde-robe">
+ <h2>Capsule essentielle</h2><p class="sub">Les 12 pièces de base qui vont avec tout. ${pal?"Choisis-les dans tes couleurs de saison :":"Fais ta colorimétrie pour les choisir dans tes couleurs."}</p>
+ ${pal?`<div class="cap-pal">${pal.map(x=>`<i style="background:${x[0]}" title="${esc(x[1]||"")}"></i>`).join("")}</div>`:""}
+ <div class="cap-row">${Object.keys(CAP).map(k=>`<div class="cap-p">${capIco(k)}<span>${CAP[k][0]}</span></div>`).join("")}</div>
+ <h2>Les tenues avec ta capsule</h2><p class="sub">${LOOKS.length} looks avec seulement ces pièces.</p>
+ <div class="cap-looks">${LOOKS.map(l=>`<div class="cap-l"><b>${l[0]}</b><div class="cap-li">${l[1].map(k=>`<span title="${CAP[k][0]}">${capIco(k)}</span>`).join("")}</div><small>${l[1].map(k=>CAP[k][0]).join(" · ")}</small><p>${l[2]}</p></div>`).join("")}</div>
+ </section>`}
 const P={
 home:()=>{const v=ok("visage"),bd=ok("corps"),c=season(),oc=ok("outfit");
  const nd=[v,bd,c].filter(Boolean).length;
@@ -624,7 +675,9 @@ news:()=>{const n=S.news,prof=PROFIL();
  const body=S.newsBusy?`<div class="note">Je cherche les tendances du moment pour toi…</div>`
   :n&&n.tendances?n.tendances.map(t=>`<div class="card"><b>${esc(t.titre||"")}</b><p style="margin:0 0 8px">${esc(t.description||"")}</p>${t.pour_toi?`<p class="sub" style="font-size:14px;margin:0 0 10px">Pour toi : ${esc(t.pour_toi)}</p>`:""}${t.recherche?links(t.recherche):""}</div>`).join("")
   :`<div class="note">${S.newsErr?esc(S.newsErr):"Découvre les tendances mode de la saison, adaptées à ton profil."}</div>`;
- return {dock:1,html:`<h1>Nouveautés fashion</h1><p class="sub">${prof?"Les tendances du moment, choisies pour ta saison et ta morphologie.":"Les tendances du moment. Fais ton analyse pour des conseils sur mesure."}</p>
+ return {dock:1,html:`<h1>Nouveautés fashion</h1>
+ ${capsuleHTML()}
+ <h2>Tendances du moment</h2><p class="sub">${prof?"Choisies pour ta saison et ta morphologie.":"Fais ton analyse pour des conseils sur mesure."}</p>
  ${body}
  <button class="btn ghost" data-news ${S.newsBusy?"disabled":""}>${n?"Actualiser les tendances":"Voir les tendances"}</button>
  <h2>À lire</h2><div class="chips">${MAGS.map(m=>`<a target="_blank" rel="noopener" href="${m[1]}">${m[0]}</a>`).join("")}</div>`,
