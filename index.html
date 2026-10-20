@@ -116,22 +116,53 @@ footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg)
 #splash .btn[hidden]{display:none}
 #splash #talkbtn.live{background:#a33a5d}
 #splash .skip{position:absolute;top:calc(14px + env(safe-area-inset-top));right:16px;background:none;border:0;color:var(--accent);font:inherit;font-size:15px;padding:10px 12px;cursor:pointer}#splash .skip[hidden]{display:none}#spnom{width:100%;max-width:320px;margin-bottom:8px}#spnom[hidden]{display:none}
-.avatar.aura .fig{position:absolute;inset:0;border-radius:120px 120px 28px 28px;overflow:hidden;box-shadow:0 12px 34px rgba(125,46,74,.25);animation:float 4s ease-in-out infinite;transform-origin:50% 92%}
-.avatar.aura .fig img{position:absolute;border-radius:0;box-shadow:none;animation:none;object-fit:fill}
-.avatar.aura .fig img:first-child{inset:0;width:100%;height:100%;object-fit:cover}
-.avatar.aura .fig img.bras{left:62.5%;top:68.85%;width:25%;height:31.15%;transform-origin:41.67% 10.53%;transition:transform .5s ease}
-.avatar.aura .fig img.mf{left:43.333%;top:28.525%;width:14.167%;height:9.508%;opacity:0}
-.avatar.aura .fig img.mf.on{opacity:1}
-.avatar.aura.speak .fig{animation:auraTalk 2.6s ease-in-out infinite}
-.avatar.aura.speak .fig img.bras{animation:auraArm 2s ease-in-out infinite}
-.avatar.aura.wave .fig img.bras{animation:auraWave .42s ease-in-out 6 alternate}
-@keyframes auraTalk{0%,100%{transform:rotate(0) translateY(0)}25%{transform:rotate(-.9deg) translateY(-2px)}50%{transform:rotate(0) translateY(0)}75%{transform:rotate(.9deg) translateY(-2px)}}
-@keyframes auraArm{0%,100%{transform:rotate(0)}30%{transform:rotate(-3.2deg)}65%{transform:rotate(1.8deg)}}
-@keyframes auraWave{from{transform:rotate(-4.5deg)}to{transform:rotate(2.5deg)}}
-.tapaura{position:absolute;z-index:3;left:50%;bottom:-14px;transform:translateX(-50%);white-space:nowrap;border:0;border-radius:99px;padding:8px 14px;font:inherit;font-size:14px;font-weight:600;color:#fff;background:var(--accent);box-shadow:0 6px 18px rgba(125,46,74,.35);animation:tapPulse 1.6s ease-in-out infinite}
-.tapaura[hidden]{display:none}
+/* Accueil plein écran : Aura dans son atelier */
+#splash{justify-content:flex-start;padding:0;overflow:hidden;background:#F6E4E9}
+#splash .atelier{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+#splash .atelier .gar{transform-box:fill-box;transform-origin:50% 0;animation:garSway 5.5s ease-in-out infinite}
+#splash .atelier .glow{transform-box:fill-box;transform-origin:50% 50%;animation:glowP 4s ease-in-out infinite}#splash .atelier .g2{animation-delay:-2s}
+#splash .atelier .spark path{transform-box:fill-box;transform-origin:50% 50%;animation:twk 3.2s ease-in-out infinite}#splash .atelier .spark .s2{animation-delay:-1.1s}#splash .atelier .spark .s3{animation-delay:-2.2s}
+#splash .atelier .fan{animation:fanB 7s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes garSway{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
+@keyframes glowP{0%,100%{opacity:.75;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+@keyframes twk{0%,100%{opacity:.25;transform:scale(.6)}50%{opacity:1;transform:scale(1.15)}}
+@keyframes fanB{0%,100%{translate:0 0}50%{translate:0 -4px}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #splash .atelier{filter:brightness(.42) saturate(.85)}:root:not([data-theme="light"]) #splash{background:#1d1418}}
+:root[data-theme="dark"] #splash .atelier{filter:brightness(.42) saturate(.85)}:root[data-theme="dark"] #splash{background:#1d1418}
+#splash .sptop{position:relative;z-index:3;width:100%;max-width:440px;padding:calc(52px + env(safe-area-inset-top,0px)) 22px 0;text-align:center}
+#splash .sptop h1{font-size:clamp(36px,6.2vh,54px);line-height:1.05;margin:0 0 6px;text-shadow:0 2px 14px rgba(255,255,255,.9)}
+#splash .sptop p{margin:0 auto;max-width:350px;min-height:3.1em;font-size:clamp(15px,2.2vh,18px);line-height:1.45;color:#5f4a53;text-shadow:0 1px 10px rgba(255,255,255,.95)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #splash .sptop h1,:root:not([data-theme="light"]) #splash .sptop p{text-shadow:0 2px 14px rgba(0,0,0,.8)}:root:not([data-theme="light"]) #splash .sptop p{color:#e9dbe0}}
+#splash .avatar.aura{position:absolute;z-index:1;left:50%;bottom:0;margin:0;height:min(70svh,148vw);width:auto;aspect-ratio:480/635;transform:translateX(-50%);pointer-events:none}
+#splash .avatar.aura:before{display:none}
+#splash .avatar.aura .fig{position:absolute;inset:0;border-radius:0;overflow:visible;box-shadow:none;transform-origin:50% 100%;animation:auraIdle 5s ease-in-out infinite;filter:drop-shadow(0 18px 30px rgba(125,46,74,.22))}
+#splash .avatar.aura .fig img{position:absolute;border-radius:0;box-shadow:none;animation:none;object-fit:fill;transform:none}
+#splash .avatar.aura .fig img.body{inset:0;width:100%;height:100%}
+#splash .avatar.aura .fig img.bras{left:62.5%;top:68.504%;width:25%;height:31.496%;transform-origin:45.83% 15%;transition:transform .6s cubic-bezier(.3,.7,.3,1);animation:armIdle 6s ease-in-out infinite}
+#splash .avatar.aura .fig img.mf{left:43.333%;top:31.339%;width:14.167%;height:9.134%;opacity:0;-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 52%,#000 55%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 52%,#000 55%,transparent 100%)}
+#splash .avatar.aura .fig img.mf.on{opacity:1}
+#splash .avatar.aura .fig img.blink{left:35.833%;top:20.315%;width:28.75%;height:6.299%;opacity:0}
+#splash .avatar.aura.blk .fig img.blink{opacity:1}
+#splash .avatar.aura.speak .fig{animation:auraTalk 3.2s ease-in-out infinite}
+#splash .avatar.aura.speak .fig img.bras{animation:armTalk 2.4s ease-in-out infinite}
+#splash .avatar.aura.wave .fig img.bras{animation:armWave .5s ease-in-out 6 alternate}
+@keyframes auraIdle{0%,100%{transform:rotate(0) scale(1,1)}25%{transform:rotate(-.5deg) scale(1.004,1.01)}50%{transform:rotate(0) scale(1,1)}75%{transform:rotate(.5deg) scale(1.004,1.01)}}
+@keyframes auraTalk{0%,100%{transform:rotate(0) translateY(0) scale(1,1)}20%{transform:rotate(-1deg) translateY(-3px) scale(1.004,1.012)}45%{transform:rotate(.4deg) translateY(0)}70%{transform:rotate(1deg) translateY(-2px) scale(1.004,1.01)}}
+@keyframes armIdle{0%,100%{transform:rotate(0)}50%{transform:rotate(-2.5deg)}}
+@keyframes armTalk{0%,100%{transform:rotate(0)}25%{transform:rotate(-9deg)}50%{transform:rotate(-3deg)}75%{transform:rotate(-11deg)}}
+@keyframes armWave{from{transform:rotate(-11deg)}to{transform:rotate(1deg)}}
+#splash .spbot{position:absolute;z-index:3;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;padding:60px 24px calc(22px + env(safe-area-inset-bottom,0px));pointer-events:none}
+#splash .spbot>*{pointer-events:auto}
+#splash .spbot:before{content:"";position:absolute;inset:-40px 0 0;z-index:-1;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.82) 38%,#fff 100%);opacity:0;transition:opacity .6s}
+#splash:has(.spbot>.btn.show) .spbot:before,#splash:has(#spnom:not([hidden])) .spbot:before{opacity:1}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #splash .spbot:before{background:linear-gradient(to bottom,transparent,rgba(20,17,19,.85) 38%,#141113 100%)}}
+:root[data-theme="dark"] #splash .spbot:before{background:linear-gradient(to bottom,transparent,rgba(20,17,19,.85) 38%,#141113 100%)}
+#splash .spbot .btn{width:100%}
+#splash .skip{z-index:4;top:calc(10px + env(safe-area-inset-top));text-shadow:0 1px 8px rgba(255,255,255,.9)}
+#splash .tapaura{position:absolute;z-index:5;left:50%;bottom:calc(30px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);white-space:nowrap;border:0;border-radius:99px;padding:12px 20px;font:inherit;font-size:16px;font-weight:500;color:#fff;background:var(--accent);box-shadow:0 8px 24px rgba(125,46,74,.35);animation:tapPulse 1.6s ease-in-out infinite}
+#splash .tapaura[hidden]{display:none}
 @keyframes tapPulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.07)}}
-@media (prefers-reduced-motion:reduce){.avatar.aura .fig,.avatar.aura .fig img.bras{animation:none!important}}
+@media (prefers-reduced-motion:reduce){#splash .avatar.aura .fig,#splash .avatar.aura .fig img.bras,#splash .atelier *{animation:none!important}}
 .spst{min-height:1.4em!important;margin:0 0 10px;font-size:14px;color:var(--accent)!important}
 .avatar img{transform-origin:50% 90%}
 .avatar.speak img{animation:none}
@@ -264,7 +295,58 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </style>
 </head>
 <body>
-<div id="splash"><div class="avatar aura" id="ava"><div class="fig"><img src="stylist-body.jpg" alt="Aura, ta styliste personnelle"><img class="bras" src="aura-bras.png" alt=""><img class="mf" src="aura-m1.jpg" alt=""><img class="mf" src="aura-m2.jpg" alt=""><img class="mf" src="aura-m3.jpg" alt=""></div><button class="tapaura" type="button" hidden>🔊 Touche pour entendre Aura</button></div><h1 id="hi"></h1><p id="hi2"></p><button class="btn" id="install" hidden>Télécharger l’application</button><div id="spnom" hidden><input class="field" id="spnomI" autocomplete="given-name" placeholder="Ton prénom" style="font-size:20px;padding:16px;margin-bottom:12px;text-align:center"><button class="btn show" id="spnomB" disabled>Continuer</button></div><p id="spst" class="spst"></p><button class="btn" id="talkbtn">Parler avec elle</button><button class="btn ghost" id="start">Commencer</button><button id="skip" class="skip" type="button">Passer ›</button></div>
+<div id="splash"><svg class="atelier" viewBox="0 0 400 860" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+<defs>
+<linearGradient id="atW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBEFF2"/><stop offset=".6" stop-color="#F3DCE3"/><stop offset="1" stop-color="#EBCBD5"/></linearGradient>
+<radialGradient id="atH" cx=".5" cy=".42" r=".55"><stop offset="0" stop-color="#FFFDFB"/><stop offset=".7" stop-color="#FCF2EF"/><stop offset="1" stop-color="#F6E3E6"/></radialGradient>
+<radialGradient id="atG" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFE7B8" stop-opacity=".95"/><stop offset="1" stop-color="#FFE7B8" stop-opacity="0"/></radialGradient>
+<linearGradient id="atGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E4C68E"/><stop offset=".5" stop-color="#B8935A"/><stop offset="1" stop-color="#D9B77C"/></linearGradient>
+<linearGradient id="atMir" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".45" stop-color="#F2E6EA"/><stop offset=".55" stop-color="#FFFFFF"/><stop offset="1" stop-color="#EAD8DE"/></linearGradient>
+</defs>
+<rect width="400" height="860" fill="url(#atW)"/>
+<g fill="none" stroke="#E6C3CE" stroke-width="1.2" opacity=".8">
+<rect x="-10" y="560" width="120" height="230" rx="4"/><rect x="290" y="560" width="120" height="230" rx="4"/>
+<path d="M0 540H400"/><path d="M0 805H400" stroke-width="2"/>
+</g>
+<path d="M58 860V300a142 142 0 0 1 284 0V860Z" fill="url(#atH)"/>
+<path d="M58 860V300a142 142 0 0 1 284 0V860" fill="none" stroke="url(#atGold)" stroke-width="2.4"/>
+<path d="M70 860V302a130 130 0 0 1 260 0V860" fill="none" stroke="#E9CDA0" stroke-width=".8" opacity=".8"/>
+<g class="lamp"><path d="M78 0V78M322 0V60" stroke="#B8935A" stroke-width="1.2"/>
+<circle class="glow" cx="78" cy="104" r="46" fill="url(#atG)"/><circle class="glow g2" cx="322" cy="86" r="42" fill="url(#atG)"/>
+<path d="M58 96a20 18 0 0 1 40 0Z" fill="url(#atGold)"/><path d="M303 78a19 17 0 0 1 38 0Z" fill="url(#atGold)"/>
+<ellipse cx="78" cy="97" rx="9" ry="3" fill="#FFF3D6"/><ellipse cx="322" cy="79" rx="8" ry="3" fill="#FFF3D6"/></g>
+<g class="rack">
+<path d="M-6 250H118" stroke="url(#atGold)" stroke-width="4" stroke-linecap="round"/>
+<path d="M114 250V790M114 790h-26M114 790h26" stroke="url(#atGold)" stroke-width="3" stroke-linecap="round"/>
+<g class="gar" style="animation-delay:-1.2s"><path d="M8 250c0-6 6-6 6-2l-4 6h18l-4-6c0-4 6-4 6 2" fill="none" stroke="#B8935A" stroke-width="1.4"/><path d="M14 256h18l6 30-4 8 16 120H-4l16-120-4-8Z" fill="#7D2E4A"/><path d="M14 256h18l6 30-4 8H12l-4-8Z" fill="#94405F"/></g>
+<g class="gar" style="animation-delay:-.4s"><path d="M44 250c0-6 6-6 6-2l-4 6h18l-4-6c0-4 6-4 6 2" fill="none" stroke="#B8935A" stroke-width="1.4"/><path d="M42 256h30l12 16-6 6-6-6 2 84H40l2-84-6 6-6-6Z" fill="#F4C9D4"/><path d="M57 258v96" stroke="#E7AFBF" stroke-width="1"/></g>
+<g class="gar" style="animation-delay:-2s"><path d="M80 250c0-6 6-6 6-2l-4 6h18l-4-6c0-4 6-4 6 2" fill="none" stroke="#B8935A" stroke-width="1.4"/><path d="M80 256h26l10 22-5 4v150H74V282l-5-4Z" fill="#FBF4EF"/><path d="M93 258v174M88 300h10" stroke="#E5D3CA" stroke-width="1.2"/><circle cx="93" cy="330" r="1.6" fill="#B8935A"/><circle cx="93" cy="356" r="1.6" fill="#B8935A"/></g>
+</g>
+<g class="shelf">
+<path d="M282 228H410" stroke="url(#atGold)" stroke-width="3"/>
+<rect x="292" y="196" width="40" height="32" rx="3" fill="#F4C9D4"/><path d="M292 206h40" stroke="#7D2E4A" stroke-width="3"/><ellipse cx="312" cy="196" rx="20" ry="4" fill="#EBB3C2"/>
+<path d="M346 228c0-22 4-28 18-28s18 6 18 28Z" fill="#7D2E4A"/><path d="M354 202c0-12 20-12 20 0" fill="none" stroke="#B8935A" stroke-width="2"/>
+<rect x="388" y="206" width="12" height="22" rx="3" fill="#E9D9F0" opacity=".9"/><rect x="391" y="200" width="6" height="7" rx="1" fill="#B8935A"/>
+</g>
+<g class="mirror"><ellipse cx="352" cy="400" rx="44" ry="96" fill="url(#atMir)"/><ellipse cx="352" cy="400" rx="44" ry="96" fill="none" stroke="url(#atGold)" stroke-width="5"/>
+<path d="M330 360l26-36M338 392l34-46" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".8"/>
+<path d="M352 496V790M352 790h-22M352 790h22" stroke="url(#atGold)" stroke-width="3" stroke-linecap="round"/></g>
+<g class="fan" transform="translate(300 300)">
+<g transform="rotate(-62)"><rect x="-3" y="-44" width="7" height="44" rx="3" fill="#7D2E4A"/></g>
+<g transform="rotate(-40)"><rect x="-3" y="-44" width="7" height="44" rx="3" fill="#C25B7A"/></g>
+<g transform="rotate(-18)"><rect x="-3" y="-44" width="7" height="44" rx="3" fill="#E9A3B5"/></g>
+<g transform="rotate(4)"><rect x="-3" y="-44" width="7" height="44" rx="3" fill="#D9B77C"/></g>
+<g transform="rotate(26)"><rect x="-3" y="-44" width="7" height="44" rx="3" fill="#8FA9A0"/></g>
+<circle r="3" fill="#B8935A"/></g>
+<g transform="translate(8 470)" opacity=".95">
+<path d="M0 30c30-8 40 10 66 2s30-14 40-6" fill="none" stroke="#E7C26A" stroke-width="7" stroke-linecap="round"/>
+<path d="M6 28l2 4M18 26l2 5M30 26l2 4M42 28l2 5M54 30l2 4M66 31l1 4M78 28l2 4M90 24l2 4" stroke="#7D5A2A" stroke-width="1"/></g>
+<g class="spark" fill="#D9B77C">
+<path d="M34 160l2 6 6 2-6 2-2 6-2-6-6-2 6-2Z"/><path class="s2" d="M372 150l1.6 5 5 1.6-5 1.6-1.6 5-1.6-5-5-1.6 5-1.6Z"/>
+<path class="s3" d="M148 70l1.4 4 4 1.4-4 1.4-1.4 4-1.4-4-4-1.4 4-1.4Z"/><path class="s2" d="M262 40l1.4 4 4 1.4-4 1.4-1.4 4-1.4-4-4-1.4 4-1.4Z"/>
+<path class="s3" d="M24 380l1.4 4 4 1.4-4 1.4-1.4 4-1.4-4-4-1.4 4-1.4Z"/><path d="M384 560l1.6 5 5 1.6-5 1.6-1.6 5-1.6-5-5-1.6 5-1.6Z"/></g>
+<ellipse cx="200" cy="830" rx="230" ry="40" fill="#E5BCC8" opacity=".55"/>
+</svg><div class="sptop"><h1 id="hi"></h1><p id="hi2"></p></div><div class="avatar aura" id="ava"><div class="fig"><img class="body" src="aura-full.webp" alt="Aura, ta styliste personnelle"><img class="bras" src="aura-bras2.webp" alt=""><img class="mf" src="aura-m1.jpg" alt=""><img class="mf" src="aura-m2.jpg" alt=""><img class="mf" src="aura-m3.jpg" alt=""><img class="blink" src="aura-blink.webp" alt=""></div></div><button class="tapaura" type="button" hidden>🔊 Touche pour entendre Aura</button><div class="spbot"><button class="btn" id="install" hidden>Télécharger l’application</button><div id="spnom" hidden><input class="field" id="spnomI" autocomplete="given-name" placeholder="Ton prénom" style="font-size:20px;padding:16px;margin-bottom:12px;text-align:center"><button class="btn show" id="spnomB" disabled>Continuer</button></div><p id="spst" class="spst"></p><button class="btn" id="talkbtn">Parler avec elle</button><button class="btn ghost" id="start">Commencer</button></div><button id="skip" class="skip" type="button">Passer ›</button></div>
 <div id="inst" role="dialog" aria-modal="true" aria-labelledby="instT"><div class="sh"><h2 id="instT">Installer My Style</h2><p class="sub" id="instS">Quelques gestes dans Safari, et My Style s’ouvre comme une vraie application depuis ton écran d’accueil.</p>
 <ol id="instL"><li><span>Ouvert depuis <b>WhatsApp</b> ? Touche d’abord la <b>boussole Safari</b> <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg> en bas à droite</span></li><li><span>Touche <b>Partager</b> <svg viewBox="0 0 24 24"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M6 11H5v10h14V11h-1"/></svg> en bas de Safari</span></li><li><span>Fais défiler et choisis <b>Sur l’écran d’accueil</b> <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg></span></li><li><span>Touche <b>Ajouter</b>, puis ouvre l’icône My Style</span></li></ol>
 <button class="btn" id="instOk">J’ai compris</button></div></div>
@@ -282,7 +364,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </nav>
 </div>
 <script>
-const VERSION="24";
+const VERSION="25";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -641,6 +723,8 @@ function mouthTick(now){const dt=Math.min(80,now-(MLAST||now));MLAST=now;MP*=Mat
  requestAnimationFrame(mouthTick)}
 requestAnimationFrame(mouthTick);
 window.auraMouth=v=>{if(v>.02)mouthKick(Math.min(1,.25+v*2.4))};
+// Aura cligne des yeux de temps en temps
+(function blinkLoop(){const go=()=>{const a=document.getElementById("ava");if(!a)return;a.classList.add("blk");setTimeout(()=>a.classList.remove("blk"),130);if(Math.random()<.25)setTimeout(()=>{a.classList.add("blk");setTimeout(()=>a.classList.remove("blk"),120)},300);setTimeout(go,2600+Math.random()*3200)};setTimeout(go,1800)})();
 function gesture(){document.querySelectorAll(".avatar.aura").forEach(a=>{a.classList.remove("wave");void a.offsetWidth;a.classList.add("wave");clearTimeout(a._g);a._g=setTimeout(()=>a.classList.remove("wave"),2600)})}
 let VOICES=[],KEEP=[];
 function loadVoices(){try{VOICES=window.speechSynthesis?speechSynthesis.getVoices():[]}catch(e){}}
