@@ -1,0 +1,17 @@
+name: Voix d'Aura
+on:
+  push:
+    paths: ['.github/voices.txt']
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          mkdir -p sons
+          while read -r name url; do [ -n "$name" ] && curl -sSf -o "sons/$name.mp3" "$url" && echo "ok $name"; done < .github/voices.txt
+          git rm -q .github/voices.txt .github/workflows/voices.yml
+          git config user.name "github-actions"; git config user.email "github-actions@users.noreply.github.com"
+          git add sons && git commit -m "Voix d'Aura (ElevenLabs)" && git push
