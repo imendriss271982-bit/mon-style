@@ -131,7 +131,7 @@ footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg)
 :root[data-theme="dark"] #splash .atelier{filter:brightness(.42) saturate(.85)}:root[data-theme="dark"] #splash{background:#1d1418}
 #splash .sptop{position:relative;z-index:3;width:100%;max-width:440px;padding:calc(52px + env(safe-area-inset-top,0px)) 22px 0;text-align:center}
 #splash .sptop h1{font-size:clamp(36px,6.2vh,54px);line-height:1.05;margin:0 0 6px;text-shadow:0 2px 14px rgba(255,255,255,.9)}
-#splash #hi2{display:none!important}
+#splash #hi2,#splash #skip{display:none!important}
 #splash .sptop p{margin:0 auto;max-width:350px;min-height:3.1em;font-size:clamp(15px,2.2vh,18px);line-height:1.45;color:#5f4a53;text-shadow:0 1px 10px rgba(255,255,255,.95)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #splash .sptop h1,:root:not([data-theme="light"]) #splash .sptop p{text-shadow:0 2px 14px rgba(0,0,0,.8)}:root:not([data-theme="light"]) #splash .sptop p{color:#e9dbe0}}
 #splash .avatar.aura{position:absolute;z-index:1;left:50%;bottom:0;margin:0;height:min(70svh,148vw);width:auto;aspect-ratio:480/635;transform:translateX(-50%);pointer-events:none}
@@ -835,14 +835,14 @@ function voiceLine(t){return new Promise(r=>{const ss=window.speechSynthesis;let
   const u=new SpeechSynthesisUtterance(t);u.lang="fr-FR";if(v)u.voice=v;u.rate=1;KEEP=[u];
   let iv=0;u.onstart=()=>{SPOKE=true;window.GREETED=true;talk(true);iv=setInterval(()=>mouthKick(.3+Math.random()*.6),130)};u.onend=()=>{clearInterval(iv);fin()};u.onerror=()=>{clearInterval(iv);talk(false)};ss.resume();ss.speak(u)}catch(e){}})}
 // Voix enregistrée d'Aura (ElevenLabs) ; si le fichier manque, voix du téléphone.
-const AUD=new Audio();AUD.preload="auto";
+const AUD=new Audio();AUD.preload="auto";const CLIPS={};["aura-1","aura-2","aura-3","aura-nom","aura-enchantee","aura-aventure","aura-go","aura-retour"].forEach(n=>{fetch("sons/"+n+".mp3").then(r=>r.ok?r.blob():null).then(b=>{if(b)CLIPS[n]=URL.createObjectURL(b)}).catch(()=>{})});
 function clipLine(name,t){return new Promise(r=>{let done=false,iv=0;const fin=v=>{if(done)return;done=true;clearInterval(iv);talk(false);r(v)};
  if(!S.voice||!name){(S.voice?voiceLine(t):wait(Math.max(2200,t.length*60))).then(()=>fin());return}
  try{affStop();if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}
  const dev=()=>{clearInterval(iv);if(!done)voiceLine(t).then(()=>fin())};
  AUD.onended=()=>fin();AUD.onerror=dev;
  AUD.onplay=()=>{SPOKE=true;window.GREETED=true;talk(true);clearInterval(iv);iv=setInterval(()=>mouthKick(.3+Math.random()*.65),120)};
- AUD.src="sons/"+name+".mp3";
+ AUD.src=CLIPS[name]||("sons/"+name+".mp3");
  try{const p=AUD.play();if(p&&p.catch)p.catch(e=>{if(e&&e.name==="NotAllowedError"){clearInterval(iv);done=true;r("blocked")}else dev()})}catch(e){dev()}})}
 function waitTap(){return new Promise(r=>{const b=document.querySelector(".tapaura");if(b)b.hidden=false;
  const go=()=>{document.removeEventListener("click",go,true);document.removeEventListener("touchend",go,true);if(b)b.hidden=true;try{AUD.play().catch(()=>{})}catch(e){}r()};
@@ -857,7 +857,7 @@ function askNom(){return new Promise(r=>{if(SKIP)return r(null);const box=$("#sp
  i.oninput=()=>{b.disabled=!i.value.trim()};
  const ok=()=>{const v=i.value.trim();if(!v)return;box.hidden=true;r(v)};b.onclick=ok;i.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();ok()}};
  window.SKIPNOM=()=>r(null)})}
-(async()=>{await typeInto($("#hi"),"Salut"+(S.nom?" "+S.nom:"")+" !",RM?1:75);await wait(300);
+(async()=>{typeInto($("#hi"),"Salut"+(S.nom?" "+S.nom:"")+" !",RM?1:45);
  if(S.nom){for(const t of RETOUR(S.nom))await line(...t);return showBtns()}
  for(const t of INTRO)await line(...t);
  await line(...ASKNOM);const n=await askNom();
