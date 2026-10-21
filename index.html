@@ -505,6 +505,23 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 
 /* ===== Capsule garde-robe ===== */
 .cap h2{margin-top:8px}
+.mkt{border:1px solid #E9C9D3;background:linear-gradient(160deg,#FFF8FA,#F8E9EE)}
+.mkt-h{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 10px}
+.mkt-h b{font:500 24px/1.1 "Cormorant Garamond",Georgia,serif;color:var(--accent)}
+.mkt-h small{color:var(--muted);font-size:13px;white-space:nowrap}.mkt-h .mkt-p{color:#9A6B1E;font-weight:600}
+.mkt-ph{position:relative;aspect-ratio:3/4;max-height:34vh;width:100%;border-radius:20px;background:var(--soft);display:grid;place-items:center;overflow:hidden;color:var(--muted);text-align:center;margin-bottom:12px}
+.mkt-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.mkt-ph svg{width:70px;height:70px;fill:none;stroke:var(--gold);stroke-width:1.2;display:block;margin:0 auto 8px}
+.mkt-busy{position:absolute;inset:0;display:grid;place-content:center;gap:12px;justify-items:center;background:rgba(255,255,255,.72);color:var(--accent);font-weight:600;padding:20px}
+.spin{width:34px;height:34px;border-radius:50%;border:3px solid #E9C9D3;border-top-color:var(--accent);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.mkt-c{margin-top:8px}
+.mkt-ba{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mkt-ba figure{margin:0;position:relative;border-radius:16px;overflow:hidden;background:var(--soft);aspect-ratio:3/4}
+.mkt-ba img{width:100%;height:100%;object-fit:cover;display:block}
+.mkt-ba figcaption{position:absolute;inset-inline-start:8px;top:8px;background:rgba(0,0,0,.55);color:#fff;font-size:12px;padding:3px 9px;border-radius:999px}
+a.lb{text-decoration:none}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mkt{background:var(--soft);border-color:var(--line)}}
 .mk-card{text-align:center}
 .mk-cap{margin:0 0 6px;color:var(--muted);font-size:14px}
 .mkf{display:block;margin:0 auto;width:min(230px,70%);height:auto}
@@ -952,6 +969,23 @@ const BX={
  bien:{fr:"Les bons gestes",en:"Do",ar:"الصح"},eviter:{fr:"À éviter",en:"Avoid",ar:"تجنّبي"},ecoute:{fr:"Aura m’explique",en:"Aura explains",ar:"أورا تشرح لي"},
  pour:{fr:"Pour",en:"For",ar:"لـ"},
  achat:{fr:"Trouver le produit",en:"Find the product",ar:"لقي المنتج"},
+ tryT:{fr:"Essaie ton make-up",en:"Try on your make-up",ar:"جرّبي مكياجچ"},
+ tryS:{fr:"Une photo de ton visage + ta tenue : Aura te maquille sur ta propre photo.",en:"A photo of your face + your outfit: Aura does your make-up on your own photo.",ar:"صورة لوجهچ + لبسچ: أورا تحط لچ المكياج على صورتچ أنتي."},
+ tryPh:{fr:"Ta photo de visage, de face, en lumière claire",en:"Your face photo, straight on, in good light",ar:"صورة وجهچ من قدّام، في إضاءة حلوة"},
+ tryTake:{fr:"Prendre la photo",en:"Take the photo",ar:"صوّري"},tryGal:{fr:"Galerie",en:"Gallery",ar:"الصور"},
+ tryQ:{fr:"Ta tenue ou ton occasion",en:"Your outfit or occasion",ar:"لبسچ أو مناسبتچ"},
+ tryEx:{fr:"ex. robe de soirée rouge",en:"e.g. red evening dress",ar:"مثلاً: فستان سهرة أحمر"},
+ tryChips:{fr:["Robe de soirée rouge","Robe noire","Mariage","Abaya noire","Travail","Naturel de jour"],en:["Red evening dress","Black dress","Wedding","Black abaya","Work","Natural day look"],ar:["فستان سهرة أحمر","فستان أسود","عرس","عباية سوداء","دوام","لوك طبيعي للنهار"]},
+ tryGo:{fr:"Créer mon make-up",en:"Create my make-up",ar:"سوّي لي مكياجي"},
+ tryBusy:{fr:"Aura te maquille… (15 à 30 secondes)",en:"Aura is doing your make-up… (15 to 30 seconds)",ar:"أورا قاعدة تحط لچ المكياج… (١٥ لـ٣٠ ثانية)"},
+ tryAv:{fr:"Avant",en:"Before",ar:"قبل"},tryAp:{fr:"Après",en:"After",ar:"بعد"},
+ trySave:{fr:"Enregistrer la photo",en:"Save the photo",ar:"احفظي الصورة"},tryAgain:{fr:"Un autre look",en:"Another look",ar:"لوك ثاني"},
+ tryLeft:{fr:"essais restants ce mois-ci",en:"tries left this month",ar:"محاولات باقية هالشهر"},
+ tryNone:{fr:"Tu as utilisé tous tes essais make-up ce mois-ci.",en:"You’ve used all your make-up tries this month.",ar:"خلّصتي كل محاولات المكياج هالشهر."},
+ tryDone:{fr:"Voilà ton make-up, ",en:"Here is your make-up, ",ar:"هذا مكياجچ يا "},
+ tryNeedQ:{fr:"Dis-moi ta tenue ou ton occasion.",en:"Tell me your outfit or occasion.",ar:"قوليلي شنو لبسچ أو مناسبتچ."},
+ tryNeedPh:{fr:"Prends d’abord une photo de ton visage.",en:"First take a photo of your face.",ar:"صوّري وجهچ أول."},
+ tryPrem:{fr:"Réservé aux abonnées",en:"For subscribers",ar:"للمشتركات"},
  geste:{fr:"Le geste",en:"How to",ar:"الطريقة"},carte:{fr:"Ton visage, zone par zone",en:"Your face, zone by zone",ar:"وجهچ، منطقة منطقة"},
  look:{fr:"Ton look dans tes couleurs",en:"Your look in your colours",ar:"لوكچ بألوانچ"}
 };
@@ -1034,6 +1068,51 @@ function mkStepLay(t){t=String(t||"").toLowerCase();
  if(/sourcil|brow|حواجب/.test(t))return["brow"];if(/l[eè]vre|rouge|gloss|lip|روج|شفا/.test(t))return["lips"];
  if(/yeux|fard|paupi|mascara|liner|eye|ombre|عيون|ظلال|ماسكرا/.test(t))return["eyes"];
  if(/teint|fond|base|primer|anti.?cern|correct|poudre|foundation|concealer|powder|أساس|بودرة|كونسيلر/.test(t))return["teint"];return null}
+// ===== Essai make-up : Aura maquille la photo de la cliente selon sa tenue (modèle d'images Gemini via le Worker) =====
+let MKT={img:null,busy:false,err:"",q:"",txt:""};
+function mkTryBox(){const v=ok("visage"),s=season(),u=S.url.mk,left=mkLeft();
+ const ch=BL(BX.tryChips).map(c=>`<button type="button" data-mkq="${esc(c)}" aria-pressed="${MKT.q===c}">${esc(c)}</button>`).join("");
+ let h=`<div class="card mkt"><div class="mkt-h"><b>✨ ${BL(BX.tryT)}</b>${premium()?`<small>${left>0?left:0} ${BL(BX.tryLeft)}</small>`:`<small class="mkt-p">👑 ${BL(BX.tryPrem)}</small>`}</div><p class="sub" style="margin:4px 0 12px">${BL(BX.tryS)}</p>`;
+ if(MKT.img&&u)h+=`<div class="mkt-ba"><figure><img src="${u}" alt=""><figcaption>${BL(BX.tryAv)}</figcaption></figure><figure><img src="${MKT.img}" alt=""><figcaption>${BL(BX.tryAp)}</figcaption></figure></div>
+  ${MKT.txt?`<p class="sub" style="margin:10px 0 0">${esc(MKT.txt)}</p>`:""}
+  <div class="two" style="margin-top:12px"><a class="lb pri" href="${MKT.img}" download="my-style-make-up.png">${BL(BX.trySave)}</a><button type="button" class="lb" data-mkagain>${BL(BX.tryAgain)}</button></div></div>`;
+ else{
+  h+=`<div class="mkt-ph">${u?`<img src="${u}" alt="">`:`${IC.face}<span>${BL(BX.tryPh)}</span>`}${MKT.busy?`<div class="mkt-busy"><span class="spin"></span>${BL(BX.tryBusy)}</div>`:""}</div>
+  ${S.dark&&S.dark.mk&&u?`<div class="note dark">${esc(tr(DARK_MSG))}</div>`:""}
+  <div class="two"><button type="button" class="lb pri" data-acam="mk">${BL(BX.tryTake)}</button><input type="file" accept="image/*" capture="user" data-f="mk" id="nat_mk" hidden><label class="lb">${BL(BX.tryGal)}<input type="file" accept="image/*" data-f="mk" hidden></label></div>
+  <label class="lbl" for="mktq">${BL(BX.tryQ)}</label><input class="field" id="mktq" placeholder="${esc(BL(BX.tryEx))}" value="${esc(MKT.q)}" maxlength="120">
+  <div class="fchips mkt-c">${ch}</div>
+  ${MKT.err?`<div class="note" style="margin-top:10px">${esc(MKT.err)}</div>`:""}
+  <button class="btn" style="margin-top:12px" data-mktry ${MKT.busy?"disabled":""}>💄 ${BL(BX.tryGo)}</button></div>`}
+ return h}
+async function mkTry(){if(!premium())return paywall("beaute");if(MKT.busy)return;
+ const q=(($("#mktq")||{}).value||MKT.q||"").trim();MKT.q=q;
+ if(!S.file.mk){MKT.err=BL(BX.tryNeedPh);render(false);say(MKT.err);return}
+ if(!q){MKT.err=BL(BX.tryNeedQ);render(false);say(MKT.err);$("#mktq")&&$("#mktq").focus();return}
+ if(mkLeft()<=0){MKT.err=BL(BX.tryNone);render(false);say(MKT.err);return}
+ const v=ok("visage"),s=season(),fam=s&&SEASONS[s].f,C=fam&&MK_SEAS[fam],fk=v&&mkFaceKey(v.forme),F=fk&&MK_FACE[fk];
+ const LN={fr:"French",en:"English",ar:"Gulf Arabic (Qatari dialect)"}[S.lang||"fr"];
+ const pr="Edit this photo: apply professional, flattering make-up to the woman in the photo, chosen to match her outfit/occasion: \""+q+"\". "+
+  "CRITICAL: keep her identity exactly the same. Do not change her face shape, features, eyes, nose, lip shape, skin texture, age, weight, expression, hair, hijab or headscarf, glasses, clothes, jewellery, background, lighting, pose or framing. Only add make-up, realistic and photographic, like a real make-up artist did it. No beauty filter, no face slimming, no retouching. "+
+  (fk?"Her face shape is "+v.forme+" : contour "+MK_FACE[fk].en[0]+" Blush "+MK_FACE[fk].en[1]+" Highlighter "+MK_FACE[fk].en[2]+" Brows: "+MK_FACE[fk].en[3]+" ":"")+
+  (C?"Her colour season is "+s+": lips "+C.en[0]+" Blush "+C.en[1]+" Eyes "+C.en[2]+" Complexion "+C.en[3]+" Choose the shades from her season that go best with the outfit. ":"")+
+  "Climate: Gulf (heat), so long-wearing, elegant make-up. Then write ONE short sentence in "+LN+" describing the look (lips, eyes, blush), speaking to her as her stylist Aura.";
+ MKT.busy=true;MKT.err="";render(false);say(BL(BX.tryBusy));
+ try{const data=await shrink(S.file.mk,1024);
+  const r=await fetch(AI_URL+"/makeup",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:pr,image:data})});
+  let j={};try{j=await r.json()}catch(e){}
+  if(!r.ok||!j.image)throw new Error(j.erreur||"Je n’ai pas réussi à créer ton make-up. Réessaie.");
+  if(MKT.img&&MKT.img.startsWith("blob:"))URL.revokeObjectURL(MKT.img);
+  const bin=atob(j.image),arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
+  MKT.img=URL.createObjectURL(new Blob([arr],{type:j.mime||"image/png"}));MKT.txt=j.texte||"";
+  quota();PLAN.mk=(PLAN.mk||0)+1;planSave();MKT.busy=false;
+  if(S.page==="beaute"){render(false);say(MKT.txt||BL(BX.tryDone)+NOM+".")}}
+ catch(e){MKT.busy=false;MKT.err=(e&&e.message&&e.message!=="Failed to fetch")?e.message:"La connexion a été coupée. Vérifie ton internet et réessaie.";if(S.page==="beaute"){render(false);say(MKT.err)}}}
+document.addEventListener("click",e=>{const t=e.target.closest("[data-mkq],[data-mktry],[data-mkagain]");if(!t)return;
+ if(t.dataset.mkq){MKT.q=t.dataset.mkq;const i=$("#mktq");if(i)i.value=MKT.q;document.querySelectorAll("[data-mkq]").forEach(b=>b.setAttribute("aria-pressed",String(b===t)));return}
+ if(t.hasAttribute("data-mktry"))return mkTry();
+ if(t.hasAttribute("data-mkagain")){MKT.img=null;MKT.txt="";render(false)}});
+document.addEventListener("input",e=>{if(e.target.id==="mktq")MKT.q=e.target.value});
 // Étiquette : assise, marche, parole. [bons gestes], [à éviter].
 const ETQ=[
  {k:"assise",t:{fr:"S’asseoir",en:"Sitting",ar:"إتيكيت الجلوس"},
@@ -1057,7 +1136,7 @@ async function mkRoutine(kind){if(!premium())return paywall("beaute");const sm=a
  catch(e){S.mkBusy=null;S.mkErr=errMsg(e);if(S.page==="beaute"){render(false);say(S.mkErr)}}}
 function beauteMk(){const v=ok("visage"),s=season(),fk=v&&mkFaceKey(v.forme),F=fk&&MK_FACE[fk],fam=s&&SEASONS[s].f,C=fam&&MK_SEAS[fam];
  const li=(lab,txt)=>`<li><b>${BL(lab)}${(S.lang||"fr")==="fr"?" :":":"}</b> ${esc(txt)}</li>`;
- let h="";
+ let h=mkTryBox();
  if(!v)h+=`<div class="card"><p style="margin:0 0 10px">${BL(BX.noFace)}</p><button class="btn" data-mod="visage">${BL(BX.doFace)}</button></div>`;
  else if(F){const a=BL(F),col=C&&MK_HEX[fam]?{b:MK_HEX[fam].b[0]}:null;
   const dot=(c,lab)=>`<span><i style="background:${c}"></i>${BL(lab)}</span>`;
@@ -1110,8 +1189,8 @@ const DARK_LIM=72; // luminosité moyenne (0 à 255) sous laquelle la photo est 
 const DARK_MSG="Ta photo est un peu sombre. Reprends-la face à une fenêtre ou une belle lumière : l’analyse sera plus rapide et plus juste.";
 const GUIDE={face:'<svg viewBox="0 0 100 150" preserveAspectRatio="xMidYMid meet"><ellipse cx="50" cy="60" rx="29" ry="38"/><path d="M26 104c-12 5-19 14-22 30M74 104c12 5 19 14 22 30"/></svg>',
  body:'<svg viewBox="0 0 100 200" preserveAspectRatio="xMidYMid meet"><circle cx="50" cy="17" r="11"/><path d="M44 29v5q-14 1-17 9l-6 54q0 5 4 5l5-40 2 37q-2 23 2 52l3 43h10l2-71h2l2 71h10l3-43q4-29 2-52l2-37 5 40q4 0 4-5l-6-54q-3-8-17-9v-5"/></svg>'};
-GUIDE.outfit=GUIDE.body;
-const GTIP={face:"Place ton visage dans l’ovale.",body:"Pose le téléphone et recule jusqu’à voir tes pieds dans la silhouette. Touche le bouton : tu as 10 secondes.",outfit:"Pose le téléphone et recule jusqu’à voir tes pieds dans la silhouette. Touche le bouton : tu as 10 secondes."};
+GUIDE.outfit=GUIDE.body;GUIDE.mk=GUIDE.face;
+const GTIP={mk:"Place ton visage dans l’ovale.",face:"Place ton visage dans l’ovale.",body:"Pose le téléphone et recule jusqu’à voir tes pieds dans la silhouette. Touche le bouton : tu as 10 secondes.",outfit:"Pose le téléphone et recule jusqu’à voir tes pieds dans la silhouette. Touche le bouton : tu as 10 secondes."};
 function lumaOf(src,w,h){try{const c=document.createElement("canvas");c.width=24;c.height=32;const x=c.getContext("2d",{willReadFrequently:true});
  // on regarde surtout le centre : là où se trouvent le visage ou la silhouette
  const sw=w*.6,sh=h*.6;x.drawImage(src,(w-sw)/2,(h-sh)/2,sw,sh,0,0,24,32);const d=x.getImageData(0,0,24,32).data;let t=0;
@@ -1125,9 +1204,9 @@ function preOutfit(f){f.mx=800;const occ=S.occ;const p=getSample().then(sm=>sm&&
 let ACAM=null;
 function acamOpen(k){if($("#cam"))return;
  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){const n=$("#nat_"+k);if(n)n.click();return}
- stopVoice();ACAM={k,face:"user",delay:k==="face"?3:10,busy:false,tm:0,said:0,dark:null};
+ stopVoice();ACAM={k,face:"user",delay:k==="face"||k==="mk"?3:10,busy:false,tm:0,said:0,dark:null};
  const d=document.createElement("div");d.id="cam";d.className="guided";d.setAttribute("role","dialog");d.setAttribute("aria-label","Caméra guidée");
- d.innerHTML=`<div class="vw"><video id="camv" playsinline muted autoplay></video><div class="gd ${k==="face"?"gf":"gb"}" id="camgd" aria-hidden="true">${GUIDE[k]}</div>
+ d.innerHTML=`<div class="vw"><video id="camv" playsinline muted autoplay></video><div class="gd ${k==="face"||k==="mk"?"gf":"gb"}" id="camgd" aria-hidden="true">${GUIDE[k]}</div>
   <div class="tipb" id="camtip" role="status">${GTIP[k]}</div><div class="cd" id="camcd"></div><div class="fl" id="camfl"></div></div>
   <div class="bar"><button data-acamx aria-label="Fermer">✕</button><button data-acamd="3" class="${ACAM.delay===3?"on":""}">3 s</button><button class="shoot" data-acamgo aria-label="Prendre la photo"></button><button data-acamd="10" class="${ACAM.delay===10?"on":""}">10 s</button><button data-acamf aria-label="Changer de caméra">⟲</button></div>`;
  document.body.appendChild(d);if(window.i18nApply)i18nApply();acamStart()}
@@ -1175,7 +1254,9 @@ function plan(){return PLANS[PLAN.p]?PLAN.p:"essai"}
 function premium(){return plan()!=="essai"}
 function isVip(){return plan()==="vip"}
 function moisCle(){const d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)}
-function quota(){if(PLAN.m!==moisCle()){PLAN.m=moisCle();PLAN.sec=0;PLAN.msg=0;planSave()}return PLAN}
+function quota(){if(PLAN.m!==moisCle()){PLAN.m=moisCle();PLAN.sec=0;PLAN.msg=0;PLAN.mk=0;planSave()}return PLAN}
+// Essais make-up par mois : Essentiel et Annuel 10, VIP 30.
+function mkLeft(){quota();return (isVip()?30:premium()?10:0)-(PLAN.mk||0)}
 function secLeft(){quota();return PLANS[plan()].min*60-(PLAN.sec||0)}
 function useSec(n){quota();PLAN.sec=(PLAN.sec||0)+n;planSave()}
 function msgLeft(){quota();return PLANS[plan()].msg-(PLAN.msg||0)}

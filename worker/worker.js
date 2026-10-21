@@ -2,6 +2,7 @@
 // même en cas de plantage, pour que l'app affiche la vraie erreur.
 const ALLOWED = ["https://imendriss271982-bit.github.io"];
 let GOOD_MODEL = "";
+let GOOD_IMG = "";
 
 export default {
   async fetch(req, env) {
@@ -79,6 +80,63 @@ export default {
       }
       const KEY = String(env.GEMINI_KEY || "").replace(/[^\x21-\x7E]/g, "").replace(/^["']+|["']+$/g, "");
       if (!KEY) return json({ erreur: "La clé Gemini n'est pas configurée sur Cloudflare." }, 500);
+
+      // Essai make-up : Gemini (modèle d'images) maquille la photo de la cliente selon sa tenue. Réservé aux abonnées dans l'app.
+      if (new URL(req.url).pathname === "/makeup") {
+        let b3 = {};
+        try { b3 = await req.json(); } catch { return json({ erreur: "Requête invalide." }, 400); }
+        const img = b3 && b3.image, mp = String((b3 && b3.prompt) || "").slice(0, 5000);
+        if (typeof img !== "string" || !img || img.length > 6e6 || !mp) return json({ erreur: "Requête invalide." }, 400);
+        const ibody = JSON.stringify({ contents: [{ role: "user", parts: [{ text: mp }, { inline_data: { mime_type: "image/jpeg", data: img } }] }],
+          generationConfig: { responseModalities: ["IMAGE", "TEXT"], temperature: 0.4 } });
+        const T1 = Date.now();
+        const icall = async model => {
+          const left = 85000 - (Date.now() - T1);
+          if (left < 5000) return new Response(JSON.stringify({ error: { message: "timeout" } }), { status: 504 });
+          try {
+            return await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+              { method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": KEY }, body: ibody, signal: AbortSignal.timeout(Math.min(60000, left)) });
+          } catch { return new Response(JSON.stringify({ error: { message: "timeout" } }), { status: 504 }); }
+        };
+        let ir = null;
+        const tryImg = async list => {
+          for (const model of list) {
+            ir = await icall(model);
+            if (ir.status === 404 || ir.status === 400 || ir.status === 503 || ir.status === 500 || ir.status === 504) continue;
+            if (ir.ok) GOOD_IMG = model;
+            return true;
+          }
+          return false;
+        };
+        const ilist = [GOOD_IMG, String(env.IMAGE_MODEL || "").trim(), "gemini-3.6-flash-image", "gemini-3-pro-image-preview", "gemini-3-flash-image", "gemini-2.5-flash-image", "gemini-2.5-flash-image-preview"].filter(Boolean);
+        if (!(await tryImg([...new Set(ilist)]))) {
+          // Les noms changent : on demande à Google la liste actuelle des modèles qui créent des images.
+          try {
+            const lr = await fetch("https://generativelanguage.googleapis.com/v1beta/models?pageSize=200", { headers: { "x-goog-api-key": KEY } });
+            const lj = await lr.json();
+            const names = (lj.models || [])
+              .filter(m => (m.supportedGenerationMethods || []).includes("generateContent"))
+              .map(m => String(m.name || "").replace(/^models\//, ""))
+              .filter(n => /image/i.test(n) && /gemini/i.test(n) && !/(tts|audio|live|embedding)/i.test(n));
+            names.sort((a, b) => (b.match(/\d+(\.\d+)?/) || [0])[0] - (a.match(/\d+(\.\d+)?/) || [0])[0]);
+            await tryImg(names.slice(0, 4));
+          } catch {}
+        }
+        let idata = {};
+        try { idata = await ir.json(); } catch {}
+        if (!ir || !ir.ok) {
+          if (ir && ir.status === 429) return json({ erreur: "Trop de demandes. Réessaie dans un instant.", code: "rate_limited" }, 429);
+          if (ir && (ir.status === 503 || ir.status === 500 || ir.status === 504)) return json({ erreur: "Le make-up est très demandé en ce moment. Réessaie dans une minute.", code: "busy" }, 503);
+          return json({ erreur: "Erreur Gemini " + (ir ? ir.status : "") + " : " + ((idata.error && idata.error.message) || "inconnue"), code: "ai_error" }, 502);
+        }
+        const icand = idata.candidates && idata.candidates[0];
+        const iparts = (icand && icand.content && icand.content.parts) || [];
+        const pic = iparts.find(x => (x.inlineData || x.inline_data) && /image/.test((x.inlineData || x.inline_data).mimeType || (x.inlineData || x.inline_data).mime_type || ""));
+        const said = iparts.map(x => x.text || "").join(" ").trim().slice(0, 600);
+        if (!pic) return json({ erreur: "Je n'ai pas réussi à créer ton make-up avec cette photo. Réessaie avec une photo de face, bien éclairée.", code: "no_image" }, 502);
+        const d = pic.inlineData || pic.inline_data;
+        return json({ image: d.data, mime: d.mimeType || d.mime_type || "image/png", texte: said });
+      }
 
       let body;
       try { body = await req.json(); } catch { return json({ erreur: "Requête invalide." }, 400); }
