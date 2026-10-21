@@ -681,6 +681,10 @@ const I18N_D=[
 ["Je prépare ton résultat…","Preparing your result…","قاعدة أجهّز نتيجتچ…"],
 ["Pose le téléphone et recule jusqu’à voir tes pieds dans la silhouette. Touche le bouton : tu as 10 secondes.","Put the phone down and step back until your feet are inside the outline. Tap the button: you have 10 seconds.","حطي التلفون وارجعي لورا لين تشوفين رجولچ داخل الرسمة. اضغطي الزر وعندچ ١٠ ثواني."],
 // ——— Accueil : My Stylist en vedette ———
+["Ta styliste IA personnelle","Your personal AI stylist","الستايلست الذكية الخاصة فيچ"],
+["👑 {0} min ce mois-ci","👑 {0} min this month","👑 {0} دقيقة هالشهر"],
+["👑 Essai : 1 min offerte","👑 Trial: 1 free minute","👑 تجربة: دقيقة مجانية"],
+["👑 Réservé aux abonnées","👑 For subscribers","👑 للمشتركات"],
 ["Ta styliste personnelle","Your personal stylist","الستايلست الخاصة فيچ"],
 ["Appeler Aura","Call Aura","اتصلي بأورا"],
 ["Une note et les changements à faire","A score and what to change","درجة وشنو تغيّرين"],

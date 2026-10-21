@@ -3,6 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+// iPhone (app sur l'écran d'accueil) : si l'écran passe sous l'heure et la batterie sans que le téléphone donne la hauteur de cette zone,
+// on réserve nous-mêmes la place, pour que le logo et les boutons ne chevauchent plus l'heure.
+(function(){function fix(){try{const st=navigator.standalone===true||matchMedia("(display-mode: standalone)").matches;if(!st||!document.body)return;
+ const t=document.createElement("div");t.style.cssText="position:fixed;top:0;left:0;width:1px;height:env(safe-area-inset-top,0px);visibility:hidden";document.body.appendChild(t);
+ const h=t.offsetHeight;t.remove();const full=Math.abs(innerHeight-screen.height)<6||Math.abs(innerHeight-screen.width)<6;
+ document.documentElement.style.setProperty("--satfb",h<10&&full?(screen.height>=852?"59px":"47px"):"0px")}catch(e){}}
+ document.addEventListener("DOMContentLoaded",fix);addEventListener("load",fix);addEventListener("resize",fix);addEventListener("orientationchange",()=>setTimeout(fix,300))})();
+</script>
 <script>/* Mise à jour automatique : si une nouvelle version est publiée, l'app se recharge toute seule */
 (function(){var B="__BUILD__";if(B.indexOf("__")===0)return;
 function chk(){fetch("version.txt?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(v){v=(v||"").trim();if(!v||v===B)return;
@@ -32,16 +41,16 @@ html,body{margin:0;height:100%}
 body{background:var(--bg);color:var(--ink);font:17px/1.55 Jost,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 button{font:inherit;color:inherit}
 button:focus-visible,a:focus-visible,label:focus-within{outline:2px solid var(--accent);outline-offset:3px}
-#app{max-width:480px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;padding:env(safe-area-inset-top,0) 0 0}
+#app{max-width:480px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;padding:max(env(safe-area-inset-top,0px),var(--satfb,0px)) 0 0}
 /* Bande fixe sous l’heure et la batterie : le contenu ne passe plus dessous en descendant */
-body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:45;pointer-events:none}
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:max(env(safe-area-inset-top,0px),var(--satfb,0px));background:var(--bg);z-index:45;pointer-events:none}
 header{display:flex;align-items:center;gap:12px;padding:14px 20px 6px;min-height:58px}
 .ib{width:40px;height:40px;border:0;background:none;border-radius:50%;display:grid;place-items:center;cursor:pointer;flex:none}
 #voice{border:1px solid var(--line);color:var(--accent)}
 nav.dock #affbtn.on{color:var(--accent)}nav.dock #affbtn.on svg{fill:var(--accent);animation:breath 1.6s ease-in-out infinite}
 #voice.off{color:var(--muted);background:var(--soft)}
 .talk #voice{animation:breath 1.2s ease-in-out infinite}
-#toast{position:fixed;left:50%;top:calc(64px + env(safe-area-inset-top,0px));transform:translate(-50%,-8px);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:999px;font-size:14px;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:50}
+#toast{position:fixed;left:50%;top:calc(64px + max(env(safe-area-inset-top,0px),var(--satfb,0px)));transform:translate(-50%,-8px);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:999px;font-size:14px;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:50}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 .ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .ib[hidden]{visibility:hidden;display:grid}
@@ -127,7 +136,7 @@ footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg)
 #splash .btn.ghost{background:none;color:var(--accent);border:1px solid var(--accent);margin-top:12px}
 #splash .btn[hidden]{display:none}
 #splash #talkbtn.live{background:#a33a5d}
-#splash .skip{position:absolute;top:calc(14px + env(safe-area-inset-top));right:16px;background:none;border:0;color:var(--accent);font:inherit;font-size:15px;padding:10px 12px;cursor:pointer}#splash .skip[hidden]{display:none}#spnom{width:100%;max-width:320px;margin-bottom:8px}#spnom[hidden]{display:none}
+#splash .skip{position:absolute;top:calc(14px + max(env(safe-area-inset-top,0px),var(--satfb,0px)));right:16px;background:none;border:0;color:var(--accent);font:inherit;font-size:15px;padding:10px 12px;cursor:pointer}#splash .skip[hidden]{display:none}#spnom{width:100%;max-width:320px;margin-bottom:8px}#spnom[hidden]{display:none}
 /* Accueil plein écran : Aura dans son atelier */
 #splash{justify-content:flex-start;padding:0;overflow:hidden;background:#F6E4E9}
 #splash .atelier{position:absolute;inset:0;width:100%;height:100%;z-index:0}
@@ -141,7 +150,7 @@ footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg)
 @keyframes fanB{0%,100%{translate:0 0}50%{translate:0 -4px}}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #splash .atelier{filter:brightness(.42) saturate(.85)}:root:not([data-theme="light"]) #splash{background:#1d1418}}
 :root[data-theme="dark"] #splash .atelier{filter:brightness(.42) saturate(.85)}:root[data-theme="dark"] #splash{background:#1d1418}
-#splash .sptop{position:relative;z-index:3;width:100%;max-width:440px;padding:calc(52px + env(safe-area-inset-top,0px)) 22px 0;text-align:center}
+#splash .sptop{position:relative;z-index:3;width:100%;max-width:440px;padding:calc(52px + max(env(safe-area-inset-top,0px),var(--satfb,0px))) 22px 0;text-align:center}
 #splash .sptop h1{font-size:clamp(36px,6.2vh,54px);line-height:1.05;margin:0 0 6px;text-shadow:0 2px 14px rgba(255,255,255,.9)}
 #splash #hi,#splash #hi2,#splash #skip{display:none!important}
 #splash .sptop p{margin:0 auto;max-width:350px;min-height:3.1em;font-size:clamp(15px,2.2vh,18px);line-height:1.45;color:#5f4a53;text-shadow:0 1px 10px rgba(255,255,255,.95)}
@@ -186,7 +195,7 @@ footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg)
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #splash .spbot:before{background:linear-gradient(to bottom,transparent,rgba(20,17,19,.85) 38%,#141113 100%)}}
 :root[data-theme="dark"] #splash .spbot:before{background:linear-gradient(to bottom,transparent,rgba(20,17,19,.85) 38%,#141113 100%)}
 #splash .spbot .btn{width:100%}
-#splash .skip{z-index:4;top:calc(10px + env(safe-area-inset-top));text-shadow:0 1px 8px rgba(255,255,255,.9)}
+#splash .skip{z-index:4;top:calc(10px + max(env(safe-area-inset-top,0px),var(--satfb,0px)));text-shadow:0 1px 8px rgba(255,255,255,.9)}
 /* Haut-parleur : toujours là, même taille et même axe que le téléphone, juste en dessous */
 #splash .tapaura{position:absolute;z-index:6;left:calc(50% + var(--ah)*.756*.24);bottom:calc(var(--ab) + var(--ah)*.80);width:62px;height:62px;padding:0;display:grid;place-items:center;border:4px solid #fff;border-radius:50%;background:var(--accent);color:#fff;cursor:pointer;box-shadow:0 8px 22px rgba(125,46,74,.45);transition:background .3s,opacity .3s}
 #splash .tapaura svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}#splash .tapaura svg path:first-child{fill:currentColor}
@@ -268,7 +277,7 @@ nav.dock button[aria-current="true"]{color:var(--accent)}
 #cam .gd.gf{padding:6% 8% 0}
 #cam .gd svg{width:100%;height:100%;fill:none;stroke:#fff;stroke-width:1.1;stroke-dasharray:4 3;vector-effect:non-scaling-stroke;filter:drop-shadow(0 0 3px rgba(0,0,0,.7));transition:stroke .3s}
 #cam .gd.ok svg{stroke:#BDF0C8}
-#cam .tipb{position:absolute;left:14px;right:14px;top:calc(14px + env(safe-area-inset-top,0px));background:rgba(0,0,0,.6);color:#fff;border-radius:14px;padding:10px 14px;font-size:15px;line-height:1.35;text-align:center;transition:background .3s}
+#cam .tipb{position:absolute;left:14px;right:14px;top:calc(14px + max(env(safe-area-inset-top,0px),var(--satfb,0px)));background:rgba(0,0,0,.6);color:#fff;border-radius:14px;padding:10px 14px;font-size:15px;line-height:1.35;text-align:center;transition:background .3s}
 #cam .tipb.dark{background:rgba(125,46,74,.92)}
 button.lb{font:inherit;width:100%}
 .wait{height:4px;border-radius:4px;background:var(--line);overflow:hidden;margin:-4px 0 12px}
@@ -381,6 +390,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 .hx-hero-t small{display:block;font-size:12px;letter-spacing:.16em;text-transform:uppercase;opacity:.8}
 .hx-hero-t b{display:block;font:500 42px/1.02 "Cormorant Garamond",Georgia,serif;margin:6px 0 6px}
 .hx-hero-t em{display:block;font-style:normal;font-size:16px;opacity:.92}
+.hx-hero-c{display:inline-block;margin-top:10px;padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.16);border:1px solid rgba(243,217,164,.55);color:#F3D9A4;font-size:13px;font-weight:600}
 .hx-hero-b{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;align-self:flex-start;min-height:54px;padding:0 24px;border-radius:999px;background:#fff;color:var(--accent);font-weight:600;font-size:16px;box-shadow:0 6px 16px rgba(0,0,0,.18);animation:ring 2.6s ease-in-out infinite}
 .hx-hero-b svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 @keyframes ring{0%,100%{box-shadow:0 6px 16px rgba(0,0,0,.18),0 0 0 0 rgba(255,255,255,.45)}50%{box-shadow:0 6px 16px rgba(0,0,0,.18),0 0 0 10px rgba(255,255,255,0)}}
@@ -437,7 +447,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 .hx-ms-g small{display:block;color:var(--muted);font-size:11.5px;margin-bottom:3px}
 .hx-ms-g em{display:block;font-style:normal;font-weight:600;font-size:13.5px;line-height:1.25;color:var(--accent);overflow-wrap:anywhere}
 .hx-ms-g .hx-sw{margin:6px 0 0 4px}
-.hx-ms.todo{background:var(--accent);color:var(--on)}.hx-ms.todo .hx-ms-h small,.hx-ms.todo p{color:inherit;opacity:.88}.hx-ms.todo p{margin:0;font-size:14.5px}
+.hx-ms.todo{background:var(--accent);color:var(--on)}.hx-ms.todo .hx-ms-h small,.hx-ms.todo p{color:inherit;opacity:1}.hx-ms.todo p{margin:0;font-size:16px;line-height:1.45}
 .fiche-h{font:600 15px/1.2 inherit;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin:30px 0 6px;padding-top:22px;border-top:1px solid var(--line)}
 .an-row{display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);padding:14px 2px}
 .an-row>button.an-v{flex:1;min-width:0;border:0;background:none;text-align:left;color:var(--ink);cursor:pointer;padding:0}
@@ -580,7 +590,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 /* Bouton langue (globe + code) */
 .lgbtn{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--accent);font:inherit;font-weight:700;font-size:15px;cursor:pointer;flex:none;touch-action:pan-y}
 .lgbtn svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.5}
-.splg{position:absolute;z-index:6;top:calc(14px + env(safe-area-inset-top,0px));right:16px}
+.splg{position:absolute;z-index:6;top:calc(14px + max(env(safe-area-inset-top,0px),var(--satfb,0px)));right:16px}
 .splg .lgbtn{background:rgba(255,255,255,.94);border-color:transparent;color:var(--accent);box-shadow:0 4px 14px rgba(0,0,0,.18)}
 [dir=rtl] .splg{right:auto;left:16px}
 #lgmenu{position:fixed;z-index:50;min-width:150px;padding:6px;border-radius:18px;background:var(--surface);border:1px solid var(--line);box-shadow:0 14px 36px rgba(0,0,0,.18);display:flex;flex-direction:column;animation:lgIn .18s ease-out}
@@ -1195,7 +1205,7 @@ ${nd===3?`<button class="hx-ms" data-view="fiche" aria-label="Voir ma fiche styl
   <p>${nd?"Il reste "+(3-nd)+" étape"+(3-nd>1?"s":"")+". Ensuite, ta fiche complète s’affiche ici.":"Visage, silhouette, couleurs : on la fait une seule fois, ensemble."}</p>
  </button>`}
  <button class="hx-hero" data-view="chat" aria-label="My Stylist : parle avec Aura"><img src="aura-bust.webp?v=1" alt="" width="330" height="308">
-  <span class="hx-hero-t"><small>Ta styliste personnelle</small><b>My Stylist</b><em>Parle avec Aura</em></span>
+  <span class="hx-hero-t"><small>Ta styliste IA personnelle</small><b>My Stylist</b><em>Parle avec Aura</em><span class="hx-hero-c">${(()=>{const m=Math.max(0,Math.ceil(secLeft()/60));return premium()?`👑 ${m} min ce mois-ci`:m>0?"👑 Essai : 1 min offerte":"👑 Réservé aux abonnées"})()}</span></span>
   <span class="hx-hero-b"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg>Appeler Aura</span></button>
  <button class="hx-oc2" data-go="o_photo"><span class="hx-oc2-i"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/></svg></span>
   <span class="hx-oc2-t"><small>Chaque jour</small><b>Outfit check</b><em>${oc?`Dernière note : ${esc(String(oc.note))}/10`:"Une note et les changements à faire"}</em></span><span class="hx-oc2-c">${cam}</span></button>
