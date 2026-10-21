@@ -847,6 +847,11 @@ const STYLES=["Classique","Chic","Casual","Modest","Romantique","Bohème","Minim
 const EMAIL_OK=v=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(v||"").trim());
 const ok=k=>S.res[k]&&!S.res[k].erreur?S.res[k]:null;
 const season=()=>{const c=ok("couleurs");return c&&SEASONS[c.saison]?c.saison:null};
+const BL3=o=>o[S.lang]||o.fr;
+// Le profil dit à voix haute en anglais ou en arabe (PROFIL reste en français pour l'IA).
+function PROF_SAY(){const v=ok("visage"),b=ok("corps"),s=season(),p=[];
+ if(v)p.push(BL3({en:"face ",ar:"الوجه "})+tr(v.forme));if(b)p.push(BL3({en:"body shape ",ar:"الجسم "})+tr(b.forme)+(b.kibbe?BL3({en:", Kibbe ",ar:"، كيبي "})+tr(b.kibbe):""));
+ if(s)p.push(BL3({en:"season ",ar:"الموسم "})+tr(s));return p.join(BL3({en:", ",ar:"، "}))}
 function PROFIL(){const v=ok("visage"),b=ok("corps"),s=season(),p=[];
  if(v)p.push("visage "+v.forme);if(b)p.push("morphologie "+b.forme+", Kibbe "+b.kibbe);if(s)p.push("saison "+s);const i=S.info||{};
  if(i.taille)p.push("mesure "+i.taille+" cm");if(i.tvet)p.push("taille de vêtements "+i.tvet);if(i.age)p.push("âge "+i.age);
@@ -1155,7 +1160,7 @@ function beauteMk(){const v=ok("visage"),s=season(),fk=v&&mkFaceKey(v.forme),F=f
  else h+=`<div class="card"><p style="margin:0 0 10px">${BL(BX.noSeas)}</p><button class="btn ghost" data-mod="couleurs">${BL(BX.doSeas)}</button></div>`;
  h+=`<h2>${BL(BX.routine)}</h2><p class="sub">${BL(BX.routineS)}</p><div class="fchips"><button data-mkr="jour" ${S.mkBusy?"disabled":""}>${BL(BX.jour)}</button><button data-mkr="soir" ${S.mkBusy?"disabled":""}>${BL(BX.soir)}</button></div>`;
  if(S.mkBusy)h+=`<div class="note">${BL(BX.busy)}</div>`;
- else if(S.mkErr)h+=`<div class="note">${esc(S.mkErr)}</div>`;
+ else if(S.mkErr)h+=`<div class="note">${esc(tr(S.mkErr))}</div>`;
  else if(MKR)h+=`<p class="sub">${esc(MKR.resume)}</p>${MKR.etapes.map((e,i)=>{const ly=mkStepLay(e.titre+" "+e.geste),X=fam&&MK_HEX[fam];return `<div class="card mk-step">${ly?mkSvg(fk||"ovale",ly,X?{l:X.l[0],b:X.b[0],e:X.e[0],t:X.t[0]}:null,"mkf st"):`<span class="mk-num">${i+1}</span>`}<div><b>${i+1}. ${esc(e.titre)}</b><p style="margin:6px 0 8px">${esc(e.geste)}</p>${e.recherche?`<details><summary>${BL(BX.achat)}</summary>${links(e.recherche)}</details>`:""}</div></div>`}).join("")}`;
  h+=`<button class="btn ghost" data-askmk style="margin-top:14px">${BL(BX.ask)}</button>`;
  return h}
@@ -1342,23 +1347,23 @@ r_corps:()=>{if(S.wait&&S.wait.corps)return waitPage("corps");const b=ok("corps"
  ${b.kibbe?`<p class="step" style="margin-top:26px">Ton type Kibbe</p><div class="big">${esc(b.kibbe)}</div>${typeof b.score_yinyang==="number"?`<div class="yy" aria-label="Score Yin/Yang ${b.score_yinyang}"><span>Yin</span><div><i style="left:${(Math.max(-10,Math.min(10,b.score_yinyang))+10)*5}%"></i></div><span>Yang</span><b>${b.score_yinyang>0?"+":""}${b.score_yinyang}</b></div>`:""}<p>${esc(b.kibbe_pourquoi||"")}</p>
  ${Array.isArray(b.essences)&&b.essences.length?`<p class="step" style="margin-top:22px">Tes essences de style</p>${b.essences.filter(e=>e&&e.pct>0).sort((x,y)=>y.pct-x.pct).map(e=>`<div class="ess"><span>${esc(e.nom)}</span><div><i style="width:${Math.min(100,+e.pct||0)}%"></i></div><b>${+e.pct||0}%</b></div>`).join("")}`:""}
  <p class="note">Le Kibbe dépend aussi de ta structure osseuse : c’est une estimation à partir de ta photo.</p>`:""}`,
- say:"Ta morphologie est "+String(b.forme).toLowerCase()+". "+b.proportions+" Pour te mettre en valeur : "+b.conseils+(b.kibbe?" Et ton type Kibbe est "+b.kibbe+". "+(b.kibbe_pourquoi||""):""),foot:nextBtn()}},
+ say:BL3({fr:"Ta morphologie est ",en:"Your body shape is ",ar:"شكل جسمچ "})+((S.lang||"fr")==="fr"?String(b.forme).toLowerCase():tr(b.forme))+". "+(b.proportions||"")+" "+(b.conseils?BL3({fr:"Pour te mettre en valeur : ",en:"To flatter your figure: ",ar:"عشان تبرزين جمالچ: "})+b.conseils:"")+(b.kibbe?" "+BL3({fr:"Et ton type Kibbe est ",en:"And your Kibbe type is ",ar:"ونوع كيبي مالچ "})+tr(b.kibbe)+". "+(b.kibbe_pourquoi||""):""),foot:nextBtn()}},
 r_kibbe:()=>{if(S.wait&&S.wait.corps)return waitPage("corps");const b=ok("corps");if(!b)return missing("corps",S.res.corps);
  return {step:"Résultat 3 sur 4",html:`<p class="step">Ton type Kibbe</p><div class="big">${esc(b.kibbe)}</div><p>${esc(b.kibbe_pourquoi)}</p>
  <p class="note">Le Kibbe dépend aussi de ta structure osseuse : c’est une estimation à partir de ta photo.</p>`,
- say:"Ton type Kibbe est "+b.kibbe+". "+b.kibbe_pourquoi,foot:nextBtn()}},
+ say:BL3({fr:"Ton type Kibbe est ",en:"Your Kibbe type is ",ar:"نوع كيبي مالچ "})+tr(b.kibbe)+". "+(b.kibbe_pourquoi||""),foot:nextBtn()}},
 r_couleurs:()=>{if(S.wait&&S.wait.couleurs)return waitPage("couleurs");const s=season();if(!s)return missing("couleurs",S.res.couleurs);const c=S.res.couleurs,d=SEASONS[s];
  return {step:"Résultat 3 sur 3",html:`<p class="step">Ta saison</p><div class="big">${esc(s)}</div><p>${esc(d.t)} ${esc(c.pourquoi||"")}</p>
  <div class="pal">${d.c.map((x,i)=>`<div style="background:${x[0]};color:${lum(x[0])>0.55?"#1E1A1D":"#fff"};animation-delay:${i*80}ms">${x[1]}</div>`).join("")}</div>
  <div class="row"><span>À éviter</span>${esc(d.e)}</div>${c.sous_ton?`<div class="row"><span>Sous-ton</span>${esc(cap(c.sous_ton))}${c.indice_T?` · indice T ${esc(String(c.indice_T))}`:""}</div>`:""}${c.contraste?`<div class="row"><span>Contraste</span>${esc(String(c.contraste))}</div>`:""}`,
- say:"Ta saison est "+s+". "+d.t+" "+(c.pourquoi||"")+" Évite "+d.e.charAt(0).toLowerCase()+d.e.slice(1),foot:nextBtn()}},
+ say:BL3({fr:"Ta saison est ",en:"Your season is ",ar:"موسمچ "})+tr(s)+". "+tr(d.t)+" "+(c.pourquoi||"")+" "+((S.lang||"fr")==="fr"?"Évite "+d.e.charAt(0).toLowerCase()+d.e.slice(1):BL3({en:"Avoid: ",ar:"تجنّبي: "})+tr(d.e)),foot:nextBtn()}},
 r_fin:()=>({html:`<p class="step">C’est prêt</p><h1>Ton profil est prêt, ${NOM}.</h1><p class="sub">${esc(PROFIL())}</p>`,
  say:"Ton profil est prêt, "+NOM+". Je le garde pour toi : tu le retrouves sur la page d’accueil.",
  foot:`<button class="btn" data-home>Retour à l’accueil</button>`}),
 fiche:()=>{const keep=S.flow;S.flow=null;const part=(f,t)=>{const r=P[f]();return `<p class="fiche-h">${t}</p>`+r.html.replace(/<p class="step"[^>]*>[^<]*<\/p>/,"")};
  const h=(ok("visage")?part("r_visage","Ton visage"):"")+(ok("corps")?part("r_corps","Ta silhouette"):"")+(season()?part("r_couleurs","Tes couleurs"):"");S.flow=keep;
  return {back:true,html:`<p class="step">Ma fiche</p><h1>Mon style, ${esc(cap(NOM))}</h1><p class="sub">${esc(PROFIL())}</p>${h.replace('<p class="fiche-h">','<p class="fiche-h" style="border:0;padding-top:0;margin-top:20px">')}`,
- say:"Voici ta fiche style, "+NOM+". "+PROFIL()+".",foot:`<button class="btn ghost" data-profil>Modifier dans mon profil</button>`}},
+ say:BL3({fr:"Voici ta fiche style, ",en:"Here’s your style profile, ",ar:"هذا ملف ستايلچ يا "})+NOM+". "+((S.lang||"fr")==="fr"?PROFIL():PROF_SAY())+".",foot:`<button class="btn ghost" data-profil>Modifier dans mon profil</button>`}},
 profil:()=>{const i=S.info||{},has=!!i.email,pick=(k,l)=>`<div class="row"><span>${l}</span>${esc(k||"—")}</div>`;
  return {dock:1,html:`<h1>Mon profil</h1>
  <div class="who"><div class="av">${esc((S.nom||"M").charAt(0).toUpperCase())}</div><div><b>${esc(S.nom||"Ma belle")}</b><span>${esc(i.email||"Ajoute ton email pour créer ton compte")}</span></div></div>
@@ -1391,7 +1396,7 @@ abo:()=>{const c=plan(),why=PW_WHY[S.pwWhy]||"",card=(k,prix,txt)=>`<button clas
 infos:()=>{const d=S.idraft||(S.idraft={...S.info,nom:S.nom||"",styles:[...(S.info.styles||[])]});
  const chips=(k,list,multi)=>`<div class="pk" data-k="${k}"${multi?' data-multi':''}>${list.map(v=>`<button type="button" data-pk="${esc(v)}" aria-pressed="${multi?(d[k]||[]).includes(v):d[k]===v}">${esc(v)}</button>`).join("")}</div>`;
  return {back:true,html:`<p class="step">Mon profil</p><h1>Mes informations</h1><p class="sub">Seul ton email est obligatoire. Le reste m’aide à te conseiller plus juste.</p>
- <label class="lbl" for="i_email">Email</label><input class="field" id="i_email" data-i="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" placeholder="toi@exemple.com" value="${esc(d.email||"")}">
+ <label class="lbl" for="i_email">Email</label><input class="field" id="i_email" data-i="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" placeholder="you@example.com" value="${esc(d.email||"")}">
  <label class="lbl" for="i_nom">Prénom <small>· facultatif</small></label><input class="field" id="i_nom" data-i="nom" autocomplete="given-name" placeholder="Ton prénom" value="${esc(d.nom||"")}">
  <div class="two"><div><label class="lbl" for="i_taille">Taille</label><div class="unit"><input class="field" id="i_taille" data-i="taille" inputmode="numeric" placeholder="165" value="${esc(d.taille||"")}"><i>cm</i></div></div>
  <div><label class="lbl" for="i_poids">Poids <small>· facultatif</small></label><div class="unit"><input class="field" id="i_poids" data-i="poids" inputmode="decimal" placeholder="60" value="${esc(d.poids||"")}"><i>kg</i></div></div></div>
@@ -1413,7 +1418,7 @@ o_res:()=>{const o=ok("outfit");if(!o)return missing("outfit",S.res.outfit);
  return {html:`<p class="step">Outfit check${S.occ?" · "+esc(S.occ):""}</p><div class="big"><span id="note">0</span><span style="font-size:28px"> / 10</span></div><p>${esc(o.resume)}</p>
  <h2>Ce qui marche</h2><ul class="tips">${(o.points_forts||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
  <h2>À changer</h2><ul class="tips">${(o.changements||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`,
- say:"Ta tenue a "+o.note+" sur 10. "+o.resume+" Ce que je changerais : "+(o.changements||[]).join(". "),count:+o.note,
+ say:BL3({fr:"Ta tenue a "+o.note+" sur 10. ",en:"Your outfit gets "+o.note+" out of 10. ",ar:"لبسچ واخذ "+o.note+" من ١٠. "})+(o.resume||"")+((o.changements||[]).length?" "+BL3({fr:"Ce que je changerais : ",en:"What I’d change: ",ar:"اللي بغيّره: "})+o.changements.join(". "):""),count:+o.note,
  foot:`<button class="btn" data-profil>Retour à mon profil</button><button class="link" data-go="o_photo">Noter une autre tenue</button>`}},
 boutique:()=>{const s=season(),cols=s?SEASONS[s].c.filter(x=>!/Noir|Blanc/.test(x[1])).map(x=>x[1].toLowerCase()):[];
  const fits=CATALOGUE.map(a=>({a,f:artFit(a)})),known=fits[0].f.known,top=known?fits.filter(x=>x.f.sc>=2).sort((x,y)=>y.f.sc-x.f.sc).slice(0,4):[];
@@ -1503,6 +1508,23 @@ const WAITS={o_run:["Je regarde tes couleurs…","Je regarde la coupe et les pro
 let WAITT=0;function waitTick(){clearInterval(WAITT);const m=$("#waitmsg"),b=$("#waitbar");if(!m)return;const L=WAITS[S.page]||WAITS.def,t0=Date.now();let i=0;
  m.textContent=tr(L[0]);WAITT=setInterval(()=>{if(!document.body.contains(m))return clearInterval(WAITT);const sec=(Date.now()-t0)/1000;
   if(b)b.style.width=Math.min(94,100*(1-Math.exp(-sec/9)))+"%";const n=Math.min(L.length-1,Math.floor(sec/3));if(n!==i){i=n;m.textContent=tr(L[n])}},250)}
+
+// Résultats gardés dans une autre langue (analyse faite en français puis passage en arabe, par ex.) :
+// on fait traduire leurs textes une seule fois. Les valeurs de référence (forme, saison, Kibbe…) restent telles quelles.
+const KEEPF=["forme","saison","sous_ton","kibbe","somatotype","categorie","note","ratios","indice_T","contraste","quiz","fail","lang","hex","erreur"];
+function txtLang(o){const t=JSON.stringify(o||{});if(/[؀-ۿ]/.test(t))return "ar";return /\b(the|your|you|and|with|this)\b/i.test(t)&&!/\b(les|des|ton|ta|avec|pour)\b/i.test(t)?"en":"fr"}
+let RTR=false,RTRT=0;
+async function resLang(){const l=S.lang||"fr";if(RTR||Date.now()-RTRT<60000)return;
+ const src={};["visage","corps","couleurs","outfit"].forEach(k=>{const r=S.res[k];if(!r||r.fail||r.erreur)return;const o={};for(const f in r)if(!KEEPF.includes(f))o[f]=r[f];
+  if(Object.keys(o).length&&(r.lang||txtLang(o))!==l)src[k]=o;else if(!r.lang)r.lang=l});
+ if(MKR&&(MKR.lang||"fr")!==l)src.routine={resume:MKR.resume,etapes:MKR.etapes};
+ if(!Object.keys(src).length)return;const sm=await getSample();if(!sm||!sm.json)return;RTR=true;
+ try{const r=await sm.json("Traduis tous les textes de cet objet JSON. Garde exactement les mêmes clés et la même structure (listes, objets imbriqués), ne change pas le sens et ne raccourcis pas. "+FMT+"Objet à traduire : "+JSON.stringify(src));
+  if(!r||r.erreur)throw 0;
+  Object.keys(src).forEach(k=>{if(k==="routine"){if(r.routine&&Array.isArray(r.routine.etapes)){MKR.resume=String(r.routine.resume||MKR.resume);MKR.etapes=r.routine.etapes.map((x,i)=>({...MKR.etapes[i],...x}));}MKR.lang=l;try{localStorage.setItem("monstyle_mk",JSON.stringify(MKR))}catch(e){}return}
+   if(r[k]&&typeof r[k]==="object")Object.assign(S.res[k],r[k]);S.res[k].lang=l});
+  save();if((S.lang||"fr")===l)render(false)}
+ catch(e){RTRT=Date.now()}finally{RTR=false}}
 function render(sayIt){
  // Nouvelle page : la page d’avant se tait avant que la nouvelle parle.
  if(S.page!==S.lastPg){if(S.lastPg!==undefined)stopVoice();S.lastPg=S.page}
@@ -1518,6 +1540,7 @@ function render(sayIt){
  if(window.onPage)window.onPage(S.page);
  if(sayIt&&p.say)say(p.say);
  waitTick();
+ setTimeout(resLang,50);
  window.scrollTo(0,0);
 }
 // ===== n8n : chaque nouvelle inscrite est envoyée au workflow « My Style – Nouvelles inscrites » =====

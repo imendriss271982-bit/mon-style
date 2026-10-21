@@ -608,7 +608,7 @@ const I18N_D=[
 ["L’analyse a échoué. Réessaie.","The analysis failed. Try again.","التحليل ما زبط. جربي مرة ثانية."],
 ["L’analyse par photo n’est pas disponible ici.","Photo analysis isn’t available here.","التحليل بالصور مو متوفر هني."],
 ["Photo trop lourde.","Photo too large.","الصورة كبيرة وايد."],
-["Dramatic","Dramatic","Dramatic"],["Soft Dramatic","Soft Dramatic","Soft Dramatic"],["Flamboyant Natural","Flamboyant Natural","Flamboyant Natural"],["Soft Natural","Soft Natural","Soft Natural"],["Dramatic Classic","Dramatic Classic","Dramatic Classic"],["Soft Classic","Soft Classic","Soft Classic"],["Pure Romantic","Pure Romantic","Pure Romantic"],["Theatrical Romantic","Theatrical Romantic","Theatrical Romantic"],["Soft Gamine","Soft Gamine","Soft Gamine"],["Natural","Natural","Natural"],["Classic","Classic","Classic"],["Romantic","Romantic","Romantic"],["Gamine","Gamine","Gamine"],["Ingenue","Ingenue","Ingenue"],["Ethereal","Ethereal","Ethereal"],["High Fashion","High Fashion","High Fashion"],["Yin","Yin","Yin"],["Yang","Yang","Yang"],
+["Dramatic","Dramatic","دراماتيك"],["Soft Dramatic","Soft Dramatic","سوفت دراماتيك"],["Flamboyant Natural","Flamboyant Natural","فلامبوينت ناتشرال"],["Soft Natural","Soft Natural","سوفت ناتشرال"],["Dramatic Classic","Dramatic Classic","دراماتيك كلاسيك"],["Soft Classic","Soft Classic","سوفت كلاسيك"],["Pure Romantic","Pure Romantic","بيور رومانتيك"],["Theatrical Romantic","Theatrical Romantic","ثياتريكال رومانتيك"],["Soft Gamine","Soft Gamine","سوفت غامين"],["Natural","Natural","ناتشرال"],["Classic","Classic","كلاسيك"],["Romantic","Romantic","رومانتيك"],["Gamine","Gamine","غامين"],["Ingenue","Ingenue","إنجينو"],["Ethereal","Ethereal","إيثيريال"],["High Fashion","High Fashion","هاي فاشن"],["Yin","Yin","ين"],["Yang","Yang","يانغ"],
 [". Montre-moi celle d’aujourd’hui.",". Show me today’s.",". وريني لوك اليوم."],
 ["›","›","‹"],
 // ——— Formules (essai gratuit, abonnements, achats) ———
@@ -629,7 +629,7 @@ const I18N_D=[
 ["29 QAR / mois","29 QAR / month","29 ريال / شهر"],
 ["79 QAR / mois","79 QAR / month","79 ريال / شهر"],
 ["249 QAR / an","249 QAR / year","249 ريال / سنة"],
-["toutes les analyses, Outfit check, beauté, 20 min avec Aura","all analyses, Outfit check, beauty, 20 min with Aura","كل التحاليل، Outfit check، الجمال، 20 دقيقة مع أورا"],
+["toutes les analyses, Outfit check, beauté, 20 min avec Aura","all analyses, Outfit check, beauty, 20 min with Aura","كل التحاليل، تقييم اللوك، الجمال، 20 دقيقة مع أورا"],
 ["tout l’Essentiel + 60 min avec Aura + garde-robe complète","everything in Essential + 60 min with Aura + full wardrobe","كل الأساسية + 60 دقيقة مع أورا + الخزانة كاملة"],
 ["l’Essentiel pour toute l’année, 2 mois offerts","Essential for the whole year, 2 months free","الأساسية لسنة كاملة، شهرين هدية"],
 ["49 QAR · ta palette complète à garder","49 QAR · your full palette to keep","49 ريال · ألوانچ كاملة تحتفظين فيها"],
@@ -639,7 +639,7 @@ const I18N_D=[
 ["{0} min avec Aura restantes ce mois-ci · voir les formules","{0} min with Aura left this month · see plans","{0} دقيقة مع أورا باقية هالشهر · شوفي الباقات"],
 ["Ton analyse du visage gratuite est faite. Les autres analyses sont réservées aux abonnées.","Your free face analysis is done. The other analyses are for subscribers.","تحليل الوجه المجاني خلص. باقي التحاليل للمشتركات."],
 ["Tu as déjà utilisé ton analyse gratuite du visage.","You have already used your free face analysis.","استخدمتي تحليل الوجه المجاني."],
-["L’Outfit check est réservé aux abonnées.","Outfit check is for subscribers.","Outfit check للمشتركات."],
+["L’Outfit check est réservé aux abonnées.","Outfit check is for subscribers.","تقييم اللوك للمشتركات."],
 ["Tu as utilisé tes minutes avec Aura ce mois-ci.","You have used your minutes with Aura this month.","خلصتي دقايقچ مع أورا هالشهر."],
 ["Tu as utilisé tes messages gratuits ce mois-ci.","You have used your free messages this month.","خلصتي رسايلچ المجانية هالشهر."],
 ["La garde-robe complète est réservée au VIP.","The full wardrobe is for VIP.","الخزانة الكاملة لـ VIP."],
@@ -685,6 +685,9 @@ const I18N_D=[
 ["Le make-up est très demandé en ce moment. Réessaie dans une minute.","Make-up is in high demand right now. Try again in a minute.","المكياج عليه طلب وايد الحين. جرّبي بعد دقيقة."],
 ["Je n'ai pas réussi à créer ton make-up avec cette photo. Réessaie avec une photo de face, bien éclairée.","I couldn’t create your make-up with this photo. Try again with a well-lit photo, straight on.","ما قدرت أسوي مكياجچ بهالصورة. جرّبي صورة من قدّام وفي إضاءة حلوة."],
 ["Trop de demandes. Réessaie dans un instant.","Too many requests. Try again in a moment.","طلبات وايد. جرّبي بعد شوي."],
+["La routine n’est pas disponible ici.","The routine isn’t available here.","الروتين مو متوفر هني."],
+["Je n’ai pas réussi à créer ta routine. Réessaie.","I couldn’t create your routine. Try again.","ما قدرت أسوي روتينچ. جرّبي مرة ثانية."],
+["Je n’ai pas réussi à créer ton make-up. Réessaie.","I couldn’t create your make-up. Try again.","ما قدرت أسوي مكياجچ. جرّبي مرة ثانية."],
 // ——— Accueil : My Stylist en vedette ———
 ["Ta styliste IA personnelle","Your personal AI stylist","الستايلست الذكية الخاصة فيچ"],
 ["👑 {0} min ce mois-ci","👑 {0} min this month","👑 {0} دقيقة هالشهر"],
@@ -726,7 +729,7 @@ const I18N_HTML={instL:{
   const k=K(n);let v=EX[l].get(k);if(v!=null)return v;
   for(const [re,t] of PAT[l]){const m=k.match(re);if(m){
     // retrouve les morceaux avec leur casse d'origine
-    const mo=n.match(new RegExp(re.source,"i"))||m;
+    const mo=n.replace(/[’']/g,"'").match(new RegExp(re.source,"i"))||m;
     return t.replace(/\{(\d)\}/g,(_,i)=>tr(mo[+i+1],l,depth+1))}}
   // Emoji ou symbole devant : « 💼 Travail »
   const em=n.match(/^([^\p{L}\p{N}]+)(\p{L}.*)$/u);if(em){const t=tr(em[2],l,depth+1);if(t!==em[2])return em[1]+t}
