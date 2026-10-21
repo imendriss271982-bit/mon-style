@@ -259,6 +259,19 @@ nav.dock button[aria-current="true"]{color:var(--accent)}
 #cam .bar{display:flex;gap:10px;justify-content:center;align-items:center;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px));background:rgba(0,0,0,.85)}
 #cam .bar button{border:0;border-radius:999px;padding:12px 16px;font-size:15px;background:#2a2a2a;color:#fff;cursor:pointer}
 #cam .bar button.on{background:var(--accent);color:var(--on)}
+#cam .bar{flex:none;height:auto}
+#cam.guided .vw{position:relative;flex:1;min-height:0;overflow:hidden}
+#cam.guided .vw video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#cam .gd{position:absolute;inset:9% 6% 3%;pointer-events:none;display:grid;place-items:center}
+#cam .gd.gf{inset:12% 10% 0}
+#cam .gd svg{width:100%;height:100%;fill:none;stroke:#fff;stroke-width:1.1;stroke-dasharray:4 3;vector-effect:non-scaling-stroke;filter:drop-shadow(0 0 3px rgba(0,0,0,.7));transition:stroke .3s}
+#cam .gd.ok svg{stroke:#BDF0C8}
+#cam .tipb{position:absolute;left:14px;right:14px;top:calc(14px + env(safe-area-inset-top,0px));background:rgba(0,0,0,.6);color:#fff;border-radius:14px;padding:10px 14px;font-size:15px;line-height:1.35;text-align:center;transition:background .3s}
+#cam .tipb.dark{background:rgba(125,46,74,.92)}
+button.lb{font:inherit;width:100%}
+.lumi{display:flex;align-items:center;gap:10px;background:var(--soft);border-radius:14px;padding:10px 14px;margin:0 0 10px;font-size:14px;color:var(--ink)}
+.lumi svg{width:22px;height:22px;flex:none;fill:none;stroke:var(--gold);stroke-width:1.8;stroke-linecap:round}
+.note.dark{background:#FBE3EA;color:#7D2E4A;margin:0 0 10px}
 #cam .bar .shoot{width:68px;height:68px;padding:0;border-radius:50%;background:#fff;border:5px solid rgba(255,255,255,.4);background-clip:padding-box}
 .clip{width:52px;height:52px;flex:none;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--accent);display:grid;place-items:center;cursor:pointer}
 .clip svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
@@ -451,6 +464,27 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 
 /* ===== Capsule garde-robe ===== */
 .cap h2{margin-top:8px}
+.mk-card{text-align:center}
+.mk-cap{margin:0 0 6px;color:var(--muted);font-size:14px}
+.mkf{display:block;margin:0 auto;width:min(230px,70%);height:auto}
+.mkf.sm{width:100%;max-width:120px}
+.mkf.md{width:100%}
+.mkf.st{width:64px;flex:none;margin:0}
+.mk-leg{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 14px;margin-top:10px;font-size:14px}
+.mk-leg span{display:flex;align-items:center;gap:6px}
+.mk-leg i,.mk-dots i{width:16px;height:16px;border-radius:50%;box-shadow:0 0 0 2px #fff,0 0 0 3px var(--line)}
+.mk-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 16px}
+.mk-z{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:12px;text-align:center}
+.mk-z b{display:block;margin-top:6px}
+.mk-z details,.mk-row details{font-size:14px;color:var(--muted);text-align:start}
+.mk-z summary,.mk-row summary{cursor:pointer;color:var(--accent);text-align:center;margin-top:4px}
+.mk-looks{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mk-row{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:6px 12px;padding:12px 0;border-top:1px solid var(--line)}
+.mk-row details{grid-column:1/-1}
+.mk-dots{display:flex;gap:10px;justify-content:flex-end}
+.mk-dots i{width:26px;height:26px}
+.mk-step{display:flex;gap:12px;align-items:flex-start}
+.mk-num{width:44px;height:44px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-weight:600;color:var(--accent);flex:none}
 .cap-pal{display:flex;gap:6px;margin:-4px 0 14px}.cap-pal i{width:24px;height:24px;border-radius:50%;box-shadow:0 0 0 2px #fff,0 0 0 3px var(--line)}
 .cap-row{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 10px;margin:0 -2px 18px;-webkit-overflow-scrolling:touch}
 .cap-p{flex:none;scroll-snap-align:start;width:96px;border-radius:18px;background:var(--soft);padding:14px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
@@ -774,8 +808,9 @@ const IC={face:'<svg viewBox="0 0 24 24"><circle cx="12" cy="10" r="5"/><path d=
 const OCCS=[["Travail","💼"],["Casual","☕"],["Soirée","✨"],["Mariage","💍"],["Rendez-vous","🌹"],["Voyage","✈️"]];
 function photoPage(k,o){
  return {step:o.step,html:`<p class="step">${o.step}</p><h1>${o.t}</h1><p class="sub">${o.c}</p>
+ ${S.dark&&S.dark[k]&&S.url[k]?`<div class="note dark">${DARK_MSG}</div>`:`<div class="lumi" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg><span>Mets-toi face à une fenêtre ou une belle lumière.</span></div>`}
  <div class="photo ${S.busy===k?"scan":""}">${S.url[k]?`<img src="${S.url[k]}" alt="Ta photo">`:IC[o.ic]+`<span style="display:block;margin-top:10px">${o.ph}</span>`}</div>
- <div class="two"><label class="lb pri">Prendre la photo<input type="file" accept="image/*" capture="${o.cam}" data-f="${k}" hidden></label><label class="lb">Galerie<input type="file" accept="image/*" data-f="${k}" hidden></label></div>`,
+ <div class="two"><button type="button" class="lb pri" data-acam="${k}">Prendre la photo</button><input type="file" accept="image/*" capture="${o.cam}" data-f="${k}" id="nat_${k}" hidden><label class="lb">Galerie<input type="file" accept="image/*" data-f="${k}" hidden></label></div>`,
  say:o.say,foot:`<button class="btn" data-next ${S.file[k]?"":"disabled"}>${o.b}</button>`};
 }
 
@@ -875,7 +910,9 @@ const BX={
  etS:{fr:"Les gestes qui donnent de l’allure, partout : au travail, en soirée, dans un majlis.",en:"The gestures that give you poise everywhere: at work, at a party, in a majlis.",ar:"الحركات اللي تعطيچ هيبة وأناقة في كل مكان: الدوام، السهرة، المجلس."},
  bien:{fr:"Les bons gestes",en:"Do",ar:"الصح"},eviter:{fr:"À éviter",en:"Avoid",ar:"تجنّبي"},ecoute:{fr:"Aura m’explique",en:"Aura explains",ar:"أورا تشرح لي"},
  pour:{fr:"Pour",en:"For",ar:"لـ"},
- achat:{fr:"Trouver le produit",en:"Find the product",ar:"لقي المنتج"}
+ achat:{fr:"Trouver le produit",en:"Find the product",ar:"لقي المنتج"},
+ geste:{fr:"Le geste",en:"How to",ar:"الطريقة"},carte:{fr:"Ton visage, zone par zone",en:"Your face, zone by zone",ar:"وجهچ، منطقة منطقة"},
+ look:{fr:"Ton look dans tes couleurs",en:"Your look in your colours",ar:"لوكچ بألوانچ"}
 };
 // Formes de visage (les 9 formes de la méthode) → où poser contouring, blush, highlighter, et la ligne des sourcils.
 const MK_FACE={
@@ -899,6 +936,63 @@ const MK_SEAS={
  Automne:{fr:["Terracotta, brique, nude caramel.","Pêche bronze ou terracotta.","Bronze, cuivre, kaki, brun chaud.","Fond de teint sous-ton doré ou olive, fini naturel."],en:["Terracotta, brick, caramel nude.","Bronze peach or terracotta.","Bronze, copper, khaki, warm brown.","Golden or olive-undertone foundation, natural finish."],ar:["تيراكوتا، طوبي، نود كراميل.","خوخي برونزي أو تيراكوتا.","برونزي، نحاسي، كاكي، بني دافي.","كريم أساس بأندرتون ذهبي أو زيتوني ولمسة طبيعية."],q:"rouge à lèvres terracotta"},
  Hiver:{fr:["Rouge bleuté, fuchsia, bordeaux.","Rose froid ou framboise.","Charbon, argent, prune, liner noir intense.","Fond de teint sous-ton rosé ou neutre, fini net."],en:["Blue-red, fuchsia, burgundy.","Cool pink or raspberry.","Charcoal, silver, plum, intense black liner.","Pink or neutral-undertone foundation, crisp finish."],ar:["أحمر مزرّق، فوشيا، عنابي.","وردي بارد أو توتي.","فحمي، فضي، برقوقي، وآيلاينر أسود قوي.","كريم أساس بأندرتون وردي أو محايد ولمسة واضحة."],q:"rouge à lèvres rouge bleuté"}
 };
+// ===== Make-up en images : visage dessiné selon la forme, zones colorées (contouring, blush, highlighter, sourcils, yeux, lèvres) =====
+const MK_HEX={Printemps:{l:["#F2735E","#F59E85","#E8687F"],b:["#F7A58B","#F4B183"],e:["#B98B4E","#E8D3A9","#3FB5A8"],t:["#F0C9A4","#E3B48B"]},
+ "Été":{l:["#E6A1B5","#C25A7C","#B07AA1"],b:["#E7A4B6","#D98CA5"],e:["#8B7D74","#B6A6D6","#8E5A7D"],t:["#EDC9BF","#DDB3A4"]},
+ Automne:{l:["#C2603F","#9E3B2E","#C08A68"],b:["#D98B62","#C46A4A"],e:["#A0703A","#B5653A","#6F6B3A"],t:["#E2B48C","#C99A6E"]},
+ Hiver:{l:["#B3123A","#D12C7A","#6D1A36"],b:["#D9617E","#C2416A"],e:["#3A3A40","#BFC3CC","#6B2D5C"],t:["#E9C8BC","#D6B09F"]}};
+// Proportions de chaque forme : demi-largeur front, pommettes, mâchoire, menton ; haut et bas du visage.
+const MK_GEO={ovale:[30,34,25,10,14,116],rond:[33,37,32,15,20,110],carre:[34,35,34,19,18,110],rect:[32,33,32,18,8,118],oblong:[29,30,27,12,6,120],
+ coeur:[37,35,22,5,14,116],diamant:[24,37,23,6,12,116],hexa:[28,37,30,12,14,114],poire:[26,33,37,17,16,112]};
+// Zones par forme : [contouring], [blush], [highlighter], sourcils (d'après les conseils écrits de MK_FACE).
+const MK_ZONES={ovale:[["leger"],["tempes"],["pom","nez","cupidon"],"doux"],rond:[["tempes","souspom"],["tempes"],["front","nez","menton"],"haut"],
+ carre:[["machoire","tempes"],["pomme"],["front","menton"],"rond"],rect:[["racine","sousmenton","machoire"],["horiz"],["pomh"],"droit"],
+ oblong:[["racine","sousmenton"],["horiz"],["pomh"],"droit"],coeur:[["tempes","leger"],["arriere"],["menton","front"],"rond"],
+ diamant:[["pointe","menton"],["arriere"],["front","menton"],"rond"],hexa:[["pointe","machoire"],["pomme"],["front","menton"],"rond"],
+ poire:[["machoire"],["haut"],["front","tempes"],"etire"]};
+let MKID=0;
+function mkFacePath(g){const [fw,cw,jw,chw,top,bot]=g,jy=Math.min(92,bot-16);
+ const R=[[50,top],[50+fw*.55,top+2],[50+fw,top+18],[50+cw,58],[50+jw,jy],[50+chw,bot-5]],L=R.slice(1).reverse().map(([x,y])=>[100-x,y]);
+ const P=[...R,[50,bot],...L],n=P.length,f=v=>v.toFixed(1);let d=`M${f(P[0][0])} ${f(P[0][1])}`;
+ for(let i=0;i<n;i++){const a=P[(i-1+n)%n],b=P[i],c=P[(i+1)%n],e=P[(i+2)%n];
+  d+=`C${f(b[0]+(c[0]-a[0])/6)} ${f(b[1]+(c[1]-a[1])/6)} ${f(c[0]-(e[0]-b[0])/6)} ${f(c[1]-(e[1]-b[1])/6)} ${f(c[0])} ${f(c[1])}`}
+ return d+"Z"}
+// lay : couches à colorer (contour, blush, hl, brow, eyes, lips, teint) ; col : couleurs de la saison.
+function mkSvg(fk,lay,col,cls){const g=MK_GEO[fk]||MK_GEO.ovale,Z=MK_ZONES[fk]||MK_ZONES.ovale,[fw,cw,jw,,top,bot]=g,jy=Math.min(92,bot-16),id="mk"+(++MKID),on=k=>lay.includes(k);
+ col=col||{};const bl=col.b||"#E8899A",li=col.l||"#C9677A",ey=col.e||"#B98B4E",te=col.t||"#F1D3C2";
+ const two=(x,y,rx,ry,r,extra)=>`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" transform="rotate(${r||0} ${x} ${y})" ${extra||""}/><ellipse cx="${100-x}" cy="${y}" rx="${rx}" ry="${ry}" transform="rotate(${-(r||0)} ${100-x} ${y})" ${extra||""}/>`;
+ const one=(x,y,rx,ry)=>`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}"/>`;
+ const C={leger:two(50+cw-9,72,9,2.4,-35),souspom:two(50+cw-9,72,11,3.4,-35),tempes:two(50+fw-4,top+24,4,9,8),machoire:two(50+jw-3,jy,4.5,9,-22),
+  racine:one(50,top+3,fw*.8,4),sousmenton:one(50,bot-1,11,3),menton:one(50,bot-2,8,2.6),pointe:two(50+cw-3,60,4,6.5,0)};
+ const B={tempes:two(50+cw-10,63,8,3.4,-30),pomme:two(50+cw-14,71,6,6),horiz:two(50+cw-10,69,10,3.5),arriere:two(50+cw-7,73,7,3,-15),haut:two(50+cw-10,63,8,3.4,-28)};
+ const H={pom:two(50+cw-11,63,5,1.6,-20),pomh:two(50+cw-10,63.5,6,1.5),nez:one(50,70,1.2,8),cupidon:one(50,86.3,2.2,.9),front:one(50,Math.max(top+16,38),6,3),
+  menton:one(50,bot-8,3.5,1.8),tempes:two(50+fw-5,top+24,3,5)};
+ const BW={doux:"M55 53Q63 49.5 72 52",haut:"M55 53L66 47Q70 46.5 73 51",rond:"M55 53Q64 46.5 73 53",droit:"M55 52Q64 50.5 73 51.5",etire:"M55 53Q65 48.5 76.5 52"}[Z[3]];
+ const brow=`<path d="${BW}"/><path d="${BW}" transform="translate(100 0) scale(-1 1)"/>`;
+ const lid=`<path d="M55.5 60Q63 50.5 72.5 59Q63 56 55.5 60Z"/><path d="M44.5 60Q37 50.5 27.5 59Q37 56 44.5 60Z"/>`;
+ const lips=`<path d="M41.5 89Q45 85.5 48 86.3Q50 87 52 86.3Q55 85.5 58.5 89Q54 93.5 50 93.5Q46 93.5 41.5 89Z"/>`;
+ const zone=(k,list,src)=>(list||[]).map(z=>src[z]||"").join("");
+ return `<svg class="${cls||"mkf"}" viewBox="0 0 100 ${bot+6}" role="img" aria-hidden="true"><defs><clipPath id="${id}c"><path d="${mkFacePath(g)}"/></clipPath>
+  <filter id="${id}b" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.6"/></filter><filter id="${id}g" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation=".9"/></filter></defs>
+  <path d="${mkFacePath(g)}" fill="${on("teint")?te:"#F3DCCF"}" stroke="#7D2E4A" stroke-width=".9"/>
+  <g clip-path="url(#${id}c)">
+   ${on("contour")?`<g fill="#7A4E3C" opacity=".55" filter="url(#${id}b)">${zone(0,Z[0],C)}</g>`:""}
+   ${on("blush")?`<g fill="${bl}" opacity=".7" filter="url(#${id}b)">${zone(0,Z[1],B)}</g>`:""}
+   ${on("eyes")?`<g fill="${ey}" opacity=".95" filter="url(#${id}g)">${lid}</g>`:""}
+   ${on("hl")?`<g fill="#E9C46A" opacity=".55" filter="url(#${id}b)">${zone(0,Z[2],H)}</g><g fill="#FFFDF4" filter="url(#${id}g)">${zone(0,Z[2],H)}</g><g fill="#D9AE45">${zone(0,Z[2],H).replace(/rx="[\d.]+" ry="[\d.]+"/g,'rx=".6" ry=".6"')}</g>`:""}
+  </g>
+  <g fill="none" stroke="#5A3D32" stroke-linecap="round"><g stroke-width="${on("brow")?2.4:1.4}" ${on("brow")?'stroke="#3B2A24"':""}>${brow}</g>
+   <path d="M56 60Q63 56 71 59.5Q63 63 56 60Z" stroke-width=".8"/><path d="M44 60Q37 56 29 59.5Q37 63 44 60Z" stroke-width=".8"/>
+   <path d="M49 66Q48 74 46.5 77Q50 79 53.5 77" stroke-width=".8" opacity=".7"/></g>
+  <g fill="#3B2A24"><circle cx="63.4" cy="59.6" r="1.7"/><circle cx="36.6" cy="59.6" r="1.7"/></g>
+  <g fill="${on("lips")?li:"#E2B2AE"}" stroke="#9E4A5A" stroke-width=".5">${lips}</g>
+  <path d="M41.5 89Q50 90.6 58.5 89" fill="none" stroke="#9E4A5A" stroke-width=".5"/></svg>`}
+// Étape de la routine → zone à montrer sur le visage.
+function mkStepLay(t){t=String(t||"").toLowerCase();
+ if(/contour|sculpt|كونتور/.test(t))return["contour"];if(/blush|joue|بلاشر|cheek/.test(t))return["blush"];if(/highlight|enlumin|illumin|هايلايت/.test(t))return["hl"];
+ if(/sourcil|brow|حواجب/.test(t))return["brow"];if(/l[eè]vre|rouge|gloss|lip|روج|شفا/.test(t))return["lips"];
+ if(/yeux|fard|paupi|mascara|liner|eye|ombre|عيون|ظلال|ماسكرا/.test(t))return["eyes"];
+ if(/teint|fond|base|primer|anti.?cern|correct|poudre|foundation|concealer|powder|أساس|بودرة|كونسيلر/.test(t))return["teint"];return null}
 // Étiquette : assise, marche, parole. [bons gestes], [à éviter].
 const ETQ=[
  {k:"assise",t:{fr:"S’asseoir",en:"Sitting",ar:"إتيكيت الجلوس"},
@@ -924,14 +1018,24 @@ function beauteMk(){const v=ok("visage"),s=season(),fk=v&&mkFaceKey(v.forme),F=f
  const li=(lab,txt)=>`<li><b>${BL(lab)}${(S.lang||"fr")==="fr"?" :":":"}</b> ${esc(txt)}</li>`;
  let h="";
  if(!v)h+=`<div class="card"><p style="margin:0 0 10px">${BL(BX.noFace)}</p><button class="btn" data-mod="visage">${BL(BX.doFace)}</button></div>`;
- else if(F){const a=BL(F);h+=`<h2>${BL(BX.forme)} · ${esc(tr(cap(v.forme)))}</h2><ul class="tips">${li(BX.contour,a[0])}${li(BX.blush,a[1])}${li(BX.hl,a[2])}${li(BX.sourcils,a[3])}</ul>`}
+ else if(F){const a=BL(F),col=C&&MK_HEX[fam]?{b:MK_HEX[fam].b[0]}:null;
+  const dot=(c,lab)=>`<span><i style="background:${c}"></i>${BL(lab)}</span>`;
+  const mini=(lay,lab,txt)=>`<div class="mk-z">${mkSvg(fk,lay,col,"mkf sm")}<b>${BL(lab)}</b><details><summary>${BL(BX.geste)}</summary><p>${esc(txt)}</p></details></div>`;
+  h+=`<h2>${BL(BX.forme)} · ${esc(tr(cap(v.forme)))}</h2><div class="card mk-card"><p class="mk-cap">${BL(BX.carte)}</p>${mkSvg(fk,["contour","blush","hl","brow"],col)}
+   <div class="mk-leg">${dot("#9A6B57",BX.contour)}${dot(col?col.b:"#E8899A",BX.blush)}${dot("#F3DFA2",BX.hl)}${dot("#3B2A24",BX.sourcils)}</div></div>
+   <div class="mk-grid">${mini(["contour"],BX.contour,a[0])}${mini(["blush"],BX.blush,a[1])}${mini(["hl"],BX.hl,a[2])}${mini(["brow"],BX.sourcils,a[3])}</div>`}
  if(v&&v.makeup)h+=`<div class="card"><b>${BL(BX.analyse)}</b><p style="margin:6px 0 0">${esc(v.makeup)}</p></div>`;
- if(C){const a=BL(C),pal=SEASONS[s].c.slice(0,6);h+=`<h2>${BL(BX.coul)} · ${esc(tr(s))}</h2><div class="cap-pal">${pal.map(x=>`<i style="background:${x[0]}"></i>`).join("")}</div><ul class="tips">${li(BX.levres,a[0])}${li(BX.blush,a[1])}${li(BX.yeux,a[2])}${li(BX.teint,a[3])}</ul>${links(C.q)}`}
+ if(C){const a=BL(C),X=MK_HEX[fam];const row=(lab,arr,txt)=>`<div class="mk-row"><b>${BL(lab)}</b><span class="mk-dots">${arr.map(c=>`<i style="background:${c}"></i>`).join("")}</span><details><summary>${BL(BX.geste)}</summary><p>${esc(txt)}</p></details></div>`;
+  h+=`<h2>${BL(BX.coul)} · ${esc(tr(s))}</h2>`;
+  if(X)h+=`<div class="card mk-card"><p class="mk-cap">${BL(BX.look)}</p><div class="mk-looks">${[0,1,2].map(i=>mkSvg(fk||"ovale",["teint","blush","eyes","lips","brow"],{l:X.l[i],b:X.b[i%2],e:X.e[i],t:X.t[i%2]},"mkf md")).join("")}</div></div>
+   ${row(BX.levres,X.l,a[0])}${row(BX.blush,X.b,a[1])}${row(BX.yeux,X.e,a[2])}${row(BX.teint,X.t,a[3])}`;
+  else h+=`<ul class="tips">${li(BX.levres,a[0])}${li(BX.blush,a[1])}${li(BX.yeux,a[2])}${li(BX.teint,a[3])}</ul>`;
+  h+=links(C.q)}
  else h+=`<div class="card"><p style="margin:0 0 10px">${BL(BX.noSeas)}</p><button class="btn ghost" data-mod="couleurs">${BL(BX.doSeas)}</button></div>`;
  h+=`<h2>${BL(BX.routine)}</h2><p class="sub">${BL(BX.routineS)}</p><div class="fchips"><button data-mkr="jour" ${S.mkBusy?"disabled":""}>${BL(BX.jour)}</button><button data-mkr="soir" ${S.mkBusy?"disabled":""}>${BL(BX.soir)}</button></div>`;
  if(S.mkBusy)h+=`<div class="note">${BL(BX.busy)}</div>`;
  else if(S.mkErr)h+=`<div class="note">${esc(S.mkErr)}</div>`;
- else if(MKR)h+=`<p class="sub">${esc(MKR.resume)}</p>${MKR.etapes.map((e,i)=>`<div class="card"><b>${i+1}. ${esc(e.titre)}</b><p style="margin:6px 0 8px">${esc(e.geste)}</p>${e.recherche?`<details><summary>${BL(BX.achat)}</summary>${links(e.recherche)}</details>`:""}</div>`).join("")}`;
+ else if(MKR)h+=`<p class="sub">${esc(MKR.resume)}</p>${MKR.etapes.map((e,i)=>{const ly=mkStepLay(e.titre+" "+e.geste),X=fam&&MK_HEX[fam];return `<div class="card mk-step">${ly?mkSvg(fk||"ovale",ly,X?{l:X.l[0],b:X.b[0],e:X.e[0],t:X.t[0]}:null,"mkf st"):`<span class="mk-num">${i+1}</span>`}<div><b>${i+1}. ${esc(e.titre)}</b><p style="margin:6px 0 8px">${esc(e.geste)}</p>${e.recherche?`<details><summary>${BL(BX.achat)}</summary>${links(e.recherche)}</details>`:""}</div></div>`}).join("")}`;
  h+=`<button class="btn ghost" data-askmk style="margin-top:14px">${BL(BX.ask)}</button>`;
  return h}
 function beauteEt(){return `<p class="sub">${BL(BX.etS)}</p>`+ETQ.map(e=>`<div class="card"><h2 style="margin-top:0">${BL(e.t)}</h2>
@@ -960,6 +1064,55 @@ async function camGo(){if(CAM.busy)return;CAM.busy=true;const cd=$("#camcd");
   const f=new File([b],"photo.jpg",{type:"image/jpeg"});S.cphoto={file:f,url:URL.createObjectURL(f)};render(false);
   if(window.liveConv&&window.liveConv()){voicePhoto((S.draft||"").trim());return}
   const m=$("#msg");if(m)m.focus();say("Jolie photo ! Dis-moi ce que tu veux savoir, puis touche Envoyer.")},"image/jpeg",.9)}
+// ===== Caméra guidée des analyses : contour du visage ou de la silhouette, et contrôle de la lumière en direct =====
+const DARK_LIM=72; // luminosité moyenne (0 à 255) sous laquelle la photo est trop sombre
+const DARK_MSG="Ta photo est un peu sombre. Reprends-la face à une fenêtre ou une belle lumière : l’analyse sera plus rapide et plus juste.";
+const GUIDE={face:'<svg viewBox="0 0 100 150" preserveAspectRatio="xMidYMid meet"><ellipse cx="50" cy="60" rx="29" ry="38"/><path d="M26 104c-12 5-19 14-22 30M74 104c12 5 19 14 22 30"/></svg>',
+ body:'<svg viewBox="0 0 100 200" preserveAspectRatio="xMidYMid meet"><circle cx="50" cy="17" r="11"/><path d="M44 29v5q-14 1-17 9l-6 54q0 5 4 5l5-40 2 37q-2 23 2 52l3 43h10l2-71h2l2 71h10l3-43q4-29 2-52l2-37 5 40q4 0 4-5l-6-54q-3-8-17-9v-5"/></svg>'};
+GUIDE.outfit=GUIDE.body;
+const GTIP={face:"Place ton visage dans l’ovale.",body:"Place-toi entière dans la silhouette.",outfit:"Place-toi entière dans la silhouette."};
+function lumaOf(src,w,h){try{const c=document.createElement("canvas");c.width=24;c.height=32;const x=c.getContext("2d",{willReadFrequently:true});
+ // on regarde surtout le centre : là où se trouvent le visage ou la silhouette
+ const sw=w*.6,sh=h*.6;x.drawImage(src,(w-sw)/2,(h-sh)/2,sw,sh,0,0,24,32);const d=x.getImageData(0,0,24,32).data;let t=0;
+ for(let i=0;i<d.length;i+=4)t+=.2126*d[i]+.7152*d[i+1]+.0722*d[i+2];return t/(d.length/4)}catch(e){return 255}}
+function lumaFile(f){return new Promise(r=>{const u=URL.createObjectURL(f),im=new Image();im.onload=()=>{const l=lumaOf(im,im.naturalWidth,im.naturalHeight);URL.revokeObjectURL(u);r(l)};im.onerror=()=>{URL.revokeObjectURL(u);r(255)};im.src=u})}
+async function setPhoto(k,f){if(S.url[k])URL.revokeObjectURL(S.url[k]);S.file[k]=f;S.url[k]=URL.createObjectURL(f);S.dark=S.dark||{};S.dark[k]=false;render(false);
+ const l=await lumaFile(f);if(S.file[k]!==f)return;S.dark[k]=l<DARK_LIM;render(false);say(S.dark[k]?DARK_MSG:"Très bien, ta photo est prête.")}
+let ACAM=null;
+function acamOpen(k){if($("#cam"))return;
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){const n=$("#nat_"+k);if(n)n.click();return}
+ stopVoice();ACAM={k,face:"user",delay:k==="face"?3:10,busy:false,tm:0,said:0,dark:null};
+ const d=document.createElement("div");d.id="cam";d.className="guided";d.setAttribute("role","dialog");d.setAttribute("aria-label","Caméra guidée");
+ d.innerHTML=`<div class="vw"><video id="camv" playsinline muted autoplay></video><div class="gd ${k==="face"?"gf":"gb"}" id="camgd" aria-hidden="true">${GUIDE[k]}</div>
+  <div class="tipb" id="camtip" role="status">${GTIP[k]}</div><div class="cd" id="camcd"></div><div class="fl" id="camfl"></div></div>
+  <div class="bar"><button data-acamx aria-label="Fermer">✕</button><button data-acamd="3" class="${ACAM.delay===3?"on":""}">3 s</button><button class="shoot" data-acamgo aria-label="Prendre la photo"></button><button data-acamd="10" class="${ACAM.delay===10?"on":""}">10 s</button><button data-acamf aria-label="Changer de caméra">⟲</button></div>`;
+ document.body.appendChild(d);if(window.i18nApply)i18nApply();acamStart()}
+async function acamStart(){const v=$("#camv");if(!v||!ACAM)return;try{if(CAM.st)CAM.st.getTracks().forEach(t=>t.stop());
+  CAM.st=await navigator.mediaDevices.getUserMedia({video:{facingMode:ACAM.face,width:{ideal:1280},height:{ideal:1920}},audio:false});
+  v.srcObject=CAM.st;v.classList.toggle("mir",ACAM.face==="user");await v.play().catch(()=>{});
+  clearInterval(ACAM.tm);ACAM.tm=setInterval(acamLight,700)}
+ catch(e){const k=ACAM&&ACAM.k;acamClose();const n=k&&$("#nat_"+k);if(n)n.click();else toast("Autorise la caméra pour prendre la photo.")}}
+// Lumière en direct : trop sombre, le bandeau devient rose et Aura le dit (une fois toutes les 10 secondes au plus).
+function acamLight(){const v=$("#camv"),tip=$("#camtip"),gd=$("#camgd");if(!v||!ACAM||!v.videoWidth)return;
+ const dark=lumaOf(v,v.videoWidth,v.videoHeight)<DARK_LIM;if(dark===ACAM.dark&&tip.textContent)return;ACAM.dark=dark;
+ tip.classList.toggle("dark",dark);gd.classList.toggle("ok",!dark);
+ tip.textContent=tr(dark?"Trop sombre : approche-toi d’une fenêtre ou d’une lumière.":GTIP[ACAM.k]);
+ if(dark&&!ACAM.busy&&Date.now()-ACAM.said>10000){ACAM.said=Date.now();say("C’est un peu sombre ici. Mets-toi face à une fenêtre ou une belle lumière, ce sera plus rapide et plus juste.")}}
+function acamClose(){if(ACAM){clearInterval(ACAM.tm);ACAM.busy=false}ACAM=null;if(CAM.st){CAM.st.getTracks().forEach(t=>t.stop());CAM.st=null}const d=$("#cam");if(d)d.remove()}
+async function acamGo(){if(!ACAM||ACAM.busy)return;ACAM.busy=true;stopVoice();const cd=$("#camcd"),k=ACAM.k;
+ for(let n=ACAM.delay;n>0;n--){if(!$("#cam"))return;cd.textContent=n;camBeep(n<=3?880:660);await wait(1000)}
+ if(!$("#cam"))return;cd.textContent="";camBeep(1320,.25);const v=$("#camv"),fl=$("#camfl");
+ const c=document.createElement("canvas");c.width=v.videoWidth||720;c.height=v.videoHeight||1280;const x=c.getContext("2d");
+ if(ACAM.face==="user"){x.translate(c.width,0);x.scale(-1,1)}x.drawImage(v,0,0,c.width,c.height);
+ fl.style.opacity="1";setTimeout(()=>{fl.style.opacity="0"},150);
+ c.toBlob(b=>{acamClose();if(!b){toast("La photo n’a pas marché. Réessaie.");return}setPhoto(k,new File([b],"photo.jpg",{type:"image/jpeg"}))},"image/jpeg",.92)}
+document.addEventListener("click",e=>{const t=e.target.closest("[data-acam],[data-acamx],[data-acamd],[data-acamgo],[data-acamf]");if(!t)return;
+ if(t.dataset.acam){acamOpen(t.dataset.acam);return}
+ if(!ACAM)return;
+ if(t.hasAttribute("data-acamx")){acamClose();return}
+ if(t.dataset.acamd){ACAM.delay=+t.dataset.acamd;document.querySelectorAll("#cam [data-acamd]").forEach(b=>b.classList.toggle("on",b===t));return}
+ if(t.hasAttribute("data-acamgo")){acamGo();return}
+ if(t.hasAttribute("data-acamf")){ACAM.face=ACAM.face==="user"?"environment":"user";acamStart()}});
 // ===== Formules My Style (modèle du rapport) =====
 // Essai gratuit : 1 analyse du visage complète + 1 minute avec Aura par mois + 3 messages écrits.
 // Base 29 QAR / mois, VIP 79 QAR / mois, Annuel 249 QAR / an. Le paiement arrive avec la version Google Play ;
@@ -1040,8 +1193,8 @@ a_intro:()=>({html:`<p class="step">Ton analyse</p><h1>On commence, ${NOM}.</h1>
  <ul class="tips"><li>1. Ton visage : une photo</li><li>2. Ta silhouette et ton Kibbe : une photo</li><li>3. Tes couleurs : quelques questions</li></ul>
  <h2>Pour une analyse juste</h2><ul class="tips"><li>Lumière du jour, près d’une fenêtre</li><li>Visage sans maquillage, cheveux attachés</li><li>Sans lunettes, sans filtre</li></ul>`,
  say:"On commence, "+NOM+". On fait ton analyse une seule fois : ton visage, ta silhouette, puis tes couleurs. Mets-toi près d’une fenêtre, en lumière du jour, sans maquillage et les cheveux attachés.",foot:`<button class="btn" data-next>C’est parti</button><button class="link" data-later>Plus tard</button>`}),
-a_face:()=>photoPage("face",{step:S.flow&&S.flow.includes("k_run")&&!S.flow.includes("v_run")?"Colorimétrie · ta photo":"Morpho visage",t:"Ton visage",c:"De face, le téléphone à hauteur des yeux, à bout de bras tendu.",ph:"Ta photo de visage",ic:"face",cam:"user",b:S.flow&&S.flow.includes("k_run")&&!S.flow.includes("v_run")?"Continuer":"Analyser mon visage",say:"Prends une photo de ton visage, bien de face, le téléphone à hauteur des yeux."}),
-a_body:()=>photoPage("body",{step:"Morpho & Kibbe",t:"Ta silhouette",c:"En pied, de face, bras le long du corps, vêtements près du corps. Pose le téléphone à 2 mètres et utilise le minuteur.",ph:"Ta photo en pied",ic:"body",cam:"environment",b:"Lancer l’analyse",say:"Prends une photo de toi en pied, de face, avec des vêtements près du corps."}),
+a_face:()=>photoPage("face",{step:S.flow&&S.flow.includes("k_run")&&!S.flow.includes("v_run")?"Colorimétrie · ta photo":"Morpho visage",t:"Ton visage",c:"De face, le téléphone à hauteur des yeux, à bout de bras tendu.",ph:"Ta photo de visage",ic:"face",cam:"user",b:S.flow&&S.flow.includes("k_run")&&!S.flow.includes("v_run")?"Continuer":"Analyser mon visage",say:"Prends une photo de ton visage, bien de face, le téléphone à hauteur des yeux. Mets-toi face à une fenêtre ou une belle lumière."}),
+a_body:()=>photoPage("body",{step:"Morpho & Kibbe",t:"Ta silhouette",c:"En pied, de face, bras le long du corps, vêtements près du corps. Pose le téléphone à 2 mètres et utilise le minuteur.",ph:"Ta photo en pied",ic:"body",cam:"environment",b:"Lancer l’analyse",say:"Prends une photo de toi en pied, de face, avec des vêtements près du corps. Mets-toi face à une fenêtre ou une belle lumière."}),
 a_run:()=>({html:`<p class="step">Analyse</p><h1>${S.err?"Un souci":"Je t’analyse…"}</h1>
  <div class="photo scan">${S.url.face?`<img src="${S.url.face}" alt="">`:""}</div>
  <p class="sub" id="runmsg">${esc(S.err||S.runmsg||"Je regarde ton visage.")}</p>`,
@@ -1121,7 +1274,7 @@ infos:()=>{const d=S.idraft||(S.idraft={...S.info,nom:S.nom||"",styles:[...(S.in
 v_run:()=>runPage("face","Je regarde ton visage…","a_face"),
 c_run:()=>runPage("body","Je regarde ta silhouette…","a_body"),
 k_run:()=>runPage("face","Je regarde tes couleurs…","a_face"),
-o_photo:()=>{const p=photoPage("outfit",{step:"Outfit check",t:"Ta tenue",c:"En pied, de face, la tenue complète avec les chaussures, en lumière claire.",ph:"Ta photo de tenue",ic:"outfit",cam:"environment",b:"Noter ma tenue",say:S.occ?"Montre-moi ta tenue, "+NOM+". Prends une photo en pied, avec les chaussures.":"C’est pour quelle occasion aujourd’hui, "+NOM+" ? Choisis, puis montre-moi ta tenue."});
+o_photo:()=>{const p=photoPage("outfit",{step:"Outfit check",t:"Ta tenue",c:"En pied, de face, la tenue complète avec les chaussures, en lumière claire.",ph:"Ta photo de tenue",ic:"outfit",cam:"environment",b:"Noter ma tenue",say:S.occ?"Montre-moi ta tenue, "+NOM+". Prends une photo en pied, avec les chaussures. Mets-toi face à une fenêtre ou une belle lumière.":"C’est pour quelle occasion aujourd’hui, "+NOM+" ? Choisis, puis montre-moi ta tenue."});
  p.html=`<p class="step">Outfit check</p><div class="occ"><img src="aura-face.jpg?v=1" alt="Aura" width="44" height="44"><p>C’est pour quelle occasion aujourd’hui ?</p></div><div class="occ-c" role="group" aria-label="Occasion">${OCCS.map(o=>`<button class="occ-b" data-occ="${o[0]}" aria-pressed="${S.occ===o[0]}">${o[1]} ${o[0]}</button>`).join("")}</div>`+p.html.replace('<p class="step">Outfit check</p>','');return p},
 o_run:()=>({html:`<p class="step">Outfit check</p><h1>${S.err?"Un souci":"Je regarde ta tenue…"}</h1><div class="photo scan">${S.url.outfit?`<img src="${S.url.outfit}" alt="">`:""}</div><p class="sub">${esc(S.err||"Une seconde.")}</p>`,
  foot:S.err?`<button class="btn" data-retry>Réessayer</button><button class="link" data-go="o_photo">Changer ma photo</button>`:"",back:!!S.err}),
@@ -1339,7 +1492,7 @@ async function send(text){
  S.chat.push({r:"u",t:text},{r:"a",t:""});S.draft="";S.busy=true;render(false);unlock();
  const h=S.chat.slice(0,-1).map(c=>({role:c.r==="u"?"user":"assistant",content:c.t}));h[0]={role:"user",content:SYS()+"\n\n"+h[0].content};
  const id="#b"+(S.chat.length-1);
- try{const r=await sm(h,{cache:false,onText:({text})=>{const b=$(id);if(b)b.textContent=text}});S.chat[S.chat.length-1].t=r.text;say(r.text)}
+ try{const r=await sm(h,{cache:false,onText:({text})=>{const b=$(id);if(b)b.textContent=text}});S.chat[S.chat.length-1].t=r.text;if(S.page==="chat")say(r.text)}
  catch(e){S.chat[S.chat.length-1].t=e&&e.code==="rate_limited"?"Trop de messages, réessaie dans un instant.":e&&e.code==="not_granted"?"Autorise la styliste pour discuter avec elle.":"Une erreur est survenue. Réessaie."}
  S.busy=false;if(S.page==="chat")render(false);
 }
@@ -1368,7 +1521,7 @@ async function sendPhoto(text){
   let t="";
   if(sm.json){const r=await sm.json(PR_CHATPH(text),{images:[ph.file]});t=(r&&(r.reponse||r.erreur))||""}
   else{const r=await sm([{role:"user",content:[{type:"image",source:{type:"base64",media_type:"image/jpeg",data:await shrunk(ph.file)}},{type:"text",text:PR_CHATPH(text).replace(FMT,"").replace(/Format : .*$/,"Réponds en texte simple, 2 à 5 phrases.")}]}],{cache:false});t=r.text}
-  last.t=t||"Je n’ai pas réussi à bien voir la photo. Réessaie avec une autre.";say(last.t)}
+  last.t=t||"Je n’ai pas réussi à bien voir la photo. Réessaie avec une autre.";if(S.page==="chat")say(last.t)}
  catch(e){last.t=e&&e.message==="off"?"L’envoi de photos n’est pas disponible ici.":errMsg(e)}
  S.busy=false;if(S.page==="chat")render(false);
 }
@@ -1411,8 +1564,10 @@ function speak(t){const ss=window.speechSynthesis;if(!ss||!t)return;affStop();co
  if(busy)setTimeout(go,Math.max(120,300-(Date.now()-LASTCANCEL)));else go()}
 function unlock(){const ss=window.speechSynthesis;if(!S.voice||!ss)return;try{ss.resume();const u=new SpeechSynthesisUtterance(".");u.volume=0.01;u.lang="fr-FR";ss.speak(u)}catch(e){}}
 // Coupe tout ce qu’Aura est en train de dire (voix du téléphone, voix arabe, phrases enregistrées).
-function stopVoice(){SPTOK++;try{if(window.speechSynthesis){speechSynthesis.cancel();LASTCANCEL=Date.now()}}catch(e){}ARTOK++;
- try{if(typeof AUD!=="undefined"&&!AUD.paused){AUD.pause();const f=AUD.onended;if(f)f()}}catch(e){}
+// Tout s'arrête : phrases en attente, présentation d'accueil, voix enregistrée qui se charge encore, vidéo qui parle.
+function stopVoice(){SPTOK++;try{GEN++}catch(e){}try{AUDTOK++}catch(e){}try{if(window.speechSynthesis){speechSynthesis.cancel();LASTCANCEL=Date.now()}}catch(e){}ARTOK++;
+ try{const f=AUD.onended;AUD.onplay=AUD.onended=AUD.onerror=null;if(!AUD.paused)AUD.pause();if(f)f()}catch(e){}
+ try{if(window.VIDOFF)VIDOFF()}catch(e){}
  talk(false);if(window.auraTalking)try{auraTalking(false)}catch(e){}}
 /*ENDVOICE*/
 var AMB=null;
@@ -1439,7 +1594,7 @@ function affPlay(){const ss=window.speechSynthesis;if(!ss){toast("Voix non dispo
   const u=new SpeechSynthesisUtterance(t);u.lang=AL==="en"?"en-US":"fr-FR";if(v)u.voice=v;u.rate=.82;u.pitch=1.05;u.volume=1;KEEP=[u];
   u.onend=()=>{i++;AFFT=setTimeout(one,2400)};u.onerror=()=>{i++;AFFT=setTimeout(one,300)};ss.resume();ss.speak(u)};
  AFFT=setTimeout(one,2500)}
-function say(t){if(!S.voice||!t)return;t=tr(t);if(S.lang==="ar")return sayAR(t);speak(t)}
+function say(t){if(!S.voice||!t)return;if(window.liveConv&&window.liveConv())return;stopVoice();t=tr(t);if(S.lang==="ar")return sayAR(t);speak(t)}
 // Arabe : voix féminine khaleeji d'Aura (ElevenLabs via le Worker), jamais la voix masculine du téléphone.
 let ARTOK=0;
 // Le texte est découpé en phrases courtes : chaque morceau est prêt vite et rien n'est coupé à la fin.
@@ -1535,7 +1690,7 @@ document.addEventListener("click",e=>{if(e.target.closest("[data-call]"))stopVoi
 document.addEventListener("change",e=>{if(e.target.hasAttribute("data-cphoto")){const f=e.target.files&&e.target.files[0];if(!f)return;S.cphoto={file:f,url:URL.createObjectURL(f)};render(false);if(window.liveConv&&window.liveConv()){voicePhoto((S.draft||"").trim());return}const m=$("#msg");if(m)m.focus();say("Jolie photo ! Dis-moi ce que tu veux savoir, puis touche Envoyer.");return}
  if(e.target.hasAttribute("data-gadd")){const fs=[...(e.target.files||[])];e.target.value="";if(fs.length)grAdd(fs);return}
  const k=e.target.dataset.f,f=e.target.files&&e.target.files[0];if(!k||!f)return;
- if(S.url[k])URL.revokeObjectURL(S.url[k]);S.file[k]=f;S.url[k]=URL.createObjectURL(f);render(false);say("Très bien, ta photo est prête.")});
+ setPhoto(k,f)});
 document.addEventListener("input",e=>{if(e.target.id==="tcode"&&TEST_CODES.includes(codeNorm(e.target.value))&&!isVip()){PLAN.p="vip";planSave();S.pwWhy="";e.target.blur();toast("Accès VIP activé");render(true);return}if(e.target.dataset.gi){const x=GR.items.find(i=>i.id===S.grItem);if(x){x[e.target.dataset.gi]=e.target.value.slice(0,40);GR.looks={};grSave()}}if(e.target.id==="msg")S.draft=e.target.value;if(e.target.dataset.i&&S.idraft){S.idraft[e.target.dataset.i]=e.target.value;e.target.classList.remove("bad")}if(e.target.id==="nom"){S.nomDraft=e.target.value;const b=document.querySelector("[data-nom]");if(b)b.disabled=!e.target.value.trim()}});
 document.addEventListener("keydown",e=>{if(e.target.id==="msg"&&e.key==="Enter"){e.preventDefault();send(e.target.value)}if(e.target.id==="nom"&&e.key==="Enter"){e.preventDefault();const b=document.querySelector("[data-nom]");if(b&&!b.disabled)b.click()}});
 
@@ -1765,7 +1920,7 @@ $("#install").addEventListener("click",async()=>{if(BIP){BIP.prompt();try{await 
  $("#inst").classList.add("show");$("#instOk").focus()});
 $("#instOk").addEventListener("click",()=>$("#inst").classList.remove("show"));
 $("#inst").addEventListener("click",e=>{if(e.target.id==="inst")$("#inst").classList.remove("show")});
-$("#start").addEventListener("click",()=>{if(window.endCall)window.endCall();unlock();$("#splash").classList.add("out");setTimeout(()=>$("#splash").remove(),800);
+$("#start").addEventListener("click",()=>{if(window.endCall)window.endCall();SKIP=true;stopVoice();unlock();$("#splash").classList.add("out");setTimeout(()=>$("#splash").remove(),800);
  SKIP=true;if(window.SKIPNOM)window.SKIPNOM();if(/formules|abo/i.test(location.hash)){go("abo");return}if(!window.CALLED){if(todoMods().length===3&&!S.later&&S.page==="home")startOnb();else say(P.home().say)}});
 </script>
 <script type="module">
