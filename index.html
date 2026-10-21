@@ -1547,8 +1547,10 @@ function render(sayIt){
 // Colle ici l'adresse « Production URL » du nœud Webhook de n8n. Vide = rien n'est envoyé.
 // Seuls le prénom, l'email, le pays, la langue et la formule partent ; jamais la taille, le poids ou les photos.
 const N8N_URL="https://imendriss.app.n8n.cloud/webhook/523be6d4-37b2-4c9e-949b-5d1d06a9d7a5";
-function n8nInscription(){if(!N8N_URL)return;try{fetch(N8N_URL,{method:"POST",headers:{"Content-Type":"application/json"},
- body:JSON.stringify({prenom:S.nom||"",email:(S.info||{}).email||"",pays:PAYS[pays()].n,langue:S.lang||"fr",formule:PLANS[plan()].nom})}).catch(()=>{})}catch(e){}}
+function n8nInscription(){if(!N8N_URL)return;try{
+ // Envoi « simple » (formulaire) : le navigateur n'a pas besoin de demander la permission à n8n (pas de blocage CORS), et n8n lit quand même chaque champ.
+ const b=new URLSearchParams({prenom:S.nom||"",email:(S.info||{}).email||"",pays:PAYS[pays()].n,langue:S.lang||"fr",formule:PLANS[plan()].nom});
+ fetch(N8N_URL,{method:"POST",mode:"no-cors",body:b,keepalive:true}).catch(()=>{})}catch(e){}}
 function saveInfo(){const d=S.idraft;if(!d)return;const bad=(id,m)=>{const f=$("#"+id);if(f){f.classList.add("bad");f.focus()}toast(m)};
  const email=String(d.email||"").trim().toLowerCase();if(!EMAIL_OK(email))return bad("i_email","Vérifie ton email");
  const num=v=>{v=String(v||"").replace(",",".").trim();return v===""?"":Number(v)};
