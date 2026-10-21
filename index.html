@@ -251,6 +251,15 @@ nav.dock button[aria-current="true"]{color:var(--accent)}
 .bub.u{align-self:flex-end;background:var(--accent);color:var(--on);border-bottom-right-radius:6px}
 .bub.a{align-self:flex-start;background:var(--soft);border-bottom-left-radius:6px}
 .bub img{display:block;max-width:100%;max-height:260px;border-radius:14px;margin:-4px -8px 8px;width:calc(100% + 16px);object-fit:cover}
+#cam{position:fixed;inset:0;z-index:60;background:#000;display:flex;flex-direction:column}
+#cam video{flex:1;min-height:0;width:100%;object-fit:cover}
+#cam video.mir{transform:scaleX(-1)}
+#cam .cd{position:absolute;inset:0;display:grid;place-items:center;font:600 160px/1 "Cormorant Garamond",Georgia,serif;color:#fff;text-shadow:0 4px 30px rgba(0,0,0,.6);pointer-events:none}
+#cam .fl{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity .35s}
+#cam .bar{display:flex;gap:10px;justify-content:center;align-items:center;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px));background:rgba(0,0,0,.85)}
+#cam .bar button{border:0;border-radius:999px;padding:12px 16px;font-size:15px;background:#2a2a2a;color:#fff;cursor:pointer}
+#cam .bar button.on{background:var(--accent);color:var(--on)}
+#cam .bar .shoot{width:68px;height:68px;padding:0;border-radius:50%;background:#fff;border:5px solid rgba(255,255,255,.4);background-clip:padding-box}
 .clip{width:52px;height:52px;flex:none;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--accent);display:grid;place-items:center;cursor:pointer}
 .clip svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .prev{position:relative;display:inline-block;margin-top:10px}.prev img{width:84px;height:84px;object-fit:cover;border-radius:14px;display:block}
@@ -587,9 +596,9 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 <button data-go="profil"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.4-4 4.4-6 8-6s6.6 2 8 6"/></svg>Profil</button>
 </nav>
 </div>
-<script src="i18n.js?v=3"></script>
+<script src="i18n.js?v=4"></script>
 <script>
-const VERSION="76";
+const VERSION="77";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -915,6 +924,28 @@ function beauteEt(){return `<p class="sub">${BL(BX.etS)}</p>`+ETQ.map(e=>`<div c
  <b>✅ ${BL(BX.bien)}</b><ul class="tips">${BL(e.ok).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
  <b>❌ ${BL(BX.eviter)}</b><ul class="tips">${BL(e.no).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
  <button class="btn" data-etq="${e.k}"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px;vertical-align:-4px;margin-inline-end:8px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg>${BL(BX.ecoute)}</button></div>`).join("")}
+// ===== Photo avec minuteur (3 ou 10 secondes) : poser le téléphone, se mettre en place, Aura reçoit la photo =====
+let CAM={st:null,face:"user",delay:3,busy:false};
+function camBeep(f,d){try{const C=window.AudioContext||window.webkitAudioContext;const ac=CAM.ac||(CAM.ac=new C());const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;g.gain.value=.15;o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+(d||.12))}catch(e){}}
+async function camStart(){const v=$("#camv");if(!v)return;try{if(CAM.st)CAM.st.getTracks().forEach(t=>t.stop());
+  CAM.st=await navigator.mediaDevices.getUserMedia({video:{facingMode:CAM.face,width:{ideal:1280},height:{ideal:1920}},audio:false});
+  v.srcObject=CAM.st;v.classList.toggle("mir",CAM.face==="user");await v.play().catch(()=>{})}
+ catch(e){camClose();toast("Autorise la caméra pour prendre la photo.")}}
+function camOpen(){if($("#cam"))return;const d=document.createElement("div");d.id="cam";d.setAttribute("role","dialog");d.setAttribute("aria-label","Photo avec minuteur");
+ d.innerHTML=`<video id="camv" playsinline muted autoplay></video><div class="cd" id="camcd"></div><div class="fl" id="camfl"></div>
+ <div class="bar"><button data-camx aria-label="Fermer">✕</button><button data-camd="3" class="${CAM.delay===3?"on":""}">3 s</button><button class="shoot" data-camgo aria-label="Lancer le minuteur"></button><button data-camd="10" class="${CAM.delay===10?"on":""}">10 s</button><button data-camf aria-label="Changer de caméra">⟲</button></div>`;
+ document.body.appendChild(d);if(window.i18nApply)i18nApply();camStart()}
+function camClose(){CAM.busy=false;if(CAM.st){CAM.st.getTracks().forEach(t=>t.stop());CAM.st=null}const d=$("#cam");if(d)d.remove()}
+async function camGo(){if(CAM.busy)return;CAM.busy=true;const cd=$("#camcd");
+ for(let n=CAM.delay;n>0;n--){if(!$("#cam"))return;cd.textContent=n;camBeep(n<=3?880:660);await wait(1000)}
+ if(!$("#cam"))return;cd.textContent="";camBeep(1320,.25);const v=$("#camv"),fl=$("#camfl");
+ const c=document.createElement("canvas");c.width=v.videoWidth||720;c.height=v.videoHeight||1280;const x=c.getContext("2d");
+ if(CAM.face==="user"){x.translate(c.width,0);x.scale(-1,1)}x.drawImage(v,0,0,c.width,c.height);
+ fl.style.opacity="1";setTimeout(()=>{fl.style.opacity="0"},150);
+ c.toBlob(b=>{camClose();if(!b){toast("La photo n’a pas marché. Réessaie.");return}
+  const f=new File([b],"photo.jpg",{type:"image/jpeg"});S.cphoto={file:f,url:URL.createObjectURL(f)};render(false);
+  if(window.liveConv&&window.liveConv()){voicePhoto((S.draft||"").trim());return}
+  const m=$("#msg");if(m)m.focus();say("Jolie photo ! Dis-moi ce que tu veux savoir, puis touche Envoyer.")},"image/jpeg",.9)}
 // ===== Formules My Style (modèle du rapport) =====
 // Essai gratuit : 1 analyse du visage complète + 1 minute avec Aura par mois + 3 messages écrits.
 // Base 29 QAR / mois, VIP 79 QAR / mois, Annuel 249 QAR / an. Le paiement arrive avec la version Google Play ;
@@ -1125,7 +1156,7 @@ chat:()=>({dock:1,html:`<div class="avatar aura inchat" id="ava2"><div class="fi
  <div class="chat">${S.chat.map((c,i)=>`<div class="bub ${c.r}" id="b${i}">${c.img?`<img src="${c.img}" alt="Photo envoyée">`:""}${esc(hideCodes(c.t))||(c.img?"":"…")}${c.r==="a"&&c.t?findArts(c.t).map(miniHTML).join(""):""}</div>`).join("")}</div>
  ${S.cphoto?`<div class="prev"><img src="${S.cphoto.url}" alt="Photo à envoyer"><button data-unphoto aria-label="Retirer la photo">×</button></div>`:""}
 
- <div style="display:flex;gap:8px;margin-top:8px;align-items:center"><label class="clip" aria-label="Ajouter une photo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><input type="file" accept="image/*" data-cphoto hidden></label><input class="field" id="msg" style="min-width:0" placeholder="${S.cphoto?"Que veux-tu savoir sur cette photo ?":"Écris ta question"}" value="${esc(S.draft)}"><button class="btn" style="width:auto;padding:14px 20px" data-send ${S.busy?"disabled":""}>Envoyer</button></div>`})
+ <div style="display:flex;gap:8px;margin-top:8px;align-items:center"><label class="clip" aria-label="Ajouter une photo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><input type="file" accept="image/*" data-cphoto hidden></label><button type="button" class="clip" data-cam aria-label="Photo avec minuteur"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="7.5"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/></svg></button><input class="field" id="msg" style="min-width:0" placeholder="${S.cphoto?"Que veux-tu savoir sur cette photo ?":"Écris ta question"}" value="${esc(S.draft)}"><button class="btn" style="width:auto;padding:14px 20px" data-send ${S.busy?"disabled":""}>Envoyer</button></div>`})
 };
 QS.forEach((q,i)=>{P["q_"+q.id]=()=>({step:"Colorimétrie",html:`<p class="step">Colorimétrie · ${i+1} sur ${QS.length}</p><h1>${q.q}</h1>${q.h?`<p class="sub">${q.h}</p>`:""}
  ${q.o.map(o=>`<button class="opt" data-ans="${q.id}" data-v="${o[0]}" aria-pressed="${S.ans[q.id]===o[0]}">${o[2]?`<span class="sw" style="background:${o[2]}"></span>`:`<span class="dot"></span>`}<span>${o[1]}</span></button>`).join("")}`,
@@ -1425,6 +1456,11 @@ document.addEventListener("click",e=>{
  if(t.id==="affbtn"){AFFON?affStop():affPlay();return}
  if(t.id==="voice"){if(AFFON)affStop();S.voice=!S.voice;try{localStorage.setItem("monstyle_voix",S.voice?"1":"0")}catch(e){}voiceBtn();if(!S.voice){stopVoice();toast("Voix coupée")}else{toast("Voix activée");unlock();const p=P[S.page]();say(p.say||"Je suis là, "+NOM+".")}return}
  if(t.dataset.setlang){if(window.endCall)endCall();stopVoice();S.lang=t.dataset.setlang;save();if(TCONV){try{TCONV.endSession()}catch(e){}TCONV=null}if(window.i18nApply)i18nApply();render(true);return}
+ if(t.hasAttribute("data-cam")){camOpen();return}
+ if(t.hasAttribute("data-camx")){camClose();return}
+ if(t.hasAttribute("data-camgo")){camGo();return}
+ if(t.hasAttribute("data-camf")){CAM.face=CAM.face==="user"?"environment":"user";camStart();return}
+ if(t.dataset.camd){CAM.delay=+t.dataset.camd;document.querySelectorAll("[data-camd]").forEach(b=>b.classList.toggle("on",b===t));return}
  if(t.dataset.buy){toast(t.dataset.buy==="seance"?"La réservation des séances arrive bientôt.":"Le paiement arrive avec la version Google Play. En attendant, utilise ton code testeuse.");return}
  if(t.hasAttribute("data-tcode")){const v=codeNorm(($("#tcode")||{}).value);if(TEST_CODES.includes(v)){PLAN.p="vip";planSave();S.pwWhy="";toast("Accès VIP activé");render(true)}else toast("Code incorrect");return}
  if(t.hasAttribute("data-essai")){PLAN.p="essai";planSave();toast("Retour à l’essai gratuit");render(false);return}
