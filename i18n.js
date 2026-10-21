@@ -610,7 +610,7 @@ const I18N_D=[
 ["Photo trop lourde.","Photo too large.","الصورة كبيرة وايد."],
 ["Dramatic","Dramatic","Dramatic"],["Soft Dramatic","Soft Dramatic","Soft Dramatic"],["Flamboyant Natural","Flamboyant Natural","Flamboyant Natural"],["Soft Natural","Soft Natural","Soft Natural"],["Dramatic Classic","Dramatic Classic","Dramatic Classic"],["Soft Classic","Soft Classic","Soft Classic"],["Pure Romantic","Pure Romantic","Pure Romantic"],["Theatrical Romantic","Theatrical Romantic","Theatrical Romantic"],["Soft Gamine","Soft Gamine","Soft Gamine"],["Natural","Natural","Natural"],["Classic","Classic","Classic"],["Romantic","Romantic","Romantic"],["Gamine","Gamine","Gamine"],["Ingenue","Ingenue","Ingenue"],["Ethereal","Ethereal","Ethereal"],["High Fashion","High Fashion","High Fashion"],["Yin","Yin","Yin"],["Yang","Yang","Yang"],
 [". Montre-moi celle d’aujourd’hui.",". Show me today’s.",". وريني لوك اليوم."],
-["›","›","‹"]
+["›","›","‹"],
 // ——— Formules (essai gratuit, abonnements, achats) ———
 ["Mes formules","My plans","باقاتي"],
 ["Formule actuelle :","Current plan:","باقتچ الحالية:"],
