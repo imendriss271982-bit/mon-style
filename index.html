@@ -370,6 +370,32 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 .hm .mys{margin:0;min-height:72px;padding:12px 24px 12px 12px}.hm .mys>span{width:48px;height:48px}.hm .mys b{font-size:22px}.hm .mys small{font-size:13px}
 
 /* ===== Accueil v2 : Outfit check et My Stylist en vedette ===== */
+/* My Stylist en vedette (grande carte bordeaux), Outfit check en dessous, bien visible mais plus discret */
+.hx-hero{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;gap:18px;width:100%;min-height:236px;margin-top:6px;border:0;border-radius:30px;padding:24px 22px 22px;text-align:start;color:#fff;cursor:pointer;background:linear-gradient(150deg,#9A3F61 0%,#7D2E4A 55%,#5E1F37 100%);box-shadow:0 16px 36px rgba(125,46,74,.32);transition:transform .15s}
+.hx-hero img{position:absolute;inset-inline-end:-6px;bottom:0;width:min(200px,50%);height:auto;filter:drop-shadow(0 8px 14px rgba(0,0,0,.25));pointer-events:none}
+[dir=rtl] .hx-hero img{transform:scaleX(-1)}
+.hx-hero-t{position:relative;max-width:56%}
+.hx-hero-t small{display:block;font-size:12px;letter-spacing:.16em;text-transform:uppercase;opacity:.8}
+.hx-hero-t b{display:block;font:500 42px/1.02 "Cormorant Garamond",Georgia,serif;margin:6px 0 6px}
+.hx-hero-t em{display:block;font-style:normal;font-size:16px;opacity:.92}
+.hx-hero-b{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;align-self:flex-start;min-height:54px;padding:0 24px;border-radius:999px;background:#fff;color:var(--accent);font-weight:600;font-size:16px;box-shadow:0 6px 16px rgba(0,0,0,.18);animation:ring 2.6s ease-in-out infinite}
+.hx-hero-b svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+@keyframes ring{0%,100%{box-shadow:0 6px 16px rgba(0,0,0,.18),0 0 0 0 rgba(255,255,255,.45)}50%{box-shadow:0 6px 16px rgba(0,0,0,.18),0 0 0 10px rgba(255,255,255,0)}}
+@media (prefers-reduced-motion:reduce){.hx-hero-b{animation:none}}
+.hx-oc2{display:flex;align-items:center;gap:14px;width:100%;border:1px solid var(--line);border-radius:24px;padding:16px;text-align:start;color:var(--ink);cursor:pointer;background:linear-gradient(120deg,#FBF3F5,#F3E3E8);transition:transform .15s}
+.hx-oc2-i{flex:none;width:48px;height:48px;border-radius:16px;background:#fff;display:grid;place-items:center}
+.hx-oc2-i svg{width:26px;height:26px;fill:none;stroke:var(--accent);stroke-width:1.5;stroke-linejoin:round}
+.hx-oc2-t{flex:1;min-width:0}
+.hx-oc2-t small{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.hx-oc2-t b{display:block;font:500 26px/1.1 "Cormorant Garamond",Georgia,serif;color:var(--accent)}
+.hx-oc2-t em{display:block;font-style:normal;font-size:14px;color:var(--muted)}
+.hx-oc2-c{flex:none;width:50px;height:50px;border-radius:50%;background:var(--accent);display:grid;place-items:center;box-shadow:0 6px 16px rgba(125,46,74,.3)}
+.hx-oc2-c svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:1.7;stroke-linejoin:round}
+.hx-oc-l2{align-self:center;margin-top:-10px;border:0;background:none;color:var(--accent);font-size:14px;text-decoration:underline;text-underline-offset:3px;padding:2px;cursor:pointer}
+.hx-hero:active,.hx-oc2:active{transform:scale(.98)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hx-oc2{background:var(--soft)}}
+:root[data-theme="dark"] .hx-oc2{background:var(--soft)}
+
 .hx{display:flex;flex-direction:column;gap:20px;margin:auto 0}
 .hx-oc{position:relative;overflow:hidden;border-radius:28px;padding:24px 22px 22px;color:#fff;background:linear-gradient(150deg,#9A3F61 0%,#7D2E4A 55%,#5E1F37 100%);box-shadow:0 14px 34px rgba(125,46,74,.28);display:flex;flex-direction:column;gap:16px}
 .hx-oc-t small{display:block;font-size:12px;letter-spacing:.18em;text-transform:uppercase;opacity:.8}
@@ -1156,13 +1182,12 @@ ${nd===3?`<button class="hx-ms" data-view="fiche" aria-label="Voir ma fiche styl
   <span class="hx-ms-h"><b>${nd?"Termine ton analyse":"Ton analyse de style"}</b><small>${nd}/3 ›</small></span>
   <p>${nd?"Il reste "+(3-nd)+" étape"+(3-nd>1?"s":"")+". Ensuite, ta fiche complète s’affiche ici.":"Visage, silhouette, couleurs : on la fait une seule fois, ensemble."}</p>
  </button>`}
- <button class="hx-st" data-view="chat"><img src="aura-bust.webp?v=1" alt="Aura, ta styliste" width="165" height="154"><span class="hx-st-t"><b>My Stylist</b><small>Parle avec Aura</small></span><span class="hx-mic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg></span></button>
- <section class="hx-oc" aria-label="Outfit check du jour">
-  <div class="hx-oc-t"><small>Chaque jour</small><b>Outfit check</b><p>${oc?`Ta dernière tenue : <strong>${esc(String(oc.note))}/10</strong>. Montre-moi celle d’aujourd’hui.`:"Montre-moi ta tenue : je te donne une note et ce qu’il faut changer."}</p></div>
-  <svg class="hx-hanger" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/></svg>
-  <button class="hx-oc-b" data-go="o_photo">${cam}Prendre ma tenue en photo</button>
-  ${oc?`<button class="hx-oc-l" data-view="o_res">Voir mon dernier résultat</button>`:""}
- </section>
+ <button class="hx-hero" data-view="chat" aria-label="My Stylist : parle avec Aura"><img src="aura-bust.webp?v=1" alt="" width="330" height="308">
+  <span class="hx-hero-t"><small>Ta styliste personnelle</small><b>My Stylist</b><em>Parle avec Aura</em></span>
+  <span class="hx-hero-b"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg>Appeler Aura</span></button>
+ <button class="hx-oc2" data-go="o_photo"><span class="hx-oc2-i"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/></svg></span>
+  <span class="hx-oc2-t"><small>Chaque jour</small><b>Outfit check</b><em>${oc?`Dernière note : ${esc(String(oc.note))}/10`:"Une note et les changements à faire"}</em></span><span class="hx-oc2-c">${cam}</span></button>
+ ${oc?`<button class="hx-oc-l2" data-view="o_res">Voir mon dernier résultat</button>`:""}
 <div class="hx-more">${grHomeCard()}</div>
  </div>`,
  say:"Bonjour "+NOM+", je suis contente de te voir. Touche le téléphone pour me parler, ou choisis une analyse."}},

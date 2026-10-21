@@ -671,6 +671,12 @@ const I18N_D=[
 ["{0} · ta palette complète à garder","{0} · your full palette to keep","{0} · ألوانچ كاملة تحتفظين فيها"],
 ["{0} · mariage, soirée, entretien","{0} · wedding, evening, interview","{0} · عرس، حفلة، مقابلة"],
 ["{0} · un vrai rendez-vous de stylisme","{0} · a real styling appointment","{0} · موعد ستايلنغ حقيقي"],
+// ——— Accueil : My Stylist en vedette ———
+["Ta styliste personnelle","Your personal stylist","الستايلست الخاصة فيچ"],
+["Appeler Aura","Call Aura","اتصلي بأورا"],
+["Une note et les changements à faire","A score and what to change","درجة وشنو تغيّرين"],
+["Dernière note : {0}/10","Last score: {0}/10","آخر درجة: {0}/10"],
+["My Stylist : parle avec Aura","My Stylist: talk to Aura","My Stylist: كلّمي أورا"],
 // ——— Lumière et caméra guidée ———
 ["Mets-toi face à une fenêtre ou une belle lumière.","Face a window or a nice bright light.","وقفي قدّام دريشة أو في مكان فيه إضاءة حلوة."],
 ["Place ton visage dans l’ovale.","Place your face inside the oval.","حطي وجهچ داخل الدائرة."],
