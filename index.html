@@ -33,6 +33,8 @@ body{background:var(--bg);color:var(--ink);font:17px/1.55 Jost,system-ui,sans-se
 button{font:inherit;color:inherit}
 button:focus-visible,a:focus-visible,label:focus-within{outline:2px solid var(--accent);outline-offset:3px}
 #app{max-width:480px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;padding:env(safe-area-inset-top,0) 0 0}
+/* Bande fixe sous l’heure et la batterie : le contenu ne passe plus dessous en descendant */
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:45;pointer-events:none}
 header{display:flex;align-items:center;gap:12px;padding:14px 20px 6px;min-height:58px}
 .ib{width:40px;height:40px;border:0;background:none;border-radius:50%;display:grid;place-items:center;cursor:pointer;flex:none}
 #voice{border:1px solid var(--line);color:var(--accent)}
