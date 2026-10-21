@@ -986,6 +986,7 @@ const BX={
  tryNeedQ:{fr:"Dis-moi ta tenue ou ton occasion.",en:"Tell me your outfit or occasion.",ar:"قوليلي شنو لبسچ أو مناسبتچ."},
  tryNeedPh:{fr:"Prends d’abord une photo de ton visage.",en:"First take a photo of your face.",ar:"صوّري وجهچ أول."},
  tryPrem:{fr:"Réservé aux abonnées",en:"For subscribers",ar:"للمشتركات"},
+ tryFree:{fr:"1 essai offert",en:"1 free try",ar:"محاولة وحدة مجانية"},
  geste:{fr:"Le geste",en:"How to",ar:"الطريقة"},carte:{fr:"Ton visage, zone par zone",en:"Your face, zone by zone",ar:"وجهچ، منطقة منطقة"},
  look:{fr:"Ton look dans tes couleurs",en:"Your look in your colours",ar:"لوكچ بألوانچ"}
 };
@@ -1072,7 +1073,7 @@ function mkStepLay(t){t=String(t||"").toLowerCase();
 let MKT={img:null,busy:false,err:"",q:"",txt:""};
 function mkTryBox(){const v=ok("visage"),s=season(),u=S.url.mk,left=mkLeft();
  const ch=BL(BX.tryChips).map(c=>`<button type="button" data-mkq="${esc(c)}" aria-pressed="${MKT.q===c}">${esc(c)}</button>`).join("");
- let h=`<div class="card mkt"><div class="mkt-h"><b>✨ ${BL(BX.tryT)}</b>${premium()?`<small>${left>0?left:0} ${BL(BX.tryLeft)}</small>`:`<small class="mkt-p">👑 ${BL(BX.tryPrem)}</small>`}</div><p class="sub" style="margin:4px 0 12px">${BL(BX.tryS)}</p>`;
+ let h=`<div class="card mkt"><div class="mkt-h"><b>✨ ${BL(BX.tryT)}</b>${premium()?`<small>${left>0?left:0} ${BL(BX.tryLeft)}</small>`:left>0?`<small class="mkt-p">🎁 ${BL(BX.tryFree)}</small>`:`<small class="mkt-p">👑 ${BL(BX.tryPrem)}</small>`}</div><p class="sub" style="margin:4px 0 12px">${BL(BX.tryS)}</p>`;
  if(MKT.img&&u)h+=`<div class="mkt-ba"><figure><img src="${u}" alt=""><figcaption>${BL(BX.tryAv)}</figcaption></figure><figure><img src="${MKT.img}" alt=""><figcaption>${BL(BX.tryAp)}</figcaption></figure></div>
   ${MKT.txt?`<p class="sub" style="margin:10px 0 0">${esc(MKT.txt)}</p>`:""}
   <div class="two" style="margin-top:12px"><a class="lb pri" href="${MKT.img}" download="my-style-make-up.png">${BL(BX.trySave)}</a><button type="button" class="lb" data-mkagain>${BL(BX.tryAgain)}</button></div></div>`;
@@ -1085,7 +1086,7 @@ function mkTryBox(){const v=ok("visage"),s=season(),u=S.url.mk,left=mkLeft();
   ${MKT.err?`<div class="note" style="margin-top:10px">${esc(MKT.err)}</div>`:""}
   <button class="btn" style="margin-top:12px" data-mktry ${MKT.busy?"disabled":""}>💄 ${BL(BX.tryGo)}</button></div>`}
  return h}
-async function mkTry(){if(!premium())return paywall("beaute");if(MKT.busy)return;
+async function mkTry(){if(!premium()&&PLAN.mkfree)return paywall("mk");if(MKT.busy)return;
  const q=(($("#mktq")||{}).value||MKT.q||"").trim();MKT.q=q;
  if(!S.file.mk){MKT.err=BL(BX.tryNeedPh);render(false);say(MKT.err);return}
  if(!q){MKT.err=BL(BX.tryNeedQ);render(false);say(MKT.err);$("#mktq")&&$("#mktq").focus();return}
@@ -1105,7 +1106,7 @@ async function mkTry(){if(!premium())return paywall("beaute");if(MKT.busy)return
   if(MKT.img&&MKT.img.startsWith("blob:"))URL.revokeObjectURL(MKT.img);
   const bin=atob(j.image),arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
   MKT.img=URL.createObjectURL(new Blob([arr],{type:j.mime||"image/png"}));MKT.txt=j.texte||"";
-  quota();PLAN.mk=(PLAN.mk||0)+1;planSave();MKT.busy=false;
+  quota();if(premium())PLAN.mk=(PLAN.mk||0)+1;else PLAN.mkfree=1;planSave();MKT.busy=false;
   if(S.page==="beaute"){render(false);say(MKT.txt||BL(BX.tryDone)+NOM+".")}}
  catch(e){MKT.busy=false;MKT.err=(e&&e.message&&e.message!=="Failed to fetch")?e.message:"La connexion a été coupée. Vérifie ton internet et réessaie.";if(S.page==="beaute"){render(false);say(MKT.err)}}}
 document.addEventListener("click",e=>{const t=e.target.closest("[data-mkq],[data-mktry],[data-mkagain]");if(!t)return;
@@ -1255,13 +1256,13 @@ function premium(){return plan()!=="essai"}
 function isVip(){return plan()==="vip"}
 function moisCle(){const d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)}
 function quota(){if(PLAN.m!==moisCle()){PLAN.m=moisCle();PLAN.sec=0;PLAN.msg=0;PLAN.mk=0;planSave()}return PLAN}
-// Essais make-up par mois : Essentiel et Annuel 10, VIP 30.
-function mkLeft(){quota();return (isVip()?30:premium()?10:0)-(PLAN.mk||0)}
+// Essais make-up : 1 seul essai offert pendant l’essai gratuit (une fois pour toutes), puis Essentiel et Annuel 10 par mois, VIP 30.
+function mkLeft(){quota();if(!premium())return PLAN.mkfree?0:1;return (isVip()?30:10)-(PLAN.mk||0)}
 function secLeft(){quota();return PLANS[plan()].min*60-(PLAN.sec||0)}
 function useSec(n){quota();PLAN.sec=(PLAN.sec||0)+n;planSave()}
 function msgLeft(){quota();return PLANS[plan()].msg-(PLAN.msg||0)}
 function useMsg(){quota();PLAN.msg=(PLAN.msg||0)+1;planSave()}
-const PW_WHY={analyses:"Ton analyse du visage gratuite est faite. Les autres analyses sont réservées aux abonnées.",visage:"Tu as déjà utilisé ton analyse gratuite du visage.",outfit:"L’Outfit check est réservé aux abonnées.",aura:"Tu as utilisé tes minutes avec Aura ce mois-ci.",chat:"Tu as utilisé tes messages gratuits ce mois-ci.",garde:"La garde-robe complète est réservée au VIP.",beaute:"La routine beauté est réservée aux abonnées."};
+const PW_WHY={analyses:"Ton analyse du visage gratuite est faite. Les autres analyses sont réservées aux abonnées.",visage:"Tu as déjà utilisé ton analyse gratuite du visage.",outfit:"L’Outfit check est réservé aux abonnées.",aura:"Tu as utilisé tes minutes avec Aura ce mois-ci.",chat:"Tu as utilisé tes messages gratuits ce mois-ci.",garde:"La garde-robe complète est réservée au VIP.",beaute:"La routine beauté est réservée aux abonnées.",mk:"Tu as utilisé ton essai make-up offert. Abonne-toi pour créer tous tes looks."};
 // Le code est accepté avec espaces, tirets, minuscules ou chiffres arabes (٢٠٢٦).
 function codeNorm(x){return String(x||"").replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[۰-۹]/g,d=>"۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/[^A-Za-z0-9]/g,"").toUpperCase()}
 function paywall(why){S.pwWhy=why||"";try{stopVoice()}catch(e){}if(window.endCall)window.endCall();go("abo")}

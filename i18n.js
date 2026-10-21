@@ -680,6 +680,7 @@ const I18N_D=[
 ["Je compare avec ma méthode…","Comparing with my method…","قاعدة أقارن مع طريقتي…"],
 ["Je prépare ton résultat…","Preparing your result…","قاعدة أجهّز نتيجتچ…"],
 ["Pose le téléphone et recule jusqu’à voir tes pieds dans la silhouette. Touche le bouton : tu as 10 secondes.","Put the phone down and step back until your feet are inside the outline. Tap the button: you have 10 seconds.","حطي التلفون وارجعي لورا لين تشوفين رجولچ داخل الرسمة. اضغطي الزر وعندچ ١٠ ثواني."],
+["Tu as utilisé ton essai make-up offert. Abonne-toi pour créer tous tes looks.","You’ve used your free make-up try. Subscribe to create all your looks.","استخدمتي محاولة المكياج المجانية. اشتركي عشان تسوين كل اللوكات اللي تبينها."],
 // ——— Accueil : My Stylist en vedette ———
 ["Ta styliste IA personnelle","Your personal AI stylist","الستايلست الذكية الخاصة فيچ"],
 ["👑 {0} min ce mois-ci","👑 {0} min this month","👑 {0} دقيقة هالشهر"],
