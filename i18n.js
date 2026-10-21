@@ -681,6 +681,10 @@ const I18N_D=[
 ["Je prépare ton résultat…","Preparing your result…","قاعدة أجهّز نتيجتچ…"],
 ["Pose le téléphone et recule jusqu’à voir tes pieds dans la silhouette. Touche le bouton : tu as 10 secondes.","Put the phone down and step back until your feet are inside the outline. Tap the button: you have 10 seconds.","حطي التلفون وارجعي لورا لين تشوفين رجولچ داخل الرسمة. اضغطي الزر وعندچ ١٠ ثواني."],
 ["Tu as utilisé ton essai make-up offert. Abonne-toi pour créer tous tes looks.","You’ve used your free make-up try. Subscribe to create all your looks.","استخدمتي محاولة المكياج المجانية. اشتركي عشان تسوين كل اللوكات اللي تبينها."],
+["La création d’images n’est pas incluse dans la version gratuite de la clé Gemini. Active la facturation sur ta clé Gemini (Google AI Studio) pour utiliser l’essai make-up.","Image creation isn’t included in the free version of the Gemini key. Turn on billing for your Gemini key (Google AI Studio) to use the make-up try-on.","صناعة الصور مو موجودة في النسخة المجانية من مفتاح جيميناي. فعّلي الدفع على مفتاح جيميناي (Google AI Studio) عشان تستخدمين تجربة المكياج."],
+["Le make-up est très demandé en ce moment. Réessaie dans une minute.","Make-up is in high demand right now. Try again in a minute.","المكياج عليه طلب وايد الحين. جرّبي بعد دقيقة."],
+["Je n'ai pas réussi à créer ton make-up avec cette photo. Réessaie avec une photo de face, bien éclairée.","I couldn’t create your make-up with this photo. Try again with a well-lit photo, straight on.","ما قدرت أسوي مكياجچ بهالصورة. جرّبي صورة من قدّام وفي إضاءة حلوة."],
+["Trop de demandes. Réessaie dans un instant.","Too many requests. Try again in a moment.","طلبات وايد. جرّبي بعد شوي."],
 // ——— Accueil : My Stylist en vedette ———
 ["Ta styliste IA personnelle","Your personal AI stylist","الستايلست الذكية الخاصة فيچ"],
 ["👑 {0} min ce mois-ci","👑 {0} min this month","👑 {0} دقيقة هالشهر"],

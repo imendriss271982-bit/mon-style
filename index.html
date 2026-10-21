@@ -1108,7 +1108,7 @@ async function mkTry(){if(!premium()&&PLAN.mkfree)return paywall("mk");if(MKT.bu
   MKT.img=URL.createObjectURL(new Blob([arr],{type:j.mime||"image/png"}));MKT.txt=j.texte||"";
   quota();if(premium())PLAN.mk=(PLAN.mk||0)+1;else PLAN.mkfree=1;planSave();MKT.busy=false;
   if(S.page==="beaute"){render(false);say(MKT.txt||BL(BX.tryDone)+NOM+".")}}
- catch(e){MKT.busy=false;MKT.err=(e&&e.message&&e.message!=="Failed to fetch")?e.message:"La connexion a été coupée. Vérifie ton internet et réessaie.";if(S.page==="beaute"){render(false);say(MKT.err)}}}
+ catch(e){MKT.busy=false;MKT.err=tr((e&&e.message&&e.message!=="Failed to fetch")?e.message:"La connexion a été coupée. Vérifie ton internet et réessaie.");if(S.page==="beaute"){render(false);say(MKT.err)}}}
 document.addEventListener("click",e=>{const t=e.target.closest("[data-mkq],[data-mktry],[data-mkagain]");if(!t)return;
  if(t.dataset.mkq){MKT.q=t.dataset.mkq;const i=$("#mktq");if(i)i.value=MKT.q;document.querySelectorAll("[data-mkq]").forEach(b=>b.setAttribute("aria-pressed",String(b===t)));return}
  if(t.hasAttribute("data-mktry"))return mkTry();
