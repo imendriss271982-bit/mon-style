@@ -587,9 +587,9 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 <button data-go="profil"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.4-4 4.4-6 8-6s6.6 2 8 6"/></svg>Profil</button>
 </nav>
 </div>
-<script src="i18n.js?v=1"></script>
+<script src="i18n.js?v=2"></script>
 <script>
-const VERSION="71";
+const VERSION="72";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -742,7 +742,7 @@ const FLOW_A=["a_nom","a_intro","a_face",...QS.map(q=>"q_"+q.id),"a_body","a_run
 const FLOW_O=["o_photo","o_run","o_res"];
 const ONB={visage:["a_face","v_run","r_visage"],corps:["a_body","c_run","r_corps"],couleurs:["a_face",...QS.map(q=>"q_"+q.id),"k_run","r_couleurs"]};
 const todoMods=()=>["visage","corps","couleurs"].filter(k=>k==="couleurs"?!season():!ok(k));
-function startOnb(){const m=todoMods();if(!m.length)return home();let f=[];m.forEach(k=>{let st=ONB[k];if(k==="couleurs"&&f.includes("a_face"))st=st.slice(1);f=f.concat(st)});
+function startOnb(){const m=todoMods().filter(k=>premium()||(k==="visage"&&!PLAN.vfree));if(!m.length)return home();let f=[];m.forEach(k=>{let st=ONB[k];if(k==="couleurs"&&f.includes("a_face"))st=st.slice(1);f=f.concat(st)});
  S.flow=[...(S.nom?[]:["a_nom"]),"a_intro",...f,"r_fin"];S.from="home";S.hist=["home"];S.page=S.flow[0];S.dir="f";S.err="";S.rid++;render(true)}
 const DOCK=["home","boutique","o_photo","news","profil","chat","beaute"];
 
@@ -814,7 +814,7 @@ async function grAdd(files){const sm=await getSample();
   sm.json(PR_ITEM(),{images:[f]}).then(fin,()=>fin(null))}
 }
 function grItemsTxt(){return GR.items.filter(x=>!x.wait).map(x=>x.id+" : "+grCat(x.cat).toLowerCase()+", "+(x.nom||"")+(x.couleur?", "+x.couleur:"")+(x.style?", style "+x.style:"")).join("\n")}
-async function grLooks(occ){const o=GR_OCC.find(x=>x[0]===occ);if(!o||S.grBusy)return;const sm=await getSample();
+async function grLooks(occ){if(!isVip())return paywall("garde");const o=GR_OCC.find(x=>x[0]===occ);if(!o||S.grBusy)return;const sm=await getSample();
  if(!sm||!sm.json){toast("La création de tenues n’est pas disponible ici.");return}
  S.grBusy=occ;S.grErr="";render(false);say("Je coordonne tes vêtements, une seconde.");
  const pr=REF+" Tu es styliste personnelle. Crée 4 tenues différentes pour l’occasion « "+o[1]+" » ("+o[2]+") UNIQUEMENT avec les pièces de sa garde-robe ci-dessous (utilise leurs identifiants). Chaque tenue : un haut et un bas, ou une robe, plus si possible veste, chaussures, sac ou accessoire. Respecte son profil : "+(PROFIL()||"inconnu")+" (morphologie, couleurs de saison). Varie les pièces d’une tenue à l’autre. N’invente aucune pièce. Si une pièce manque pour bien finir la tenue, dis-le dans « manque ».\nGarde-robe :\n"+grItemsTxt()+"\n"+FMT+'Format : {"tenues":[{"titre":"2 à 4 mots","pieces":["id"],"conseil":"1 phrase de styliste","manque":"pièce à acheter, ou vide"}]}';
@@ -889,7 +889,7 @@ const ETQ=[
   no:{fr:["Parler fort ou couper la parole.","Les mots de remplissage : « euh », « genre », « en fait ».","Regarder ton téléphone pendant que l’autre parle.","Les sujets sensibles en public : argent, poids, vie privée."],en:["Talking loudly or interrupting.","Filler words: “um”, “like”, “actually”.","Looking at your phone while the other person is talking.","Sensitive topics in public: money, weight, private life."],ar:["ترفعين صوتچ أو تقاطعين.","كلمات الحشو: «يعني»، «اممم»، «أصلاً».","تطالعين التلفون والثاني يكلمچ.","المواضيع الحساسة قدام الناس: الفلوس، الوزن، الخصوصيات."]}}
 ];
 let MKR=null;try{MKR=JSON.parse(localStorage.getItem("monstyle_mk")||"null")}catch(e){}
-async function mkRoutine(kind){const sm=await getSample();if(!sm||!sm.json){toast("La routine n’est pas disponible ici.");return}
+async function mkRoutine(kind){if(!premium())return paywall("beaute");const sm=await getSample();if(!sm||!sm.json){toast("La routine n’est pas disponible ici.");return}
  S.mkBusy=kind;S.mkErr="";render(false);say(BL(BX.busy));const v=ok("visage");
  const pr="Tu es maquilleuse professionnelle et styliste. Crée une routine de "+(kind==="soir"?"maquillage de soirée":"maquillage de jour")+" pas à pas, adaptée à la forme de son visage et à sa saison de couleurs. Profil : "+(PROFIL()||"inconnu")+(v&&v.micro?". Micro-morphologie : "+v.micro:"")+". 6 à 8 étapes, du soin au fixateur, chaque geste précis (où, comment, avec quoi) et la teinte conseillée pour sa saison. Reste simple, réaliste et pour le climat du Golfe (chaleur). "+FMT+'Format : {"resume":"1 phrase à dire à voix haute","etapes":[{"titre":"2 à 4 mots","geste":"1 à 2 phrases","recherche":"2 à 4 mots en français pour chercher le produit en boutique"}]}';
  try{const r=await sm.json(pr);if(!r||r.erreur||!Array.isArray(r.etapes)||!r.etapes.length)throw new Error(r&&r.erreur||"Je n’ai pas réussi à créer ta routine. Réessaie.");
@@ -915,6 +915,25 @@ function beauteEt(){return `<p class="sub">${BL(BX.etS)}</p>`+ETQ.map(e=>`<div c
  <b>✅ ${BL(BX.bien)}</b><ul class="tips">${BL(e.ok).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
  <b>❌ ${BL(BX.eviter)}</b><ul class="tips">${BL(e.no).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
  <button class="btn" data-etq="${e.k}"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px;vertical-align:-4px;margin-inline-end:8px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg>${BL(BX.ecoute)}</button></div>`).join("")}
+// ===== Formules My Style (modèle du rapport) =====
+// Essai gratuit : 1 analyse du visage complète + 1 minute avec Aura par mois + 3 messages écrits.
+// Base 29 QAR / mois, VIP 79 QAR / mois, Annuel 249 QAR / an. Le paiement arrive avec la version Google Play ;
+// en attendant, un code testeuse débloque le VIP pour la famille et les testeuses.
+const PLANS={essai:{nom:"Essai gratuit",min:1,msg:3},base:{nom:"My Style Essentiel",min:20,msg:200},annuel:{nom:"My Style Annuel",min:20,msg:200},vip:{nom:"My Style VIP",min:60,msg:500}};
+const TEST_CODES=["MYSTYLE2026"];
+let PLAN=(()=>{try{return JSON.parse(localStorage.getItem("monstyle_plan")||"{}")||{}}catch(e){return{}}})();
+function planSave(){try{localStorage.setItem("monstyle_plan",JSON.stringify(PLAN))}catch(e){}}
+function plan(){return PLANS[PLAN.p]?PLAN.p:"essai"}
+function premium(){return plan()!=="essai"}
+function isVip(){return plan()==="vip"}
+function moisCle(){const d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)}
+function quota(){if(PLAN.m!==moisCle()){PLAN.m=moisCle();PLAN.sec=0;PLAN.msg=0;planSave()}return PLAN}
+function secLeft(){quota();return PLANS[plan()].min*60-(PLAN.sec||0)}
+function useSec(n){quota();PLAN.sec=(PLAN.sec||0)+n;planSave()}
+function msgLeft(){quota();return PLANS[plan()].msg-(PLAN.msg||0)}
+function useMsg(){quota();PLAN.msg=(PLAN.msg||0)+1;planSave()}
+const PW_WHY={analyses:"Ton analyse du visage gratuite est faite. Les autres analyses sont réservées aux abonnées.",visage:"Tu as déjà utilisé ton analyse gratuite du visage.",outfit:"L’Outfit check est réservé aux abonnées.",aura:"Tu as utilisé tes minutes avec Aura ce mois-ci.",chat:"Tu as utilisé tes messages gratuits ce mois-ci.",garde:"La garde-robe complète est réservée au VIP.",beaute:"La routine beauté est réservée aux abonnées."};
+function paywall(why){S.pwWhy=why||"";try{stopVoice()}catch(e){}if(window.endCall)window.endCall();go("abo")}
 const P={
 home:()=>{const v=ok("visage"),bd=ok("corps"),c=season(),oc=ok("outfit");
  const nd=[v,bd,c].filter(Boolean).length;
@@ -1015,12 +1034,28 @@ profil:()=>{const i=S.info||{},has=!!i.email,pick=(k,l)=>`<div class="row"><span
  ${has?`<h2 style="margin-top:0">Mes informations</h2>${pick(i.taille?i.taille+" cm":"","Taille")}${pick(i.poids?i.poids+" kg":"","Poids (privé)")}${pick(i.age,"Âge")}${pick(i.tvet,"Taille de vêtements")}${pick(i.budget,"Budget")}${pick((i.styles||[]).join(", "),"Styles préférés")}
  <button class="btn ghost" data-go="infos" style="margin:6px 0 4px">Modifier mes informations</button>`
  :`<button class="tile main" data-go="infos"><b>Créer mon profil</b><span>Ton email, ta taille, ton style : je m’en sers pour mieux te conseiller.</span></button>`}
+ <button class="tile" data-go="abo"><b>${PLANS[plan()].nom}</b><span>${Math.max(0,Math.floor(secLeft()/60))} min avec Aura restantes ce mois-ci · voir les formules</span></button>
  <h2>Langue de l’application</h2><div class="pk">${[["fr","Français"],["en","English"],["ar","عربي"]].map(x=>`<button type="button" data-setlang="${x[0]}" aria-pressed="${(S.lang||"fr")===x[0]}">${x[1]}</button>`).join("")}</div>
  <h2>Mes analyses</h2><p class="hint" style="margin-top:-6px">Touche un résultat pour le revoir, ou refais l’analyse avec une nouvelle photo.</p>
  ${[["visage","Morpho visage",ok("visage")?cap(ok("visage").forme):"","r_visage"],["corps","Morpho & Kibbe",ok("corps")&&[ok("corps").forme,ok("corps").kibbe].filter(Boolean).join(" · "),"r_corps"],["couleurs","Colorimétrie",season(),"r_couleurs"]].map(x=>`<div class="an-row"><button class="an-v" ${x[2]?`data-view="${x[3]}"`:`data-mod="${x[0]}"`}><span>${x[1]}</span><b>${esc(x[2]||"À faire")}</b></button><button class="an-r" data-mod="${x[0]}">${x[2]?"Refaire":"Faire"}</button></div>`).join("")}
  ${ok("outfit")?`<h2>Dernier outfit check</h2><button class="tile" data-view="o_res"><span>Note</span><b>${esc(ok("outfit").note+" / 10")}</b></button>`:""}
  <button class="link" data-wipe>Effacer toutes mes données</button>`,
  say:has?"Voici ton profil, "+NOM+". Touche une carte pour réécouter le détail.":"Crée ton profil, "+NOM+". Ton email, ta taille et ton style m’aident à mieux te conseiller."}},
+abo:()=>{const c=plan(),why=PW_WHY[S.pwWhy]||"",card=(k,prix,txt)=>`<button class="tile${k==="vip"?" main":""}" data-buy="${k}" aria-pressed="${c===k}"><b>${PLANS[k].nom}${c===k?" ✓":""}</b><span>${prix} · ${txt}</span></button>`,m=Math.max(0,Math.floor(secLeft()/60));
+ return {dock:1,html:`<h1>Mes formules</h1>
+ ${why?`<p class="sub">${why}</p>`:`<p class="sub">Formule actuelle : <b>${PLANS[c].nom}</b> · ${m} min avec Aura restantes ce mois-ci.</p>`}
+ ${card("base","29 QAR / mois","toutes les analyses, Outfit check, beauté, 20 min avec Aura")}
+ ${card("vip","79 QAR / mois","tout l’Essentiel + 60 min avec Aura + garde-robe complète")}
+ ${card("annuel","249 QAR / an","l’Essentiel pour toute l’année, 2 mois offerts")}
+ <h2>À l’unité</h2>
+ <button class="tile" data-buy="pdf"><b>Rapport couleurs PDF</b><span>49 QAR · ta palette complète à garder</span></button>
+ <button class="tile" data-buy="occasion"><b>Look pour une occasion</b><span>99 QAR · mariage, soirée, entretien</span></button>
+ <button class="tile" data-buy="seance"><b>Séance avec la styliste</b><span>300 QAR · un vrai rendez-vous de stylisme</span></button>
+ <h2>Code testeuse</h2>
+ <input class="field" id="tcode" autocomplete="off" placeholder="Ton code" style="margin-bottom:10px">
+ <button class="btn ghost" data-tcode>Activer</button>
+ ${premium()?`<button class="link" data-essai>Revenir à l’essai gratuit</button>`:""}`,
+ say:why?"Choisis la formule qui te va, "+NOM+".":"Voici les formules My Style, "+NOM+"."}},
 infos:()=>{const d=S.idraft||(S.idraft={...S.info,nom:S.nom||"",styles:[...(S.info.styles||[])]});
  const chips=(k,list,multi)=>`<div class="pk" data-k="${k}"${multi?' data-multi':''}>${list.map(v=>`<button type="button" data-pk="${esc(v)}" aria-pressed="${multi?(d[k]||[]).includes(v):d[k]===v}">${esc(v)}</button>`).join("")}</div>`;
  return {back:true,html:`<p class="step">Mon profil</p><h1>Mes informations</h1><p class="sub">Seul ton email est obligatoire. Le reste m’aide à te conseiller plus juste.</p>
@@ -1198,7 +1233,7 @@ function setMsg(t){S.runmsg=t;const m=$("#runmsg");if(m)m.textContent=t}
 const RUNS={v_run:["visage",()=>PR_VISAGE(),"face","Je regarde ton visage, une seconde."],c_run:["corps",()=>PR_BODY(),"body","Je regarde ta silhouette, une seconde."],k_run:["couleurs",()=>PR_COUL(),"face","Je regarde tes couleurs, une seconde."]};
 async function runMod(k){const [key,pr,f,msg]=RUNS[k];const sm=await getSample();S.busy=true;S.err="";
  const Q={saison:seasonFromAnswers(S.ans),sous_ton:"",pourquoi:"D’après tes réponses au questionnaire."};
- const done=r=>{S.res[key]=r;save();S.busy=false;if(S.page===k)next()},fail=m=>{S.busy=false;S.err=m;if(S.page===k){render(false);say(m)}};
+ const done=r=>{S.res[key]=r;save();if(key==="visage"&&!premium()){PLAN.vfree=1;planSave()}S.busy=false;if(S.page===k)next()},fail=m=>{S.busy=false;S.err=m;if(S.page===k){render(false);say(m)}};
  if(!sm){if(key==="couleurs")return done(Q);return fail("L’analyse par photo n’est pas disponible ici.")}
  const rid=++S.rid;say(msg);
  try{let r=await sm.json(pr(),{images:[S.file[f]]});if(rid!==S.rid)return;
@@ -1242,7 +1277,7 @@ async function textConv(){
  return TCONV;
 }
 async function send(text){
- text=(text||"").trim();if(S.cphoto&&!S.busy)return sendPhoto(text);if(!text||S.busy)return;const sm=await getSample();
+ text=(text||"").trim();if(text&&!S.busy){if(msgLeft()<=0)return paywall("chat");useMsg()}if(S.cphoto&&!S.busy)return sendPhoto(text);if(!text||S.busy)return;const sm=await getSample();
  if(typeof sm!=="function"){S.chat.push({r:"u",t:text},{r:"a",t:""});S.draft="";S.busy=true;render(false);
   try{const c=await textConv();c.sendUserMessage(text)}catch(e){S.chat[S.chat.length-1].t="La styliste n’a pas pu répondre. Réessaie.";S.busy=false;if(S.page==="chat")render(false)}
   return}
@@ -1388,14 +1423,19 @@ document.addEventListener("click",e=>{
  if(t.id==="affbtn"){AFFON?affStop():affPlay();return}
  if(t.id==="voice"){if(AFFON)affStop();S.voice=!S.voice;try{localStorage.setItem("monstyle_voix",S.voice?"1":"0")}catch(e){}voiceBtn();if(!S.voice){stopVoice();toast("Voix coupée")}else{toast("Voix activée");unlock();const p=P[S.page]();say(p.say||"Je suis là, "+NOM+".")}return}
  if(t.dataset.setlang){if(window.endCall)endCall();stopVoice();S.lang=t.dataset.setlang;save();if(TCONV){try{TCONV.endSession()}catch(e){}TCONV=null}if(window.i18nApply)i18nApply();render(true);return}
- if(t.dataset.mod)return startMod(t.dataset.mod);
+ if(t.dataset.buy){toast(t.dataset.buy==="seance"?"La réservation des séances arrive bientôt.":"Le paiement arrive avec la version Google Play. En attendant, utilise ton code testeuse.");return}
+ if(t.hasAttribute("data-tcode")){const v=String(($("#tcode")||{}).value||"").trim().toUpperCase();if(TEST_CODES.includes(v)){PLAN.p="vip";planSave();S.pwWhy="";toast("Accès VIP activé");render(true)}else toast("Code incorrect");return}
+ if(t.hasAttribute("data-essai")){PLAN.p="essai";planSave();toast("Retour à l’essai gratuit");render(false);return}
+ if(t.dataset.mod){const m=t.dataset.mod;if(!premium()&&(m!=="visage"||PLAN.vfree))return paywall(m==="visage"?"visage":"analyses");return startMod(m)}
  if(t.dataset.gocc){S.grOcc=t.dataset.gocc;S.grErr="";render(false);return}
  if(t.dataset.glooks)return grLooks(t.dataset.glooks);
  if(t.dataset.gitem){S.grItem=t.dataset.gitem;go("g_item");return}
  if(t.dataset.gcat){const x=GR.items.find(i=>i.id===S.grItem);if(x){x.cat=t.dataset.gcat;x.todo=0;GR.looks={};grSave();render(false)}return}
  if(t.dataset.gdel){if(!confirm(tr("Supprimer cet article de ta garde-robe ?")))return;GR.items=GR.items.filter(i=>i.id!==t.dataset.gdel);GR.looks={};grSave();toast("Article supprimé");back();return}
  if(t.dataset.occ){S.occ=t.dataset.occ;save();render(false);say({"Travail":"Une tenue pour le travail, parfait.","Casual":"Une tenue décontractée, j’adore.","Soirée":"Une soirée ! On va te rendre éblouissante.","Mariage":"Un mariage, il faut être élégante sans voler la vedette.","Rendez-vous":"Un rendez-vous, on veut te voir rayonner.","Voyage":"Un voyage, confort et style."}[S.occ]+" Montre-moi ta tenue.");return}
+ if(t.dataset.start==="A"&&!premium()){if(PLAN.vfree)return paywall("analyses");return startMod("visage")}
  if(t.dataset.start==="A"){S.flow=FLOW_A;S.hist=["home"];S.page="a_nom";S.dir="f";S.res={outfit:S.res.outfit};S.wait={};S.rid++;render(true);return}
+ if(t.dataset.go==="o_photo"&&!premium())return paywall("outfit");
  if(t.dataset.go==="o_photo"){S.flow=FLOW_O;if(S.page!=="o_photo"){S.hist=["home"];S.page="o_photo";S.dir="f";render(true)}return}
  if(t.dataset.go){go(t.dataset.go);return}
  if(t.dataset.view){S.flow=null;go(t.dataset.view);return}
@@ -1682,6 +1722,7 @@ function anim(){const v=conv&&conv.getOutputVolume?conv.getOutputVolume():0;cons
 async function startCall(){
  if(busy)return;busy=true;
  if(conv){try{await conv.endSession()}catch(_){}conv=null;live(false);st("Appel terminé.");busy=false;return}
+ if(typeof secLeft==="function"&&secLeft()<=0){busy=false;if(typeof paywall==="function")paywall("aura");return}
  st("Connexion…");
  try{
   if(typeof stopVoice==="function")stopVoice();
@@ -1698,6 +1739,7 @@ async function startCall(){
   try{if(typeof CATCTX==="function")conv.sendContextualUpdate(CATCTX(true))}catch(_){}
   const tp=window.CALLTOPIC;window.CALLTOPIC=null;if(tp){try{conv.sendContextualUpdate(tp.ctx);setTimeout(()=>{try{conv&&conv.sendUserMessage(tp.msg)}catch(_){}},900)}catch(_){}}
   live(true);st("Elle arrive…");cancelAnimationFrame(raf);anim();
+  clearInterval(window.MINT);window.MINT=setInterval(()=>{if(!conv){clearInterval(window.MINT);return}useSec(1);if(secLeft()<=0){clearInterval(window.MINT);try{conv.endSession()}catch(_){}conv=null;live(false);paywall("aura")}},1000);
   window.callStatus=st;if(typeof S!=="undefined"&&S.cphoto&&typeof voicePhoto==="function")setTimeout(()=>voicePhoto((S.draft||"").trim()),2500);
  }catch(err){conv=null;live(false);st(err&&err.name==="NotAllowedError"?"Autorise le micro : Réglages, Safari, Micro.":"Impossible de lancer l’appel : "+(err&&err.message||err))}
  busy=false}
