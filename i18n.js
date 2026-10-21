@@ -657,6 +657,20 @@ const I18N_D=[
 ["Fermer","Close","سكّري"],
 ["Autorise la caméra pour prendre la photo.","Allow the camera to take the photo.","اسمحي للكاميرا عشان تصورين."],
 ["La photo n’a pas marché. Réessaie.","The photo didn’t work. Try again.","الصورة ما زبطت. جربي مرة ثانية."],
+["Mon pays","My country","بلدي"],
+["Qatar","Qatar","قطر"],
+["Arabie saoudite","Saudi Arabia","السعودية"],
+["Émirats arabes unis","United Arab Emirates","الإمارات"],
+["Koweït","Kuwait","الكويت"],
+["Bahreïn","Bahrain","البحرين"],
+["Oman","Oman","عُمان"],
+["{0} — livraison : {1}.","{0} — delivery: {1}.","{0} — التوصيل: {1}."],
+["Mode et beauté au Qatar ; les événements de ton pays arrivent bientôt.","Fashion and beauty in Qatar; events in your country are coming soon.","موضة وجمال في قطر؛ فعاليات بلدچ قريبًا."],
+["{0} / mois · {1}","{0} / month · {1}","{0} / شهر · {1}"],
+["{0} / an · {1}","{0} / year · {1}","{0} / سنة · {1}"],
+["{0} · ta palette complète à garder","{0} · your full palette to keep","{0} · ألوانچ كاملة تحتفظين فيها"],
+["{0} · mariage, soirée, entretien","{0} · wedding, evening, interview","{0} · عرس، حفلة، مقابلة"],
+["{0} · un vrai rendez-vous de stylisme","{0} · a real styling appointment","{0} · موعد ستايلنغ حقيقي"],
 ];
 /* Liste d’installation (texte avec mise en forme). */
 const I18N_HTML={instL:{

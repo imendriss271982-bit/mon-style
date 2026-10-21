@@ -596,9 +596,9 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 <button data-go="profil"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.4-4 4.4-6 8-6s6.6 2 8 6"/></svg>Profil</button>
 </nav>
 </div>
-<script src="i18n.js?v=4"></script>
+<script src="i18n.js?v=5"></script>
 <script>
-const VERSION="78";
+const VERSION="79";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -660,16 +660,31 @@ const ANS_TXT=a=>QS.map(q=>{const o=q.o.find(x=>x[0]===a[q.id]);return o?q.q+" "
 const CORPS={"Sablier":"Marque la taille : robes portefeuille, ceintures, tailles hautes.","Poire":"Attire le regard vers le haut : encolures bateau, couleurs claires en haut, pantalons droits ou évasés.","Pomme":"Tissus fluides, coupe empire, décolleté en V, et mets tes jambes en valeur.","Rectangle":"Crée des courbes : volants, ceintures, jupes évasées, superpositions.","Triangle inversé":"Équilibre en bas : jupes trapèze, pantalons larges, hauts à encolure simple."};
 const SHAPE=f=>{f=String(f||"");if(/Sablier|Poire|Pomme|Rectangle|Triangle inversé/.test(f))return(f.match(/Sablier|Poire|Pomme|Rectangle|Triangle inversé/)||[])[0];const l=(f.trim().match(/^[AVHXOI8]/)||[""])[0];return {X:"Sablier","8":"Sablier",A:"Poire",V:"Triangle inversé",H:"Rectangle",I:"Rectangle",O:"Pomme"}[l]||f};
 const SHOPCUT={"Sablier":["robe portefeuille","pantalon taille haute","chemisier cintré"],"Poire":["top encolure bateau","pantalon évasé","veste courte structurée"],"Pomme":["robe empire","blouse col V fluide","pantalon droit"],"Rectangle":["jupe évasée","top à volants","robe ceinturée"],"Triangle inversé":["pantalon large","jupe trapèze","top col V"]};
-/* Boutiques partenaires (affiliation, commandes du Qatar acceptées).
+/* Pays du Golfe : nom, monnaie et prix des formules dans la monnaie locale.
+   Le pays est deviné au premier lancement (fuseau horaire du téléphone) et se change dans le profil. */
+const PAYS={
+ QA:{n:"Qatar",v:"Doha",cur:"QAR",p:{base:29,vip:79,annuel:249,pdf:49,occasion:99,seance:300}},
+ SA:{n:"Arabie saoudite",v:"Riyad",cur:"SAR",p:{base:29,vip:79,annuel:249,pdf:49,occasion:99,seance:300}},
+ AE:{n:"Émirats arabes unis",v:"Dubaï",cur:"AED",p:{base:29,vip:79,annuel:249,pdf:49,occasion:99,seance:300}},
+ KW:{n:"Koweït",v:"Koweït",cur:"KWD",p:{base:2.5,vip:6.9,annuel:21,pdf:4,occasion:8.5,seance:25}},
+ BH:{n:"Bahreïn",v:"Manama",cur:"BHD",p:{base:2.9,vip:7.9,annuel:24.9,pdf:4.9,occasion:9.9,seance:29}},
+ OM:{n:"Oman",v:"Mascate",cur:"OMR",p:{base:2.9,vip:7.9,annuel:24.9,pdf:4.9,occasion:9.9,seance:29}}};
+const TZPAYS={"Asia/Qatar":"QA","Asia/Riyadh":"SA","Asia/Dubai":"AE","Asia/Kuwait":"KW","Asia/Bahrain":"BH","Asia/Muscat":"OM"};
+function pays(){if(!PAYS[S.pays]){let z="";try{z=Intl.DateTimeFormat().resolvedOptions().timeZone}catch(e){}S.pays=TZPAYS[z]||"QA"}return S.pays}
+function prix(k){const c=PAYS[pays()];return c.p[k]+" "+c.cur}
+/* Boutiques partenaires (affiliation ; chaque boutique n’apparaît que dans les pays où elle paie la commission).
    Quand un programme t'accepte, colle ton identifiant ou ton lien ici :
    - Amazon.ae : "tag" = ton identifiant Associates (ex. "mystyle-21").
    - Ounass, Namshi : "deep" = ton lien de suivi ArabClicks/Optimise
      qui se termine par "url=" ; le lien de la recherche y est ajouté automatiquement.
    Tant que c'est vide, le bouton ouvre la boutique normalement (sans commission). */
-const SHOPS=[
- {n:"Ounass",site:"ounass.com",deep:""},
- {n:"Namshi",site:"namshi.com",deep:""},
- {n:"Amazon",site:"amazon.ae",url:q=>"https://www.amazon.ae/s?k="+encodeURIComponent(q),tag:""}];
+const SHOPS_ALL=[
+ {n:"Ounass",site:"ounass.com",deep:"",pays:["QA","SA","AE","KW","BH","OM"]},
+ {n:"Namshi",site:"namshi.com",deep:"",pays:["SA","AE","KW","BH","OM"]},
+ {n:"Amazon",site:"amazon.ae",url:q=>"https://www.amazon.ae/s?k="+encodeURIComponent(q),tag:"",pays:["QA","AE","KW","BH","OM"]},
+ {n:"Amazon",site:"amazon.sa",url:q=>"https://www.amazon.sa/s?k="+encodeURIComponent(q),tag:"",pays:["SA"]}];
+// Namshi n'est pas montré au Qatar tant que leur programme ne paie pas les commandes du Qatar.
+function shops(){return SHOPS_ALL.filter(x=>x.pays.includes(pays()))}
 function shopUrl(s,q){const direct=s.url?s.url(q)+(s.tag?"&tag="+encodeURIComponent(s.tag):""):null;
  if(s.deep)return s.deep+encodeURIComponent(direct||"https://www."+s.site+"/");
  return direct||"https://www.google.com/search?q="+encodeURIComponent("site:"+s.site+" "+q)}
@@ -721,15 +736,15 @@ const hideCodes=s=>String(s??"").replace(/\s*\[MS\d{2}\]/g,"");
 const norm=s=>String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
 function findArts(txt){const n=norm(txt),out=[];CATALOGUE.forEach(a=>{if((n.includes(a.id.toLowerCase())||n.includes(norm(a.nom)))&&out.length<3)out.push(a)});return out}
 const miniHTML=a=>`<button class="mini" data-art="${a.id}"><span class="ill">${garSVG(a)}</span><span><b>${esc(a.nom)}</b><small>Voir chez nos boutiques</small></span></button>`;
-function CATCTX(voice){return "VITRINE MY STYLE (pièces types disponibles chez nos boutiques partenaires Ounass, Namshi et Amazon, dans l’onglet Boutique) : "+CATALOGUE.map(a=>a.id+" "+a.nom+" (coupes idéales : "+a.formes.join(", ")+" ; "+a.occ.toLowerCase()+")").join(" ; ")+". Quand elle cherche une tenue ou te demande quoi acheter, choisis en priorité dans cette vitrine les pièces qui vont à sa morphologie et à sa saison de couleurs, explique pourquoi en une phrase, et cite chaque pièce avec son nom exact"+(voice?" (à l’oral, sans le code)":" suivi de son code entre crochets, par exemple « Robe portefeuille terracotta [MS01] »")+". Dis-lui qu’elle la retrouve dans l’onglet Boutique. N’invente ni prix ni stock."}
+function CATCTX(voice){return "PAYS DE LA CLIENTE : "+PAYS[pays()].n+" (prix en "+PAYS[pays()].cur+"). Ne recommande que ces boutiques partenaires : "+shops().map(x=>x.n+" ("+x.site+")").join(", ")+". VITRINE MY STYLE (pièces types disponibles chez ces boutiques, dans l’onglet Boutique) : "+CATALOGUE.map(a=>a.id+" "+a.nom+" (coupes idéales : "+a.formes.join(", ")+" ; "+a.occ.toLowerCase()+")").join(" ; ")+". Quand elle cherche une tenue ou te demande quoi acheter, choisis en priorité dans cette vitrine les pièces qui vont à sa morphologie et à sa saison de couleurs, explique pourquoi en une phrase, et cite chaque pièce avec son nom exact"+(voice?" (à l’oral, sans le code)":" suivi de son code entre crochets, par exemple « Robe portefeuille terracotta [MS01] »")+". Dis-lui qu’elle la retrouve dans l’onglet Boutique. N’invente ni prix ni stock."}
 window.addAuraBubble=txt=>{if(!txt||!findArts(txt).length)return;S.chat.push({r:"a",t:txt});try{save()}catch(_){}
  const c=S.page==="chat"&&document.querySelector(".chat");if(c){c.insertAdjacentHTML("beforeend",`<div class="bub a">${esc(hideCodes(txt))}${findArts(txt).map(miniHTML).join("")}</div>`);c.lastElementChild.scrollIntoView({behavior:"smooth",block:"nearest"})}};
 
 let S={rid:0,wait:{},page:"home",hist:[],dir:"f",ans:{},file:{},url:{},res:{},busy:false,err:"",voice:true,chat:[],draft:"",shopQ:"",listen:false,flow:null,news:null,newsBusy:false,newsErr:""};
 try{if(localStorage.getItem("monstyle_voix")==="0")S.voice=false}catch(e){}
 S.info={};
-try{const j=JSON.parse(localStorage.getItem("monstyle")||"null");if(j){S.res=j.res||{};S.ans=j.ans||{};S.info=j.info||{};if(j.nom){S.nom=j.nom;NOM=j.nom}if(j.later)S.later=true;if(j.lang)S.lang=j.lang}}catch(e){}
-function save(){try{localStorage.setItem("monstyle",JSON.stringify({res:{visage:S.res.visage,corps:S.res.corps,couleurs:S.res.couleurs,outfit:S.res.outfit},ans:S.ans,nom:S.nom,info:S.info,later:S.later,lang:S.lang}))}catch(e){}}
+try{const j=JSON.parse(localStorage.getItem("monstyle")||"null");if(j){S.res=j.res||{};S.ans=j.ans||{};S.info=j.info||{};if(j.nom){S.nom=j.nom;NOM=j.nom}if(j.later)S.later=true;if(j.lang)S.lang=j.lang;if(j.pays)S.pays=j.pays}}catch(e){}
+function save(){try{localStorage.setItem("monstyle",JSON.stringify({res:{visage:S.res.visage,corps:S.res.corps,couleurs:S.res.couleurs,outfit:S.res.outfit},ans:S.ans,nom:S.nom,info:S.info,later:S.later,lang:S.lang,pays:S.pays}))}catch(e){}}
 // Lien de test « nouvelle cliente » : ?nouvelle → Aura redemande le prénom, en français.
 try{if(/[?&]nouvelle\b/.test(location.search)){delete S.nom;NOM="ma belle";S.lang="fr";save();history.replaceState(null,"",location.pathname)}}catch(e){}
 if(window.i18nApply)i18nApply();
@@ -1067,6 +1082,7 @@ profil:()=>{const i=S.info||{},has=!!i.email,pick=(k,l)=>`<div class="row"><span
  <button class="btn ghost" data-go="infos" style="margin:6px 0 4px">Modifier mes informations</button>`
  :`<button class="tile main" data-go="infos"><b>Créer mon profil</b><span>Ton email, ta taille, ton style : je m’en sers pour mieux te conseiller.</span></button>`}
  <button class="tile" data-go="abo"><b>${PLANS[plan()].nom}</b><span>${Math.max(0,Math.floor(secLeft()/60))} min avec Aura restantes ce mois-ci · voir les formules</span></button>
+ <h2>Mon pays</h2><div class="pk">${Object.keys(PAYS).map(k=>`<button type="button" data-setpays="${k}" aria-pressed="${pays()===k}">${PAYS[k].n}</button>`).join("")}</div>
  <h2>Langue de l’application</h2><div class="pk">${[["fr","Français"],["en","English"],["ar","عربي"]].map(x=>`<button type="button" data-setlang="${x[0]}" aria-pressed="${(S.lang||"fr")===x[0]}">${x[1]}</button>`).join("")}</div>
  <h2>Mes analyses</h2><p class="hint" style="margin-top:-6px">Touche un résultat pour le revoir, ou refais l’analyse avec une nouvelle photo.</p>
  ${[["visage","Morpho visage",ok("visage")?cap(ok("visage").forme):"","r_visage"],["corps","Morpho & Kibbe",ok("corps")&&[ok("corps").forme,ok("corps").kibbe].filter(Boolean).join(" · "),"r_corps"],["couleurs","Colorimétrie",season(),"r_couleurs"]].map(x=>`<div class="an-row"><button class="an-v" ${x[2]?`data-view="${x[3]}"`:`data-mod="${x[0]}"`}><span>${x[1]}</span><b>${esc(x[2]||"À faire")}</b></button><button class="an-r" data-mod="${x[0]}">${x[2]?"Refaire":"Faire"}</button></div>`).join("")}
@@ -1076,13 +1092,13 @@ profil:()=>{const i=S.info||{},has=!!i.email,pick=(k,l)=>`<div class="row"><span
 abo:()=>{const c=plan(),why=PW_WHY[S.pwWhy]||"",card=(k,prix,txt)=>`<button class="tile${k==="vip"?" main":""}" data-buy="${k}" aria-pressed="${c===k}"><b>${PLANS[k].nom}${c===k?" ✓":""}</b><span>${prix} · ${txt}</span></button>`,m=Math.max(0,Math.floor(secLeft()/60));
  return {dock:1,html:`<h1>Mes formules</h1>
  ${why?`<p class="sub">${why}</p>`:`<p class="sub">Formule actuelle : <b>${PLANS[c].nom}</b> · ${m} min avec Aura restantes ce mois-ci.</p>`}
- ${card("base","29 QAR / mois","toutes les analyses, Outfit check, beauté, 20 min avec Aura")}
- ${card("vip","79 QAR / mois","tout l’Essentiel + 60 min avec Aura + garde-robe complète")}
- ${card("annuel","249 QAR / an","l’Essentiel pour toute l’année, 2 mois offerts")}
+ ${card("base",prix("base")+" / mois","toutes les analyses, Outfit check, beauté, 20 min avec Aura")}
+ ${card("vip",prix("vip")+" / mois","tout l’Essentiel + 60 min avec Aura + garde-robe complète")}
+ ${card("annuel",prix("annuel")+" / an","l’Essentiel pour toute l’année, 2 mois offerts")}
  <h2>À l’unité</h2>
- <button class="tile" data-buy="pdf"><b>Rapport couleurs PDF</b><span>49 QAR · ta palette complète à garder</span></button>
- <button class="tile" data-buy="occasion"><b>Look pour une occasion</b><span>99 QAR · mariage, soirée, entretien</span></button>
- <button class="tile" data-buy="seance"><b>Séance avec la styliste</b><span>300 QAR · un vrai rendez-vous de stylisme</span></button>
+ <button class="tile" data-buy="pdf"><b>Rapport couleurs PDF</b><span>${prix("pdf")} · ta palette complète à garder</span></button>
+ <button class="tile" data-buy="occasion"><b>Look pour une occasion</b><span>${prix("occasion")} · mariage, soirée, entretien</span></button>
+ <button class="tile" data-buy="seance"><b>Séance avec la styliste</b><span>${prix("seance")} · un vrai rendez-vous de stylisme</span></button>
  <h2>Code testeuse</h2>
  <input class="field" id="tcode" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" inputmode="latin" dir="ltr" placeholder="Ton code" style="margin-bottom:10px" onkeydown="if(event.key==='Enter'){event.preventDefault();document.querySelector('[data-tcode]').click()}">
  <button class="btn" data-tcode style="margin-bottom:120px">Activer</button>
@@ -1120,7 +1136,7 @@ boutique:()=>{const s=season(),cols=s?SEASONS[s].c.filter(x=>!/Noir|Blanc/.test(
  const list=fits.filter(x=>!S.vcat||x.a.cat===S.vcat).sort((x,y)=>y.f.sc-x.f.sc);
  const card=x=>`<button class="art" data-art="${x.a.id}"><span class="ill">${garSVG(x.a)}</span><b>${esc(x.a.nom)}</b><small>${esc(x.a.occ)}</small>${x.f.sc>=4?`<span class="tag">Parfait pour toi</span>`:x.f.sc>=2?`<span class="tag soft">Te va bien</span>`:""}</button>`;
  return {dock:1,html:`<h1>Ma boutique</h1><p class="sub">${known?"Des pièces choisies pour ta morphologie et ta saison.":"Fais ton analyse pour que je choisisse les pièces faites pour toi."}</p>
- <div class="card"><b>Nos boutiques partenaires</b><p class="sub" style="font-size:14px;margin:6px 0 0">${SHOPS.map(s=>s.n).join(" · ")} — livraison au Qatar.</p></div>
+ <div class="card"><b>Nos boutiques partenaires</b><p class="sub" style="font-size:14px;margin:6px 0 0">${shops().map(s=>s.n).join(" · ")} — livraison : ${PAYS[pays()].n}.</p></div>
  ${top.length?`<h2>La sélection d’Aura</h2><div class="vit">${top.map(card).join("")}</div>`:""}
  <button class="btn" data-askaura style="margin:14px 0 6px">Demander à Aura de choisir pour moi</button>
  <h2>La vitrine</h2><div class="fchips">${VCATS.map(c=>`<button data-vcat="${c[0]}" aria-pressed="${(S.vcat||"")===c[0]}">${c[1]}</button>`).join("")}</div>
@@ -1139,7 +1155,7 @@ news:()=>{const n=S.news,prof=PROFIL();
   :n&&n.tendances?n.tendances.map(t=>`<div class="card"><b>${esc(t.titre||"")}</b><p style="margin:0 0 8px">${esc(t.description||"")}</p>${t.pour_toi?`<p class="sub" style="font-size:14px;margin:0 0 10px">Pour toi : ${esc(t.pour_toi)}</p>`:""}${t.recherche?links(t.recherche):""}</div>`).join("")
   :`<div class="note">${S.newsErr?esc(S.newsErr):"Découvre les tendances mode de la saison, adaptées à ton profil."}</div>`;
  return {dock:1,html:`<h1>Nouveautés fashion</h1>
- <h2>Événements à Doha</h2><p class="sub">Mode et beauté au Qatar, mis à jour chaque semaine.</p>
+ <h2>Événements à Doha</h2><p class="sub">${pays()==="QA"?"Mode et beauté au Qatar, mis à jour chaque semaine.":"Mode et beauté au Qatar ; les événements de ton pays arrivent bientôt."}</p>
  ${evHTML()}
  <h2>Tendances du moment</h2><p class="sub">${prof?"Choisies pour ta saison et ta morphologie.":"Fais ton analyse pour des conseils sur mesure."}</p>
  ${body}
@@ -1194,7 +1210,7 @@ async function loadNews(){
  catch(e){S.newsErr=ERRS[e&&e.code]||(e&&e.message&&e.message!=="erreur"?e.message:"Impossible de charger les tendances. Réessaie.")}
  S.newsBusy=false;if(S.page==="news"){render(false);if(S.news&&S.news.resume)say(S.news.resume);else if(S.newsErr)say(S.newsErr)}
 }
-function links(q){return `<div class="chips">${SHOPS.map(s=>`<a target="_blank" rel="noopener sponsored" href="${shopUrl(s,q)}">${s.n}</a>`).join("")}</div>`}
+function links(q){return `<div class="chips">${shops().map(s=>`<a target="_blank" rel="noopener sponsored" href="${shopUrl(s,q)}">${s.n}</a>`).join("")}</div>`}
 function lum(h){const n=parseInt(h.slice(1),16);return(0.299*(n>>16)+0.587*(n>>8&255)+0.114*(n&255))/255}
 
 function render(sayIt){
@@ -1229,7 +1245,7 @@ function home(){S.flow=null;S.hist=[];S.page="home";S.dir="b";render(true)}
 function countUp(to){const el=$("#note");if(!el||isNaN(to))return;const t0=performance.now();(function f(n){const k=Math.min(1,(n-t0)/1000);el.textContent=k<1?(to*k).toFixed(1):String(to);if(k<1)requestAnimationFrame(f)})(t0)}
 
 // Langue des réponses de l'IA : celle choisie par la cliente. Les valeurs de référence restent en français (l'app les traduit à l'affichage).
-const LANGTXT={en:"en anglais",ar:"en arabe, dans un dialecte du Golfe (qatari) simple et chaleureux, en t’adressant à une femme"};
+const LANGTXT={en:"en anglais",ar:"en arabe, dans un dialecte du Golfe (khaleeji) simple et chaleureux, en t’adressant à une femme"};
 Object.defineProperty(window,"FMT",{get(){const l=typeof S!=="undefined"&&S.lang;if(!LANGTXT[l])return "Réponds uniquement avec un objet JSON valide, en français, sans texte autour. ";
  return "Réponds uniquement avec un objet JSON valide, sans texte autour. Écris tous les textes "+LANGTXT[l]+". Exception : les valeurs des champs « forme », « saison », « sous_ton », « kibbe », « somatotype », « categorie » et le « nom » des essences restent exactement en français (ou dans les listes données), sans traduction. "}});
 const SEAS_LIST=Object.keys(SEASONS).join(", ");
@@ -1294,7 +1310,7 @@ async function run(k){if(RUNS[k])return runMod(k);
 }
 
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;S.micMsg="";
-function SYS(){return REF+" Tu es la styliste personnelle de l’application Mon style. Parle comme une amie styliste chaleureuse, à l’oral : 2 à 4 phrases courtes, sans liste, sans emoji. Elle s’appelle "+(S.nom||"(prénom inconnu)")+" : dis « ma belle » une seule fois, dans ta toute première réponse (« Salut ma belle, »), puis ne le répète plus jamais ; ensuite utilise seulement son prénom, de temps en temps. Réponds en français, ou en arabe ou en anglais si elle écrit dans ces langues. "+({en:"Elle a choisi l’anglais : réponds en anglais par défaut. ",ar:"Elle a choisi l’arabe : réponds par défaut en dialecte qatari du Golfe (jamais en arabe classique), en t’adressant à elle au féminin avec « چ ». "}[S.lang]||"")+" Son profil : "+(PROFIL()||"pas encore analysé : invite-la à faire son analyse")+". Pour les achats, donne le type de pièce, la couleur et les mots-clés à chercher chez nos boutiques partenaires (Ounass, Namshi, Amazon), dans l’onglet Boutique, sans inventer de lien ni de prix. "+CATCTX()}
+function SYS(){return REF+" Tu es la styliste personnelle de l’application Mon style. Parle comme une amie styliste chaleureuse, à l’oral : 2 à 4 phrases courtes, sans liste, sans emoji. Elle s’appelle "+(S.nom||"(prénom inconnu)")+" : dis « ma belle » une seule fois, dans ta toute première réponse (« Salut ma belle, »), puis ne le répète plus jamais ; ensuite utilise seulement son prénom, de temps en temps. Réponds en français, ou en arabe ou en anglais si elle écrit dans ces langues. "+({en:"Elle a choisi l’anglais : réponds en anglais par défaut. ",ar:"Elle a choisi l’arabe : réponds par défaut en dialecte qatari du Golfe (jamais en arabe classique), en t’adressant à elle au féminin avec « چ ». "}[S.lang]||"")+" Son profil : "+(PROFIL()||"pas encore analysé : invite-la à faire son analyse")+". Pour les achats, donne le type de pièce, la couleur et les mots-clés à chercher chez les boutiques partenaires de son pays, dans l’onglet Boutique, sans inventer de lien ni de prix. "+CATCTX()}
 let TCONV=null;
 async function textConv(){
  if(TCONV)return TCONV;
@@ -1463,6 +1479,7 @@ document.addEventListener("click",e=>{
  if(t.dataset.buy){toast(t.dataset.buy==="seance"?"La réservation des séances arrive bientôt.":"Le paiement arrive avec la version Google Play. En attendant, utilise ton code testeuse.");return}
  if(t.hasAttribute("data-tcode")){const v=codeNorm(($("#tcode")||{}).value);if(TEST_CODES.includes(v)){PLAN.p="vip";planSave();S.pwWhy="";toast("Accès VIP activé");render(true)}else toast("Code incorrect");return}
  if(t.hasAttribute("data-essai")){PLAN.p="essai";planSave();toast("Retour à l’essai gratuit");render(false);return}
+ if(t.dataset.setpays){S.pays=t.dataset.setpays;save();toast(PAYS[S.pays].n);render(false);return}
  if(t.dataset.mod){const m=t.dataset.mod;if(!premium()&&(m!=="visage"||PLAN.vfree))return paywall(m==="visage"?"visage":"analyses");return startMod(m)}
  if(t.dataset.gocc){S.grOcc=t.dataset.gocc;S.grErr="";render(false);return}
  if(t.dataset.glooks)return grLooks(t.dataset.glooks);
