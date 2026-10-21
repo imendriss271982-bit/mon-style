@@ -651,6 +651,12 @@ const I18N_D=[
 ["Accès VIP activé","VIP access activated","تفعّل VIP"],
 ["Code incorrect","Wrong code","الكود غلط"],
 ["Retour à l’essai gratuit","Back to the free trial","رجعتي للتجربة المجانية"],
+["Photo avec minuteur","Timer photo","صورة بمؤقّت"],
+["Lancer le minuteur","Start the timer","شغّلي المؤقّت"],
+["Changer de caméra","Switch camera","بدّلي الكاميرا"],
+["Fermer","Close","سكّري"],
+["Autorise la caméra pour prendre la photo.","Allow the camera to take the photo.","اسمحي للكاميرا عشان تصورين."],
+["La photo n’a pas marché. Réessaie.","The photo didn’t work. Try again.","الصورة ما زبطت. جربي مرة ثانية."],
 ];
 /* Liste d’installation (texte avec mise en forme). */
 const I18N_HTML={instL:{
