@@ -254,7 +254,7 @@ nav.dock button[aria-current="true"]{color:var(--accent)}
 .bub.a{align-self:flex-start;background:var(--soft);border-bottom-left-radius:6px}
 .bub img{display:block;max-width:100%;max-height:260px;border-radius:14px;margin:-4px -8px 8px;width:calc(100% + 16px);object-fit:cover}
 #cam{position:fixed;inset:0;z-index:60;background:#000;display:flex;flex-direction:column}
-#cam video{flex:1;min-height:0;width:100%;object-fit:cover}
+#cam video{flex:1;min-height:0;width:100%;object-fit:contain}
 #cam video.mir{transform:scaleX(-1)}
 #cam .cd{position:absolute;inset:0;display:grid;place-items:center;font:600 160px/1 "Cormorant Garamond",Georgia,serif;color:#fff;text-shadow:0 4px 30px rgba(0,0,0,.6);pointer-events:none}
 #cam .fl{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity .35s}
@@ -263,9 +263,9 @@ nav.dock button[aria-current="true"]{color:var(--accent)}
 #cam .bar button.on{background:var(--accent);color:var(--on)}
 #cam .bar{flex:none;height:auto}
 #cam.guided .vw{position:relative;flex:1;min-height:0;overflow:hidden}
-#cam.guided .vw video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-#cam .gd{position:absolute;inset:16% 12% 6%;pointer-events:none;display:grid;place-items:center}
-#cam .gd.gf{inset:12% 10% 0}
+#cam.guided .vw video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+#cam .gd{position:absolute;inset:0;pointer-events:none;display:grid;place-items:center;box-sizing:border-box;padding:8% 10% 3%}
+#cam .gd.gf{padding:6% 8% 0}
 #cam .gd svg{width:100%;height:100%;fill:none;stroke:#fff;stroke-width:1.1;stroke-dasharray:4 3;vector-effect:non-scaling-stroke;filter:drop-shadow(0 0 3px rgba(0,0,0,.7));transition:stroke .3s}
 #cam .gd.ok svg{stroke:#BDF0C8}
 #cam .tipb{position:absolute;left:14px;right:14px;top:calc(14px + env(safe-area-inset-top,0px));background:rgba(0,0,0,.6);color:#fff;border-radius:14px;padding:10px 14px;font-size:15px;line-height:1.35;text-align:center;transition:background .3s}
@@ -1077,7 +1077,7 @@ function beauteEt(){return `<p class="sub">${BL(BX.etS)}</p>`+ETQ.map(e=>`<div c
 let CAM={st:null,face:"user",delay:3,busy:false};
 function camBeep(f,d){try{const C=window.AudioContext||window.webkitAudioContext;const ac=CAM.ac||(CAM.ac=new C());const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;g.gain.value=.15;o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+(d||.12))}catch(e){}}
 async function camStart(){const v=$("#camv");if(!v)return;try{if(CAM.st)CAM.st.getTracks().forEach(t=>t.stop());
-  CAM.st=await navigator.mediaDevices.getUserMedia({video:{facingMode:CAM.face,width:{ideal:1280},height:{ideal:1920}},audio:false});
+  CAM.st=await navigator.mediaDevices.getUserMedia({video:{facingMode:CAM.face,width:{ideal:1920},height:{ideal:1080}},audio:false});
   v.srcObject=CAM.st;v.classList.toggle("mir",CAM.face==="user");await v.play().catch(()=>{})}
  catch(e){camClose();toast("Autorise la caméra pour prendre la photo.")}}
 function camOpen(){if($("#cam"))return;const d=document.createElement("div");d.id="cam";d.setAttribute("role","dialog");d.setAttribute("aria-label","Photo avec minuteur");
@@ -1122,8 +1122,8 @@ function acamOpen(k){if($("#cam"))return;
   <div class="bar"><button data-acamx aria-label="Fermer">✕</button><button data-acamd="3" class="${ACAM.delay===3?"on":""}">3 s</button><button class="shoot" data-acamgo aria-label="Prendre la photo"></button><button data-acamd="10" class="${ACAM.delay===10?"on":""}">10 s</button><button data-acamf aria-label="Changer de caméra">⟲</button></div>`;
  document.body.appendChild(d);if(window.i18nApply)i18nApply();acamStart()}
 async function acamStart(){const v=$("#camv");if(!v||!ACAM)return;try{if(CAM.st)CAM.st.getTracks().forEach(t=>t.stop());
-  CAM.st=await navigator.mediaDevices.getUserMedia({video:{facingMode:ACAM.face,width:{ideal:1280},height:{ideal:1920}},audio:false});
-  v.srcObject=CAM.st;v.classList.toggle("mir",ACAM.face==="user");await v.play().catch(()=>{});
+  CAM.st=await navigator.mediaDevices.getUserMedia({video:{facingMode:ACAM.face,width:{ideal:1920},height:{ideal:1080}},audio:false});
+  v.srcObject=CAM.st;v.classList.toggle("mir",ACAM.face==="user");v.onloadedmetadata=v.onresize=acamFit;await v.play().catch(()=>{});acamFit();
   clearInterval(ACAM.tm);ACAM.tm=setInterval(acamLight,700)}
  catch(e){const k=ACAM&&ACAM.k;acamClose();const n=k&&$("#nat_"+k);if(n)n.click();else toast("Autorise la caméra pour prendre la photo.")}}
 // Lumière en direct : trop sombre, le bandeau devient rose et Aura le dit (une fois toutes les 10 secondes au plus).
@@ -1132,11 +1132,15 @@ function acamLight(){const v=$("#camv"),tip=$("#camtip"),gd=$("#camgd");if(!v||!
  tip.classList.toggle("dark",dark);gd.classList.toggle("ok",!dark);
  tip.textContent=tr(dark?"Trop sombre : approche-toi d’une fenêtre ou d’une lumière.":GTIP[ACAM.k]);
  if(dark&&!ACAM.busy&&Date.now()-ACAM.said>10000){ACAM.said=Date.now();say("C’est un peu sombre ici. Mets-toi face à une fenêtre ou une belle lumière, ce sera plus rapide et plus juste.")}}
+// Le contour se place exactement sur l'image filmée (quelle que soit sa forme, portrait ou paysage).
+function acamFit(){const v=$("#camv"),g=$("#camgd");if(!v||!g||!v.videoWidth)return;const b=v.getBoundingClientRect(),sc=Math.min(b.width/v.videoWidth,b.height/v.videoHeight);
+ const w=v.videoWidth*sc,h=v.videoHeight*sc;g.style.inset="auto";Object.assign(g.style,{left:(b.width-w)/2+"px",top:(b.height-h)/2+"px",width:w+"px",height:h+"px"})}
+addEventListener("resize",()=>{try{acamFit()}catch(e){}});
 function acamClose(){if(ACAM){clearInterval(ACAM.tm);ACAM.busy=false}ACAM=null;if(CAM.st){CAM.st.getTracks().forEach(t=>t.stop());CAM.st=null}const d=$("#cam");if(d)d.remove()}
 async function acamGo(){if(!ACAM||ACAM.busy)return;ACAM.busy=true;stopVoice();const cd=$("#camcd"),k=ACAM.k;
  for(let n=ACAM.delay;n>0;n--){if(!$("#cam"))return;cd.textContent=n;camBeep(n<=3?880:660);await wait(1000)}
  if(!$("#cam"))return;cd.textContent="";camBeep(1320,.25);const v=$("#camv"),fl=$("#camfl");
- const vw=v.videoWidth||720,vh=v.videoHeight||1280,box=v.getBoundingClientRect(),sc=Math.max(box.width/vw,box.height/vh)||1;
+ const vw=v.videoWidth||720,vh=v.videoHeight||1280,box=v.getBoundingClientRect(),sc=Math.min(box.width/vw,box.height/vh)||1;
  const cw=Math.min(vw,Math.round(box.width/sc)),ch=Math.min(vh,Math.round(box.height/sc)),sx=(vw-cw)/2,sy=(vh-ch)/2;
  const c=document.createElement("canvas");c.width=cw;c.height=ch;const x=c.getContext("2d");
  if(ACAM.face==="user"){x.translate(cw,0);x.scale(-1,1)}x.drawImage(v,sx,sy,cw,ch,0,0,cw,ch);
