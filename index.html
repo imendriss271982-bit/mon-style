@@ -598,7 +598,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </div>
 <script src="i18n.js?v=5"></script>
 <script>
-const VERSION="79";
+const VERSION="80";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -1229,15 +1229,22 @@ function render(sayIt){
  if(sayIt&&p.say)say(p.say);
  window.scrollTo(0,0);
 }
+// ===== n8n : chaque nouvelle inscrite est envoyée au workflow « My Style – Nouvelles inscrites » =====
+// Colle ici l'adresse « Production URL » du nœud Webhook de n8n. Vide = rien n'est envoyé.
+// Seuls le prénom, l'email, le pays, la langue et la formule partent ; jamais la taille, le poids ou les photos.
+const N8N_URL="";
+function n8nInscription(){if(!N8N_URL)return;try{fetch(N8N_URL,{method:"POST",headers:{"Content-Type":"application/json"},
+ body:JSON.stringify({prenom:S.nom||"",email:(S.info||{}).email||"",pays:PAYS[pays()].n,langue:S.lang||"fr",formule:PLANS[plan()].nom})}).catch(()=>{})}catch(e){}}
 function saveInfo(){const d=S.idraft;if(!d)return;const bad=(id,m)=>{const f=$("#"+id);if(f){f.classList.add("bad");f.focus()}toast(m)};
  const email=String(d.email||"").trim().toLowerCase();if(!EMAIL_OK(email))return bad("i_email","Vérifie ton email");
  const num=v=>{v=String(v||"").replace(",",".").trim();return v===""?"":Number(v)};
  const ta=num(d.taille),po=num(d.poids);
  if(ta!==""&&!(ta>=120&&ta<=220))return bad("i_taille","Ta taille en cm, entre 120 et 220");
  if(po!==""&&!(po>=30&&po<=250))return bad("i_poids","Ton poids en kg, entre 30 et 250");
+ const nouvelle=email!==((S.info||{}).email||"");
  S.info={email,taille:ta===""?"":Math.round(ta),poids:po===""?"":Math.round(po*10)/10,age:d.age||"",tvet:d.tvet||"",budget:d.budget||"",styles:[...(d.styles||[])]};
  const n=String(d.nom||"").trim();if(n){S.nom=n;NOM=n}
- save();S.idraft=undefined;toast("Profil enregistré");S.hist=S.hist.filter(h=>h!=="infos");if(S.hist[S.hist.length-1]==="profil")S.hist.pop();S.page="profil";S.dir="b";render(true)}
+ save();if(nouvelle)n8nInscription();S.idraft=undefined;toast("Profil enregistré");S.hist=S.hist.filter(h=>h!=="infos");if(S.hist[S.hist.length-1]==="profil")S.hist.pop();S.page="profil";S.dir="b";render(true)}
 function go(page,dir){if(page==="infos")S.idraft=undefined;if(page!==S.page&&!/_run$/.test(S.page))S.hist.push(S.page);S.page=page;S.dir=dir||"f";S.err="";if(DOCK.includes(page)&&page!=="o_photo"){S.flow=null}render(true)}
 function back(){stopVoice();const p=S.hist.pop();if(!p){S.page="home";S.flow=null}else S.page=p;S.dir="b";S.err="";if(S.flow&&!S.flow.includes(S.page))S.flow=null;render(false)}
 function next(){const ix=S.flow.indexOf(S.page);const n=S.flow[ix+1];if(/_run$/.test(n)){go(n);run(n)}else if(n)go(n);else if(S.from==="profil"){S.from=null;S.flow=null;S.hist=["home"];S.page="profil";S.dir="b";render(true)}else home()}
