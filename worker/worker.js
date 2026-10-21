@@ -98,10 +98,12 @@ export default {
               { method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": KEY }, body: ibody, signal: AbortSignal.timeout(Math.min(60000, left)) });
           } catch { return new Response(JSON.stringify({ error: { message: "timeout" } }), { status: 504 }); }
         };
-        let ir = null;
+        let ir = null, quotaMsg = "";
         const tryImg = async list => {
           for (const model of list) {
             ir = await icall(model);
+            // 429 = quota épuisé ou pas de quota pour ce modèle (souvent : clé gratuite) : on garde le message et on essaie le modèle suivant.
+            if (ir.status === 429) { try { const q = await ir.clone().json(); quotaMsg = (q.error && q.error.message) || quotaMsg; } catch {} continue; }
             if (ir.status === 404 || ir.status === 400 || ir.status === 503 || ir.status === 500 || ir.status === 504) continue;
             if (ir.ok) GOOD_IMG = model;
             return true;
@@ -125,7 +127,11 @@ export default {
         let idata = {};
         try { idata = await ir.json(); } catch {}
         if (!ir || !ir.ok) {
-          if (ir && ir.status === 429) return json({ erreur: "Trop de demandes. Réessaie dans un instant.", code: "rate_limited" }, 429);
+          if (quotaMsg || (ir && ir.status === 429)) {
+            const free = /limit: ?0|free.?tier|billing|quota/i.test(quotaMsg);
+            return json({ erreur: free ? "La création d’images n’est pas incluse dans la version gratuite de la clé Gemini. Active la facturation sur ta clé Gemini (Google AI Studio) pour utiliser l’essai make-up." : "Trop de demandes. Réessaie dans un instant.",
+              code: free ? "no_billing" : "rate_limited", detail: quotaMsg.slice(0, 300) }, 429);
+          }
           if (ir && (ir.status === 503 || ir.status === 500 || ir.status === 504)) return json({ erreur: "Le make-up est très demandé en ce moment. Réessaie dans une minute.", code: "busy" }, 503);
           return json({ erreur: "Erreur Gemini " + (ir ? ir.status : "") + " : " + ((idata.error && idata.error.message) || "inconnue"), code: "ai_error" }, 502);
         }
