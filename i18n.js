@@ -688,6 +688,8 @@ const I18N_D=[
 ["La routine n’est pas disponible ici.","The routine isn’t available here.","الروتين مو متوفر هني."],
 ["Je n’ai pas réussi à créer ta routine. Réessaie.","I couldn’t create your routine. Try again.","ما قدرت أسوي روتينچ. جرّبي مرة ثانية."],
 ["Je n’ai pas réussi à créer ton make-up. Réessaie.","I couldn’t create your make-up. Try again.","ما قدرت أسوي مكياجچ. جرّبي مرة ثانية."],
+["Numéro WhatsApp","WhatsApp number","رقم الواتساب"],
+["Vérifie ton numéro WhatsApp","Check your WhatsApp number","تأكدي من رقم الواتساب"],
 // ——— Accueil : My Stylist en vedette ———
 ["Ta styliste IA personnelle","Your personal AI stylist","الستايلست الذكية الخاصة فيچ"],
 ["👑 {0} min ce mois-ci","👑 {0} min this month","👑 {0} دقيقة هالشهر"],

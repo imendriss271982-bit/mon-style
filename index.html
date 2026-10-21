@@ -1367,7 +1367,7 @@ fiche:()=>{const keep=S.flow;S.flow=null;const part=(f,t)=>{const r=P[f]();retur
 profil:()=>{const i=S.info||{},has=!!i.email,pick=(k,l)=>`<div class="row"><span>${l}</span>${esc(k||"—")}</div>`;
  return {dock:1,html:`<h1>Mon profil</h1>
  <div class="who"><div class="av">${esc((S.nom||"M").charAt(0).toUpperCase())}</div><div><b>${esc(S.nom||"Ma belle")}</b><span>${esc(i.email||"Ajoute ton email pour créer ton compte")}</span></div></div>
- ${has?`<h2 style="margin-top:0">Mes informations</h2>${pick(i.taille?i.taille+" cm":"","Taille")}${pick(i.poids?i.poids+" kg":"","Poids (privé)")}${pick(i.age,"Âge")}${pick(i.tvet,"Taille de vêtements")}${pick(i.budget,"Budget")}${pick((i.styles||[]).join(", "),"Styles préférés")}
+ ${has?`<h2 style="margin-top:0">Mes informations</h2>${pick(i.tel,"WhatsApp")}${pick(i.taille?i.taille+" cm":"","Taille")}${pick(i.poids?i.poids+" kg":"","Poids (privé)")}${pick(i.age,"Âge")}${pick(i.tvet,"Taille de vêtements")}${pick(i.budget,"Budget")}${pick((i.styles||[]).join(", "),"Styles préférés")}
  <button class="btn ghost" data-go="infos" style="margin:6px 0 4px">Modifier mes informations</button>`
  :`<button class="tile main" data-go="infos"><b>Créer mon profil</b><span>Ton email, ta taille, ton style : je m’en sers pour mieux te conseiller.</span></button>`}
  <button class="tile" data-go="abo"><b>${PLANS[plan()].nom}</b><span>${Math.max(0,Math.floor(secLeft()/60))} min avec Aura restantes ce mois-ci · voir les formules</span></button>
@@ -1398,6 +1398,7 @@ infos:()=>{const d=S.idraft||(S.idraft={...S.info,nom:S.nom||"",styles:[...(S.in
  return {back:true,html:`<p class="step">Mon profil</p><h1>Mes informations</h1><p class="sub">Seul ton email est obligatoire. Le reste m’aide à te conseiller plus juste.</p>
  <label class="lbl" for="i_email">Email</label><input class="field" id="i_email" data-i="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" placeholder="you@example.com" value="${esc(d.email||"")}">
  <label class="lbl" for="i_nom">Prénom <small>· facultatif</small></label><input class="field" id="i_nom" data-i="nom" autocomplete="given-name" placeholder="Ton prénom" value="${esc(d.nom||"")}">
+ <label class="lbl" for="i_tel">Numéro WhatsApp <small>· facultatif</small></label><input class="field" id="i_tel" data-i="tel" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" placeholder="+974 5555 1234" value="${esc(d.tel||"")}">
  <div class="two"><div><label class="lbl" for="i_taille">Taille</label><div class="unit"><input class="field" id="i_taille" data-i="taille" inputmode="numeric" placeholder="165" value="${esc(d.taille||"")}"><i>cm</i></div></div>
  <div><label class="lbl" for="i_poids">Poids <small>· facultatif</small></label><div class="unit"><input class="field" id="i_poids" data-i="poids" inputmode="decimal" placeholder="60" value="${esc(d.poids||"")}"><i>kg</i></div></div></div>
  <p class="hint">Ton poids reste sur ton téléphone : il n’est jamais envoyé ni montré à personne.</p>
@@ -1545,11 +1546,11 @@ function render(sayIt){
 }
 // ===== n8n : chaque nouvelle inscrite est envoyée au workflow « My Style – Nouvelles inscrites » =====
 // Colle ici l'adresse « Production URL » du nœud Webhook de n8n. Vide = rien n'est envoyé.
-// Seuls le prénom, l'email, le pays, la langue et la formule partent ; jamais la taille, le poids ou les photos.
+// Seuls la date, le prénom, l'email, le WhatsApp, le pays, la langue et la formule partent ; jamais la taille, le poids ou les photos.
 const N8N_URL="https://imendriss.app.n8n.cloud/webhook/523be6d4-37b2-4c9e-949b-5d1d06a9d7a5";
 function n8nInscription(){if(!N8N_URL)return;try{
  // Envoi « simple » (formulaire) : le navigateur n'a pas besoin de demander la permission à n8n (pas de blocage CORS), et n8n lit quand même chaque champ.
- const b=new URLSearchParams({prenom:S.nom||"",email:(S.info||{}).email||"",pays:PAYS[pays()].n,langue:S.lang||"fr",formule:PLANS[plan()].nom});
+ const b=new URLSearchParams({date:new Date().toLocaleString("sv-SE",{timeZone:"Asia/Qatar"}).slice(0,16),prenom:S.nom||"",email:(S.info||{}).email||"",tel:(S.info||{}).tel||"",pays:PAYS[pays()].n,langue:S.lang||"fr",formule:PLANS[plan()].nom});
  fetch(N8N_URL,{method:"POST",mode:"no-cors",body:b,keepalive:true}).catch(()=>{})}catch(e){}}
 function saveInfo(){const d=S.idraft;if(!d)return;const bad=(id,m)=>{const f=$("#"+id);if(f){f.classList.add("bad");f.focus()}toast(m)};
  const email=String(d.email||"").trim().toLowerCase();if(!EMAIL_OK(email))return bad("i_email","Vérifie ton email");
@@ -1557,8 +1558,9 @@ function saveInfo(){const d=S.idraft;if(!d)return;const bad=(id,m)=>{const f=$("
  const ta=num(d.taille),po=num(d.poids);
  if(ta!==""&&!(ta>=120&&ta<=220))return bad("i_taille","Ta taille en cm, entre 120 et 220");
  if(po!==""&&!(po>=30&&po<=250))return bad("i_poids","Ton poids en kg, entre 30 et 250");
+ const tel=String(d.tel||"").replace(/[^\d+ ]/g,"").replace(/\s+/g," ").trim();if(tel&&tel.replace(/\D/g,"").length<8)return bad("i_tel","Vérifie ton numéro WhatsApp");
  const nouvelle=email!==((S.info||{}).email||"");
- S.info={email,taille:ta===""?"":Math.round(ta),poids:po===""?"":Math.round(po*10)/10,age:d.age||"",tvet:d.tvet||"",budget:d.budget||"",styles:[...(d.styles||[])]};
+ S.info={email,tel,taille:ta===""?"":Math.round(ta),poids:po===""?"":Math.round(po*10)/10,age:d.age||"",tvet:d.tvet||"",budget:d.budget||"",styles:[...(d.styles||[])]};
  const n=String(d.nom||"").trim();if(n){S.nom=n;NOM=n}
  save();if(nouvelle)n8nInscription();S.idraft=undefined;toast("Profil enregistré");S.hist=S.hist.filter(h=>h!=="infos");if(S.hist[S.hist.length-1]==="profil")S.hist.pop();S.page="profil";S.dir="b";render(true)}
 function go(page,dir){if(page==="infos")S.idraft=undefined;if(page!==S.page&&!/_run$/.test(S.page))S.hist.push(S.page);S.page=page;S.dir=dir||"f";S.err="";if(DOCK.includes(page)&&page!=="o_photo"){S.flow=null}render(true)}
