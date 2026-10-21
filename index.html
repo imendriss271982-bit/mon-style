@@ -589,7 +589,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 </div>
 <script src="i18n.js?v=1"></script>
 <script>
-const VERSION="69";
+const VERSION="70";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -1308,8 +1308,9 @@ let VOICES=[],KEEP=[];
 function loadVoices(){try{VOICES=window.speechSynthesis?speechSynthesis.getVoices():[]}catch(e){}}
 loadVoices();if(window.speechSynthesis)speechSynthesis.addEventListener?.("voiceschanged",loadVoices);
 let SPTOK=0;
+let LASTCANCEL=0;
 function speak(t){const ss=window.speechSynthesis;if(!ss||!t)return;affStop();const tk=++SPTOK;
- const busy=ss.speaking||ss.pending;if(busy)ss.cancel();
+ const busy=ss.speaking||ss.pending||Date.now()-LASTCANCEL<300;if(ss.speaking||ss.pending){ss.cancel();LASTCANCEL=Date.now()}
  if(!VOICES.length)loadVoices();
  const lang=/[؀-ۿ]/.test(t)?"ar-SA":S.lang==="en"?"en-US":"fr-FR";const vs=VOICES.filter(x=>x.lang.toLowerCase().replace("_","-").startsWith(lang.slice(0,2)));
  const v=vs.find(x=>/amélie|audrey|marie|julie|hortense|denise|samantha|karen|serena|zira|aria|female|femme|google/i.test(x.name))||vs.find(x=>x.lang.replace("_","-")===lang)||vs[0];
@@ -1317,10 +1318,10 @@ function speak(t){const ss=window.speechSynthesis;if(!ss||!t)return;affStop();co
  KEEP=parts.map((p,i)=>{const u=new SpeechSynthesisUtterance(p);u.lang=lang;if(v)u.voice=v;u.rate=1;u.volume=1;
   if(i===0)u.onstart=()=>talk(true);if(i===parts.length-1)u.onend=()=>talk(false);u.onerror=()=>talk(false);return u});
  const go=()=>{if(tk!==SPTOK)return;ss.resume();KEEP.forEach(u=>ss.speak(u))};
- if(busy)setTimeout(go,120);else go()}
+ if(busy)setTimeout(go,Math.max(120,300-(Date.now()-LASTCANCEL)));else go()}
 function unlock(){const ss=window.speechSynthesis;if(!S.voice||!ss)return;try{ss.resume();const u=new SpeechSynthesisUtterance(".");u.volume=0.01;u.lang="fr-FR";ss.speak(u)}catch(e){}}
 // Coupe tout ce qu’Aura est en train de dire (voix du téléphone, voix arabe, phrases enregistrées).
-function stopVoice(){SPTOK++;try{if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}ARTOK++;
+function stopVoice(){SPTOK++;try{if(window.speechSynthesis){speechSynthesis.cancel();LASTCANCEL=Date.now()}}catch(e){}ARTOK++;
  try{if(typeof AUD!=="undefined"&&!AUD.paused){AUD.pause();const f=AUD.onended;if(f)f()}}catch(e){}
  talk(false);if(window.auraTalking)try{auraTalking(false)}catch(e){}}
 /*ENDVOICE*/
@@ -1448,7 +1449,7 @@ let SKIP=false,CUR="",SPOKE=false;window.GREETED=false;
 const RM=matchMedia("(prefers-reduced-motion:reduce)").matches;
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 function voiceLine(t){return new Promise(r=>{const ss=window.speechSynthesis;let done=false;const fin=()=>{if(!done){done=true;talk(false);r()}};
- setTimeout(fin,Math.max(2600,t.length*70));
+ setTimeout(fin,Math.max(4000,t.length*120+2500));
  if(!S.voice||!ss){return}
  try{affStop();if(!VOICES.length)loadVoices();const vs=VOICES.filter(x=>x.lang.toLowerCase().startsWith("fr"));
   const v=vs.find(x=>/amélie|audrey|marie|julie|hortense|denise|female|femme|google/i.test(x.name))||vs[0];
@@ -1669,7 +1670,7 @@ async function startCall(){
  try{
   if(typeof stopVoice==="function")stopVoice();
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){try{navigator.clipboard&&navigator.clipboard.writeText(location.href.split("?")[0])}catch(_){}throw new Error("cette fenêtre bloque le micro. Le lien est copié : ouvre Safari, colle-le dans la barre d’adresse, puis ajoute l’application à l’écran d’accueil.")};
-  await navigator.mediaDevices.getUserMedia({audio:true});
+  {const ms=await navigator.mediaDevices.getUserMedia({audio:true});ms.getTracks().forEach(t=>t.stop())}
   const {Conversation}=await import("https://esm.sh/@elevenlabs/client");
   window.CALLED=true;
   conv=await Conversation.startSession({agentId:AGENT_ID,connectionType:"websocket",...(typeof S!=="undefined"&&S.lang?{overrides:{agent:{language:S.lang}}}:{}),dynamicVariables:{user_name:(typeof S!=="undefined"&&S.nom)||"",profil:(typeof PROFIL==="function"&&PROFIL())||"pas encore analysé"},
