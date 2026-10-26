@@ -4,6 +4,23 @@
    Pour corriger une traduction : modifie simplement la 2e (anglais) ou la 3e (arabe) colonne. */
 const I18N_D=[
 // ——— Accueil v2 ———
+["Looks pour toi","Looks for you","إطلالات مخصصة لچ"],
+["Looks","Looks","إطلالات"],
+["Sur mesure pour toi","Made for you","مخصصة لچ"],
+["Des tenues composées pour ta silhouette et ta saison.","Outfits put together for your body shape and your season.","لبسات منسّقة على جسمچ وموسمچ."],
+["Des idées de tenues, à affiner avec ton analyse.","Outfit ideas, to fine-tune with your analysis.","أفكار لبسات، نضبطها أكثر بعد تحليلچ."],
+["Fais ton analyse de style","Do your style analysis","سوّي تحليل ستايلچ"],
+["Ensuite, chaque look est choisi pour ta silhouette et tes couleurs ›","Then every look is chosen for your body shape and colours ›","بعدها كل لوك ينختار على جسمچ وألوانچ ‹"],
+["Look {0} · {1}","Look {0} · {1}","لوك {0} · {1}"],
+["robe","dress","فستان"],
+["haut et bas","top and bottom","توب وتحت"],
+["abaya","abaya","عباية"],
+["Demander à Aura","Ask Aura","اسألي أورا"],
+["J’ai choisi ma tenue : Outfit check","I’ve picked my outfit: Outfit check","اخترت لبسي: Outfit check"],
+["Voici des looks choisis pour toi. Choisis une occasion.","Here are looks chosen for you. Pick an occasion.","هذي لوكات اخترتها لچ. اختاري المناسبة."],
+["Voici des idées de looks. Fais ton analyse pour que je les choisisse vraiment pour toi.","Here are some look ideas. Do your analysis so I can really choose them for you.","هذي أفكار لوكات. سوّي تحليلچ عشان أختارها لچ صدق."],
+["Que penses-tu de ce look pour l’occasion","What do you think of this look for the occasion","شرايچ بهاللوك لمناسبة"],
+["Dis-moi comment l’accessoiriser.","Tell me how to accessorise it.","قوليلي شلون أنسّق معاه إكسسوارات."],
 ["Cherche ton look idéal…","Find your ideal look…","ابحثي عن إطلالتچ المثالية…"],
 ["Cherche ton look idéal","Find your ideal look","ابحثي عن إطلالتچ المثالية"],
 ["Nos services pour toi","Our services for you","خدماتنا لچ"],
