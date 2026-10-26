@@ -617,6 +617,36 @@ a.lb{text-decoration:none}
 @keyframes lgIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 .avatar.aura.inchat .micbadge{left:auto;right:2%;top:16%;bottom:auto;pointer-events:auto}
 [dir=rtl] .avatar.aura.inchat .micbadge{right:auto;left:2%}
+/* ===== Préférences de style (aura-profile.js) ===== */
+.pf-sw{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.pf-sw button{display:flex;flex-direction:column;align-items:center;gap:4px;border:0;background:none;padding:4px 0;color:var(--ink);cursor:pointer;min-width:0}
+.pf-sw i{width:38px;height:38px;border-radius:50%;border:1px solid rgba(0,0,0,.12);box-shadow:0 0 0 3px var(--bg);transition:box-shadow .15s}
+.pf-sw span{font-size:11.5px;line-height:1.2;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pf-sw button[aria-pressed="true"] i{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--accent)}
+.pf-sw button[aria-pressed="true"] span{color:var(--accent);font-weight:700}
+.pf-sw button[data-pfoff]{opacity:.35}
+.pf-note{min-height:64px;resize:vertical;font:inherit}
+.pf-av{display:grid;gap:8px}
+.pf-a{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+.pf-a p{flex:1;margin:0;font-size:14px;min-width:0}
+.pf-a button{flex:none;width:32px;height:32px;border:0;border-radius:50%;background:var(--soft);color:var(--muted);font-size:18px;cursor:pointer}
+/* ===== Garde-robe : ajout manuel, filtres, tenues enregistrées, semaine ===== */
+.gr-adds{display:grid;gap:10px;margin:18px 0 16px}.gr-adds .gr-add{margin:0;width:100%}
+.gr-add.gr-man{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font-family:inherit;font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:15px}
+.gr-ph{display:grid;place-items:center;width:100%;aspect-ratio:1;border-radius:12px;background:var(--soft)}.gr-ph svg{width:62%;height:62%}
+.gr-it .gr-ph{border-radius:16px}.gr-big .gr-ph{max-height:40vh;aspect-ratio:1.2;border-radius:22px}
+.gr-f{margin:0 0 10px}.gr-f small{opacity:.7;font-size:11px}
+.gr-acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.gr-acts button{border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:999px;padding:7px 12px;font:inherit;font-size:13.5px;cursor:pointer;min-height:36px}
+.gr-acts button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on)}
+.gr-acts button:disabled{opacity:.6}
+.gr-acts[data-rated="1"] [data-pfgood],.gr-acts[data-rated="0"] [data-pfbad]{background:var(--accent);border-color:var(--accent)}
+.gr-days{display:flex;gap:4px;margin-top:10px;flex-wrap:wrap}.gr-days button{flex:1 0 34px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:10px;padding:6px 0;font:inherit;font-size:12px;cursor:pointer}
+.gr-days button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on)}
+.gr-week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-bottom:12px}
+.gr-day{border-radius:12px;background:var(--soft);padding:6px 4px;text-align:center;min-width:0}.gr-day b{display:block;font-size:11.5px}.gr-day span{display:block;font-size:10.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gr-day.on{background:var(--accent);color:var(--on)}.gr-day.on span{color:inherit;opacity:.9}
+.gr-hex{height:48px;padding:4px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -688,9 +718,9 @@ a.lb{text-decoration:none}
 <button data-go="profil"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.4-4 4.4-6 8-6s6.6 2 8 6"/></svg>Profil</button>
 </nav>
 </div>
-<script src="i18n.js?v=9"></script>
+<script src="i18n.js?v=10"></script>
 <script>
-const VERSION="84";
+const VERSION="85";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -823,7 +853,8 @@ function artFit(a){const b=ok("corps"),s=season(),sh=b?SHAPE(b.forme):null;let s
  if(sh&&a.formes.includes(sh)){sc+=2;why.push("sa coupe met en valeur ta silhouette "+sh)}
  if(s){const c=hexRGB(a.hex),d=Math.min(...SEASONS[s].c.map(x=>{const r=hexRGB(x[0]);return Math.hypot(c[0]-r[0],c[1]-r[1],c[2]-r[2])}));
   if(d<50){sc+=2;why.push("le "+a.coul.toLowerCase()+" fait partie de ta palette "+s)}else if(d<85){sc+=1;why.push("le "+a.coul.toLowerCase()+" est proche de ta palette")}}
- return {sc,why,known:!!(sh||s)}}
+ if(typeof pfFit==="function"){const f=pfFit(a);sc+=f.sc;why.push(...f.why)}
+ return {sc,why,known:!!(sh||s)||(typeof pfEmpty==="function"&&!pfEmpty())}}
 const hideCodes=s=>String(s??"").replace(/\s*\[MS\d{2}\]/g,"");
 const norm=s=>String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
 function findArts(txt){const n=norm(txt),out=[];CATALOGUE.forEach(a=>{if((n.includes(a.id.toLowerCase())||n.includes(norm(a.nom)))&&out.length<3)out.push(a)});return out}
@@ -856,7 +887,8 @@ function PROFIL(){const v=ok("visage"),b=ok("corps"),s=season(),p=[];
  if(v)p.push("visage "+v.forme);if(b)p.push("morphologie "+b.forme+", Kibbe "+b.kibbe);if(s)p.push("saison "+s);const i=S.info||{};
  if(i.taille)p.push("mesure "+i.taille+" cm");if(i.tvet)p.push("taille de vêtements "+i.tvet);if(i.age)p.push("âge "+i.age);
  if(i.budget)p.push("budget "+i.budget.toLowerCase());if(i.styles&&i.styles.length)p.push("styles préférés : "+i.styles.join(", ").toLowerCase());
- return p.join(", ")}
+ // Préférences choisies par la cliente (aura-profile.js) et résumé de sa vraie garde-robe.
+ let x=p.join(", ");if(typeof pfCtx==="function"){const c=pfCtx();if(c)x+=(x?" ; ":"")+c}if(typeof grBrief==="function"){const g=grBrief();if(g)x+=(x?" ; ":"")+g}return x}
 
 const FLOW_A=["a_nom","a_intro","a_face",...QS.map(q=>"q_"+q.id),"a_body","a_run","r_visage","r_corps","r_couleurs","r_fin"];
 const FLOW_O=["o_photo","o_run","o_res"];
@@ -868,7 +900,7 @@ const DOCK=["home","boutique","o_photo","news","profil","chat","beaute"];
 
 const IC={face:'<svg viewBox="0 0 24 24"><circle cx="12" cy="10" r="5"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>',body:'<svg viewBox="0 0 24 24"><circle cx="12" cy="4" r="2"/><path d="M12 6v8M8 9h8M12 14l-3 7M12 14l3 7"/></svg>',outfit:'<svg viewBox="0 0 24 24"><path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/></svg>'};
 
-const OCCS=[["Travail","💼"],["Casual","☕"],["Soirée","✨"],["Mariage","💍"],["Rendez-vous","🌹"],["Voyage","✈️"]];
+const OCCS=[["Travail","💼"],["Casual","☕"],["Soirée","✨"],["Mariage","💍"],["Rendez-vous","🌹"],["Voyage","✈️"],["Ramadan","🌙"],["Aïd","🎉"]];
 function photoPage(k,o){
  return {step:o.step,html:`<p class="step">${o.step}</p><h1>${o.t}</h1><p class="sub">${o.c}</p>
  ${S.dark&&S.dark[k]&&S.url[k]?`<div class="note dark">${DARK_MSG}</div>`:`<div class="lumi" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg><span>Mets-toi face à une fenêtre ou une belle lumière.</span></div>`}
@@ -912,40 +944,67 @@ function capsuleHTML(){const c=season(),pal=c?SEASONS[c].c.slice(0,6):null;
  <div class="cap-looks">${LOOKS.map(l=>`<div class="cap-l"><b>${l[0]}</b><div class="cap-li">${l[1].map(k=>`<span title="${CAP[k][0]}">${capIco(k)}</span>`).join("")}</div><small>${l[1].map(k=>CAP[k][0]).join(" · ")}</small><p>${l[2]}</p></div>`).join("")}</div>
  </section>`}
 // Ma garde-robe : la cliente ajoute ses vêtements en photo, Aura les reconnaît puis crée des tenues avec.
-const GR_CATS=[["haut","Haut"],["bas","Bas"],["robe","Robe"],["veste","Veste"],["chaussures","Chaussures"],["sac","Sac"],["accessoire","Accessoire"]];
+// « bas » reste pour les anciens articles ; les nouveaux sont rangés en pantalon ou jupe.
+const GR_CATS=[["haut","Haut"],["pantalon","Pantalon"],["jupe","Jupe"],["robe","Robe"],["veste","Veste"],["abaya","Abaya"],["chaussures","Chaussures"],["sac","Sac"],["accessoire","Accessoire"],["bas","Bas"]];
+const GR_TOP=["haut"],GR_BOT=["bas","pantalon","jupe"],GR_FULL=["robe","abaya"];
 const GR_MIN=7,GR_HAUTS=4,GR_BAS=3;
-const GR_OCC=[["quotidien","Quotidien","Travail ou journée de tous les jours, confortable et soignée","#DCEFC9"],["weekend","Week-end","Décontracté, sorties, courses, café entre amies","#F9D5DA"],["soiree","Soirée","Dîner, sortie le soir, élégante","#E6DAF5"],["voyage","Voyage","Pratique, confortable, ne se froisse pas","#FBE7C6"]];
-let GR={items:[],looks:{}};
-try{const g=JSON.parse(localStorage.getItem("monstyle_gr")||"null");if(g&&Array.isArray(g.items))GR={items:g.items,looks:g.looks||{}}}catch(e){}
-function grSave(){try{localStorage.setItem("monstyle_gr",JSON.stringify(GR));return true}catch(e){toast("Le téléphone est plein : supprime quelques articles");return false}}
-const grCount=()=>{const it=GR.items.filter(x=>!x.wait);return{tot:it.length,hauts:it.filter(x=>x.cat==="haut"||x.cat==="robe").length,bas:it.filter(x=>x.cat==="bas"||x.cat==="robe").length}};
+const GR_OCC=[["quotidien","Quotidien","Travail ou journée de tous les jours, confortable et soignée","#DCEFC9","📅"],["travail","Bureau & réunions","Professionnelle, nette, crédible, adaptée à un rendez-vous d’affaires","#D9E4F5","💼"],["weekend","Week-end","Décontracté, sorties, courses, café entre amies","#F9D5DA","☀️"],["soiree","Soirée","Dîner, sortie le soir, élégante","#E6DAF5","✨"],["mariage","Mariage","Invitée de mariage : élégante sans voler la vedette, tissus nobles, longueur adaptée à la soirée","#F7E3C8","💍"],["ramadan","Ramadan","Iftar, ghabga, visites en famille : élégante, confortable, couvrante si elle le souhaite","#E3DDF2","🌙"],["aid","Aïd","Tenue de fête : tissus nobles, couleurs lumineuses, détails soignés","#FBE3EC","🎉"],["voyage","Voyage","Pratique, confortable, ne se froisse pas","#FBE7C6","✈️"]];
+// Les occasions que la cliente a choisies dans ses préférences passent en premier ; les autres restent accessibles.
+const GR_OCC_PF={quotidien:"Quotidien",travail:["Travail","Réunions"],weekend:"Week-end",soiree:"Soirées",mariage:"Mariages",ramadan:"Ramadan",aid:"Aïd",voyage:"Voyage"};
+function grOccs(){const mine=o=>{const m=GR_OCC_PF[o[0]],l=typeof PF!=="undefined"?PF.occasions:[];return [].concat(m).some(x=>l.includes(x))};return [...GR_OCC.filter(mine),...GR_OCC.filter(o=>!mine(o))]}
+let GR={items:[],looks:{},saved:[]};
+// Chargement prudent : un article ou une tenue abîmé est ignoré, jamais bloquant.
+try{const g=JSON.parse(localStorage.getItem("monstyle_gr")||"null");if(g&&Array.isArray(g.items)){
+ const items=g.items.filter(x=>x&&typeof x==="object"&&x.id).map(x=>({...x,id:String(x.id),cat:GR_CATS.some(c=>c[0]===x.cat)?x.cat:"haut",nom:String(x.nom||""),couleur:String(x.couleur||""),hex:/^#[0-9a-f]{6}$/i.test(x.hex||"")?x.hex:"",img:typeof x.img==="string"?x.img:"",wait:0,todo:x.todo||(!x.cat||x.wait)?1:0}));
+ const saved=Array.isArray(g.saved)?g.saved.filter(t=>t&&Array.isArray(t.pieces)&&t.pieces.length).map(t=>({id:String(t.id||Date.now().toString(36)),titre:String(t.titre||"Tenue"),pieces:t.pieces.map(String),conseil:String(t.conseil||""),manque:String(t.manque||""),occ:String(t.occ||""),jour:String(t.jour||""),d:String(t.d||"")})):[];
+ GR={items,looks:g.looks&&typeof g.looks==="object"?g.looks:{},saved}}}catch(e){}
+function grSave(){try{GR.saved=(GR.saved||[]).map(t=>({...t,pieces:t.pieces.filter(i=>GR.items.some(x=>x.id===i))})).filter(t=>t.pieces.length);localStorage.setItem("monstyle_gr",JSON.stringify(GR));return true}catch(e){toast("Le téléphone est plein : supprime quelques articles");return false}}
+const grCount=()=>{const it=GR.items.filter(x=>!x.wait);return{tot:it.length,hauts:it.filter(x=>GR_TOP.includes(x.cat)||GR_FULL.includes(x.cat)).length,bas:it.filter(x=>GR_BOT.includes(x.cat)||GR_FULL.includes(x.cat)).length}};
 const grReady=()=>{const c=grCount();return c.tot>=GR_MIN&&c.hauts>=1&&c.bas>=1};
 const grCat=k=>(GR_CATS.find(c=>c[0]===k)||["","Article"])[1];
 function grThumb(file){return new Promise((res,rej)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{const k=Math.min(1,420/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL("image/jpeg",0.72))};im.onerror=()=>{URL.revokeObjectURL(u);rej(new Error("photo"))};im.src=u})}
-const PR_ITEM=()=>"Tu es styliste. Voici la photo d’un vêtement ou accessoire de la garde-robe d’une cliente. Identifie la pièce principale. Si ce n’est pas un vêtement, réponds {\"erreur\":\"Je ne vois pas de vêtement sur cette photo.\"}. "+FMT+"Catégorie parmi : haut, bas, robe, veste, chaussures, sac, accessoire (une combinaison compte comme robe, un gilet ou manteau comme veste). Format : {\"categorie\":\"\",\"nom\":\"2 à 4 mots, ex. Chemise en lin\",\"couleur\":\"1 à 2 mots\",\"hex\":\"#RRGGBB couleur dominante\",\"style\":\"1 mot : classique, casual, chic, sport, romantique, bohème…\"}";
+const PR_ITEM=()=>"Tu es styliste. Voici la photo d’un vêtement ou accessoire de la garde-robe d’une cliente. Identifie la pièce principale. Si ce n’est pas un vêtement, réponds {\"erreur\":\"Je ne vois pas de vêtement sur cette photo.\"}. "+FMT+"Catégorie parmi : haut, pantalon, jupe, robe, veste, abaya, chaussures, sac, accessoire (un jean ou un short compte comme pantalon, une combinaison comme robe, un gilet ou manteau comme veste, un kimono ou une abaya comme abaya). Format : {\"categorie\":\"\",\"nom\":\"2 à 4 mots, ex. Chemise en lin\",\"couleur\":\"1 à 2 mots\",\"hex\":\"#RRGGBB couleur dominante\",\"style\":\"1 mot : classique, casual, chic, sport, romantique, bohème…\"}";
 async function grAdd(files){const sm=await getSample();
  for(const f of files){let img;try{img=await grThumb(f)}catch(e){toast("Cette photo n’a pas pu être lue");continue}
   const it={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),img,cat:"",nom:"",couleur:"",hex:"",wait:1};
   GR.items.unshift(it);if(!grSave()){GR.items.shift();break}
   if(S.page==="garde")render(false);
-  const fin=r=>{it.wait=0;if(r&&!r.erreur){it.cat=GR_CATS.some(c=>c[0]===r.categorie)?r.categorie:"haut";it.nom=String(r.nom||"").slice(0,40);it.couleur=String(r.couleur||"").slice(0,24);it.hex=/^#[0-9a-f]{6}$/i.test(r.hex||"")?r.hex:"";it.style=String(r.style||"").slice(0,20)}else{it.cat="haut";it.nom="Article";it.todo=1;if(r&&r.erreur)toast(r.erreur)}
+  const fin=r=>{it.wait=0;if(r&&!r.erreur){it.cat=GR_CATS.some(c=>c[0]===r.categorie)&&r.categorie!=="bas"?r.categorie:"haut";it.nom=String(r.nom||"").slice(0,40);it.couleur=String(r.couleur||"").slice(0,24);it.hex=/^#[0-9a-f]{6}$/i.test(r.hex||"")?r.hex:"";it.style=String(r.style||"").slice(0,20)}else{it.cat="haut";it.nom="Article";it.todo=1;if(r&&r.erreur)toast(r.erreur)}
    GR.looks={};grSave();if(S.page==="garde"||S.page==="g_item")render(false);
    if(S.page==="garde"&&!GR.items.some(x=>x.wait)){const c=grCount();say(c.tot>=GR_MIN?"Super, ta garde-robe est prête. Choisis une occasion et je crée tes tenues.":"C’est noté. Encore "+(GR_MIN-c.tot)+" article"+(GR_MIN-c.tot>1?"s":"")+" et je coordonne tes tenues.")}};
   if(!sm||!sm.json){fin(null);continue}
   sm.json(PR_ITEM(),{images:[f]}).then(fin,()=>fin(null))}
 }
+// Résumé court de la VRAIE garde-robe, envoyé à Aura (voix et chat) pour qu'elle propose des tenues avec ce que la cliente possède.
+function grBrief(){const it=GR.items.filter(x=>!x.wait&&!x.todo);if(!it.length)return "";
+ return "sa garde-robe enregistrée ("+it.length+" pièces) : "+it.slice(0,30).map(x=>(x.nom||grCat(x.cat)).toLowerCase()+(x.couleur&&!norm(x.nom).includes(norm(x.couleur))?" "+x.couleur.toLowerCase():"")).join(", ")+(it.length>30?"…":"")+(GR.saved.length?" ; tenues qu’elle a enregistrées : "+GR.saved.slice(0,5).map(t=>t.titre).join(", "):"")}
 function grItemsTxt(){return GR.items.filter(x=>!x.wait).map(x=>x.id+" : "+grCat(x.cat).toLowerCase()+", "+(x.nom||"")+(x.couleur?", "+x.couleur:"")+(x.style?", style "+x.style:"")).join("\n")}
 async function grLooks(occ){if(!isVip())return paywall("garde");const o=GR_OCC.find(x=>x[0]===occ);if(!o||S.grBusy)return;const sm=await getSample();
  if(!sm||!sm.json){toast("La création de tenues n’est pas disponible ici.");return}
  S.grBusy=occ;S.grErr="";render(false);say("Je coordonne tes vêtements, une seconde.");
- const pr=REF+" Tu es styliste personnelle. Crée 4 tenues différentes pour l’occasion « "+o[1]+" » ("+o[2]+") UNIQUEMENT avec les pièces de sa garde-robe ci-dessous (utilise leurs identifiants). Chaque tenue : un haut et un bas, ou une robe, plus si possible veste, chaussures, sac ou accessoire. Respecte son profil : "+(PROFIL()||"inconnu")+" (morphologie, couleurs de saison). Varie les pièces d’une tenue à l’autre. N’invente aucune pièce. Si une pièce manque pour bien finir la tenue, dis-le dans « manque ».\nGarde-robe :\n"+grItemsTxt()+"\n"+FMT+'Format : {"tenues":[{"titre":"2 à 4 mots","pieces":["id"],"conseil":"1 phrase de styliste","manque":"pièce à acheter, ou vide"}]}';
+ const pr=REF+" Tu es styliste personnelle. Crée 4 tenues différentes pour l’occasion « "+o[1]+" » ("+o[2]+") UNIQUEMENT avec les pièces de sa garde-robe ci-dessous (utilise leurs identifiants). Chaque tenue : un haut et un bas, ou une robe, ou une abaya (avec ce qu’on porte dessous si elle l’a), plus si possible veste, chaussures, sac ou accessoire. Respecte son profil : "+(PROFIL()||"inconnu")+" (morphologie, couleurs de saison). "+(typeof pfRules==="function"?pfRules():"")+" Varie les pièces d’une tenue à l’autre. N’invente aucune pièce, aucune marque, aucun prix. Le conseil explique en une phrase pourquoi la tenue fonctionne (silhouette, couleurs, occasion). Si une pièce manque pour bien finir la tenue, dis-le dans « manque » : c’est un achat facultatif, pas une pièce qu’elle possède.\nGarde-robe :\n"+grItemsTxt()+"\n"+FMT+'Format : {"tenues":[{"titre":"2 à 4 mots","pieces":["id"],"conseil":"1 phrase de styliste","manque":"pièce à acheter, ou vide"}]}';
  try{const r=await sm.json(pr);if(r&&r.erreur)throw new Error(r.erreur);
   const ids=new Set(GR.items.map(x=>x.id));const t=(r&&r.tenues||[]).map(x=>({titre:String(x.titre||"Tenue"),pieces:(x.pieces||[]).map(String).filter(i=>ids.has(i)),conseil:String(x.conseil||""),manque:String(x.manque||"")})).filter(x=>x.pieces.length>=2);
   if(!t.length)throw new Error("Je n’ai pas réussi à composer de tenue. Ajoute quelques pièces et réessaie.");
   GR.looks[occ]=t;grSave();S.grBusy=null;S.grOcc=occ;if(S.page==="garde"){render(false);say("Voilà "+t.length+" tenues "+o[1].toLowerCase()+" avec tes vêtements, "+NOM+". "+t[0].titre+" : "+t[0].conseil)}}
  catch(e){S.grBusy=null;S.grErr=errMsg(e);if(S.page==="garde"){render(false);say(S.grErr)}}
 }
-const grImg=(x,cls)=>x?`<img class="${cls||""}" src="${x.img}" alt="${esc(x.nom||grCat(x.cat))}">`:"";
+// Un article ajouté sans photo est dessiné dans sa couleur (silhouette de la catégorie).
+const GR_SIL={haut:"top",pantalon:"pantalon",bas:"pantalon",jupe:"jupe",robe:"robe",veste:"veste",abaya:"abaya"};
+const GR_ICO={chaussures:'<path d="M14 70h54c8 0 12-5 12-9 0-3-3-5-7-6l-18-6-10-14H32l-4 12-10 3c-4 1-6 4-6 8v12z"/>',sac:'<path d="M28 40v-8a12 12 0 0 1 24 0v8" fill="none" stroke-width="5"/><path d="M16 40h48l-5 40H21z"/>',accessoire:'<circle cx="40" cy="50" r="18" fill="none" stroke-width="7"/><circle cx="40" cy="28" r="6"/>'};
+function grPh(x){const h=x.hex||"#D9C3A5",sil=GR_SIL[x.cat];return `<span class="gr-ph" role="img" aria-label="${esc(x.nom||grCat(x.cat))}">${sil?garSVG({cat:sil,hex:h}):`<svg viewBox="0 0 80 100" aria-hidden="true"><g fill="${h}" stroke="rgba(0,0,0,.25)" stroke-width="1.5">${GR_ICO[x.cat]||GR_ICO.accessoire}</g></svg>`}</span>`}
+// « Autre version » : Aura remplace la tenue par une variante, toujours avec les vraies pièces de la garde-robe.
+async function grAlt(occ,i){i=+i;const o=GR_OCC.find(x=>x[0]===occ),l=(GR.looks[occ]||[])[i];if(!o||!l||S.grAlt)return;const sm=await getSample();
+ if(!sm||!sm.json){toast("La création de tenues n’est pas disponible ici.");return}
+ S.grAlt=occ+":"+i;{const y=window.scrollY;render(false);window.scrollTo(0,y)}
+ const autres=(GR.looks[occ]||[]).map(x=>x.pieces.join("+")).join(" ; ");
+ const pr=REF+" Tu es styliste personnelle. Propose UNE autre tenue pour l’occasion « "+o[1]+" » ("+o[2]+"), différente de celle-ci : "+l.pieces.join("+")+" (change au moins deux pièces), et différente de : "+autres+". UNIQUEMENT avec les pièces de sa garde-robe ci-dessous (identifiants). Respecte son profil : "+(PROFIL()||"inconnu")+". "+(typeof pfRules==="function"?pfRules():"")+" N’invente aucune pièce, marque ou prix.\nGarde-robe :\n"+grItemsTxt()+"\n"+FMT+'Format : {"titre":"2 à 4 mots","pieces":["id"],"conseil":"1 phrase : pourquoi ça marche","manque":"achat facultatif, ou vide"}';
+ try{const r=await sm.json(pr);if(r&&r.erreur)throw new Error(r.erreur);const ids=new Set(GR.items.map(x=>x.id)),pc=((r&&r.pieces)||[]).map(String).filter(x=>ids.has(x));
+  if(pc.length<2||pc.join()===l.pieces.join())throw new Error("Je n’ai pas trouvé d’autre combinaison avec tes pièces. Ajoute quelques articles et réessaie.");
+  GR.looks[occ][i]={titre:String(r.titre||"Autre tenue"),pieces:pc,conseil:String(r.conseil||""),manque:String(r.manque||"")};grSave();S.grAlt=null;
+  if(S.page==="garde"){const y=window.scrollY;render(false);window.scrollTo(0,y);say(GR.looks[occ][i].titre+" : "+GR.looks[occ][i].conseil)}}
+ catch(e){S.grAlt=null;toast(errMsg(e));if(S.page==="garde"){const y=window.scrollY;render(false);window.scrollTo(0,y)}}}
+const grImg=(x,cls)=>x?(x.img?`<img class="${cls||""}" src="${x.img}" alt="${esc(x.nom||grCat(x.cat))}">`:grPh(x)):"";
 const GR_HANGER='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/></svg>';
 function grHomeCard(){const c=grCount(),n=GR.items.filter(x=>!x.wait).slice(0,4),nl=Object.values(GR.looks).reduce((a,l)=>a+l.length,0),pct=Math.min(100,c.tot/GR_MIN*100);
  return `<button class="hx-gr" data-view="garde" aria-label="Ma garde-robe">
@@ -1273,6 +1332,16 @@ const PW_WHY={analyses:"Ton analyse du visage gratuite est faite. Les autres ana
 // Le code est accepté avec espaces, tirets, minuscules ou chiffres arabes (٢٠٢٦).
 function codeNorm(x){return String(x||"").replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[۰-۹]/g,d=>"۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/[^A-Za-z0-9]/g,"").toUpperCase()}
 function paywall(why){if(GRATUIT)return;S.pwWhy=why||"";try{stopVoice()}catch(e){}if(window.endCall)window.endCall();go("abo")}
+// Boutons sous chaque tenue proposée : enregistrer, j'aime / j'aime pas (mémorisé par Aura), autre version.
+function grActs(l,occ,i){const nm=l.titre+" ("+l.pieces.map(id=>{const x=GR.items.find(y=>y.id===id);return x?(x.nom||grCat(x.cat)).toLowerCase():""}).filter(Boolean).join(", ")+")",sv=GR.saved.some(t=>t.titre===l.titre&&t.pieces.join()===l.pieces.join());
+ return `<div class="gr-acts" data-pfrate><button type="button" data-gsave="${occ}:${i}" aria-pressed="${sv}">${sv?"♥ Enregistrée":"♡ Enregistrer"}</button><button type="button" data-pfgood="${esc(nm)}" aria-label="J’aime ce look">👍</button><button type="button" data-pfbad="${esc(nm)}" aria-label="Je n’aime pas ce look">👎</button><button type="button" data-galt="${occ}:${i}"${S.grAlt===occ+":"+i?" disabled":""}>${S.grAlt===occ+":"+i?"Je cherche…":"Autre version"}</button></div>`}
+const GR_JOURS=["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
+// Tenues enregistrées + planning de la semaine (chaque tenue peut être posée sur un jour).
+function grSavedHTML(){if(!GR.saved.length)return "";const by=id=>GR.items.find(x=>x.id===id),occN=o=>(GR_OCC.find(x=>x[0]===o)||[0,""])[1];
+ const week=GR.saved.some(t=>t.jour)?`<div class="gr-week">${GR_JOURS.map(j=>{const t=GR.saved.find(x=>x.jour===j);return `<div class="gr-day${t?" on":""}"><b>${j}</b><span>${t?esc(t.titre):"—"}</span></div>`}).join("")}</div>`:"";
+ return `<h2>Mes tenues enregistrées <small class="gr-n">${GR.saved.length}</small></h2>${week?`<p class="hint" style="margin:-6px 0 8px">Ma semaine</p>${week}`:""}<div class="gr-looks">${GR.saved.map(t=>{const it=t.pieces.map(by).filter(Boolean);return `<article class="gr-look"><div class="gr-col n${Math.min(it.length,4)}">${it.slice(0,4).map(x=>grImg(x)).join("")}</div><b>${esc(t.titre)}</b><small>${esc(occN(t.occ))}${occN(t.occ)?" · ":""}${it.map(x=>esc(x.nom||grCat(x.cat))).join(" · ")}</small>${t.conseil?`<p>${esc(t.conseil)}</p>`:""}
+ <div class="gr-days" aria-label="Porter ce jour-là">${GR_JOURS.map(j=>`<button type="button" data-gday="${t.id}:${j}" aria-pressed="${t.jour===j}">${j}</button>`).join("")}</div>
+ <div class="gr-acts"><button type="button" data-gunsave="${t.id}">Retirer</button></div></article>`}).join("")}</div>`}
 const P={
 home:()=>{const v=ok("visage"),bd=ok("corps"),c=season(),oc=ok("outfit");
  const nd=[v,bd,c].filter(Boolean).length;
@@ -1302,27 +1371,30 @@ ${nd===3?`<button class="hx-ms" data-view="fiche" aria-label="Voir ma fiche styl
 <div class="hx-more">${grHomeCard()}</div>
  </div>`,
  say:"Bonjour "+NOM+", je suis contente de te voir. Touche le téléphone pour me parler, ou choisis une analyse."}},
-garde:()=>{const c=grCount(),rd=grReady(),occ=S.grOcc||"quotidien",looks=GR.looks[occ],by=id=>GR.items.find(x=>x.id===id);
+garde:()=>{const c=grCount(),rd=grReady(),occ=GR_OCC.some(o=>o[0]===S.grOcc)?S.grOcc:grOccs()[0][0],looks=GR.looks[occ],by=id=>GR.items.find(x=>x.id===id);
  const prog=`<section class="gr-prog" aria-label="Progression">
   <div class="gr-pt"><span class="gr-ic">${GR_HANGER}</span><div><small>${Math.min(c.tot,GR_MIN)} / ${GR_MIN} articles importés</small><p>${rd?"Ta garde-robe est prête. Choisis une occasion, je coordonne tes vêtements en tenues.":"Ajoute au moins "+GR_MIN+" articles, et je les coordonne en tenues pour toi."}</p></div></div>
-  <label class="gr-add">Ajouter un article <span aria-hidden="true">→</span><input type="file" accept="image/*" multiple data-gadd hidden></label>
+  <div class="gr-adds"><label class="gr-add">Ajouter en photo <span aria-hidden="true">→</span><input type="file" accept="image/*" multiple data-gadd hidden></label><button type="button" class="gr-add gr-man" data-gmanual>Ajouter sans photo <span aria-hidden="true">+</span></button></div>
   <div class="gr-bars"><div><b>Hauts</b><span class="gr-bar"><i style="width:${Math.min(100,c.hauts/GR_HAUTS*100)}%"></i></span><small>${Math.min(c.hauts,GR_HAUTS)} / ${GR_HAUTS}</small></div><div><b>Bas</b><span class="gr-bar"><i style="width:${Math.min(100,c.bas/GR_BAS*100)}%"></i></span><small>${Math.min(c.bas,GR_BAS)} / ${GR_BAS}</small></div></div>
   <p class="gr-tip">Astuce : photographie chaque pièce à plat ou sur cintre, sur un fond clair. Tu peux en choisir plusieurs d’un coup dans ta galerie.</p>
  </section>`;
- const occs=`<h2>Tenues de ma garde-robe</h2><div class="gr-occ" role="tablist">${GR_OCC.map(o=>{const n=(GR.looks[o[0]]||[]).length;return `<button role="tab" data-gocc="${o[0]}" aria-selected="${occ===o[0]}"><span class="gr-oi" style="background:${o[3]}">${{quotidien:"📅",weekend:"☀️",soiree:"✨",voyage:"✈️"}[o[0]]}</span><span><b>${o[1]}</b><small>${n} tenue${n>1?"s":""}</small></span></button>`}).join("")}</div>`;
+ const occs=`<h2>Tenues de ma garde-robe</h2><div class="gr-occ" role="tablist">${grOccs().map(o=>{const n=(GR.looks[o[0]]||[]).length;return `<button role="tab" data-gocc="${o[0]}" aria-selected="${occ===o[0]}"><span class="gr-oi" style="background:${o[3]}">${o[4]}</span><span><b>${o[1]}</b><small>${n} tenue${n>1?"s":""}</small></span></button>`}).join("")}</div>`;
  let body;
  if(S.grBusy===occ)body=`<div class="note">Je coordonne tes vêtements…</div>`;
  else if(!rd)body=`<div class="gr-empty"><span class="gr-ex">${["blazer","jupe","sac","escarpins"].map(k=>capIco(k)).join("")}</span><p>Ajoute tes articles : ton styliste les coordonne en tenues ${esc(GR_OCC.find(o=>o[0]===occ)[1].toLowerCase())}.</p></div>`;
- else if(looks&&looks.length)body=`<div class="gr-looks">${looks.map(l=>{const it=l.pieces.map(by).filter(Boolean);return `<article class="gr-look"><div class="gr-col n${Math.min(it.length,4)}">${it.slice(0,4).map(x=>grImg(x)).join("")}</div><b>${esc(l.titre)}</b><small>${it.map(x=>esc(x.nom||grCat(x.cat))).join(" · ")}</small><p>${esc(l.conseil)}</p>${l.manque?`<p class="gr-miss">À ajouter : ${esc(l.manque)}</p>${links(l.manque)}`:""}</article>`}).join("")}</div><button class="btn ghost" data-glooks="${occ}">Créer d’autres tenues</button>`;
+ else if(looks&&looks.length)body=`<div class="gr-looks">${looks.map((l,li)=>{const it=l.pieces.map(by).filter(Boolean);return `<article class="gr-look"><div class="gr-col n${Math.min(it.length,4)}">${it.slice(0,4).map(x=>grImg(x)).join("")}</div><b>${esc(l.titre)}</b><small>${it.map(x=>esc(x.nom||grCat(x.cat))).join(" · ")}</small><p>${esc(l.conseil)}</p>${l.manque?`<p class="gr-miss">Achat facultatif : ${esc(l.manque)}</p>${links(l.manque)}`:""}${grActs(l,occ,li)}</article>`}).join("")}</div><button class="btn ghost" data-glooks="${occ}">Créer d’autres tenues</button>`;
  else body=`${S.grErr?`<div class="note">${esc(S.grErr)}</div>`:""}<button class="btn" data-glooks="${occ}">Créer mes tenues ${esc(GR_OCC.find(o=>o[0]===occ)[1].toLowerCase())}</button>`;
- const list=GR.items.length?`<h2>Mes articles <small class="gr-n">${GR.items.length}</small></h2><div class="gr-grid">${GR.items.map(x=>`<button class="gr-it${x.wait?" wait":""}${x.todo?" todo":""}" ${x.wait?"disabled":`data-gitem="${x.id}"`} aria-label="${esc(x.nom||"Article")}">${grImg(x)}<span>${x.wait?"Je regarde…":esc(x.nom||grCat(x.cat))}</span></button>`).join("")}</div>`:"";
+ const cats=GR_CATS.filter(k=>GR.items.some(x=>x.cat===k[0])),fl=cats.some(k=>k[0]===S.grF)?S.grF:"",shown=GR.items.filter(x=>!fl||x.cat===fl);
+ const filt=cats.length>1?`<div class="fchips gr-f">${[["","Tout"],...cats].map(k=>`<button data-gf="${k[0]}" aria-pressed="${fl===k[0]}">${k[1]}${k[0]?` <small>${GR.items.filter(x=>x.cat===k[0]).length}</small>`:""}</button>`).join("")}</div>`:"";
+ const list=GR.items.length?`${grSavedHTML()}<h2>Mes articles <small class="gr-n">${GR.items.length}</small></h2>${filt}<div class="gr-grid">${shown.map(x=>`<button class="gr-it${x.wait?" wait":""}${x.todo?" todo":""}" ${x.wait?"disabled":`data-gitem="${x.id}"`} aria-label="${esc(x.nom||"Article")}">${grImg(x)}<span>${x.wait?"Je regarde…":esc(x.nom||grCat(x.cat))}</span></button>`).join("")}</div>`:"";
  return {back:true,html:`<h1>Ma garde-robe</h1>${prog}${occs}${body}${list}`,
   say:rd?"Voici ta garde-robe, "+NOM+". Choisis une occasion et je crée des tenues avec tes vêtements.":"Voici ta garde-robe, "+NOM+". Ajoute au moins "+GR_MIN+" articles en photo, et je les coordonne en tenues pour toi."}},
 g_item:()=>{const x=GR.items.find(i=>i.id===S.grItem);if(!x)return {back:true,html:`<h1>Article supprimé</h1>`,foot:`<button class="btn" data-view="garde">Retour à ma garde-robe</button>`};
  return {back:true,html:`<p class="step">Ma garde-robe</p><div class="gr-big">${grImg(x)}</div>
  <label class="lbl" for="g_nom">Nom</label><input class="field" id="g_nom" data-gi="nom" value="${esc(x.nom)}" placeholder="Par exemple : chemise en lin">
  <label class="lbl" for="g_coul">Couleur</label><input class="field" id="g_coul" data-gi="couleur" value="${esc(x.couleur)}" placeholder="Par exemple : beige">
- <span class="lbl">Catégorie</span><div class="pk">${GR_CATS.map(c=>`<button type="button" data-gcat="${c[0]}" aria-pressed="${x.cat===c[0]}">${c[1]}</button>`).join("")}</div>`,
+ <label class="lbl" for="g_hex">Teinte</label><input class="field gr-hex" id="g_hex" type="color" data-gi="hex" value="${/^#[0-9a-f]{6}$/i.test(x.hex||"")?x.hex:"#d9c3a5"}">
+ <span class="lbl">Catégorie</span><div class="pk">${GR_CATS.filter(c=>c[0]!=="bas"||x.cat==="bas").map(c=>`<button type="button" data-gcat="${c[0]}" aria-pressed="${x.cat===c[0]}">${c[1]}</button>`).join("")}</div>`,
  say:x.todo?"Je n’ai pas reconnu cet article. Choisis sa catégorie.":"",foot:`<button class="btn" data-back>Enregistrer</button><button class="link" data-gdel="${x.id}">Supprimer cet article</button>`}},
 a_nom:()=>({html:`<p class="step">Ton analyse</p><h1>Comment tu t’appelles ?</h1><p class="sub">Ton prénom, pour que je puisse t’appeler par ton nom.</p>
  <input class="field" id="nom" autocomplete="given-name" placeholder="Ton prénom" value="${esc(S.nomDraft??S.nom??"")}" style="font-size:20px;padding:18px">`,
@@ -1372,6 +1444,7 @@ profil:()=>{const i=S.info||{},has=!!i.email,pick=(k,l)=>`<div class="row"><span
  ${has?`<h2 style="margin-top:0">Mes informations</h2>${pick(i.tel,"WhatsApp")}${pick(i.taille?i.taille+" cm":"","Taille")}${pick(i.poids?i.poids+" kg":"","Poids (privé)")}${pick(i.age,"Âge")}${pick(i.tvet,"Taille de vêtements")}${pick(i.budget,"Budget")}${pick((i.styles||[]).join(", "),"Styles préférés")}
  <button class="btn ghost" data-go="infos" style="margin:6px 0 4px">Modifier mes informations</button>`
  :`<button class="tile main" data-go="infos"><b>Créer mon profil</b><span>Ton email, ta taille, ton style : je m’en sers pour mieux te conseiller.</span></button>`}
+ <button class="tile main" data-view="prefs"><b>Mes préférences de style</b><span>${typeof pfEmpty==="function"&&!pfEmpty()?"Couleurs, pièces, occasions, mode pudique : touche pour modifier":"Dis à Aura les couleurs, pièces et occasions que tu aimes"}</span></button>
  ${GRATUIT?"":`<button class="tile" data-go="abo"><b>${PLANS[plan()].nom}</b><span>${Math.max(0,Math.floor(secLeft()/60))} min avec Aura restantes ce mois-ci · voir les formules</span></button>`}
  <h2>Mon pays</h2><div class="pk">${Object.keys(PAYS).map(k=>`<button type="button" data-setpays="${k}" aria-pressed="${pays()===k}">${PAYS[k].n}</button>`).join("")}</div>
  <h2>Langue de l’application</h2><div class="pk">${[["fr","Français"],["en","English"],["ar","عربي"]].map(x=>`<button type="button" data-setlang="${x[0]}" aria-pressed="${(S.lang||"fr")===x[0]}">${x[1]}</button>`).join("")}</div>
@@ -1581,7 +1654,7 @@ const REFL=REF.split("\n"),REFP=(...k)=>REFL[0]+"\n"+REFL.filter(l=>k.some(x=>l.
 const PR_VISAGE=()=>REFP("VISAGISME")+" Tu es styliste experte en visagisme et suis STRICTEMENT la méthode ci-dessus. Voici la photo de visage d’une cliente. Repère les points (Trichion, Menton, Zygion, Gonion, Frontal) en tenant compte de la perspective, mesure les distances, calcule R_HL, R_JW et R_CH avec 2 décimales, puis classe le visage parmi les 9 formes de la matrice. Analyse aussi la micro-morphologie (yeux, nez, lèvres). Si la photo est inutilisable (pas de visage, trop sombre, filtre, visage pas de face), réponds {\"erreur\":\"explication courte et ce qu’il faut changer\"}. "+FMT+"Format : {\"forme\":\"une des 9 formes\",\"ratios\":{\"R_HL\":0,\"R_JW\":0,\"R_CH\":0},\"pourquoi\":\"2 phrases qui citent les ratios\",\"micro\":\"yeux, nez, lèvres en 1 phrase\",\"coupes\":\"coupes, raie et frange correctives\",\"couleur_cheveux\":\"\",\"lunettes\":\"\",\"makeup\":\"\"}";
 const PR_COUL=()=>REFP("COLORIMÉTRIE")+" Tu es styliste experte en colorimétrie. Voici la photo de visage d’une cliente. Combine ce que tu vois (teint, sous-ton, yeux, cheveux, contraste) avec ses réponses au questionnaire : "+ANS_TXT(S.ans)+". Le questionnaire seul indique : "+seasonFromAnswers(S.ans)+". Choisis la saison exacte parmi : "+SEAS_LIST+". Si la photo est inutilisable, réponds {\"erreur\":\"explication courte\"}. "+FMT+"Estime L*a*b* de la peau et des cheveux, calcule l’indice T = b*/a* et le contraste C selon la méthode. Format : {\"saison\":\"une des 12 saisons exactement\",\"sous_ton\":\"chaud|froid|neutre\",\"indice_T\":0,\"contraste\":0,\"pourquoi\":\"2 phrases qui citent T et le contraste\"}";
 const PR_BODY=()=>REFP("MORPHOLOGIE","KIBBE","ESSENCES")+" Tu es styliste experte en morphologie et en Kibbe. Voici la photo en pied d’une cliente. Analyse ses proportions (épaules, taille, hanches, buste, jambes) et sa structure (anguleuse ou douce). Reste bienveillante, ne juge jamais le poids ni les formes. Kibbe parmi : "+KIBBE_LIST+". Si la photo est inutilisable, réponds {\"erreur\":\"explication courte et ce qu’il faut changer\"}. "+FMT+"Suis STRICTEMENT la méthode ci-dessus : mesure épaules, taille et hanches, calcule R_WE et R_HE, choisis la silhouette parmi A, V, H, X, 8, O, I ; évalue squelette, chair et traits pour le score Yin/Yang S ; donne le somatotype et le mélange des 7 essences en pourcentages. Format : {\"forme\":\"lettre · nom (ex. X · Sablier)\",\"ratios\":{\"R_WE\":0,\"R_HE\":0},\"proportions\":\"1 phrase avec le ratio buste/jambes\",\"somatotype\":\"\",\"score_yinyang\":0,\"kibbe\":\"\",\"kibbe_pourquoi\":\"2 phrases qui citent le score\",\"essences\":[{\"nom\":\"\",\"pct\":0}],\"conseils\":\"\",\"a_eviter\":\"\"}";
-const PR_OUT=()=>REF+" Tu es styliste personnelle exigeante et bienveillante. Note la tenue de la photo de 0 à 10 : harmonie des couleurs, coupe, proportions, point focal, adéquation avec son profil ("+(PROFIL()||"inconnu")+")"+(S.occ?" et avec l’occasion : "+S.occ+" (dis clairement si la tenue convient à cette occasion et quoi ajuster pour elle)":"")+". Si la photo est inutilisable, réponds {\"erreur\":\"explication courte\"}. "+FMT+"Format : {\"note\":0,\"resume\":\"1 phrase\",\"points_forts\":[\"\"],\"changements\":[\"changement précis\"]}";
+const PR_OUT=()=>REF+" Tu es styliste personnelle exigeante et bienveillante. Note la tenue de la photo de 0 à 10 : harmonie des couleurs, coupe, proportions, point focal, adéquation avec son profil ("+(PROFIL()||"inconnu")+")"+(S.occ?" et avec l’occasion : "+S.occ+" (dis clairement si la tenue convient à cette occasion et quoi ajuster pour elle)":"")+". "+(typeof pfRules==="function"?pfRules():"")+" Si une pièce de sa garde-robe enregistrée améliorerait la tenue, propose-la en disant qu’elle l’a déjà ; sinon précise que c’est un achat facultatif. N’invente ni marque ni prix. Si la photo est inutilisable, réponds {\"erreur\":\"explication courte\"}. "+FMT+"Format : {\"note\":0,\"resume\":\"1 phrase\",\"points_forts\":[\"\"],\"changements\":[\"changement précis\"]}";
 const ERRS={not_granted:"Autorise Claude à analyser tes photos, puis réessaie.",image_rejected:"Cette photo n’est pas acceptée. Essaie-en une autre.",rate_limited:"Trop de demandes. Réessaie dans un instant.",images_unavailable:"L’envoi de photos n’est pas disponible ici.",invalid_json:"La réponse n’a pas pu être lue. Réessaie."};
 let SAMPLE=null;
 const AI_URL="https://mon-style.imendriss271982.workers.dev";
@@ -1814,10 +1887,18 @@ document.addEventListener("click",e=>{
  if(t.dataset.mod){const m=t.dataset.mod;if(!premium()&&(m!=="visage"||PLAN.vfree))return paywall(m==="visage"?"visage":"analyses");return startMod(m)}
  if(t.dataset.gocc){S.grOcc=t.dataset.gocc;S.grErr="";render(false);return}
  if(t.dataset.glooks)return grLooks(t.dataset.glooks);
+ if(t.dataset.gf!==undefined){S.grF=t.dataset.gf;const y=window.scrollY;render(false);window.scrollTo(0,y);return}
+ if(t.hasAttribute("data-gmanual")){const it={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),img:"",cat:"haut",nom:"",couleur:"",hex:"#D9C3A5",wait:0,manual:1};GR.items.unshift(it);GR.looks={};if(!grSave()){GR.items.shift();return}S.grItem=it.id;go("g_item");return}
+ if(t.dataset.gsave){const [o,i]=t.dataset.gsave.split(":"),l=(GR.looks[o]||[])[+i];if(!l)return;const k=GR.saved.findIndex(x=>x.titre===l.titre&&x.pieces.join()===l.pieces.join());
+  if(k>=0){GR.saved.splice(k,1);toast("Tenue retirée")}else{GR.saved.unshift({id:Date.now().toString(36),titre:l.titre,pieces:[...l.pieces],conseil:l.conseil,manque:l.manque,occ:o,jour:"",d:new Date().toISOString().slice(0,10)});toast("Tenue enregistrée")}
+  grSave();const y=window.scrollY;render(false);window.scrollTo(0,y);return}
+ if(t.dataset.gunsave){GR.saved=GR.saved.filter(x=>x.id!==t.dataset.gunsave);grSave();toast("Tenue retirée");const y=window.scrollY;render(false);window.scrollTo(0,y);return}
+ if(t.dataset.gday){const [id,j]=t.dataset.gday.split(":"),x=GR.saved.find(z=>z.id===id);if(!x)return;const was=x.jour===j;GR.saved.forEach(z=>{if(z.jour===j)z.jour=""});x.jour=was?"":j;grSave();const y=window.scrollY;render(false);window.scrollTo(0,y);return}
+ if(t.dataset.galt)return grAlt(...t.dataset.galt.split(":"));
  if(t.dataset.gitem){S.grItem=t.dataset.gitem;go("g_item");return}
  if(t.dataset.gcat){const x=GR.items.find(i=>i.id===S.grItem);if(x){x.cat=t.dataset.gcat;x.todo=0;GR.looks={};grSave();render(false)}return}
  if(t.dataset.gdel){if(!confirm(tr("Supprimer cet article de ta garde-robe ?")))return;GR.items=GR.items.filter(i=>i.id!==t.dataset.gdel);GR.looks={};grSave();toast("Article supprimé");back();return}
- if(t.dataset.occ){S.occ=t.dataset.occ;save();render(false);say({"Travail":"Une tenue pour le travail, parfait.","Casual":"Une tenue décontractée, j’adore.","Soirée":"Une soirée ! On va te rendre éblouissante.","Mariage":"Un mariage, il faut être élégante sans voler la vedette.","Rendez-vous":"Un rendez-vous, on veut te voir rayonner.","Voyage":"Un voyage, confort et style."}[S.occ]+" Montre-moi ta tenue.");return}
+ if(t.dataset.occ){S.occ=t.dataset.occ;save();render(false);say({"Travail":"Une tenue pour le travail, parfait.","Casual":"Une tenue décontractée, j’adore.","Soirée":"Une soirée ! On va te rendre éblouissante.","Mariage":"Un mariage, il faut être élégante sans voler la vedette.","Rendez-vous":"Un rendez-vous, on veut te voir rayonner.","Voyage":"Un voyage, confort et style.","Ramadan":"Une tenue de Ramadan, élégante et confortable.","Aïd":"L’Aïd ! On va te rendre lumineuse."}[S.occ]+" Montre-moi ta tenue.");return}
  if(t.dataset.start==="A"&&!premium()){if(PLAN.vfree)return paywall("analyses");return startMod("visage")}
  if(t.dataset.start==="A"){S.flow=FLOW_A;S.hist=["home"];S.page="a_nom";S.dir="f";S.res={outfit:S.res.outfit};S.wait={};S.rid++;render(true);return}
  if(t.dataset.go==="o_photo"&&!premium())return paywall("outfit");
@@ -1835,7 +1916,7 @@ document.addEventListener("click",e=>{
   else{d[k]=d[k]===t.dataset.pk?"":t.dataset.pk;box.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.pk===d[k])))}return}
  if(t.hasAttribute("data-isave"))return saveInfo();
  if(t.hasAttribute("data-wipe")){if(!confirm(tr("Effacer ton profil, tes résultats, ta garde-robe et ton email de ce téléphone ?")))return;
-  try{localStorage.removeItem("monstyle");localStorage.removeItem("monstyle_gr")}catch(e){}GR={items:[],looks:{}};S.info={};S.res={};S.ans={};S.later=false;S.nom=undefined;NOM="ma belle";S.idraft=undefined;toast("Tes données sont effacées");home();return}
+  try{localStorage.removeItem("monstyle");localStorage.removeItem("monstyle_gr");localStorage.removeItem("monstyle_pref")}catch(e){}GR={items:[],looks:{},saved:[]};if(typeof PF!=="undefined")PF=pfClean(null);S.info={};S.res={};S.ans={};S.later=false;S.nom=undefined;NOM="ma belle";S.idraft=undefined;toast("Tes données sont effacées");home();return}
  if(t.hasAttribute("data-nom")){const v=(S.nomDraft??S.nom??"").trim();if(!v)return;S.nom=v;NOM=v;S.nomDraft=undefined;save();return next()}
  if(t.hasAttribute("data-retry")){run(S.page);S.err="";render(false);return}
  if(t.dataset.ans){S.ans[t.dataset.ans]=t.dataset.v;render(false);setTimeout(()=>{if(S.page==="q_"+t.dataset.ans)next()},380);return}
@@ -1843,7 +1924,7 @@ document.addEventListener("click",e=>{
  if(t.dataset.art){S.art=t.dataset.art;go("art");return}
  if(t.dataset.askart){const a=ART(t.dataset.askart);go("chat");setTimeout(()=>send("Est-ce que la pièce « "+a.nom+" » ["+a.id+"] me va ? Avec quoi je peux la porter ?"),350);return}
  if(t.hasAttribute("data-askaura")){go("chat");setTimeout(()=>send("Choisis-moi 3 pièces de la vitrine My Style qui me vont le mieux, et dis-moi pourquoi."),350);return}
- if(t.hasAttribute("data-shop")){S.shopQ=($("#shopq")||{}).value?.trim()||"";render(false);return}
+ if(t.hasAttribute("data-shop")){S.shopQ=($("#shopq")||{}).value?.trim()||"";if(!S.shopQ){toast("Écris ce que tu cherches");$("#shopq")?.focus();return}render(false);return}
  if(t.hasAttribute("data-news"))return loadNews();
  if(t.dataset.btab){S.btab=t.dataset.btab;stopVoice();render(true);return}
  if(t.dataset.mkr)return mkRoutine(t.dataset.mkr);
@@ -2092,6 +2173,7 @@ $("#inst").addEventListener("click",e=>{if(e.target.id==="inst")$("#inst").class
 $("#start").addEventListener("click",()=>{if(window.endCall)window.endCall();SKIP=true;stopVoice();unlock();$("#splash").classList.add("out");setTimeout(()=>$("#splash").remove(),800);
  SKIP=true;if(window.SKIPNOM)window.SKIPNOM();if(/formules|abo/i.test(location.hash)){go("abo");return}if(!window.CALLED){if(todoMods().length===3&&!S.later&&S.page==="home")startOnb();else say(P.home().say)}});
 </script>
+<script src="aura-profile.js?v=2"></script>
 <script type="module">
 let conv=null,busy=false,raf=0;
 window.liveConv=()=>conv;
