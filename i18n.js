@@ -786,6 +786,16 @@ const I18N_D=[
 ["C’est un peu sombre ici. Mets-toi face à une fenêtre ou une belle lumière, ce sera plus rapide et plus juste.","It’s a little dark here. Face a window or a nice bright light: it will be faster and more accurate.","المكان مظلم شوي. وقفي قدّام دريشة أو في مكان فيه إضاءة حلوة، عشان التحليل يكون أسرع وأدق."],
 ["Ta photo est un peu sombre. Reprends-la face à une fenêtre ou une belle lumière : l’analyse sera plus rapide et plus juste.","Your photo is a little dark. Take it again facing a window or a nice bright light: the analysis will be faster and more accurate.","صورتچ مظلمة شوي. عيدي الصورة قدّام دريشة أو في إضاءة حلوة، عشان التحليل يكون أسرع وأدق."],
 ["Caméra guidée","Guided camera","كاميرا مع دليل"],
+// ——— Accueil v90 (maquette ivoire et bordeaux) ———
+["Cherche ton prochain look…","Search for your next look…","ابحثي عن إطلالتچ الجاية…"],
+["Tes rubriques préférées","Your favourite sections","أقسامچ المفضلة"],
+["Shopping et nouveautés","Shopping & new in","تسوقي ووصل جديد"],
+["Conseils beauté","Beauty tips","نصايح الجمال"],
+["Looks pour toi","Looks for you","إطلالات مخصصة لچ"],
+["Inspirations du jour","Today’s inspiration","ملهمات اليوم"],
+["Looks, beauté, art de vivre","Looks, beauty, lifestyle","إطلالات، جمال، أسلوب حياة"],
+["Mon style au quotidien","My everyday style","ستايلي كل يوم"],
+["My Stylist : parle avec Aura","My Stylist: talk to Aura","My Stylist: كلّمي أورا"],
 ];
 /* Liste d’installation (texte avec mise en forme). */
 const I18N_HTML={instL:{
