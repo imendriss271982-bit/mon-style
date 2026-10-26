@@ -3,6 +3,17 @@
    Le texte affiché à l'écran et la voix d'Aura sont traduits automatiquement à partir de cette liste.
    Pour corriger une traduction : modifie simplement la 2e (anglais) ou la 3e (arabe) colonne. */
 const I18N_D=[
+// ——— Accueil v2 ———
+["Cherche ton look idéal…","Find your ideal look…","ابحثي عن إطلالتچ المثالية…"],
+["Cherche ton look idéal","Find your ideal look","ابحثي عن إطلالتچ المثالية"],
+["Nos services pour toi","Our services for you","خدماتنا لچ"],
+["Shopping","Shopping","تسوّقي"],
+["Nouvelles arrivées","New arrivals","وصول جديد"],
+["Conseils make-up","Make-up tips","نصايح المكياج"],
+["Ta tenue du jour","Your outfit of the day","لبسچ اليوم"],
+["Ta beauté commence ici","Your beauty starts here","جمالچ يبدأ من هني"],
+["Des produits choisis pour toi","Products picked for you","منتجات مختارة خصيصاً لچ"],
+["Trouve-moi un look :","Find me a look:","دوري لي على لوك:"],
 // ——— Accueil d'Aura / démarrage ———
 ["Salut","Hi","هلا والله"],
 ["Salut {0} !","Hi {0}!","هلا والله {0}!"],

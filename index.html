@@ -617,6 +617,49 @@ a.lb{text-decoration:none}
 @keyframes lgIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 .avatar.aura.inchat .micbadge{left:auto;right:2%;top:16%;bottom:auto;pointer-events:auto}
 [dir=rtl] .avatar.aura.inchat .micbadge{right:auto;left:2%}
+/* ===== Accueil v2 (design « boutique rose ») ===== */
+.hz{display:flex;flex-direction:column;gap:18px}
+.hz-h h1{margin:0;font:700 34px/1.15 Jost,system-ui,sans-serif;color:var(--ink);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.hz-h h1 em{font-style:normal;color:var(--accent)}
+.hz-h h1 svg{width:24px;height:24px;fill:var(--accent);flex:none}
+.hz-h p{margin:4px 0 0;font-size:19px;color:var(--ink);opacity:.85}
+.hz-q{display:flex;align-items:center;gap:10px;margin-top:14px;height:50px;padding:0 16px;border-radius:999px;background:var(--surface);border:1px solid var(--line);box-shadow:0 6px 18px rgba(125,46,74,.08)}
+.hz-q svg{width:20px;height:20px;fill:none;stroke:var(--muted);stroke-width:1.8;stroke-linecap:round;flex:none}
+.hz-q input{flex:1;min-width:0;border:0;background:none;font:inherit;font-size:15px;color:var(--ink);outline:none;-webkit-appearance:none;appearance:none}
+.hz-q input::placeholder{color:var(--muted)}
+.hz-q:focus-within{border-color:var(--accent)}
+.hz-hero{position:relative;overflow:hidden;height:360px;margin:0 -8px;border-radius:32px;background:linear-gradient(170deg,#F8E4EA 0%,#F1D3DC 60%,#EAC3CF 100%)}
+.hz-bg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+[dir=rtl] .hz-bg{transform:scaleX(-1)}
+.hz-hero>img{position:absolute;bottom:-6px;inset-inline-end:-22px;width:60%;max-width:280px;height:auto;filter:drop-shadow(0 10px 18px rgba(125,46,74,.22));pointer-events:none}
+.hz-card{position:absolute;inset-inline-start:12px;bottom:14px;width:min(56%,230px);padding:14px 14px 14px;border-radius:26px;background:rgba(255,255,255,.86);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 12px 30px rgba(125,46,74,.18);display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:start}
+.hz-card small{font-size:12px;color:var(--muted)}
+.hz-card b{font:500 30px/1.05 "Cormorant Garamond",Georgia,serif;color:var(--accent);margin-top:2px}
+.hz-card em{font-style:normal;font-size:18px;font-weight:600;color:var(--ink)}
+.hz-min{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:5px 12px;border-radius:999px;border:1px solid #E3C79A;background:#FFF8EC;color:#7A5A2A;font-size:12.5px;font-weight:600}
+.hz-call{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:50px;margin-top:12px;border:0;border-radius:999px;background:linear-gradient(135deg,#9A3F61,#7D2E4A);color:#fff;font:600 16px/1 inherit;box-shadow:0 8px 18px rgba(125,46,74,.32);cursor:pointer;animation:hzring 2.6s ease-in-out infinite}
+@keyframes hzring{0%,100%{box-shadow:0 8px 18px rgba(125,46,74,.32),0 0 0 0 rgba(125,46,74,.35)}50%{box-shadow:0 8px 18px rgba(125,46,74,.32),0 0 0 9px rgba(125,46,74,0)}}
+.hz-call svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round}
+@media (prefers-reduced-motion:reduce){.hz-call{animation:none}}
+.hz-t{margin:8px 0 -4px;font:700 22px/1.2 Jost,system-ui,sans-serif;color:var(--ink)}
+.hz-sv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.hz-sv button{display:flex;flex-direction:column;align-items:center;gap:8px;padding:8px 8px 12px;border:1px solid var(--line);border-radius:22px;background:var(--surface);color:var(--ink);cursor:pointer;text-align:center;box-shadow:0 6px 16px rgba(125,46,74,.06);transition:transform .15s}
+.hz-sv .hz-il{display:grid;place-items:center;width:100%;aspect-ratio:1/1;border-radius:16px;background:linear-gradient(160deg,#FBEEF1,#F2D9E0)}
+.hz-sv .hz-il svg{width:78%;height:78%}
+.hz-sv b{font-size:14.5px;font-weight:600;line-height:1.2}
+.hz-sv small{display:block;font-size:12.5px;color:var(--muted);line-height:1.25;margin-top:-6px}
+.hz-pr{position:relative;display:flex;align-items:center;gap:8px;width:100%;min-height:136px;padding:18px 16px 18px 20px;border:0;border-radius:26px;overflow:hidden;cursor:pointer;text-align:start;background:linear-gradient(120deg,#F9E6EB,#EFCFD9);color:var(--ink);transition:transform .15s}
+.hz-pr-t{flex:1;min-width:0;position:relative;z-index:1}
+.hz-pr-t b{display:block;font:500 28px/1.1 "Cormorant Garamond",Georgia,serif;color:var(--accent)}
+.hz-pr-t small{display:block;margin-top:6px;font-size:13.5px;color:var(--muted)}
+.hz-pr svg{flex:none;width:46%;max-width:180px;height:auto}
+.hz-sv button:active,.hz-pr:active,.hz-call:active{transform:scale(.97)}
+.hz .hx-ms{margin-top:0}
+.hz .hx-oc-l2{margin-top:-8px}
+.hz .hx-more{margin-top:8px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hz-hero{background:linear-gradient(170deg,#3A2430,#2A1D23)}:root:not([data-theme="light"]) .hz-card{background:rgba(29,24,27,.86)}:root:not([data-theme="light"]) .hz-sv .hz-il,:root:not([data-theme="light"]) .hz-pr{background:linear-gradient(160deg,#30222A,#3A2430)}:root:not([data-theme="light"]) .hz-min{background:#2B2218;color:#E9CD9C;border-color:#6B5532}:root:not([data-theme="light"]) .hz-bg{opacity:.35}}
+:root[data-theme="dark"] .hz-hero{background:linear-gradient(170deg,#3A2430,#2A1D23)}:root[data-theme="dark"] .hz-card{background:rgba(29,24,27,.86)}:root[data-theme="dark"] .hz-sv .hz-il,:root[data-theme="dark"] .hz-pr{background:linear-gradient(160deg,#30222A,#3A2430)}:root[data-theme="dark"] .hz-min{background:#2B2218;color:#E9CD9C;border-color:#6B5532}:root[data-theme="dark"] .hz-bg{opacity:.35}
+@media (max-width:360px){.hz-h h1{font-size:29px}.hz-card b{font-size:29px}.hz-hero{height:340px}}
 </style>
 </head>
 <body>
@@ -688,9 +731,9 @@ a.lb{text-decoration:none}
 <button data-go="profil"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.4-4 4.4-6 8-6s6.6 2 8 6"/></svg>Profil</button>
 </nav>
 </div>
-<script src="i18n.js?v=5"></script>
+<script src="i18n.js?v=6"></script>
 <script>
-const VERSION="80";
+const VERSION="81";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
@@ -1282,8 +1325,27 @@ home:()=>{const v=ok("visage"),bd=ok("corps"),c=season(),oc=ok("outfit");
  const row=(m,ic,label,val,mod,extra)=>`<button class="hx-row ${val?"ok":""}" ${val?`data-view="${m}"`:`data-mod="${mod}"`}><span class="hx-ill"><svg viewBox="0 0 80 50" aria-hidden="true">${ILL[ic]}</svg></span><span class="hx-rt"><b>${label}</b><small>${DESC[ic]}</small><em>${esc(val?cap(val):"À faire une fois")}</em></span>${extra||""}<span class="hx-chev" aria-hidden="true">›</span></button>`;
  const sw=c?`<span class="hx-sw">${SEASONS[c].c.slice(0,4).map(x=>`<i style="background:${x[0]}"></i>`).join("")}</span>`:"";
  const cam='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-2.5h6L17 8h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.6"/></svg>';
- return {dock:1,html:`<div class="hx">
- <div class="hm-h"><h1 class="hh">Salut <em>${esc(cap(NOM))}</em></h1><p>Qu’est-ce qu’on porte aujourd’hui ?</p></div>
+ return {dock:1,html:`<div class="hz">
+ <div class="hz-h"><h1>Salut <em>${esc(cap(NOM))}</em> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg></h1><p>Qu’est-ce qu’on porte aujourd’hui ?</p>
+  <form class="hz-q" data-hzq role="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg><input type="search" id="hzq" enterkeyhint="search" placeholder="Cherche ton look idéal…" aria-label="Cherche ton look idéal"></form></div>
+ <section class="hz-hero" aria-label="My Stylist"><svg class="hz-bg" viewBox="0 0 360 360" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="hzG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E4C68E"/><stop offset="1" stop-color="#B8935A"/></linearGradient><radialGradient id="hzL" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFF4DE" stop-opacity=".9"/><stop offset="1" stop-color="#FFF4DE" stop-opacity="0"/></radialGradient></defs>
+<circle cx="150" cy="70" r="90" fill="url(#hzL)"/>
+<g opacity=".55"><path d="M0 96h120M0 176h120" stroke="url(#hzG)" stroke-width="3"/>
+<rect x="14" y="66" width="18" height="30" rx="4" fill="#E7AFBF"/><rect x="19" y="58" width="8" height="9" rx="2" fill="#B8935A"/><rect x="42" y="74" width="22" height="22" rx="5" fill="#F6D5DE"/><path d="M76 96c0-18 3-22 13-22s13 4 13 22z" fill="#C98699"/>
+<rect x="12" y="146" width="26" height="30" rx="4" fill="#F3CAD5"/><rect x="48" y="150" width="14" height="26" rx="3" fill="#E7AFBF"/><rect x="50" y="143" width="10" height="8" rx="2" fill="#B8935A"/><rect x="72" y="140" width="30" height="36" rx="6" fill="#F6D5DE"/></g>
+<g opacity=".5"><path d="M190 120h180" stroke="url(#hzG)" stroke-width="4" stroke-linecap="round"/>
+<path d="M206 124l-8 26 6 4-10 90h44l-10-90 6-4-8-26z" fill="#D99AAD"/><path d="M252 124h30l10 22-6 4v100h-38V150l-6-4z" fill="#F6E7EA"/><path d="M302 124h28l6 20-4 4 8 96h-48l8-96-4-4z" fill="#C27C92"/><path d="M342 124h24v126h-28z" fill="#EBC2CE"/></g>
+<ellipse cx="180" cy="372" rx="220" ry="40" fill="#E5BCC8" opacity=".6"/></svg><img src="aura-hero.webp?v=1" alt="Aura, ta styliste personnelle" width="442" height="552">
+  <div class="hz-card"><small>Ta styliste IA personnelle</small><b>My Stylist</b><em>Parle avec Aura</em><span class="hz-min">${(()=>{const m=Math.max(0,Math.ceil(secLeft()/60));return premium()?`👑 ${m} min ce mois-ci`:m>0?"👑 Essai : 1 min offerte":"👑 Réservé aux abonnées"})()}</span>
+  <button class="hz-call" data-view="chat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg>Appeler Aura</button></div>
+ </section>
+ <h2 class="hz-t">Nos services pour toi</h2>
+ <div class="hz-sv">
+  <button data-go="boutique"><span class="hz-il"><svg viewBox="0 0 80 80" aria-hidden="true"><path d="M30 26v-6a10 10 0 0 1 20 0v6" fill="none" stroke="#9A3F61" stroke-width="2.6" stroke-linecap="round"/><path d="M18 26h44l-4 42H22z" fill="#E98FA9"/><path d="M18 26h44l-1 8H19z" fill="#F4B4C6"/><path d="M40 26l22 0-4 42H40z" fill="#000" opacity=".06"/><circle cx="30" cy="34" r="2" fill="#9A3F61"/><circle cx="50" cy="34" r="2" fill="#9A3F61"/></svg></span><b>Shopping</b><small>Nouvelles arrivées</small></button>
+  <button data-go="beaute"><span class="hz-il"><svg viewBox="0 0 80 80" aria-hidden="true"><rect x="12" y="30" width="16" height="38" rx="4" fill="#F4E3D7"/><rect x="15" y="20" width="10" height="11" rx="2" fill="url(#hzG2)"/><rect x="31" y="22" width="16" height="46" rx="5" fill="#5A2333"/><rect x="34" y="12" width="10" height="11" rx="2" fill="url(#hzG2)"/><rect x="34" y="40" width="10" height="12" rx="1.5" fill="#E7C08A" opacity=".8"/><rect x="51" y="42" width="11" height="26" rx="2" fill="url(#hzG2)"/><path d="M52 42v-10l9-4v14z" fill="#9A3F61"/><rect x="63" y="50" width="9" height="18" rx="4" fill="#E7AFBF"/><defs><linearGradient id="hzG2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EAD0A0"/><stop offset="1" stop-color="#B8935A"/></linearGradient></defs></svg></span><b>Beauté</b><small>Conseils make-up</small></button>
+  <button data-go="o_photo"><span class="hz-il"><svg viewBox="0 0 80 80" aria-hidden="true"><path d="M36 8a4 4 0 1 1 6 3.4c-1 .6-2 1.4-2 2.6" fill="none" stroke="#B8935A" stroke-width="1.8" stroke-linecap="round"/><path d="M33 16h14l-2 12 3 4c6 10 12 22 16 38H16c4-16 10-28 16-38l3-4z" fill="#E98FA9"/><path d="M33 16h14l-2 12H35z" fill="#F4B4C6"/><path d="M35 30h10" stroke="#9A3F61" stroke-width="2.4" stroke-linecap="round"/><path d="M40 32c-2 12-6 26-10 38M40 32c2 12 6 26 10 38" stroke="#D97895" stroke-width="1.2" fill="none" opacity=".7"/></svg></span><b>Outfit check</b><small>${oc?`Dernière note : ${esc(String(oc.note))}/10`:"Ta tenue du jour"}</small></button>
+ </div>
+ ${oc?`<button class="hx-oc-l2" data-view="o_res">Voir mon dernier résultat</button>`:""}
 ${nd===3?`<button class="hx-ms" data-view="fiche" aria-label="Voir ma fiche style">
   <span class="hx-ms-h"><b>Mon style</b><small>Voir le détail ›</small></span>
   <span class="hx-ms-g"><span><small>Visage</small><em>${esc(cap(v.forme))}</em></span><span><small>Silhouette</small><em>${esc(bd.kibbe?bd.forme+" · "+bd.kibbe:bd.forme)}</em></span><span><small>Saison</small><em>${esc(c)}</em>${sw}</span></span>
@@ -1291,12 +1353,7 @@ ${nd===3?`<button class="hx-ms" data-view="fiche" aria-label="Voir ma fiche styl
   <span class="hx-ms-h"><b>${nd?"Termine ton analyse":"Ton analyse de style"}</b><small>${nd}/3 ›</small></span>
   <p>${nd?"Il reste "+(3-nd)+" étape"+(3-nd>1?"s":"")+". Ensuite, ta fiche complète s’affiche ici.":"Visage, silhouette, couleurs : on la fait une seule fois, ensemble."}</p>
  </button>`}
- <button class="hx-hero" data-view="chat" aria-label="My Stylist : parle avec Aura"><img src="aura-bust.webp?v=1" alt="" width="330" height="308">
-  <span class="hx-hero-t"><small>Ta styliste IA personnelle</small><b>My Stylist</b><em>Parle avec Aura</em><span class="hx-hero-c">${(()=>{const m=Math.max(0,Math.ceil(secLeft()/60));return premium()?`👑 ${m} min ce mois-ci`:m>0?"👑 Essai : 1 min offerte":"👑 Réservé aux abonnées"})()}</span></span>
-  <span class="hx-hero-b"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg>Appeler Aura</span></button>
- <button class="hx-oc2" data-go="o_photo"><span class="hx-oc2-i"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/></svg></span>
-  <span class="hx-oc2-t"><small>Chaque jour</small><b>Outfit check</b><em>${oc?`Dernière note : ${esc(String(oc.note))}/10`:"Une note et les changements à faire"}</em></span><span class="hx-oc2-c">${cam}</span></button>
- ${oc?`<button class="hx-oc-l2" data-view="o_res">Voir mon dernier résultat</button>`:""}
+ <button class="hz-pr" data-go="boutique"><span class="hz-pr-t"><b>Ta beauté commence ici</b><small>Des produits choisis pour toi</small></span><svg viewBox="0 0 180 120" aria-hidden="true"><circle cx="40" cy="30" r="22" fill="#F7C9D5" opacity=".8"/><circle cx="150" cy="96" r="26" fill="#F3B9C9" opacity=".7"/><path d="M22 92c8-10 20-10 28 0-8 8-20 8-28 0z" fill="#F3B9C9"/><rect x="70" y="40" width="40" height="64" rx="8" fill="#3A1621"/><rect x="74" y="46" width="32" height="52" rx="6" fill="#5A2333"/><rect x="80" y="24" width="20" height="18" rx="3" fill="url(#hzG3)"/><rect x="82" y="64" width="16" height="10" rx="1.5" fill="#E7C08A" opacity=".85"/><g transform="rotate(-24 140 70)"><rect x="128" y="48" width="14" height="48" rx="2" fill="url(#hzG3)"/><path d="M129 48v-14l12-6v20z" fill="#9A3F61"/></g><rect x="40" y="80" width="26" height="24" rx="4" fill="#F4E3D7"/><rect x="45" y="72" width="16" height="9" rx="2" fill="url(#hzG3)"/><defs><linearGradient id="hzG3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EAD0A0"/><stop offset="1" stop-color="#B8935A"/></linearGradient></defs></svg></button>
 <div class="hx-more">${grHomeCard()}</div>
  </div>`,
  say:"Bonjour "+NOM+", je suis contente de te voir. Touche le téléphone pour me parler, ou choisis une analyse."}},
@@ -1854,6 +1911,7 @@ document.addEventListener("click",e=>{
  if(t.hasAttribute("data-send"))return send(($("#msg")||{}).value);
 });
 document.addEventListener("click",e=>{if(e.target.closest("[data-call]"))stopVoice()});
+document.addEventListener("submit",e=>{const f=e.target.closest("[data-hzq]");if(!f)return;e.preventDefault();const q=($("#hzq")||{}).value||"";if(!q.trim())return;S.flow=null;go("chat");setTimeout(()=>send(tr("Trouve-moi un look :")+" "+q.trim()),350)});
 document.addEventListener("change",e=>{if(e.target.hasAttribute("data-cphoto")){const f=e.target.files&&e.target.files[0];if(!f)return;S.cphoto={file:f,url:URL.createObjectURL(f)};render(false);if(window.liveConv&&window.liveConv()){voicePhoto((S.draft||"").trim());return}const m=$("#msg");if(m)m.focus();say("Jolie photo ! Dis-moi ce que tu veux savoir, puis touche Envoyer.");return}
  if(e.target.hasAttribute("data-gadd")){const fs=[...(e.target.files||[])];e.target.value="";if(fs.length)grAdd(fs);return}
  const k=e.target.dataset.f,f=e.target.files&&e.target.files[0];if(!k||!f)return;
