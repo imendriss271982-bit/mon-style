@@ -17,6 +17,6 @@ const URL=process.env.URL||'http://localhost:8765/';
   report.push(pg+': '+n+' boutons');
  }
  // Navigation par la barre du bas
- for(const g of ['home','garde','chat','tenues','profil']){await p.click(`#dock [data-go="${g}"]`);await p.waitForTimeout(300);const cur=await p.evaluate(()=>S.page);if(cur!==g)errs.push('dock '+g+' -> '+cur)}
+ for(const g of ['home','garde','chat','boutique','profil']){await p.click(`#dock [data-go="${g}"]`);await p.waitForTimeout(300);const cur=await p.evaluate(()=>S.page);if(cur!==g)errs.push('dock '+g+' -> '+cur)}
  if(process.env.EXTRA){await require(process.env.EXTRA)(p,errs,report)}
  console.log(report.join('\n'));console.log(errs.length?'ERREURS:\n'+errs.join('\n'):'Aucune erreur');await b.close();process.exit(errs.length?1:0)})();
