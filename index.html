@@ -138,7 +138,7 @@ footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg)
 #splash #talkbtn.live{background:#4A3E36}
 #splash .skip{position:absolute;top:calc(14px + max(env(safe-area-inset-top,0px),var(--satfb,0px)));right:16px;background:none;border:0;color:var(--accent);font:inherit;font-size:15px;padding:10px 12px;cursor:pointer}#splash .skip[hidden]{display:none}#spnom{width:100%;max-width:320px;margin-bottom:8px}#spnom[hidden]{display:none}
 /* Accueil plein écran : Aura dans son atelier */
-#splash{justify-content:flex-start;padding:0;overflow:hidden;background:#FFFEF9}
+#splash{justify-content:flex-start;padding:0;overflow:hidden;background:#622233}
 #splash .atelier{position:absolute;inset:0;width:100%;height:100%;z-index:0}
 #splash .atelier .gar{transform-box:fill-box;transform-origin:50% 0;animation:garSway 5.5s ease-in-out infinite}
 #splash .atelier .glow{transform-box:fill-box;transform-origin:50% 50%;animation:glowP 4s ease-in-out infinite}#splash .atelier .g2{animation-delay:-2s}
@@ -190,7 +190,7 @@ footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg)
 @keyframes armWave{from{transform:rotate(-11deg)}to{transform:rotate(1deg)}}
 #splash .spbot{position:absolute;z-index:3;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;padding:60px 24px calc(22px + env(safe-area-inset-bottom,0px));pointer-events:none}
 #splash .spbot>*{pointer-events:auto}
-#splash .spbot:before{content:"";position:absolute;inset:-40px 0 0;z-index:-1;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.82) 38%,#fff 100%);opacity:0;transition:opacity .6s}
+#splash .spbot:before{content:"";position:absolute;inset:-40px 0 0;z-index:-1;background:linear-gradient(to bottom,transparent,rgba(74,24,38,.82) 38%,#4A1826 100%);opacity:0;transition:opacity .6s}
 #splash:has(.spbot>.btn.show) .spbot:before,#splash:has(#spnom:not([hidden])) .spbot:before{opacity:1}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #splash .spbot:before{background:linear-gradient(to bottom,transparent,rgba(20,17,19,.85) 38%,#141210 100%)}}
 :root[data-theme="dark"] #splash .spbot:before{background:linear-gradient(to bottom,transparent,rgba(20,17,19,.85) 38%,#141210 100%)}
@@ -587,6 +587,10 @@ a.lb{text-decoration:none}
 
 /* Pas d’appel depuis l’écran d’ouverture : on appelle Aura une fois entrée (My Stylist) */
 #splash #talkbtn{display:none!important}
+#splash .spbot .btn{background:#FFFEF9;color:#622233;border:1px solid #E3C58E}
+#splash .spbot .btn.ghost{background:none;color:#FFFEF9;border-color:#E3C58E}
+#splash .sptop h1{color:#FFFEF9;text-shadow:0 2px 14px rgba(0,0,0,.45)}#splash .sptop p{color:#F3E6DA;text-shadow:0 1px 10px rgba(0,0,0,.5)}
+#splash .skip{color:#FFFEF9;text-shadow:0 1px 8px rgba(0,0,0,.5)}
 /* Événements à Doha */
 .evl{display:flex;flex-direction:column;gap:10px;margin:0 0 22px}
 .ev{display:flex;gap:14px;align-items:flex-start;padding:14px;border-radius:20px;background:var(--surface);border:1px solid var(--line);color:var(--ink);text-decoration:none}
@@ -695,21 +699,21 @@ nav.dock button[aria-current="true"]{font-weight:500}
 <body>
 <div id="splash"><svg class="atelier" viewBox="0 0 400 860" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
 <defs>
-<linearGradient id="atW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFEF9"/><stop offset=".6" stop-color="#FBF8F0"/><stop offset="1" stop-color="#F3EDE0"/></linearGradient>
+<linearGradient id="atW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7A2A3E"/><stop offset=".6" stop-color="#622233"/><stop offset="1" stop-color="#4A1826"/></linearGradient>
 <radialGradient id="atH" cx=".5" cy=".42" r=".55"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".7" stop-color="#FFFEF9"/><stop offset="1" stop-color="#F8F4EA"/></radialGradient>
 <radialGradient id="atG" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFE7B8" stop-opacity=".95"/><stop offset="1" stop-color="#FFE7B8" stop-opacity="0"/></radialGradient>
-<linearGradient id="atGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1A1716"/><stop offset=".5" stop-color="#1A1716"/><stop offset="1" stop-color="#1A1716"/></linearGradient>
+<linearGradient id="atGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E3C58E"/><stop offset=".5" stop-color="#C9A465"/><stop offset="1" stop-color="#E3C58E"/></linearGradient>
 <linearGradient id="atMir" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".45" stop-color="#F9F6EE"/><stop offset=".55" stop-color="#FFFFFF"/><stop offset="1" stop-color="#EFE9DC"/></linearGradient>
 </defs>
 <rect width="400" height="860" fill="url(#atW)"/>
-<g fill="none" stroke="#E6DECD" stroke-width="1.2" opacity=".8">
+<g fill="none" stroke="#8E4458" stroke-width="1.2" opacity=".8">
 <rect x="-10" y="560" width="120" height="230" rx="4"/><rect x="290" y="560" width="120" height="230" rx="4"/>
 <path d="M0 540H400"/><path d="M0 805H400" stroke-width="2"/>
 </g>
 <path d="M58 860V300a142 142 0 0 1 284 0V860Z" fill="url(#atH)"/>
 <path d="M58 860V300a142 142 0 0 1 284 0V860" fill="none" stroke="url(#atGold)" stroke-width="2.4"/>
 <path d="M70 860V302a130 130 0 0 1 260 0V860" fill="none" stroke="#E9CDA0" stroke-width=".8" opacity=".8"/>
-<g class="lamp"><path d="M78 0V78M322 0V60" stroke="#1A1716" stroke-width="1.2"/>
+<g class="lamp"><path d="M78 0V78M322 0V60" stroke="#C9A465" stroke-width="1.2"/>
 <circle class="glow" cx="78" cy="104" r="46" fill="url(#atG)"/><circle class="glow g2" cx="322" cy="86" r="42" fill="url(#atG)"/>
 <path d="M58 96a20 18 0 0 1 40 0Z" fill="url(#atGold)"/><path d="M303 78a19 17 0 0 1 38 0Z" fill="url(#atGold)"/>
 <ellipse cx="78" cy="97" rx="9" ry="3" fill="#FFF3D6"/><ellipse cx="322" cy="79" rx="8" ry="3" fill="#FFF3D6"/></g>
@@ -763,7 +767,7 @@ nav.dock button[aria-current="true"]{font-weight:500}
 </div>
 <script src="i18n.js?v=11"></script>
 <script>
-const VERSION="96";
+const VERSION="97";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 const REF=`BASE DE RÉFÉRENCE PROFESSIONNELLE (à suivre strictement, c’est la méthode de l’utilisatrice) :
 COLORIMÉTRIE 12 SAISONS. Trois dimensions : température (chaude ou froide, sous-ton doré ou bleuté), valeur (claire ou profonde) et chroma (vive/claire ou douce/atténuée). Printemps (chaud, clair, lumineux) : Printemps Clair (Light Spring), Printemps Chaud/Pur (True/Warm Spring), Printemps Vif/Lumineux (Bright Spring). Été (froid, clair, doux) : Été Clair (Light Summer), Été Froid/Pur (True/Cool Summer), Été Doux/Atténué (Soft Summer). Automne (chaud, profond, doux) : Automne Doux (Soft Autumn), Automne Chaud/Pur (True/Warm Autumn), Automne Profond (Dark/Deep Autumn). Hiver (froid, profond, vif) : Hiver Vif/Lumineux (Bright Winter), Hiver Froid/Pur (True/Cool Winter), Hiver Profond (Dark/Deep Winter). Tableau : Bright Winter ou Bright Spring = éclat et fort contraste, tons saturés nets ; True Cool Winter ou Summer = froid pur, bleus, argent, pas d’or ; Dark Winter ou Autumn = profondeur et richesse, velours ; Soft Summer ou Autumn = douceur, tons poudrés et grisés ; True Warm Autumn ou Spring = chaud pur, or, terre, corail ; Light Summer ou Spring = clair, délicat, pastel. Test du blanc optique : seule la famille Hiver porte le noir intense et le blanc éclatant sans se fatiguer. Protocole de drapage : 1) or contre argent pour la température ; 2) couleur vive (fuchsia) contre atténuée (rose poussiéreux) pour le chroma ; 3) pièce test de la saison supposée. Règle d’or : les couleurs harmonieuses avec les traits du visage effacent les ombres et donnent un teint frais.
