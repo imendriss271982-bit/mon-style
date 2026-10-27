@@ -3,6 +3,18 @@
 const ALLOWED = ["https://imendriss271982-bit.github.io"];
 let GOOD_MODEL = "";
 let GOOD_IMG = "";
+// Limite de demandes par adresse IP (par instance du Worker, au mieux) : l'en-tête Origin peut être imité
+// hors navigateur, cette limite évite qu'un robot épuise le crédit Gemini / ElevenLabs.
+const HITS = new Map();
+const LIMITS = { "/": 60, "/makeup": 6, "/tts": 60 }; // demandes par 10 minutes
+function tooMany(ip, path) {
+  const now = Date.now(), win = 600000, key = path + "|" + ip, max = LIMITS[path] || 30;
+  const list = (HITS.get(key) || []).filter(t => now - t < win);
+  list.push(now); HITS.set(key, list);
+  if (HITS.size > 5000) for (const [k, v] of HITS) if (!v.length || now - v[v.length - 1] > win) HITS.delete(k);
+  return list.length > max;
+}
+const MIMES = ["image/jpeg", "image/png", "image/webp"];
 
 export default {
   async fetch(req, env) {
@@ -23,6 +35,11 @@ export default {
     try {
       if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
       if (req.method !== "POST" || !ALLOWED.includes(origin)) return json({ erreur: "Accès refusé." }, 403);
+      {
+        const path = new URL(req.url).pathname;
+        const ip = req.headers.get("CF-Connecting-IP") || "?";
+        if (tooMany(ip, LIMITS[path] ? path : "/")) return json({ erreur: "Trop de demandes. Réessaie dans quelques minutes.", code: "rate_limited" }, 429);
+      }
 
       // Voix d'Aura qui dit le prénom de la cliente (ElevenLabs), avec phrases fixes uniquement.
       if (new URL(req.url).pathname === "/tts") {
@@ -154,14 +171,14 @@ export default {
 
       let size = 0;
       for (const i of images) {
-        if (!i || typeof i.data !== "string") return json({ erreur: "Photo invalide." }, 400);
+        if (!i || typeof i.data !== "string" || (i.mime && !MIMES.includes(i.mime))) return json({ erreur: "Photo invalide." }, 400);
         size += i.data.length;
       }
       if (size > 8e6) return json({ erreur: "Photo trop lourde." }, 413);
 
       const parts = [
         { text: prompt },
-        ...images.map(i => ({ inline_data: { mime_type: i.mime || "image/jpeg", data: i.data } }))
+        ...images.map(i => ({ inline_data: { mime_type: MIMES.includes(i.mime) ? i.mime : "image/jpeg", data: i.data } }))
       ];
       const models = [String(env.MODEL || "").trim(), "gemini-3.8-flash", "gemini-3.6-flash", "gemini-flash-latest", "gemini-3.5-flash-lite"].filter(Boolean);
       // Réflexion courte : l'analyse arrive beaucoup plus vite.
@@ -229,7 +246,9 @@ export default {
         return json({ erreur: "La réponse n'a pas pu être lue. Réessaie.", code: "invalid_json" }, 502);
       }
     } catch (e) {
-      return json({ erreur: "Erreur du serveur : " + (e && e.message ? e.message : String(e)) }, 500);
+      // Le détail technique reste dans les journaux Cloudflare, pas dans l'app.
+      console.error(e);
+      return json({ erreur: "Erreur du serveur. Réessaie dans un instant.", code: "server" }, 500);
     }
   }
 };

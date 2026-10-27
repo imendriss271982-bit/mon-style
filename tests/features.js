@@ -55,10 +55,20 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  ok(await p.evaluate(()=>GR.saved.length===1&&/Mes tenues enregistrées/.test(document.body.innerText)),'Tenue enregistrée retrouvée après rechargement');
  const sid=await p.evaluate(()=>GR.saved[0].id);
  await p.click(`[data-gday="${sid}:Ven"]`);ok(await p.evaluate(()=>GR.saved[0].jour==='Ven'&&!!document.querySelector('.gr-day.on')),'Tenue posée sur vendredi (Ma semaine)');
+ // ——— Ajustement « Plus confortable » : prompt orienté, résultat remplacé, rien d'enregistré en préférence ———
+ await p.evaluate(()=>{S.grOcc='ramadan';go('garde')});const nAv=await p.evaluate(()=>PF.avis.length);
+ await p.evaluate(()=>{window.__pr=[];const ids=GR.items.map(x=>x.id);SAMPLE={json:async pr=>{__pr.push(pr);return {titre:'Douceur iftar',pieces:[ids[4],ids[3]],pourquoi:'Pièces souples.',conseil:'Tes couleurs aimées.',manque:''}}}});
+ await p.evaluate(()=>document.querySelector('[data-galt="ramadan:0:confort"]').click());await p.waitForTimeout(500);
+ ok(await p.evaluate(()=>/version plus confortable/.test(__pr[__pr.length-1])&&GR.looks.ramadan[0].titre==='Douceur iftar'&&/Pièces souples/.test(GR.looks.ramadan[0].conseil)),'Ajustement « Plus confortable » appliqué et expliqué');
+ ok(await p.evaluate(n=>PF.avis.length===n,nAv),'Un ajustement ponctuel n’est pas enregistré comme préférence');
  // supprimer une pièce de la tenue enregistrée
  const abaya=await p.evaluate(()=>GR.saved[0].pieces[0]);
  await p.evaluate(id=>{S.grItem=id;go('g_item')},abaya);await p.click(`[data-gdel="${abaya}"]`);await p.waitForTimeout(200);
  ok(await p.evaluate(()=>GR.saved[0]&&GR.saved[0].pieces.length===2),'Pièce supprimée retirée de la tenue enregistrée');
+ // ——— Objectifs et confort ———
+ await p.evaluate(()=>go('prefs'));await p.click('[data-pfk="objectifs"] [data-pfv="Gagner en confiance"]');await p.click('[data-pfk="confort"] [data-pfv="Talons bas ou plats"]');
+ ok(await p.evaluate(()=>/objectifs de style : gagner en confiance/.test(PROFIL())&&/confort : talons bas/.test(pfRules().toLowerCase())),'Objectifs et confort transmis à Aura');
+ ok(await p.evaluate(()=>typeof REF==='string'&&REF.startsWith('BASE DE RÉFÉRENCE')&&/VISAGISME/.test(REFP('VISAGISME'))),'Méthode chargée depuis aura-methode.js');
  await p.evaluate(()=>go('garde'));await p.click(`[data-gunsave="${sid}"]`);ok(await p.evaluate(()=>GR.saved.length===0),'Tenue retirée');
  // préférences : suppression d'un avis puis effacement total
  await p.evaluate(()=>go('prefs'));await p.click('[data-pfdel]');ok(await p.evaluate(()=>PF.avis.length===0),'Avis supprimé');

@@ -15,6 +15,9 @@ const PF_PIECES = ["Robes","Pantalons","Jeans","Jupes","Abayas","Jumpsuits","Bla
 const PF_PIECE_CAT = {Robes:"robe",Pantalons:"pantalon",Jupes:"jupe",Abayas:"abaya",Blazers:"veste"};
 const PF_COUPES = ["Ajustée","Fluide","Oversize","Structurée"];
 const PF_OCCASIONS = ["Travail","Réunions","Quotidien","Week-end","Soirées","Mariages","Ramadan","Aïd","Voyage","Sport"];
+// Objectifs et confort : choisis par la cliente, jamais déduits. Formulés sans jamais « corriger » le corps.
+const PF_OBJECTIFS = ["Trouver mon style signature","Gagner en confiance","Un look plus professionnel","Oser plus de couleurs","Simplifier ma garde-robe","Acheter moins mais mieux","Être élégante sans effort"];
+const PF_CONFORT = ["Talons bas ou plats","Matières respirantes","Coupes amples","Pas de tissus qui serrent","Facile à porter toute la journée"];
 const PF_PUDEUR = [["","Pas de préférence"],["couvrant","Tenues couvrantes"],["hijab","Couvrantes, avec hijab"],["abaya","Abaya au quotidien"]];
 const PF_PUDEUR_REGLE = {
   couvrant: "tenues couvrantes : manches longues ou trois-quarts, longueur midi ou maxi, pas de décolleté, pas de transparence, coupes non moulantes",
@@ -36,6 +39,8 @@ function pfClean(raw) {
     aime, evite, porte, evitePieces,
     coupes: list(o.coupes, PF_COUPES),
     occasions: list(o.occasions, PF_OCCASIONS),
+    objectifs: list(o.objectifs, PF_OBJECTIFS),
+    confort: list(o.confort, PF_CONFORT),
     pudeur: PF_PUDEUR.some(p => p[0] === o.pudeur) ? o.pudeur : "",
     note: typeof o.note === "string" ? o.note.slice(0, 200) : "",
     avis
@@ -43,7 +48,7 @@ function pfClean(raw) {
 }
 let PF = (() => { try { return pfClean(JSON.parse(localStorage.getItem(PF_KEY) || "null")); } catch (e) { return pfClean(null); } })();
 function pfSave() { try { localStorage.setItem(PF_KEY, JSON.stringify(PF)); return true; } catch (e) { return false; } }
-const pfEmpty = () => !PF.aime.length && !PF.evite.length && !PF.porte.length && !PF.evitePieces.length && !PF.coupes.length && !PF.occasions.length && !PF.pudeur && !PF.note && !PF.avis.length;
+const pfEmpty = () => !PF.aime.length && !PF.evite.length && !PF.porte.length && !PF.evitePieces.length && !PF.coupes.length && !PF.occasions.length && !PF.objectifs.length && !PF.confort.length && !PF.pudeur && !PF.note && !PF.avis.length;
 
 // Un avis de la cliente sur une tenue (👍 / 👎). Le même texte n'est gardé qu'une fois, le plus récent en premier.
 function pfAvis(ok, txt) {
@@ -61,6 +66,8 @@ function pfCtx() {
   if (PF.evitePieces.length) p.push("pièces qu’elle ne porte pas : " + low(PF.evitePieces));
   if (PF.coupes.length) p.push("coupes préférées : " + low(PF.coupes));
   if (PF.occasions.length) p.push("ses occasions habituelles : " + low(PF.occasions));
+  if (PF.objectifs.length) p.push("ses objectifs de style : " + low(PF.objectifs));
+  if (PF.confort.length) p.push("ses besoins de confort : " + low(PF.confort));
   if (PF.pudeur) p.push("mode pudique : " + PF_PUDEUR_REGLE[PF.pudeur]);
   if (PF.note) p.push("à savoir (écrit par elle) : " + PF.note);
   const ok = PF.avis.filter(a => a.ok).slice(0, 5).map(a => "« " + a.txt + " »"), ko = PF.avis.filter(a => !a.ok).slice(0, 5).map(a => "« " + a.txt + " »");
@@ -74,6 +81,8 @@ function pfRules() {
   if (PF.pudeur) r.push("Respecte strictement sa préférence de mode pudique (" + PF_PUDEUR_REGLE[PF.pudeur] + ").");
   if (PF.evite.length) r.push("N’utilise pas ces couleurs sauf si elle le demande : " + PF.evite.join(", ").toLowerCase() + ".");
   if (PF.evitePieces.length) r.push("Ne propose pas ces pièces : " + PF.evitePieces.join(", ").toLowerCase() + ".");
+  if (PF.confort.length) r.push("Respecte ses besoins de confort : " + PF.confort.join(", ").toLowerCase() + ".");
+  if (PF.objectifs.length) r.push("Garde en tête ses objectifs : " + PF.objectifs.join(", ").toLowerCase() + ".");
   if (PF.aime.length) r.push("Favorise ses couleurs préférées quand c’est possible : " + PF.aime.join(", ").toLowerCase() + ".");
   if (PF.avis.some(a => !a.ok)) r.push("Évite de reproduire les tenues qu’elle n’a pas aimées.");
   return r.join(" ");
@@ -108,9 +117,12 @@ P.prefs = () => {
   <h2>Je ne porte pas</h2>${chips("evitePieces", PF_PIECES)}
   <h2>Coupes préférées</h2>${chips("coupes", PF_COUPES)}
   <h2>Mes occasions habituelles</h2>${chips("occasions", PF_OCCASIONS)}
+  <h2>Mes objectifs de style</h2>${chips("objectifs", PF_OBJECTIFS)}
+  <h2>Mon confort</h2>${chips("confort", PF_CONFORT)}
   <h2>Mode pudique</h2><div class="pk" data-pfone="pudeur">${PF_PUDEUR.map(p => `<button type="button" data-pfv="${esc(p[0])}" aria-pressed="${PF.pudeur === p[0]}">${esc(p[1])}</button>`).join("")}</div>
   <label class="lbl" for="pf_note">Autre chose à savoir <small>· facultatif</small></label>
   <textarea class="field pf-note" id="pf_note" maxlength="200" rows="2" placeholder="Par exemple : je préfère les talons bas">${esc(PF.note)}</textarea>
+  <p class="sub pf-priv">Ces choix restent sur ce téléphone (pas de synchronisation entre appareils). Aura ne retient que ce que tu choisis ici et tes 👍 / 👎.</p>
   ${avis}
   ${pfEmpty() ? "" : `<button class="link" data-pfwipe>Effacer toutes mes préférences</button>`}`,
     say: "Dis-moi ce que tu aimes, " + NOM + ". Tes couleurs, les pièces que tu portes, et tes occasions. Je m’en souviendrai pour te conseiller." };

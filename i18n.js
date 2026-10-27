@@ -3,6 +3,27 @@
    Le texte affiché à l'écran et la voix d'Aura sont traduits automatiquement à partir de cette liste.
    Pour corriger une traduction : modifie simplement la 2e (anglais) ou la 3e (arabe) colonne. */
 const I18N_D=[
+// ——— Objectifs, confort, ajustements de tenues (v3) ———
+["Mes objectifs de style","My style goals","أهدافي في الستايل"],
+["Mon confort","My comfort","راحتي"],
+["Trouver mon style signature","Find my signature style","ألقى ستايلي الخاص"],
+["Gagner en confiance","Feel more confident","أحس بثقة أكثر"],
+["Un look plus professionnel","A more professional look","لوك أكثر احترافية"],
+["Oser plus de couleurs","Dare more colour","أتجرأ على ألوان أكثر"],
+["Simplifier ma garde-robe","Simplify my wardrobe","أبسّط خزانتي"],
+["Acheter moins mais mieux","Buy less but better","أشتري أقل بس أحسن"],
+["Être élégante sans effort","Effortlessly elegant","أنيقة بدون تعب"],
+["Talons bas ou plats","Low or flat heels","كعب واطي أو فلات"],
+["Matières respirantes","Breathable fabrics","أقمشة تتنفس"],
+["Coupes amples","Loose cuts","قصات واسعة"],
+["Pas de tissus qui serrent","Nothing tight","ولا شي يضيّق"],
+["Facile à porter toute la journée","Easy to wear all day","مريح طول اليوم"],
+["Ces choix restent sur ce téléphone (pas de synchronisation entre appareils). Aura ne retient que ce que tu choisis ici et tes 👍 / 👎.","These choices stay on this phone (no sync between devices). Aura only keeps what you choose here and your 👍 / 👎.","هالاختيارات تنحفظ في هالتلفون بس (ما تنتقل لأجهزة ثانية). أورا ما تحفظ إلا اللي تختارينه هني و 👍 / 👎."],
+["Plus habillé","More dressy","أرسم أكثر"],
+["Plus décontracté","More casual","كاجوال أكثر"],
+["Plus confortable","More comfortable","مريح أكثر"],
+["Nouvelle version prête","New version ready","النسخة الجديدة جاهزة"],
+["Ajuster cette tenue","Adjust this outfit","عدّلي هاللبسة"],
 // ——— Préférences de style et garde-robe (v2) ———
 ["Mes préférences de style","My style preferences","تفضيلاتي في الستايل"],
 ["Couleurs, pièces, occasions, mode pudique : touche pour modifier","Colours, pieces, occasions, modest fashion: tap to edit","الألوان، القطع، المناسبات، اللبس المحتشم: اضغطي للتعديل"],
