@@ -879,7 +879,8 @@ const I18N_HTML={instL:{
  const K=s=>N(s).toLowerCase().replace(/[’']/g,"'");
  const EX={en:new Map(),ar:new Map()},PAT={en:[],ar:[]};
  const reEsc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
- I18N_D.forEach(([fr,en,ar])=>{const k=K(fr);
+ // Traductions de l'espace mariée (zifafi-i18n.js, chargé avant) ajoutées à la liste.
+ (typeof ZF_I18N!=="undefined"?I18N_D.concat(ZF_I18N):I18N_D).forEach(([fr,en,ar])=>{const k=K(fr);
   if(/\{\d\}/.test(fr)){const re=new RegExp("^"+reEsc(k).replace(/\\\{(\d)\\\}/g,"(.+?)")+"$","i");PAT.en.push([re,en]);PAT.ar.push([re,ar])}
   else{if(!EX.en.has(k))EX.en.set(k,en);if(!EX.ar.has(k))EX.ar.set(k,ar)}});
  // Les modèles les plus longs d'abord : plus précis.
