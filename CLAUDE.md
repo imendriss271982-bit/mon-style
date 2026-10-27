@@ -1,6 +1,6 @@
 # My Style — notes pour Claude Code
 
-Application de personal styling (PWA statique) avec Aura, styliste IA vocale. Langues : français (source), anglais, arabe qatari. Palette officielle : fond #FAF7F2, bordeaux #702B3A, fond secondaire #F0E9E0, texte #292421, texte secondaire #77716B, blanc.
+Application de personal styling (PWA statique) avec Aura, styliste IA vocale. Langues : français (source), anglais, arabe qatari. Palette officielle (v108) : fond blanc pur #FFFFFF, bordeaux #702B3A, fond secondaire gris très clair #F5F5F5, lignes #E6E6E6, texte #292421, texte secondaire #6E6E6E. Aucun rose ni beige dans l’interface.
 
 ## Structure
 - `index.html` : toute l'app (CSS + script principal). Pages = objet `P` (`P.home`, `P.garde`, `P.profil`…), navigation `go(page)` / `back()` / `home()`, rendu `render()`. Barre du bas (v102) : Accueil `home`, Garde-robe `garde` (articles seulement), Aura `chat`, Boutique `boutique`, Profil `profil` (v105 : Boutique remplace Mes tenues ; Mes tenues `tenues` = `P.garde(1)` s'ouvre depuis la garde-robe, l'accueil et Aura). Beauté et Nouveautés s'ouvrent depuis l'accueil ; `DOCK_OF` dit quel onglet reste allumé sur une page secondaire. Un seul écouteur de clic principal (`data-*` sur les boutons).
