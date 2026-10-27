@@ -256,6 +256,24 @@ nav.dock button[aria-current="page"]{color:var(--accent)}
 .unit{position:relative}.unit .field{padding-right:48px}.unit i{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-style:normal;color:var(--muted)}
 .hint{font-size:13px;color:var(--muted);margin:6px 2px 0}
 .field.bad{border-color:#C0392B}
+/* v107 : écran rassurant avant la photo de la silhouette, et mesures sans photo (palette officielle) */
+.bi{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:12px}
+.bi li{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;line-height:1.45}
+.bi svg{flex:none;width:40px;height:40px;padding:9px;border-radius:50%;background:var(--soft);fill:none;stroke:var(--accent);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.bi-hint{margin-top:-6px}
+.bm{display:grid;grid-template-columns:minmax(96px,34%) 1fr;gap:14px;align-items:start;margin-top:6px}
+.bm-svg{width:100%;height:auto;max-height:300px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:8px}
+.bm-fig circle,.bm-fig path{fill:var(--soft);stroke:var(--muted);stroke-width:1.2;stroke-linejoin:round}
+.bm-ln{fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round}
+.bm-n{fill:var(--accent)}.bm-t{fill:var(--on);font:600 10px var(--ff);text-anchor:middle}
+.bm-f{display:grid;gap:10px;min-width:0}
+.bm-l{display:block;min-width:0}.bm-l>span:first-child{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--muted);margin-bottom:4px}
+.bm-l b{flex:none;display:inline grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:var(--on);font-size:12px;font-weight:600}
+.bm-l .field{padding-top:11px;padding-bottom:11px}
+[dir="rtl"] .bm-l .unit .field{padding-right:16px;padding-left:48px}[dir="rtl"] .bm-l .unit i{right:auto;left:16px}
+.bm-tips{margin-top:14px;font-size:15px;color:var(--muted)}
+.bm-redo{color:var(--accent);margin-top:6px}
+@media (max-width:359px){.bm{grid-template-columns:1fr}.bm-svg{max-height:240px}}
 .who{display:flex;align-items:center;gap:14px;margin:4px 0 18px}
 .av{width:58px;height:58px;border-radius:50%;background:var(--accent);color:var(--on);display:grid;place-items:center;font:500 33px var(--fh);flex:none}
 .who b{display:block;font:500 24px/1.25 var(--fh)}.who span{color:var(--muted);font-size:14px;word-break:break-all}
@@ -793,12 +811,13 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 </nav>
 </div>
 <script src="zifafi-i18n.js?v=1"></script>
-<script src="i18n.js?v=15"></script>
+<script src="i18n.js?v=16"></script>
 <script src="aura-methode.js?v=1"></script>
 <script src="aura-mesure.js?v=1"></script>
+<script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=1"></script>
 <script>
-const VERSION="106";
+const VERSION="107";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 let NOM="ma belle";
 const AGENT_ID="agent_3801m58kjga8fddsm7bz46gcz4wf";const AGENT_URL="https://elevenlabs.io/app/talk-to?agent_id="+AGENT_ID;
@@ -950,7 +969,7 @@ function PROF_SAY(){const v=ok("visage"),b=ok("corps"),s=season(),p=[];
  if(v)p.push(BL3({en:"face ",ar:"الوجه "})+tr(v.forme));if(b)p.push(BL3({en:"body shape ",ar:"الجسم "})+tr(b.forme)+(b.kibbe?BL3({en:", Kibbe ",ar:"، كيبي "})+tr(b.kibbe):""));
  if(s)p.push(BL3({en:"season ",ar:"الموسم "})+tr(s));return p.join(BL3({en:", ",ar:"، "}))}
 function PROFIL(){const v=ok("visage"),b=ok("corps"),s=season(),p=[];
- if(v)p.push("visage "+v.forme);if(b)p.push("morphologie "+b.forme+", Kibbe "+b.kibbe);if(s)p.push("saison "+s);const i=S.info||{};
+ if(v)p.push("visage "+v.forme);if(b)p.push("morphologie "+b.forme+(b.kibbe?", Kibbe "+b.kibbe:"")+(b.src==="mesures"&&b.mes?" (calculée avec ses mesures : hauteur "+b.mes.hauteur+" cm, poitrine "+b.mes.poitrine+", taille "+b.mes.taille+", hanches "+b.mes.hanches+", épaules "+b.mes.epaules+" cm)":""));if(s)p.push("saison "+s);const i=S.info||{};
  if(i.taille)p.push("mesure "+i.taille+" cm");if(i.tvet)p.push("taille de vêtements "+i.tvet);if(i.age)p.push("âge "+i.age);
  if(i.budget)p.push("budget "+i.budget.toLowerCase());if(i.styles&&i.styles.length)p.push("styles préférés : "+i.styles.join(", ").toLowerCase());
  // Préférences choisies par la cliente (aura-profile.js) et résumé de sa vraie garde-robe.
@@ -958,9 +977,10 @@ function PROFIL(){const v=ok("visage"),b=ok("corps"),s=season(),p=[];
  // Mode mariée (zifafi.js) : contexte ZIFAFI en tête, les goûts du quotidien restent un simple repère.
  if(typeof zfCtx==="function"){const z=zfCtx();if(z)x=z+(x?" Son style au quotidien (repère seulement, ne remplace pas ses choix de mariée) : "+x:"")}return x}
 
-const FLOW_A=["a_nom","a_intro","a_face",...QS.map(q=>"q_"+q.id),"a_body","a_run","r_visage","r_corps","r_couleurs","r_fin"];
+// v107 : le résultat du visage s’affiche AVANT qu’on demande la photo de la silhouette (écran rassurant b_intro, ou mesures b_mes).
+const FLOW_A=["a_nom","a_intro","a_face","v_run","r_visage","b_intro","a_body","c_run","r_corps",...QS.map(q=>"q_"+q.id),"k_run","r_couleurs","r_fin"];
 const FLOW_O=["o_photo","o_run","o_res"];
-const ONB={visage:["a_face","v_run","r_visage"],corps:["a_body","c_run","r_corps"],couleurs:["a_face",...QS.map(q=>"q_"+q.id),"k_run","r_couleurs"]};
+const ONB={visage:["a_face","v_run","r_visage"],corps:["b_intro","a_body","c_run","r_corps"],couleurs:["a_face",...QS.map(q=>"q_"+q.id),"k_run","r_couleurs"]};
 const todoMods=()=>["visage","corps","couleurs"].filter(k=>k==="couleurs"?!season():!ok(k));
 function startOnb(){const m=todoMods().filter(k=>premium()||(k==="visage"&&!PLAN.vfree));if(!m.length)return home();let f=[];m.forEach(k=>{let st=ONB[k];if(k==="couleurs"&&f.includes("a_face"))st=st.slice(1);f=f.concat(st)});
  S.flow=[...(S.nom?[]:["a_nom"]),"a_intro",...f,"r_fin"];S.from="home";S.hist=["home"];S.page=S.flow[0];S.dir="f";S.err="";S.rid++;render(true)}
@@ -1527,11 +1547,19 @@ a_nom:()=>({html:`<p class="step">Ton analyse</p><h1>Comment tu t’appelles ?</
  <input class="field" id="nom" autocomplete="given-name" placeholder="Ton prénom" value="${esc(S.nomDraft??S.nom??"")}" style="font-size:20px;padding:18px">`,
  say:"Avant de commencer, comment tu t’appelles ?",foot:`<button class="btn" data-nom ${(S.nomDraft??S.nom??"").trim()?"":"disabled"}>Continuer</button>`}),
 a_intro:()=>({html:`<p class="step">Ton analyse</p><h1>On commence, ${NOM}.</h1><p class="sub">On le fait une seule fois. Ensuite, ton profil de style reste sur l’accueil, et tu peux le modifier dans ton profil.</p>
- <ul class="tips"><li>1. Ton visage : une photo</li><li>2. Ta silhouette et ton Kibbe : une photo</li><li>3. Tes couleurs : quelques questions</li></ul>
+ <ul class="tips"><li>1. Ton visage : une photo</li><li>2. Ta silhouette : une photo ou tes mesures</li><li>3. Tes couleurs : quelques questions</li></ul>
  <h2>Pour une analyse juste</h2><ul class="tips"><li>Lumière du jour, près d’une fenêtre</li><li>Visage sans maquillage, cheveux attachés</li><li>Sans lunettes, sans filtre</li></ul>`,
  say:"On commence, "+NOM+". On fait ton analyse une seule fois : ton visage, ta silhouette, puis tes couleurs. Mets-toi près d’une fenêtre, en lumière du jour, sans maquillage et les cheveux attachés.",foot:`<button class="btn" data-next>C’est parti</button><button class="link" data-later>Plus tard</button>`}),
 a_face:()=>photoPage("face",{step:S.flow&&S.flow.includes("k_run")&&!S.flow.includes("v_run")?"Colorimétrie · ta photo":"Morpho visage",t:"Ton visage",c:"De face, le téléphone à hauteur des yeux, à bout de bras tendu.",ph:"Ta photo de visage",ic:"face",cam:"user",b:S.flow&&S.flow.includes("k_run")&&!S.flow.includes("v_run")?"Continuer":"Analyser mon visage",say:"Prends une photo de ton visage, bien de face, le téléphone à hauteur des yeux. Mets-toi face à une fenêtre ou une belle lumière."}),
-a_body:()=>photoPage("body",{step:"Morpho & Kibbe",t:"Ta silhouette",c:"En pied, de face, bras le long du corps, vêtements près du corps. Pose le téléphone à 2 mètres et utilise le minuteur.",ph:"Ta photo en pied",ic:"body",cam:"environment",b:"Lancer l’analyse",say:"Prends une photo de toi en pied, de face, avec des vêtements près du corps. Mets-toi face à une fenêtre ou une belle lumière."}),
+a_body:()=>photoPage("body",{step:"Morpho & Kibbe",t:"Ta silhouette",c:"En pied, de face, bras le long du corps, vêtements près du corps. Pose le téléphone à 2 mètres et utilise le minuteur.</p><p class=\"sub bi-hint\">Tu peux cacher ou couper ton visage : seule ta silhouette compte.",ph:"Ta photo en pied",ic:"body",cam:"environment",b:"Lancer l’analyse",say:"Prends une photo de toi en pied, de face, avec des vêtements près du corps. Mets-toi face à une fenêtre ou une belle lumière."}),
+b_intro:()=>({step:"Morpho & Kibbe",html:`<p class="step">Ta silhouette</p><h1>Ta photo reste privée</h1>
+ <ul class="bi">${[["Prends la photo habillée, avec des vêtements près du corps, pour qu’on voie tes épaules, ta taille et tes hanches.",'<path d="M9 3l3 2 3-2 4 3-2 4-2-1v11H9V9L7 10 5 6z"/>'],["Tu peux cacher ou couper ton visage : seule ta silhouette compte.",'<circle cx="12" cy="8" r="4"/><path d="M5 21c1.3-4 4-6 7-6s5.7 2 7 6"/><path d="M4 4l16 16"/>'],["Ta photo est analysée puis jamais gardée.",'<rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>']].map(x=>`<li><svg viewBox="0 0 24 24" aria-hidden="true">${x[1]}</svg><span>${x[0]}</span></li>`).join("")}</ul>`,
+ say:"Ta photo reste privée, et tu peux cacher ton visage.",foot:`<button class="btn" data-bgo>Prendre ma photo</button><button class="btn ghost" data-bmes>Je préfère donner mes mesures</button>`}),
+b_mes:()=>{const d=S.bm||(S.bm=bmInit());const F=[["hauteur","Ta taille (hauteur)","1"],["epaules","Largeur d’épaules","2"],["poitrine","Tour de poitrine","3"],["taille","Tour de taille","4"],["hanches","Tour de hanches","5"]];
+ return {step:"Morpho & Kibbe",html:`<p class="step">Ta silhouette</p><h1>Tes mesures</h1><p class="sub">Avec un mètre ruban, sur des vêtements fins. Tes mesures restent seulement sur ton téléphone.</p>
+ <div class="bm">${BM_SVG}<div class="bm-f">${F.map(f=>`<label class="bm-l"><span><b>${f[2]}</b>${f[1]}</span><span class="unit"><input class="field" type="number" inputmode="decimal" step="0.5" min="${CORPS_MES.BORNES[f[0]][0]}" max="${CORPS_MES.BORNES[f[0]][1]}" data-bm="${f[0]}" id="bm_${f[0]}" value="${esc(String(d[f[0]]??""))}"><i>cm</i></span></label>`).join("")}</div></div>
+ <ul class="tips bm-tips"><li>Épaules : dans le dos, d’une pointe d’épaule à l’autre.</li><li>Poitrine : à l’endroit le plus fort, le ruban bien droit.</li><li>Taille : à l’endroit le plus fin, au-dessus du nombril.</li><li>Hanches : à l’endroit le plus large, sur les fesses.</li></ul>`,
+ say:"Donne-moi tes mesures en centimètres, je calcule ta silhouette.",foot:`<button class="btn" data-bcalc>Voir ma silhouette</button>`}},
 a_run:()=>({html:`<p class="step">Analyse</p><h1>${S.err?"Un souci":"Je t’analyse…"}</h1>
  <div class="photo scan">${S.url.face?`<img src="${S.url.face}" alt="">`:""}</div>
  <p class="sub" id="runmsg">${esc(S.err||S.runmsg||"Je regarde ton visage.")}</p>`,
@@ -1541,10 +1569,11 @@ r_visage:()=>{const v=ok("visage");if(!v)return missing("visage",S.res.visage);
  ${v.ratios?`<div class="row"><span>Tes ratios</span>R_HL ${esc(String(v.ratios.R_HL))} · R_JW ${esc(String(v.ratios.R_JW))} · R_CH ${esc(String(v.ratios.R_CH))}</div>`:""}${v.micro?`<div class="row"><span>Yeux, nez, lèvres</span>${esc(v.micro)}</div>`:""}<div class="row"><span>Coupes de cheveux</span>${esc(v.coupes)}</div><div class="row"><span>Couleur de cheveux</span>${esc(v.couleur_cheveux)}</div>
  <div class="row"><span>Lunettes</span>${esc(v.lunettes)}</div><div class="row"><span>Make-up</span>${esc(v.makeup)}</div>`,
  say:"Ton visage est "+String(v.forme).toLowerCase()+". "+v.pourquoi+" Les coupes qui te vont : "+v.coupes,foot:nextBtn()}},
-r_corps:()=>{if(S.wait&&S.wait.corps)return waitPage("corps");const b=ok("corps");if(!b)return missing("corps",S.res.corps);
- return {step:"Résultat 2 sur 3",html:`<p class="step">Ta morphologie</p><div class="big">${esc(b.forme)}</div><p>${esc(b.proportions)}</p>
+r_corps:()=>{if(S.wait&&S.wait.corps)return waitPage("corps");const b=ok("corps");if(!b)return missing("corps",S.res.corps);const bm=b.src==="mesures";
+ return {step:"Résultat 2 sur 3",html:`<p class="step">Ta morphologie</p><div class="big">${esc(b.forme)}</div>${bm?`<p class="sub">Calculée avec tes mesures.</p>`:""}<p>${esc(b.proportions)}</p>
  ${b.ratios?`<div class="row"><span>Tes ratios</span>R_WE ${esc(String(b.ratios.R_WE))} · R_HE ${esc(String(b.ratios.R_HE))}</div>`:""}${b.somatotype?`<div class="row"><span>Somatotype</span>${esc(cap(b.somatotype))}</div>`:""}
- <div class="row"><span>Ce qui te met en valeur</span>${esc(b.conseils)}</div><div class="row"><span>À éviter</span>${esc(b.a_eviter)}</div>
+ <div class="row"><span>Ce qui te met en valeur</span>${esc(b.conseils)}</div><div class="row"><span>À éviter</span>${esc(b.a_eviter)}</div>${b.hauteur?`<div class="row"><span>Ta hauteur</span>${esc(b.hauteur)}</div>`:""}
+ ${bm?`<p class="note" style="margin-top:18px">Ton type Kibbe se lit sur une photo : avec une photo, je te le donne aussi.</p><button class="link bm-redo" data-bphoto>Refaire avec une photo</button>`:""}
  ${b.kibbe?`<p class="step" style="margin-top:26px">Ton type Kibbe</p><div class="big">${esc(b.kibbe)}</div>${typeof b.score_yinyang==="number"?`<div class="yy" aria-label="Score Yin/Yang ${b.score_yinyang}"><span>Yin</span><div><i style="left:${(Math.max(-10,Math.min(10,b.score_yinyang))+10)*5}%"></i></div><span>Yang</span><b>${b.score_yinyang>0?"+":""}${b.score_yinyang}</b></div>`:""}<p>${esc(b.kibbe_pourquoi||"")}</p>
  ${Array.isArray(b.essences)&&b.essences.length?`<p class="step" style="margin-top:22px">Tes essences de style</p>${b.essences.filter(e=>e&&e.pct>0).sort((x,y)=>y.pct-x.pct).map(e=>`<div class="ess"><span>${esc(e.nom)}</span><div><i style="width:${Math.min(100,+e.pct||0)}%"></i></div><b>${+e.pct||0}%</b></div>`).join("")}`:""}
  <p class="note">Le Kibbe dépend aussi de ta structure osseuse : c’est une estimation à partir de ta photo.</p>`:""}`,
@@ -1672,7 +1701,7 @@ QS.forEach((q,i)=>{P["q_"+q.id]=()=>({step:"Colorimétrie",html:`<p class="step"
 
 const MOD_RES={visage:"r_visage",corps:"r_corps",kibbe:"r_kibbe",couleurs:"r_couleurs"};
 const RES_MOD={r_visage:"visage",r_corps:"corps",r_kibbe:"kibbe",r_couleurs:"couleurs"};
-const MODS={visage:["a_face","v_run","r_visage"],corps:["a_body","c_run","r_corps"],kibbe:["a_body","c_run","r_kibbe"],couleurs:["a_face",...QS.map(q=>"q_"+q.id),"k_run","r_couleurs"]};
+const MODS={visage:["a_face","v_run","r_visage"],corps:["b_intro","a_body","c_run","r_corps"],kibbe:["b_intro","a_body","c_run","r_kibbe"],couleurs:["a_face",...QS.map(q=>"q_"+q.id),"k_run","r_couleurs"]};
 const MIC={face:IC.face,body:IC.body,kibbe:'<svg viewBox="0 0 24 24"><path d="M12 3l7 9-7 9-7-9z"/><path d="M5 12h14"/></svg>',pal:'<svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.2 0 1.8-.9 1.4-1.9-.5-1.1.3-2.1 1.5-2.1H17a4 4 0 0 0 4-4c0-5.5-4-10-9-10z"/><circle cx="7.5" cy="11" r="1.2"/><circle cx="10" cy="7" r="1.2"/><circle cx="15" cy="7.5" r="1.2"/></svg>'};
 function startMod(m){const F=MODS[m];if(!F)return;S.from=S.page==="profil"||/^r_/.test(S.page)?"profil":"home";S.flow=S.nom?F:["a_nom",...F];S.hist=[S.from];S.page=S.flow[0];S.dir="f";S.err="";S.rid++;render(true)}
 function runPage(f,t,redo){return {html:`<p class="step">Analyse</p><h1>${S.err?"Un souci":t}</h1><div class="photo scan">${S.url[f]?`<img src="${S.url[f]}" alt="">`:""}</div>${S.err?`<p class="sub">${esc(S.err)}</p>`:WAITBOX}`,
@@ -1680,6 +1709,21 @@ function runPage(f,t,redo){return {html:`<p class="step">Analyse</p><h1>${S.err?
 function nextBtn(){if(S.flow){const last=S.flow.indexOf(S.page)===S.flow.length-1;return `<button class="btn" data-next>${last?(S.from==="profil"?"Retour à mon profil":"Retour à l’accueil"):"Continuer"}</button>`}
  const m=RES_MOD[S.page];return `<button class="btn" data-back>Retour</button>${m?`<button class="link" data-mod="${m}">Refaire cette analyse</button>`:""}`}
 function missing(k,r){const m=RES_MOD[S.page]||k;return {html:`<h1>Pas encore de résultat</h1><p class="sub">${esc(r&&r.erreur?r.erreur:"Cette analyse n’est pas encore faite.")}</p>`,foot:`<button class="btn" data-mod="${m}">Faire cette analyse</button>`}}
+// ===== v107 : silhouette sans photo, avec les mesures (aura-corps.js). Mesures gardées seulement sur le téléphone (monstyle). =====
+// Dessin original : où placer le mètre ruban (numéros = champs du formulaire).
+const BM_SVG=(()=>{const L=(n,y,x1,x2,dash)=>`<path d="M${x1} ${y}H${x2}" class="bm-ln"${dash?' stroke-dasharray="3 2"':''}/><circle cx="${x1-11}" cy="${y}" r="7.5" class="bm-n"/><text x="${x1-11}" y="${y+3.6}" class="bm-t">${n}</text>`;
+ return `<svg class="bm-svg" viewBox="0 0 130 225" role="img" aria-label="Où mesurer"><g transform="translate(15,10)" class="bm-fig"><circle cx="50" cy="17" r="11"/><path d="M44 29v5q-14 1-17 9l-6 54q0 5 4 5l5-40 2 37q-2 23 2 52l3 43h10l2-71h2l2 71h10l3-43q4-29 2-52l2-37 5 40q4 0 4-5l-6-54q-3-8-17-9v-5"/></g>
+ ${L(2,50,40,90)}${L(3,66,44,86,1)}${L(4,88,47,83,1)}${L(5,112,43,87,1)}<path d="M120 10V213M116 15l4-5 4 5M116 208l4 5 4-5" class="bm-ln"/><circle cx="120" cy="112" r="7.5" class="bm-n"/><text x="120" y="115.6" class="bm-t">1</text></svg>`})();
+// Brouillon du formulaire : dernières mesures enregistrées, sinon la hauteur du profil. Données abîmées ignorées.
+function bmInit(){const d={},m=S.res&&S.res.corps&&S.res.corps.mes;
+ if(m&&typeof m==="object")for(const k in CORPS_MES.BORNES){const v=Number(m[k]);if(isFinite(v)&&v>0)d[k]=v}
+ if(d.hauteur==null){const t=Number((S.info||{}).taille);if(isFinite(t)&&t>0)d.hauteur=t}return d}
+const BM_NOM={hauteur:"ta hauteur",epaules:"ta largeur d’épaules",poitrine:"ton tour de poitrine",taille:"ton tour de taille",hanches:"ton tour de hanches"};
+function bmCalc(){const r=CORPS_MES.resultat(S.bm||{});
+ if(!r.ok){const f=$("#bm_"+r.champ);if(f){f.classList.add("bad");f.focus()}
+  toast(r.erreur==="vide"?"Il manque "+BM_NOM[r.champ]+".":"Vérifie "+BM_NOM[r.champ]+" : entre "+r.min+" et "+r.max+" cm.");return}
+ S.res.corps={...r.res,lang:S.lang||"fr"};S.wait=S.wait||{};S.wait.corps=false;save();S.bm=undefined;
+ if(S.flow&&S.flow.includes("b_mes"))return next();S.flow=null;go("r_corps")}
 // Événements mode & beauté à Doha : liste dans events.json (mise à jour chaque semaine).
 let EVTS=null;
 fetch("events.json?t="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>{EVTS=j&&Array.isArray(j.evenements)?j.evenements:[];if(S.page==="news")render(false)}).catch(()=>{EVTS=[]});
@@ -1719,7 +1763,7 @@ const KEEPF=["forme","saison","sous_ton","kibbe","somatotype","categorie","note"
 function txtLang(o){const t=JSON.stringify(o||{});if(/[؀-ۿ]/.test(t))return "ar";return /\b(the|your|you|and|with|this)\b/i.test(t)&&!/\b(les|des|ton|ta|avec|pour)\b/i.test(t)?"en":"fr"}
 let RTR=false,RTRT=0;
 async function resLang(){const l=S.lang||"fr";if(RTR||Date.now()-RTRT<60000)return;
- const src={};["visage","corps","couleurs","outfit"].forEach(k=>{const r=S.res[k];if(!r||r.fail||r.erreur)return;const o={};for(const f in r)if(!KEEPF.includes(f))o[f]=r[f];
+ const src={};["visage","corps","couleurs","outfit"].forEach(k=>{const r=S.res[k];if(!r||r.fail||r.erreur||r.src==="mesures")return;const o={};for(const f in r)if(!KEEPF.includes(f))o[f]=r[f];
   if(Object.keys(o).length&&(r.lang||txtLang(o))!==l)src[k]=o;else if(!r.lang)r.lang=l});
  if(MKR&&(MKR.lang||"fr")!==l)src.routine={resume:MKR.resume,etapes:MKR.etapes};
  if(!Object.keys(src).length)return;const sm=await getSample();if(!sm||!sm.json)return;RTR=true;
@@ -1787,7 +1831,7 @@ function fixVisage(r){const m=MES;if(!m||m.erreur||!r||r.fail)return r;if(r.erre
 const PR_VISAGE_MES=m=>REFP("VISAGISME")+" Tu es styliste experte en visagisme. Voici la photo de visage d’une cliente. Sa forme de visage a DÉJÀ été mesurée précisément par le téléphone (478 points, méthode A, B, C, D d’Imen) : forme = "+m.forme+" ("+m.regle+"). Mesures : longueur A = "+m.L+" fois la largeur des pommettes C ; front B = "+Math.round(m.f*100)+" % de C ; mâchoire D = "+Math.round(m.j*100)+" % de C ; mâchoire "+(m.anguleux?"anguleuse":"douce")+". Ne refais pas la mesure, ne change pas la forme et ne la contredis jamais. Analyse seulement la micro-morphologie (yeux, nez, lèvres) et donne les conseils correctifs adaptés à un visage "+m.forme+" selon la méthode ci-dessus. Si la photo est inutilisable (pas de visage, trop sombre, filtre), réponds {\"erreur\":\"explication courte et ce qu’il faut changer\"}. "+FMT+"Format : {\"forme\":\""+m.forme+"\",\"pourquoi\":\"2 phrases simples qui expliquent la forme avec ces mesures (en pourcentages)\",\"micro\":\"yeux, nez, lèvres en 1 phrase\",\"coupes\":\"coupes, raie et frange correctives\",\"couleur_cheveux\":\"\",\"lunettes\":\"\",\"makeup\":\"\"}";
 const PR_VISAGE=()=>MES&&MES.forme?PR_VISAGE_MES(MES):REFP("VISAGISME")+" Tu es styliste experte en visagisme et suis STRICTEMENT la méthode ci-dessus. Voici la photo de visage d’une cliente. Repère les points (Trichion, Menton, Zygion, Gonion, Frontal) en tenant compte de la perspective, mesure les distances, calcule R_HL, R_JW et R_CH avec 2 décimales, puis classe le visage parmi les 9 formes de la matrice. Analyse aussi la micro-morphologie (yeux, nez, lèvres). Si la photo est inutilisable (pas de visage, trop sombre, filtre, visage pas de face), réponds {\"erreur\":\"explication courte et ce qu’il faut changer\"}. "+FMT+"Format : {\"forme\":\"une des 9 formes\",\"ratios\":{\"R_HL\":0,\"R_JW\":0,\"R_CH\":0},\"pourquoi\":\"2 phrases qui citent les ratios\",\"micro\":\"yeux, nez, lèvres en 1 phrase\",\"coupes\":\"coupes, raie et frange correctives\",\"couleur_cheveux\":\"\",\"lunettes\":\"\",\"makeup\":\"\"}";
 const PR_COUL=()=>REFP("COLORIMÉTRIE")+" Tu es styliste experte en colorimétrie. Voici la photo de visage d’une cliente. Combine ce que tu vois (teint, sous-ton, yeux, cheveux, contraste) avec ses réponses au questionnaire : "+ANS_TXT(S.ans)+". Le questionnaire seul indique : "+seasonFromAnswers(S.ans)+". Choisis la saison exacte parmi : "+SEAS_LIST+". Si la photo est inutilisable, réponds {\"erreur\":\"explication courte\"}. "+FMT+"Estime L*a*b* de la peau et des cheveux, calcule l’indice T = b*/a* et le contraste C selon la méthode. Format : {\"saison\":\"une des 12 saisons exactement\",\"sous_ton\":\"chaud|froid|neutre\",\"indice_T\":0,\"contraste\":0,\"pourquoi\":\"2 phrases qui citent T et le contraste\"}";
-const PR_BODY=()=>REFP("MORPHOLOGIE","KIBBE","ESSENCES")+" Tu es styliste experte en morphologie et en Kibbe. Voici la photo en pied d’une cliente. Analyse ses proportions (épaules, taille, hanches, buste, jambes) et sa structure (anguleuse ou douce). Reste bienveillante, ne juge jamais le poids ni les formes. Kibbe parmi : "+KIBBE_LIST+". Si la photo est inutilisable, réponds {\"erreur\":\"explication courte et ce qu’il faut changer\"}. "+FMT+"Suis STRICTEMENT la méthode ci-dessus : mesure épaules, taille et hanches, calcule R_WE et R_HE, choisis la silhouette parmi A, V, H, X, 8, O, I ; évalue squelette, chair et traits pour le score Yin/Yang S ; donne le somatotype et le mélange des 7 essences en pourcentages. Format : {\"forme\":\"lettre · nom (ex. X · Sablier)\",\"ratios\":{\"R_WE\":0,\"R_HE\":0},\"proportions\":\"1 phrase avec le ratio buste/jambes\",\"somatotype\":\"\",\"score_yinyang\":0,\"kibbe\":\"\",\"kibbe_pourquoi\":\"2 phrases qui citent le score\",\"essences\":[{\"nom\":\"\",\"pct\":0}],\"conseils\":\"\",\"a_eviter\":\"\"}";
+const PR_BODY=()=>REFP("MORPHOLOGIE","KIBBE","ESSENCES")+" Tu es styliste experte en morphologie et en Kibbe. Voici la photo en pied d’une cliente, habillée. IMPORTANT : son visage peut être caché, flouté, couvert (main, voile, niqab, emoji, autocollant) ou coupé du cadre : c’est normal et voulu, par pudeur. Analyse UNIQUEMENT le corps, des épaules aux pieds ; n’utilise pas le visage, ne le décris pas, ne le commente pas, et ne demande jamais de le montrer. Ne refuse jamais et ne renvoie jamais d’erreur parce que le visage manque, est caché ou coupé. Pour le Kibbe, évalue le squelette (épaules, ossature, longueur des membres) et la chair (courbes, mollesse ou fermeté des lignes) ; si les traits du visage ne sont pas visibles, ignore ce critère et dis-le simplement dans kibbe_pourquoi. Analyse ses proportions (épaules, taille, hanches, buste, jambes) et sa structure (anguleuse ou douce). Reste bienveillante, ne juge jamais le poids ni les formes. Kibbe parmi : "+KIBBE_LIST+". Réponds {\"erreur\":\"explication courte et ce qu’il faut changer\"} SEULEMENT si la silhouette elle-même n’est pas lisible (épaules, taille ou hanches hors du cadre, photo trop sombre ou floue, vêtements trop amples pour voir la forme), jamais à cause du visage. "+FMT+"Suis STRICTEMENT la méthode ci-dessus : mesure épaules, taille et hanches, calcule R_WE et R_HE, choisis la silhouette parmi A, V, H, X, 8, O, I ; évalue squelette, chair et traits pour le score Yin/Yang S ; donne le somatotype et le mélange des 7 essences en pourcentages. Format : {\"forme\":\"lettre · nom (ex. X · Sablier)\",\"ratios\":{\"R_WE\":0,\"R_HE\":0},\"proportions\":\"1 phrase avec le ratio buste/jambes\",\"somatotype\":\"\",\"score_yinyang\":0,\"kibbe\":\"\",\"kibbe_pourquoi\":\"2 phrases qui citent le score\",\"essences\":[{\"nom\":\"\",\"pct\":0}],\"conseils\":\"\",\"a_eviter\":\"\"}";
 const PR_OUT=()=>REF+" Tu es styliste personnelle exigeante et bienveillante. Note la tenue de la photo de 0 à 10 : harmonie des couleurs, coupe, proportions, point focal, adéquation avec son profil ("+(PROFIL()||"inconnu")+")"+(S.occ?" et avec l’occasion : "+S.occ+" (dis clairement si la tenue convient à cette occasion et quoi ajuster pour elle)":"")+". "+(typeof pfRules==="function"?pfRules():"")+" Si une pièce de sa garde-robe enregistrée améliorerait la tenue, propose-la en disant qu’elle l’a déjà ; sinon précise que c’est un achat facultatif. N’invente ni marque ni prix. Si la photo est inutilisable, réponds {\"erreur\":\"explication courte\"}. "+FMT+"Format : {\"note\":0,\"resume\":\"1 phrase\",\"points_forts\":[\"\"],\"changements\":[\"changement précis\"]}";
 const ERRS={not_granted:"Autorise Claude à analyser tes photos, puis réessaie.",image_rejected:"Cette photo n’est pas acceptée. Essaie-en une autre.",rate_limited:"Trop de demandes. Réessaie dans un instant.",images_unavailable:"L’envoi de photos n’est pas disponible ici.",invalid_json:"La réponse n’a pas pu être lue. Réessaie."};
 let SAMPLE=null;
@@ -2041,6 +2085,11 @@ document.addEventListener("click",e=>{
  if(t.dataset.go){go(t.dataset.go);return}
  if(t.dataset.view){S.flow=null;go(t.dataset.view);return}
  if(t.hasAttribute("data-next"))return next();
+ // v107 : écran rassurant de la silhouette → photo (appareil ouvert tout de suite) ou mesures.
+ if(t.hasAttribute("data-bgo")){next();if(S.page==="a_body")acamOpen("body");return}
+ if(t.hasAttribute("data-bmes")){if(S.flow){S.flow=S.flow.filter(x=>x!=="a_body"&&x!=="c_run").map(x=>x==="b_intro"?"b_mes":x==="r_kibbe"?"r_corps":x)}S.bm=bmInit();go("b_mes");return}
+ if(t.hasAttribute("data-bcalc"))return bmCalc();
+ if(t.hasAttribute("data-bphoto")){const fr=S.from||(S.hist.includes("profil")?"profil":"home");S.flow=["a_body","c_run","r_corps"];S.from=fr;S.hist=[fr];S.page="a_body";S.dir="f";S.err="";S.rid++;render(true);return}
  if(t.hasAttribute("data-onb"))return startOnb();
  if(t.hasAttribute("data-later")){S.later=true;save();home();return}
  if(t.hasAttribute("data-back"))return back();
@@ -2076,7 +2125,7 @@ document.addEventListener("change",e=>{if(e.target.hasAttribute("data-cphoto")){
  if(e.target.hasAttribute("data-gadd")){const fs=[...(e.target.files||[])];e.target.value="";if(fs.length)grAdd(fs);return}
  const k=e.target.dataset.f,f=e.target.files&&e.target.files[0];if(!k||!f)return;
  setPhoto(k,f)});
-document.addEventListener("input",e=>{if(e.target.id==="tcode"&&TEST_CODES.includes(codeNorm(e.target.value))&&!isVip()){PLAN.p="vip";planSave();S.pwWhy="";e.target.blur();toast("Accès VIP activé");render(true);return}if(e.target.dataset.gi){const x=GR.items.find(i=>i.id===S.grItem);if(x){x[e.target.dataset.gi]=e.target.value.slice(0,40);GR.looks={};grSave()}}if(e.target.id==="msg")S.draft=e.target.value;if(e.target.dataset.i&&S.idraft){S.idraft[e.target.dataset.i]=e.target.value;e.target.classList.remove("bad")}if(e.target.id==="nom"){S.nomDraft=e.target.value;const b=document.querySelector("[data-nom]");if(b)b.disabled=!e.target.value.trim()}});
+document.addEventListener("input",e=>{if(e.target.id==="tcode"&&TEST_CODES.includes(codeNorm(e.target.value))&&!isVip()){PLAN.p="vip";planSave();S.pwWhy="";e.target.blur();toast("Accès VIP activé");render(true);return}if(e.target.dataset.gi){const x=GR.items.find(i=>i.id===S.grItem);if(x){x[e.target.dataset.gi]=e.target.value.slice(0,40);GR.looks={};grSave()}}if(e.target.id==="msg")S.draft=e.target.value;if(e.target.dataset.i&&S.idraft){S.idraft[e.target.dataset.i]=e.target.value;e.target.classList.remove("bad")}if(e.target.dataset.bm){S.bm=S.bm||{};S.bm[e.target.dataset.bm]=e.target.value;e.target.classList.remove("bad")}if(e.target.id==="nom"){S.nomDraft=e.target.value;const b=document.querySelector("[data-nom]");if(b)b.disabled=!e.target.value.trim()}});
 document.addEventListener("keydown",e=>{if(e.target.id==="hq"&&e.key==="Enter"){e.preventDefault();const q=e.target.value.trim();if(!q)return;S.flow=null;go("chat");setTimeout(()=>send(q),60);return}if(e.target.id==="msg"&&e.key==="Enter"){e.preventDefault();send(e.target.value)}if(e.target.id==="nom"&&e.key==="Enter"){e.preventDefault();const b=document.querySelector("[data-nom]");if(b&&!b.disabled)b.click()}});
 
 const AFF=[n=>n+", tu es belle, toujours.",()=>"Tu es rayonnante aujourd’hui.",n=>"N’oublie pas de sourire, "+n+".",()=>"Ton sourire est ta plus belle parure.",n=>n+", tu mérites de te sentir bien.",()=>"Ta beauté est unique.",n=>"Souris, "+n+", tu illumines la journée.",()=>"Tu es élégante, comme tu es.",n=>n+", aime-toi un peu plus aujourd’hui.",()=>"Ta confiance te rend magnifique.",n=>"Tu es une lumière, "+n+".",()=>"Prends soin de toi, tu le vaux bien."];
