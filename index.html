@@ -817,8 +817,10 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=1"></script>
 <script>
-const VERSION="110";
-let HOME_HI=false;
+const VERSION="111";
+// Bonjour d’Aura : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
+let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
+function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 let NOM="ma belle";
 const AGENT_ID="agent_3801m58kjga8fddsm7bz46gcz4wf";const AGENT_URL="https://elevenlabs.io/app/talk-to?agent_id="+AGENT_ID;
@@ -1790,7 +1792,7 @@ function render(sayIt){
  if(p.count)countUp(p.count);
  if(window.onPage)window.onPage(S.page);
  // Accueil : Aura dit bonjour une seule fois par ouverture de l’app, pas à chaque retour.
- if(sayIt&&p.say&&!(S.page==="home"&&HOME_HI)){if(S.page==="home")HOME_HI=true;say(p.say)}
+ if(sayIt&&p.say&&!(S.page==="home"&&HOME_HI)){if(S.page==="home")markHi();say(p.say)}
  waitTick();
  setTimeout(resLang,50);
  window.scrollTo(0,0);
@@ -2336,7 +2338,8 @@ async function introRun(){const gen=GEN,ok=()=>gen===GEN&&!SKIP,lg=SCR[S.lang]?S
  if(!ok())return;await line(...C.ASKNOM);if(!ok())return;const n=await askNom();if(!ok())return;
  if(n){S.nom=n;NOM=n;save();$("#hi").textContent=L("hi")+" "+n+(lg==="fr"?" !":"!");if(lg==="fr")await ttsNom(n,"enchantee");else sayUrl(C.OUTRO(n)[0][0]);for(const t of C.OUTRO(n)){if(!ok())return;await line(...t)}if(lg!=="fr")for(const t of [...C.SUITE,...C.FIN]){if(!ok())return;await line(...t)}}
  else for(const t of [...C.SUITE,...C.FIN]){if(!ok())return;await line(...t)}}
-introFr();
+// Déjà saluée pendant cette ouverture (rechargement de mise à jour) : l’écran d’accueil reste silencieux.
+if(HOME_HI){SKIP=true;showBtns();applyLang();$("#hi").textContent=L("hi")+(S.nom?" "+S.nom:"")+(S.lang&&S.lang!=="fr"?"!":" !");$("#hi2").textContent=L("t")}else introFr();
 function HELLO(){return "Salut"+(S.nom?" "+S.nom:"")+" ! Je suis ta personal stylist. Je suis là pour révéler ta beauté."}
 function skipIntro(){SKIP=true;stopVoice();try{AUD.pause()}catch(e){}$("#hi2").textContent=L("t");if(window.SKIPNOM)window.SKIPNOM();showBtns()}
 $("#skip").addEventListener("click",skipIntro);
@@ -2359,7 +2362,7 @@ $("#install").addEventListener("click",async()=>{if(BIP){BIP.prompt();try{await 
 $("#instOk").addEventListener("click",()=>$("#inst").classList.remove("show"));
 $("#inst").addEventListener("click",e=>{if(e.target.id==="inst")$("#inst").classList.remove("show")});
 $("#start").addEventListener("click",()=>{if(window.endCall)window.endCall();SKIP=true;stopVoice();unlock();$("#splash").classList.add("out");setTimeout(()=>$("#splash").remove(),800);
- SKIP=true;if(window.SKIPNOM)window.SKIPNOM();if(/formules|abo/i.test(location.hash)){go("abo");return}if(!window.CALLED){if(todoMods().length===3&&!S.later&&S.page==="home")startOnb();else say(P.home().say)}});
+ SKIP=true;if(window.SKIPNOM)window.SKIPNOM();if(/formules|abo/i.test(location.hash)){go("abo");return}if(!window.CALLED){if(todoMods().length===3&&!S.later&&S.page==="home")startOnb();else if(!window.GREETED&&!HOME_HI)say(P.home().say)}markHi()});
 </script>
 <script src="aura-profile.js?v=3"></script>
 <script src="zifafi.js?v=1"></script>

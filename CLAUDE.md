@@ -24,14 +24,14 @@ Application de personal styling (PWA statique) avec Aura, styliste IA vocale. La
 - Ne rien inventer sur la cliente : seules ses réponses explicites vont dans le profil.
 - Les tenues n'utilisent que les vraies pièces (ids vérifiés) ; un achat proposé est « facultatif ». Pas de marque ni de prix inventés.
 - `PROFIL()` résume analyses + infos + `pfCtx()` + `grBrief()` ; c'est la variable `profil` envoyée à l'agent ElevenLabs (voix et chat).
-- Accueil (v109) : « Pour toi aujourd’hui » sans photo de vêtements ; cartes Explorer avec vraies photos Unsplash (`HZ_PH`, illustration en secours). Profil, infos et Boutique s’ouvrent sans voix. (v110) Le bonjour d’Aura sur l’accueil n’est dit qu’une fois par ouverture de l’app (`HOME_HI`).
+- Accueil (v109) : « Pour toi aujourd’hui » sans photo de vêtements ; cartes Explorer avec vraies photos Unsplash (`HZ_PH`, illustration en secours). Profil, infos et Boutique s’ouvrent sans voix. (v111) Le bonjour d’Aura n’est dit qu’une fois par ouverture : écran d’ouverture OU accueil, jamais les deux, jamais au retour sur l’accueil (`HOME_HI` + `sessionStorage ms_hi`, gardé après un rechargement de mise à jour).
 - `GRATUIT=true` (phase de test) : tout est illimité. Le remettre à `false` réactive les formules.
 - À chaque publication : augmenter `const VERSION` dans `index.html` (mise à jour auto des téléphones) et le `?v=` de `i18n.js` / `aura-corps.js` / `aura-profile.js` / `aura-methode.js` / `zifafi*.js` / `zifafi.css` si modifiés.
 - Aucune clé API dans le front, les fichiers publics ou l'historique Git.
 
 ## Développement et tests
 - Lancer en local : `python3 -m http.server 8765` dans le dossier, puis ouvrir http://localhost:8765/ (l'IA ne répond qu'en ligne : le Worker n'accepte que l'origine GitHub Pages).
-- Tests (Playwright, IA simulée) : `node tests/smoke.js` (toutes les pages, erreurs JS) ; `EXTRA=$PWD/tests/crawl.js node tests/smoke.js` (clique chaque bouton) ; `node tests/features.js` (préférences, garde-robe, tenues, semaine, données abîmées) ; `node tests/ux.js` (barre du bas, accueil, arabe RTL, largeurs 320 à 1280 px) ; `node tests/zifafi.js` (moteur, profil, robes, couleurs, looks, inspiration, académie, Aura mariée, langues, largeurs) ; `node tests/mesure.js` (règles de forme du visage) et `PAGE=1 node tests/mesure.js` (branchement dans l'app) ; `node tests/corps.js` (règles des mesures) et `PAGE=1 node tests/corps.js` (ordre visage → silhouette, écran rassurant, mesures, prompt sans visage, langues, largeurs).
+- Tests (Playwright, IA simulée) : `node tests/smoke.js` (toutes les pages, erreurs JS) ; `EXTRA=$PWD/tests/crawl.js node tests/smoke.js` (clique chaque bouton) ; `node tests/features.js` (préférences, garde-robe, tenues, semaine, données abîmées) ; `node tests/ux.js` (barre du bas, accueil, arabe RTL, largeurs 320 à 1280 px) ; `node tests/zifafi.js` (moteur, profil, robes, couleurs, looks, inspiration, académie, Aura mariée, langues, largeurs) ; `node tests/mesure.js` (règles de forme du visage) et `PAGE=1 node tests/mesure.js` (branchement dans l'app) ; `node tests/salut.js` (bonjour une seule fois par ouverture) ; `node tests/corps.js` (règles des mesures) et `PAGE=1 node tests/corps.js` (ordre visage → silhouette, écran rassurant, mesures, prompt sans visage, langues, largeurs).
 - Pas d'étape de build.
 
 ## Déploiement
