@@ -462,6 +462,8 @@ const I18N_D=[
 ["budget {0}","budget {0}","الميزانية {0}"],
 ["styles préférés : {0}","favourite styles: {0}","الستايلات المفضلة: {0}"],
 // Formes du visage
+["Forme mesurée sur ta photo, point par point.","Shape measured on your photo, point by point.","شكل وجهچ انقاس على صورتچ، نقطة نقطة."],
+["Ton visage est un peu tourné. Regarde bien l’objectif, de face, et reprends la photo.","Your face is turned slightly. Look straight at the camera and take the photo again.","وجهچ مايل شوي. طالعي الكاميرا من قدام وعيدي الصورة."],
 ["Ovale","Oval","بيضاوي"],
 ["Rond","Round","دائري"],
 ["Carré","Square","مربع"],
