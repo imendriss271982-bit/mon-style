@@ -1,6 +1,6 @@
 // Touche chaque bouton de chaque page principale et signale ceux qui plantent ou ne font rien.
 module.exports=async(p,errs,report)=>{
- for(const pg of ['home','boutique','beaute','profil','garde','news']){
+ for(const pg of ['home','boutique','beaute','profil','garde','tenues','news','chat']){
   const n=await p.evaluate(x=>{S.hist=[];go(x);return document.querySelectorAll('#page button').length},pg);
   for(let i=0;i<n;i++){
    await p.evaluate(x=>{S.hist=[];S.flow=null;go(x)},pg);await p.waitForTimeout(120);

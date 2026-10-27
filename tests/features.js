@@ -40,7 +40,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  ok(await p.evaluate(()=>grOccs()[0][0]==='mariage'||grOccs()[0][0]==='ramadan'),'Les occasions choisies (Mariages, Ramadan) passent en premier');
  // ——— Tenues (IA simulée) ———
  await p.evaluate(()=>{window.__pr=[];const ids=GR.items.map(x=>x.id);SAMPLE={json:async pr=>{__pr.push(pr);if(/Propose UNE autre tenue/.test(pr))return {titre:'Variante chic',pieces:[ids[1],ids[2],ids[6]],conseil:'Le beige adoucit.',manque:''};return {tenues:[{titre:'Iftar élégant',pieces:[ids[4],ids[6],ids[7]],conseil:'L’abaya noire structure.',manque:'Broche dorée'},{titre:'Soie et noir',pieces:[ids[0],ids[2],ids[6]],conseil:'Contraste net.',manque:''},{titre:'Pièce inventée',pieces:['zzz'],conseil:'',manque:''}]}}}});
- await p.click('[data-gocc="ramadan"]');await p.click('[data-glooks="ramadan"]');await p.waitForTimeout(400);
+ await p.evaluate(()=>go('tenues'));await p.click('[data-gocc="ramadan"]');await p.click('[data-glooks="ramadan"]');await p.waitForTimeout(400);
  const pr=await p.evaluate(()=>__pr[0]);
  ok(/Ramadan/.test(pr)&&/hijab/.test(pr)&&/N’utilise pas ces couleurs.*orange, rose/.test(pr)&&/Ne propose pas ces pièces : jupes/.test(pr),'Le prompt de tenues contient occasion, pudeur, couleurs et pièces évitées');
  ok(await p.evaluate(()=>GR.looks.ramadan.length===2),'Une tenue avec une pièce inventée est rejetée');
@@ -51,12 +51,12 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  await p.click('[data-galt="ramadan:1"]');await p.waitForTimeout(500);
  ok(await p.evaluate(()=>GR.looks.ramadan[1].titre==='Variante chic'),'Autre version remplace la tenue');
  ok(await p.evaluate(()=>/tenues qu’elle a aimées : « Iftar élégant/.test(PROFIL())),'Les avis sont transmis à Aura');
- await boot();await p.evaluate(()=>go('garde'));
+ await boot();await p.evaluate(()=>go('tenues'));
  ok(await p.evaluate(()=>GR.saved.length===1&&/Mes tenues enregistrées/.test(document.body.innerText)),'Tenue enregistrée retrouvée après rechargement');
  const sid=await p.evaluate(()=>GR.saved[0].id);
  await p.click(`[data-gday="${sid}:Ven"]`);ok(await p.evaluate(()=>GR.saved[0].jour==='Ven'&&!!document.querySelector('.gr-day.on')),'Tenue posée sur vendredi (Ma semaine)');
  // ——— Ajustement « Plus confortable » : prompt orienté, résultat remplacé, rien d'enregistré en préférence ———
- await p.evaluate(()=>{S.grOcc='ramadan';go('garde')});const nAv=await p.evaluate(()=>PF.avis.length);
+ await p.evaluate(()=>{S.grOcc='ramadan';go('tenues')});const nAv=await p.evaluate(()=>PF.avis.length);
  await p.evaluate(()=>{window.__pr=[];const ids=GR.items.map(x=>x.id);SAMPLE={json:async pr=>{__pr.push(pr);return {titre:'Douceur iftar',pieces:[ids[4],ids[3]],pourquoi:'Pièces souples.',conseil:'Tes couleurs aimées.',manque:''}}}});
  await p.evaluate(()=>document.querySelector('[data-galt="ramadan:0:confort"]').click());await p.waitForTimeout(500);
  ok(await p.evaluate(()=>/version plus confortable/.test(__pr[__pr.length-1])&&GR.looks.ramadan[0].titre==='Douceur iftar'&&/Pièces souples/.test(GR.looks.ramadan[0].conseil)),'Ajustement « Plus confortable » appliqué et expliqué');
@@ -69,7 +69,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  await p.evaluate(()=>go('prefs'));await p.click('[data-pfk="objectifs"] [data-pfv="Gagner en confiance"]');await p.click('[data-pfk="confort"] [data-pfv="Talons bas ou plats"]');
  ok(await p.evaluate(()=>/objectifs de style : gagner en confiance/.test(PROFIL())&&/confort : talons bas/.test(pfRules().toLowerCase())),'Objectifs et confort transmis à Aura');
  ok(await p.evaluate(()=>typeof REF==='string'&&REF.startsWith('BASE DE RÉFÉRENCE')&&/VISAGISME/.test(REFP('VISAGISME'))),'Méthode chargée depuis aura-methode.js');
- await p.evaluate(()=>go('garde'));await p.click(`[data-gunsave="${sid}"]`);ok(await p.evaluate(()=>GR.saved.length===0),'Tenue retirée');
+ await p.evaluate(()=>go('tenues'));await p.click(`[data-gunsave="${sid}"]`);ok(await p.evaluate(()=>GR.saved.length===0),'Tenue retirée');
  // préférences : suppression d'un avis puis effacement total
  await p.evaluate(()=>go('prefs'));await p.click('[data-pfdel]');ok(await p.evaluate(()=>PF.avis.length===0),'Avis supprimé');
  await p.click('[data-pfwipe]');ok(await p.evaluate(()=>pfEmpty()&&!PROFIL().includes('évite')),'Toutes les préférences effacées');

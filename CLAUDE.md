@@ -1,9 +1,9 @@
 # My Style — notes pour Claude Code
 
-Application de personal styling (PWA statique) avec Aura, styliste IA vocale. Langues : français (source), anglais, arabe qatari.
+Application de personal styling (PWA statique) avec Aura, styliste IA vocale. Langues : français (source), anglais, arabe qatari. Palette officielle : fond #FAF7F2, bordeaux #702B3A, fond secondaire #F0E9E0, texte #292421, texte secondaire #77716B, blanc.
 
 ## Structure
-- `index.html` : toute l'app (CSS + script principal). Pages = objet `P` (`P.home`, `P.garde`, `P.profil`…), navigation `go(page)` / `back()` / `home()`, rendu `render()`. Un seul écouteur de clic principal (`data-*` sur les boutons).
+- `index.html` : toute l'app (CSS + script principal). Pages = objet `P` (`P.home`, `P.garde`, `P.profil`…), navigation `go(page)` / `back()` / `home()`, rendu `render()`. Barre du bas (v102) : Accueil `home`, Garde-robe `garde` (articles seulement), Aura `chat`, Mes tenues `tenues` (= `P.garde(1)` : Outfit check, tenues par occasion, tenues enregistrées), Profil `profil`. Boutique, Beauté et Nouveautés s'ouvrent depuis l'accueil ; `DOCK_OF` dit quel onglet reste allumé sur une page secondaire. Un seul écouteur de clic principal (`data-*` sur les boutons).
 - `aura-profile.js` : préférences de style choisies par la cliente (`PF`, clé `monstyle_pref`), objectifs, confort, avis 👍/👎, page `P.prefs`, `pfCtx()` (contexte pour Aura), `pfRules()` (règles strictes des prompts), `pfFit()` (classement boutique). Chargé après le script principal.
 - `aura-methode.js` : la méthode de stylisme d'Imen (`REF`, une rubrique par ligne, titre en majuscules). C'est ici qu'on met à jour la méthode avec ses cours, sans toucher à `index.html`. Chargé avant le script principal.
 - `i18n.js` : traductions `[fr, en, ar]`. Toute nouvelle phrase affichée doit y être ajoutée (sinon elle reste en français).
@@ -23,7 +23,7 @@ Application de personal styling (PWA statique) avec Aura, styliste IA vocale. La
 
 ## Développement et tests
 - Lancer en local : `python3 -m http.server 8765` dans le dossier, puis ouvrir http://localhost:8765/ (l'IA ne répond qu'en ligne : le Worker n'accepte que l'origine GitHub Pages).
-- Tests (Playwright, IA simulée) : `node tests/smoke.js` (toutes les pages, erreurs JS) ; `EXTRA=$PWD/tests/crawl.js node tests/smoke.js` (clique chaque bouton) ; `node tests/features.js` (préférences, garde-robe, tenues, semaine, données abîmées).
+- Tests (Playwright, IA simulée) : `node tests/smoke.js` (toutes les pages, erreurs JS) ; `EXTRA=$PWD/tests/crawl.js node tests/smoke.js` (clique chaque bouton) ; `node tests/features.js` (préférences, garde-robe, tenues, semaine, données abîmées) ; `node tests/ux.js` (barre du bas, accueil, arabe RTL, largeurs 320 à 1280 px).
 - Pas d'étape de build.
 
 ## Déploiement
