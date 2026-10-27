@@ -32,7 +32,7 @@ const items=[['Abaya noire','abaya','#111111'],['Chemise soie','haut','#f5efe6']
  await p.close();
  // ——— Accueil avec garde-robe : recommandation réelle ———
  p=await open(390,full);
- ok(await p.evaluate(()=>/Chic du lundi/.test(document.querySelector('.hr-card').innerText)&&document.querySelectorAll('.hr-card .gr-ph').length===3),'Accueil : la recommandation est une vraie tenue créée');
+ ok(await p.evaluate(()=>/Chic du lundi/.test(document.querySelector('.hr-card').innerText)&&document.querySelectorAll('.hr-card .gr-ph,.hr-card img').length===0),'Accueil : la recommandation est une vraie tenue créée, sans photo de vêtements');
  await p.click('.hr-card');await p.waitForTimeout(200);ok(await p.evaluate(()=>S.page==='tenues'&&/Chic du lundi/.test(document.body.innerText)&&!!document.querySelector('[data-galt="quotidien:0:chic"]')),'Recommandation → Mes tenues, avec les ajustements');
  await p.evaluate(()=>go('garde'));ok(await p.evaluate(()=>!document.querySelector('.gr-look')&&document.querySelectorAll('.gr-grid .gr-it').length===8&&!!document.querySelector('.gr-tot')),'Garde-robe : seulement les articles, lien vers Mes tenues');
  ok(await p.evaluate(()=>JSON.parse(localStorage.getItem('monstyle_gr')).items.length===8),'Données de garde-robe conservées');

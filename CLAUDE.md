@@ -24,6 +24,7 @@ Application de personal styling (PWA statique) avec Aura, styliste IA vocale. La
 - Ne rien inventer sur la cliente : seules ses réponses explicites vont dans le profil.
 - Les tenues n'utilisent que les vraies pièces (ids vérifiés) ; un achat proposé est « facultatif ». Pas de marque ni de prix inventés.
 - `PROFIL()` résume analyses + infos + `pfCtx()` + `grBrief()` ; c'est la variable `profil` envoyée à l'agent ElevenLabs (voix et chat).
+- Accueil (v109) : « Pour toi aujourd’hui » sans photo de vêtements ; cartes Explorer avec vraies photos Unsplash (`HZ_PH`, illustration en secours). Profil, infos et Boutique s’ouvrent sans voix.
 - `GRATUIT=true` (phase de test) : tout est illimité. Le remettre à `false` réactive les formules.
 - À chaque publication : augmenter `const VERSION` dans `index.html` (mise à jour auto des téléphones) et le `?v=` de `i18n.js` / `aura-corps.js` / `aura-profile.js` / `aura-methode.js` / `zifafi*.js` / `zifafi.css` si modifiés.
 - Aucune clé API dans le front, les fichiers publics ou l'historique Git.

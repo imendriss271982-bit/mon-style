@@ -700,7 +700,7 @@ a.lb{text-decoration:none}
 .hz-cats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .hz-cats button{display:flex;flex-direction:column;align-items:stretch;gap:8px;border:1px solid var(--line);border-radius:18px;background:var(--surface);padding:8px 8px 12px;cursor:pointer;color:var(--ink);transition:transform .15s}
 .hz-art{display:grid;place-items:center;aspect-ratio:4/3;border-radius:12px;background:var(--soft)}
-.hz-art svg{width:86%;height:auto}
+.hz-art{position:relative;overflow:hidden}.hz-art svg{width:86%;height:auto}.hz-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
 .hz-cats b{font-weight:500;font-size:13.5px;line-height:1.3;text-align:center}
 .hz-insp{display:flex;align-items:center;gap:10px;width:100%;border:1px solid var(--line);border-radius:20px;background:#FFFFFF;padding:16px 14px 16px 20px;text-align:start;cursor:pointer;color:var(--ink);transition:transform .15s}
 .hz-insp-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
@@ -817,7 +817,7 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=1"></script>
 <script>
-const VERSION="108";
+const VERSION="109";
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 let NOM="ma belle";
 const AGENT_ID="agent_3801m58kjga8fddsm7bz46gcz4wf";const AGENT_URL="https://elevenlabs.io/app/talk-to?agent_id="+AGENT_ID;
@@ -1113,9 +1113,11 @@ async function grAlt(occ,i,dir){i=+i;dir=GR_DIR[dir]?dir:"";const o=GR_OCC.find(
  catch(e){S.grAlt=null;toast(errMsg(e));if((S.page==="garde"||S.page==="tenues")){const y=window.scrollY;render(false);window.scrollTo(0,y)}}}
 const grImg=(x,cls)=>x?(x.img?`<img class="${cls||""}" src="${x.img}" alt="${esc(x.nom||grCat(x.cat))}">`:grPh(x)):"";
 const GR_HANGER='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/></svg>';
+// Vraies photos (Unsplash, licence libre) sur les cartes Explorer ; si la photo ne charge pas, l'illustration reste.
+const HZ_PH=(id,svg)=>`<img class="hz-photo" src="https://images.unsplash.com/photo-${id}?w=480&h=360&fit=crop&crop=entropy&q=70&auto=format" alt="" loading="lazy" decoding="async" onerror="this.remove()">${svg}`;
 // Recommandation de l'accueil : seulement à partir de données réelles (tenue du jour, tenue créée, ou prochaine étape).
 function homeReco(nd){const by=id=>GR.items.find(x=>x.id===id),today=GR_JOURS[(new Date().getDay()+6)%7];
- const look=(l,lab,occ)=>{const it=l.pieces.map(by).filter(Boolean);if(it.length<2)return "";return `<button class="hr-card" data-go="tenues"${occ?` data-gocc2="${occ}"`:""}><span class="hr-lab">${lab}</span><span class="gr-col n${Math.min(it.length,4)}">${it.slice(0,4).map(x=>grImg(x)).join("")}</span><b>${esc(l.titre)}</b>${l.conseil?`<small>${esc(l.conseil)}</small>`:""}<em>Voir mes tenues ›</em></button>`};
+ const look=(l,lab,occ)=>{const it=l.pieces.map(by).filter(Boolean);if(it.length<2)return "";return `<button class="hr-card" data-go="tenues"${occ?` data-gocc2="${occ}"`:""}><span class="hr-lab">${lab}</span><b>${esc(l.titre)}</b>${l.conseil?`<small>${esc(l.conseil)}</small>`:""}<em>Voir mes tenues ›</em></button>`};
  const td=GR.saved.find(t=>t.jour===today);if(td){const h=look(td,"Ta tenue d’aujourd’hui");if(h)return h}
  for(const [occ,ls] of Object.entries(GR.looks)){if(ls&&ls[0]){const h=look(ls[0],"Une tenue pour toi",occ);if(h)return h}}
  const step=(lab,t,d,attr,btn)=>`<div class="hr-card hr-step"><span class="hr-lab">${lab}</span><b>${t}</b><small>${d}</small><button class="btn ghost" ${attr}>${btn}</button></div>`;
@@ -1503,9 +1505,9 @@ ${nd===3?`<button class="hx-ms" data-view="fiche" aria-label="Voir ma fiche styl
 </section>
  <section><h2 class="hz-h">Explorer</h2>
   <div class="hz-cats">
-   <button data-go="boutique"><span class="hz-art">${ART.shop}</span><b>Boutique</b></button>
-   <button data-go="beaute"><span class="hz-art">${ART.beaute}</span><b>Beauté</b></button>
-   <button data-go="news"><span class="hz-art">${ART.looks}</span><b>Nouveautés</b></button>
+   <button data-go="boutique"><span class="hz-art">${HZ_PH("1483985988355-763728e1935b",ART.shop)}</span><b>Boutique</b></button>
+   <button data-go="beaute"><span class="hz-art">${HZ_PH("1512496015851-a90fb38ba796",ART.beaute)}</span><b>Beauté</b></button>
+   <button data-go="news"><span class="hz-art">${HZ_PH("1441984904996-e0b6ba687e04",ART.looks)}</span><b>Nouveautés</b></button>
   </div></section>
  </div>`,
  say:"Bonjour "+NOM+", je suis contente de te voir. Touche le téléphone pour me parler, ou choisis ce qu’on fait aujourd’hui."}},
@@ -1608,7 +1610,7 @@ profil:()=>{const i=S.info||{},has=!!i.email,pick=(k,l)=>`<div class="row"><span
  ${[["visage","Morpho visage",ok("visage")?cap(ok("visage").forme):"","r_visage"],["corps","Morpho & Kibbe",ok("corps")&&[ok("corps").forme,ok("corps").kibbe].filter(Boolean).join(" · "),"r_corps"],["couleurs","Colorimétrie",season(),"r_couleurs"]].map(x=>`<div class="an-row"><button class="an-v" ${x[2]?`data-view="${x[3]}"`:`data-mod="${x[0]}"`}><span>${x[1]}</span><b>${esc(x[2]||"À faire")}</b></button><button class="an-r" data-mod="${x[0]}">${x[2]?"Refaire":"Faire"}</button></div>`).join("")}
  ${ok("outfit")?`<h2>Dernier outfit check</h2><button class="tile" data-view="o_res"><span>Note</span><b>${esc(ok("outfit").note+" / 10")}</b></button>`:""}
  <button class="link" data-wipe>Effacer toutes mes données</button>`,
- say:has?"Voici ton profil, "+NOM+". Touche une carte pour réécouter le détail.":"Crée ton profil, "+NOM+". Ton email, ta taille et ton style m’aident à mieux te conseiller."}},
+ say:""}},
 abo:()=>{const c=plan(),why=PW_WHY[S.pwWhy]||"",card=(k,prix,txt)=>`<button class="tile${k==="vip"?" main":""}" data-buy="${k}" aria-pressed="${c===k}"><b>${PLANS[k].nom}${c===k?" ✓":""}</b><span>${prix} · ${txt}</span></button>`,m=Math.max(0,Math.floor(secLeft()/60));
  return {dock:1,html:`<h1>Mes formules</h1>
  ${why?`<p class="sub">${why}</p>`:`<p class="sub">Formule actuelle : <b>${PLANS[c].nom}</b> · ${m} min avec Aura restantes ce mois-ci.</p>`}
@@ -1637,7 +1639,7 @@ infos:()=>{const d=S.idraft||(S.idraft={...S.info,nom:S.nom||"",styles:[...(S.in
  <span class="lbl">Taille de vêtements</span>${chips("tvet",TAILLES)}
  <span class="lbl">Budget shopping</span>${chips("budget",BUDGETS)}
  <span class="lbl">Styles que tu aimes <small>· plusieurs choix</small></span>${chips("styles",STYLES,true)}`,
- say:"Remplis tes informations, "+NOM+". Seul ton email est obligatoire.",
+ say:"",
  foot:`<button class="btn" data-isave>Enregistrer</button>`}},
 v_run:()=>runPage("face","Je regarde ton visage…","a_face"),
 c_run:()=>runPage("body","Je regarde ta silhouette…","a_body"),
@@ -1664,7 +1666,7 @@ boutique:()=>{const s=season(),cols=s?SEASONS[s].c.filter(x=>!/Noir|Blanc/.test(
  <div class="vit">${list.map(card).join("")}</div>
  <div class="card" style="margin-top:14px"><b>Je cherche autre chose</b><input class="field" id="shopq" placeholder="Par exemple : robe de soirée" value="${esc(S.shopQ)}"><button class="btn ghost" data-shop>Chercher</button>${S.shopQ?`<div style="margin-top:12px">${links(S.shopQ+(cols[0]?" "+cols[0]:""))}</div>`:""}</div>
  <p class="sub" style="font-size:14px">Chaque bouton t’emmène chez la boutique partenaire. My Style peut recevoir une commission sur tes achats, sans aucun coût en plus pour toi.</p>`,
- say:"Voici ta boutique, "+NOM+". "+(top.length?"J’ai mis en haut les pièces qui te vont le mieux.":"Touche une pièce pour la voir chez nos boutiques.")}},
+ say:""}},
 art:()=>{const a=ART(S.art)||CATALOGUE[0],f=artFit(a);
  return {dock:1,html:`<div class="artbig">${garSVG(a)}</div><h1>${esc(a.nom)}</h1><p class="sub">${esc(a.coul)} · ${esc(a.occ)}</p>
  <div class="card"><b>L’avis d’Aura</b><p style="margin:6px 0 0">${f.why.length?cap(f.why.join(" et "))+".":f.known?"Ce n’est pas la pièce la plus flatteuse pour toi : demande-moi une alternative.":"Fais ton analyse et je te dirai si elle te va."}</p></div>
