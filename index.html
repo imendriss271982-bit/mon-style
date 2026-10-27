@@ -817,7 +817,8 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=1"></script>
 <script>
-const VERSION="109";
+const VERSION="110";
+let HOME_HI=false;
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
 let NOM="ma belle";
 const AGENT_ID="agent_3801m58kjga8fddsm7bz46gcz4wf";const AGENT_URL="https://elevenlabs.io/app/talk-to?agent_id="+AGENT_ID;
@@ -1788,7 +1789,8 @@ function render(sayIt){
  $("#back").hidden=p.dock||p.back===false;$("#hprof").hidden=S.page!=="home";if(!p.dock)affStop();
  if(p.count)countUp(p.count);
  if(window.onPage)window.onPage(S.page);
- if(sayIt&&p.say)say(p.say);
+ // Accueil : Aura dit bonjour une seule fois par ouverture de l’app, pas à chaque retour.
+ if(sayIt&&p.say&&!(S.page==="home"&&HOME_HI)){if(S.page==="home")HOME_HI=true;say(p.say)}
  waitTick();
  setTimeout(resLang,50);
  window.scrollTo(0,0);
