@@ -715,10 +715,11 @@ a.lb{text-decoration:none}
 :root[data-theme="dark"] .hz-art{background:#EFE6DD}
 nav.dock button[aria-current="page"]{font-weight:500}
 
-/* v115 : fond blanc texturé (soie / papier) comme la maquette — reste blanc, aucune couleur */
-body{background-color:#FFFFFF;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .16 0 0 0 0 .14 0 0 0 0 .13 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),linear-gradient(118deg,rgba(255,255,255,0) 0 30%,rgba(0,0,0,.025) 30% 31%,rgba(255,255,255,0) 31% 62%,rgba(0,0,0,.02) 62% 63%,rgba(255,255,255,0) 63%),radial-gradient(120% 60% at 85% 0%,#FFFFFF 0,#F7F7F7 100%);background-attachment:fixed,fixed,fixed}
+/* v116 : fond blanc velours (texture marquée, effet velouté) — reste blanc, aucune couleur */
+body{background-color:#FBFBFB;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .2 0 0 0 0 .18 0 0 0 0 .17 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='1200' preserveAspectRatio='none'%3E%3Cfilter id='v'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.006 .009' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .16 0 0 0 0 .14 0 0 0 0 .13 0 0 0 .55 -.18'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23v)'/%3E%3C/svg%3E"),linear-gradient(125deg,rgba(255,255,255,.9) 0,rgba(255,255,255,0) 22%,rgba(0,0,0,.05) 34%,rgba(255,255,255,.7) 46%,rgba(0,0,0,.035) 60%,rgba(255,255,255,.8) 72%,rgba(0,0,0,.045) 86%,rgba(255,255,255,.6) 100%),radial-gradient(90% 55% at 20% 10%,#FFFFFF 0,#F1F1F1 100%);background-size:240px 240px,cover,100% 100%,100% 100%;background-repeat:repeat,no-repeat,no-repeat,no-repeat;background-attachment:fixed,fixed,fixed,fixed}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body{background-image:none;background-color:var(--bg)}}
 :root[data-theme="dark"] body{background-image:none;background-color:var(--bg)}
+.hz-top:before{opacity:.55}
 /* v113 : accueil selon la maquette (en-tête rond, logo centré, carte My Stylist) */
 header{position:relative;min-height:64px}
 header .brand{position:absolute;left:50%;top:50%;transform:translate(-50%,-38%);pointer-events:none}header .brand .logo{pointer-events:auto}
@@ -834,7 +835,7 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=2"></script>
 <script>
-const VERSION="115";
+const VERSION="116";
 // Bonjour d’Aura : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
