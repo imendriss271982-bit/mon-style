@@ -33,10 +33,14 @@ const ZF = {
   temp: [["chaud","Plutôt chaudes"],["froid","Plutôt froides"],["neutre","Neutres"],["nsp","Je ne sais pas"]],
   metal: [["or","Or"],["argent","Argent"],["orrose","Or rose"],["mix","Métaux mélangés"]],
   bouquet: [["blanc","Blanc"],["creme","Crème, ivoire"],["pastel","Pastels"],["poudre","Rose poudré"],["bordeaux","Bordeaux, rouge"],["vert","Feuillage vert"],["colore","Coloré"]],
-  makeup: [["naturel","Naturel"],["softglam","Soft glam"],["classique","Classique mariée"],["soiree","Soirée, plus intense"]]
+  makeup: [["naturel","Naturel"],["softglam","Soft glam"],["classique","Classique mariée"],["soiree","Soirée, plus intense"]],
+  budget: [["serre","Budget serré"],["moyen","Budget moyen"],["large","Budget confortable"],["nsp","Je préfère ne pas dire"]],
+  tenues: [["une","Une seule tenue"],["deux","Deux tenues"],["trois","Trois tenues ou plus"],["nsp","Je ne sais pas encore"]],
+  fleurs: [["roses","Roses classiques"],["pivoines","Pivoines"],["callas","Callas"],["champetre","Fleurs champêtres"],["orchidees","Orchidées"],["gypso","Gypsophile"],["saison","Fleurs de saison"],["tradi","Arrangement traditionnel"]],
+  bqstyle: [["rond","Rond"],["cascade","Cascade"],["champetre","Champêtre"],["minimal","Minimaliste"],["mini","Petit bouquet"]]
 };
 // Champs à choix unique (les autres sont à choix multiple) et champs texte libres.
-const ZF_ONE = ["ceremony","setting","imagine","train","deco","movement","sleeveCover","neckCover","waist","volume","structure","balance","shape","temp","makeup"];
+const ZF_ONE = ["budget","tenues","ceremony","setting","imagine","train","deco","movement","sleeveCover","neckCover","waist","volume","structure","balance","shape","temp","makeup"];
 const ZF_TXT = { tradNote: 160, fitNote: 160, inclure: 120, eviter: 120 };
 const zfLabel = (k, id) => { const o = (ZF[k] || []).find(x => x[0] === id); return o ? o[1] : ""; };
 
@@ -271,3 +275,86 @@ function zfLookOpts(prof, dress) {
 const ZF_LOOK_CATS = [["bijoux","Bijoux"],["voile","Voile"],["chaussures","Chaussures"],["coiffure","Coiffure"],["makeup","Maquillage"],["bouquet","Bouquet"]];
 
 if (typeof module !== "undefined") module.exports = { ZF, ZF_ONE, zfCleanProf, zfReco, zfScore, zfSignals, zfLookOpts, zfPalFit, ZF_PALS, ZF_SIL, ZF_DIRS };
+
+// ——— Zifafi Wedding (v112) : repères My Style, checklist, conseils, cohérence du look ———
+// Repère de couleurs tiré de la saison My Style (test déjà fait) : une piste, jamais une obligation.
+function zfSeasonHint(season) {
+  const s = String(season || "");
+  if (/^(Printemps|Automne)/.test(s)) return { temp: "chaud", whites: ["ivoire", "champagne", "casse"], metal: "or" };
+  if (/^(Été|Hiver)/.test(s)) return { temp: "froid", whites: ["blanc", "casse"], metal: "argent" };
+  return null;
+}
+// Silhouette My Style → catégorie du profil mariée (proposée à la cliente, jamais appliquée sans son accord).
+function zfShapeFromMS(forme) {
+  const f = String(forme || "");
+  if (/Sablier|^X/.test(f)) return "X"; if (/Poire|^A/.test(f)) return "A"; if (/Triangle invers|^V/.test(f)) return "V"; if (/Rectangle|^H/.test(f)) return "H";
+  return "";
+}
+// Checklist de base : périodes avant le mariage (en jours) et tâches par défaut.
+const ZF_PER = [["p12","6 à 12 mois avant",365,180],["p6","3 à 6 mois avant",180,90],["p3","1 à 3 mois avant",90,30],["p1","Un mois avant",30,7],["w1","Une semaine avant",7,1],["jj","Le jour J",0,0]];
+const ZF_TASKS0 = [
+  ["t_budget","p12","Définir le budget de ma tenue de mariée"],["t_explore","p12","Explorer les styles de robe"],["t_profil","p12","Remplir mon profil de mariée"],
+  ["t_rdv","p6","Prendre rendez-vous pour les essayages"],["t_robe","p6","Choisir ma robe"],["t_retouches","p6","Planifier les retouches"],
+  ["t_acc","p3","Choisir mes accessoires (voile, bijoux)"],["t_chauss","p3","Choisir mes chaussures et les porter à la maison"],["t_bouquet","p3","Choisir mon bouquet"],["t_beaute","p3","Réserver coiffure et maquillage (avec un essai)"],
+  ["t_essfin","p1","Dernier essayage avec chaussures et lingerie"],["t_look","p1","Vérifier mon look complet avec Aura"],["t_bijoux","p1","Préparer chaussures et bijoux ensemble"],
+  ["t_kit","w1","Préparer une trousse d’urgence"],["t_horaire","w1","Confirmer le programme du jour J"],["t_confirm","w1","Confirmer coiffure et maquillage"],
+  ["t_eau","jj","Manger et boire un peu avant de m’habiller"],["t_respire","jj","Prendre un moment pour respirer et profiter"]
+];
+// Tâches ajoutées selon ce qu'elle a indiqué (moments du mariage).
+const ZF_TASKS_EV = { henne: ["t_henne","p3","Choisir ma tenue du henné"], zaffa: ["t_zaffa","p3","Répéter mon entrée (zaffa)"], soiree: ["t_soiree","p3","Choisir ma tenue de soirée"] };
+function zfDefaultTasks(prof) {
+  const ev = (prof && Array.isArray(prof.events)) ? prof.events : [];
+  return [...ZF_TASKS0, ...ev.map(e => ZF_TASKS_EV[e]).filter(Boolean)].map(([id, per, t]) => ({ id, per, t, due: "", note: "", done: false, own: false }));
+}
+// Date conseillée (fin de la période) si la date du mariage est connue ; "" sinon.
+function zfTaskDue(date, per) {
+  const P = ZF_PER.find(p => p[0] === per); if (!P || !/^\d{4}-\d{2}-\d{2}$/.test(date || "")) return "";
+  const d = new Date(date + "T12:00:00"); d.setDate(d.getDate() - P[3]); return d.toISOString().slice(0, 10);
+}
+function zfCleanTasks(a) {
+  if (!Array.isArray(a)) return null;
+  const s = (v, n) => typeof v === "string" ? v.slice(0, n) : "", d = v => /^\d{4}-\d{2}-\d{2}$/.test(v || "") ? v : "";
+  const seen = new Set();
+  return a.filter(t => t && typeof t === "object" && typeof t.id === "string" && !seen.has(t.id) && seen.add(t.id))
+    .map(t => ({ id: t.id.slice(0, 24), per: ZF_PER.some(p => p[0] === t.per) ? t.per : "p3", t: s(t.t, 100) || "Tâche", due: d(t.due), note: s(t.note, 200), done: !!t.done, own: !!t.own, ed: !!t.ed })).slice(0, 80);
+}
+// Conseils pratiques et étiquette : [id, catégorie, titre, texte]. Courts, pratiques, jamais présentés comme des règles universelles.
+const ZF_TIPCATS = [["achat","Achat de la robe"],["essayage","Essayages"],["retouches","Retouches"],["acc","Accessoires"],["beaute","Préparation beauté"],["jourj","Organisation du jour J"],["photo","Photos"],["budget","Budget"],["voyage","Voyage et lune de miel"],["urgence","Imprévus"],["etiquette","Étiquette"]];
+const ZF_TIPS = [
+  ["a1","achat","Commence tôt","Beaucoup de robes se commandent plusieurs mois à l’avance, retouches comprises. Renseigne-toi sur les délais dès les premiers rendez-vous."],
+  ["a2","achat","Essaie plusieurs silhouettes","Même celles qui ne t’attirent pas sur photo : une robe se juge portée, pas sur un cintre."],
+  ["a3","achat","Viens avec peu de monde","Une ou deux personnes de confiance suffisent : trop d’avis rendent le choix plus difficile."],
+  ["e1","essayage","Bouge pendant l’essayage","Marche, assieds-toi, lève les bras : tu porteras ta robe pendant des heures."],
+  ["e2","essayage","Pense aux sous-vêtements","Apporte la lingerie et des chaussures de la bonne hauteur dès les premiers essayages."],
+  ["r1","retouches","Prévois au moins deux retouches","La première ajuste la robe, la dernière vérifie l’ensemble avec chaussures et accessoires."],
+  ["r2","retouches","L’ourlet se fait avec tes chaussures","Apporte toujours la paire que tu porteras le jour J."],
+  ["c1","acc","Une seule pièce forte","Si ta robe est très ornée, choisis un seul bijou affirmé : le reste peut rester discret. C’est une piste, pas une règle."],
+  ["c2","acc","Essaie le voile avec la coiffure","Le poids du voile change la tenue de la coiffure : fais un essai ensemble."],
+  ["c3","acc","Fais d’abord avec ce que tu as","Un bijou de famille ou des boucles que tu aimes peuvent compléter ton look sans nouvel achat."],
+  ["b1","beaute","Fais un essai coiffure et maquillage","Si possible avec ton voile ou ton bijou de cheveux, et prends des photos à la lumière du jour."],
+  ["b2","beaute","Pas de nouveau soin juste avant","Évite les produits ou soins que ta peau ne connaît pas dans les jours qui précèdent."],
+  ["j1","jourj","Désigne une personne de confiance","Elle gère le téléphone, les horaires et la trousse d’urgence pour toi."],
+  ["j2","jourj","Prévois des pauses","Un moment pour boire, manger un peu et respirer rend la journée plus agréable."],
+  ["p1","photo","Repère la lumière","Demande au photographe les meilleurs endroits et l’heure de la plus belle lumière."],
+  ["p2","photo","Prévois les photos de famille","Une liste des groupes à photographier fait gagner beaucoup de temps."],
+  ["g1","budget","Compte les retouches et accessoires","Le budget de la tenue comprend souvent retouches, voile, chaussures, bijoux et beauté."],
+  ["g2","budget","Fixe une limite avant d’essayer","C’est plus facile de rester sereine quand la limite est décidée à l’avance."],
+  ["v1","voyage","Des tenues faciles à porter","Pour le voyage, choisis des matières qui se froissent peu et des pièces qui se combinent."],
+  ["u1","urgence","Ta trousse d’urgence","Épingles, fil et aiguille, mouchoirs, pansements, poudre, rouge à lèvres, chargeur et une paire de chaussures plates."],
+  ["u2","urgence","Une tache ?","Tamponne doucement avec de l’eau froide, sans frotter, et demande conseil avant tout produit."],
+  ["q1","etiquette","Saluer tes invités","Un sourire, un regard et quelques mots suffisent : tu n’as pas besoin de parler longtemps à chacun."],
+  ["q2","etiquette","Suis le déroulé prévu","Les gestes et l’ordre de la cérémonie changent selon les familles et les traditions : vérifie-les avec tes proches."],
+  ["q3","etiquette","Les traditions ne sont pas les mêmes pour toutes","Il n’existe pas d’étiquette unique : garde ce qui a du sens pour toi et ta famille."],
+  ["q4","etiquette","Avec une traîne","Demande à une personne proche de t’aider à l’arranger quand tu t’arrêtes ou que tu te retournes."]
+];
+// Cohérence du look : quelques repères doux, jamais un refus. Retourne des phrases.
+function zfCoherence(look) {
+  const out = [], s = (look && look.sel) || {}, d = (look && look.dress) || {};
+  if (d.deco === "riche" && s.bijoux === "parure") out.push("Ta robe est déjà très ornée et tu as choisi une parure affirmée : une possibilité est d’alléger l’un des deux. Tu peux aussi garder les deux si c’est ce que tu aimes.");
+  if (s.chaussures === "hauts" && s.voile === "cathedrale") out.push("Talons hauts et voile cathédrale : prévois de t’entraîner à marcher avec les deux.");
+  if (d.train === "longue" && s.voile === "court") out.push("Voile court et longue traîne : le dos de la robe sera bien visible, c’est un joli choix si ses détails comptent pour toi.");
+  if (s.coiffure === "hijab" && s.voile === "cathedrale") out.push("Hijab et voile cathédrale : fais un essai pour vérifier le poids et la tenue.");
+  if (s.bouquet === "cascade" && d.sil === "droite") out.push("Un bouquet cascade sur une robe droite attire le regard vers le bas : à essayer en photo.");
+  return out;
+}
+if (typeof module !== "undefined") Object.assign(module.exports, { zfSeasonHint, zfShapeFromMS, ZF_PER, zfDefaultTasks, zfTaskDue, zfCleanTasks, ZF_TIPS, ZF_TIPCATS, zfCoherence });
