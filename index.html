@@ -715,7 +715,20 @@ a.lb{text-decoration:none}
 :root[data-theme="dark"] .hz-art{background:#EFE6DD}
 nav.dock button[aria-current="page"]{font-weight:500}
 
-@media (max-width:340px){header{gap:4px;padding-inline:10px}.brand{min-width:0}.logo .st{font-size:16px;letter-spacing:.18em;margin-right:-.18em}.lgbtn{padding:0 8px}.lgbtn svg{display:none}}
+/* v113 : accueil selon la maquette (en-tête rond, logo centré, carte My Stylist) */
+header{position:relative;min-height:64px}
+header .brand{position:absolute;left:50%;top:50%;transform:translate(-50%,-38%);pointer-events:none}header .brand .logo{pointer-events:auto}
+#back[hidden]{display:none}
+#hprof{order:1}.lgbtn{order:3;margin-inline-start:auto}#voice{order:4}
+header .ib,header .lgbtn{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:#FFFFFF;box-shadow:0 4px 14px rgba(41,36,33,.06);color:var(--ink)}
+header .lgbtn{display:grid;place-items:center;padding:0;gap:0;cursor:pointer}header .lgbtn .lgc{display:none}header .lgbtn svg{display:block;width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6}
+#voice{color:var(--accent)}
+.logo .my{font-size:34px}.logo .st{font-size:20px}
+.hz-hi .hh{font-size:clamp(24px,7.4vw,31px)}
+.hz-st{background:linear-gradient(152deg,#FFFFFF 0 46%,#F5F5F5 46% 60%,#FFFFFF 60%)}
+.hz-st b{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;font-size:40px}
+.hz-insp-a{position:relative}
+@media (max-width:340px){header{gap:4px;padding-inline:10px}header .ib,header .lgbtn{width:40px;height:40px}.logo .my{font-size:28px}.brand{min-width:0}.logo .st{font-size:16px;letter-spacing:.18em;margin-right:-.18em}.lgbtn{padding:0 8px}.lgbtn svg{display:none}}
 /* ——— v102 : navigation 5 onglets, accueil, tenues ——— */
 nav.dock button{min-height:48px;justify-content:center}
 nav.dock button[aria-current="page"]{color:var(--accent);font-weight:500}
@@ -799,7 +812,7 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 <ol id="instL"><li><span>Ouvert depuis <b>WhatsApp</b> ? Touche d’abord la <b>boussole Safari</b> <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg> en bas à droite</span></li><li><span>Touche <b>Partager</b> <svg viewBox="0 0 24 24"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M6 11H5v10h14V11h-1"/></svg> en bas de Safari</span></li><li><span>Fais défiler et choisis <b>Sur l’écran d’accueil</b> <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg></span></li><li><span>Touche <b>Ajouter</b>, puis ouvre l’icône My Style</span></li></ol>
 <button class="btn" id="instOk">J’ai compris</button></div></div>
 <div id="app">
-<header><button class="ib" id="back" aria-label="Retour"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div id="mid" class="brand"><span class="logo" role="img" aria-label="My Style"><span class="my" aria-hidden="true">My</span><span class="st" aria-hidden="true">STYLE</span></span></div><button type="button" class="lgbtn" data-lgmenu aria-label="Langue" aria-haspopup="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></svg><b class="lgc">FR</b></button><button class="ib" id="hprof" data-go="profil" aria-label="Mon profil" hidden><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.4-4 4.4-6 8-6s6.6 2 8 6"/></svg></button><button class="ib" id="voice" aria-label="Couper la voix" aria-pressed="true"></button></header>
+<header><button class="ib" id="back" aria-label="Retour"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div id="mid" class="brand"><span class="logo" role="img" aria-label="My Style" data-noi18n><span class="my" aria-hidden="true">My</span><span class="st" aria-hidden="true">STYLE</span></span></div><button type="button" class="lgbtn" data-lgmenu aria-label="Langue" aria-haspopup="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></svg><b class="lgc">FR</b></button><button class="ib" id="hprof" data-go="profil" aria-label="Mon profil" hidden><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.4-4 4.4-6 8-6s6.6 2 8 6"/></svg></button><button class="ib" id="voice" aria-label="Couper la voix" aria-pressed="true"></button></header>
 <main id="page"></main>
 <footer id="foot"></footer>
 <nav class="dock" id="dock" aria-label="Navigation principale">
@@ -811,13 +824,13 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 </nav>
 </div>
 <script src="zifafi-i18n.js?v=2"></script>
-<script src="i18n.js?v=16"></script>
+<script src="i18n.js?v=17"></script>
 <script src="aura-methode.js?v=1"></script>
 <script src="aura-mesure.js?v=1"></script>
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=2"></script>
 <script>
-const VERSION="112";
+const VERSION="113";
 // Bonjour d’Aura : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -1488,15 +1501,17 @@ home:()=>{const v=ok("visage"),bd=ok("corps"),c=season(),oc=ok("outfit");
   <div class="hz-ava"><img src="aura-bust.webp?v=1" alt="Aura, ta styliste personnelle" width="330" height="308"></div>
  </section>
  <button class="hz-st" data-view="chat" aria-label="Demander à Aura : ta styliste personnelle">
-  <small>Ta styliste IA personnelle</small><b>Demander à Aura</b><em>Parle-lui ou écris-lui</em>
+  <small>Ta styliste IA personnelle</small><b data-noi18n>My Stylist</b><em>Parle-moi, Aura</em>
   <span class="hz-chip">${mins}</span>
   <span class="hz-call"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg>Appeler Aura</span>
  </button>
- <div class="hz-acts">
-  <button data-go="tenues"><span aria-hidden="true">${GR_HANGER}</span><b>Créer une tenue</b><small>Avec tes vêtements</small></button>
-  <button data-go="garde"><span aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 3v18M9.5 11v2M14.5 11v2"/></svg></span><b>Ma garde-robe</b><small>${grCount().tot?grCount().tot+" article"+(grCount().tot>1?"s":""):"À remplir"}</small></button>
- </div>
- ${typeof zfHomeCards==="function"?zfHomeCards():""}
+ <section><h2 class="hz-h">Tes rubriques préférées</h2>
+  <div class="hz-cats">
+   <button data-go="boutique"><span class="hz-art">${HZ_PH("1483985988355-763728e1935b",ART.shop)}</span><b>Shopping et nouveautés</b></button>
+   <button data-go="beaute"><span class="hz-art">${HZ_PH("1512496015851-a90fb38ba796",ART.beaute)}</span><b>Conseils beauté</b></button>
+   <button data-go="tenues"><span class="hz-art">${HZ_PH("1441984904996-e0b6ba687e04",ART.looks)}</span><b>Looks pour toi</b></button>
+  </div></section>
+ <button class="hz-insp" data-go="news"><span class="hz-insp-t"><b>Inspirations du jour</b><small>Looks, beauté, art de vivre</small><i aria-hidden="true">›</i></span><span class="hz-insp-a">${ART.insp}</span></button>
  <section><h2 class="hz-h">Pour toi aujourd’hui</h2>${homeReco(nd)}</section>
  <section class="hz-more"><h2 class="hz-h">Mon style</h2>
 ${nd===3?`<button class="hx-ms" data-view="fiche" aria-label="Voir ma fiche style">
@@ -1506,12 +1521,11 @@ ${nd===3?`<button class="hx-ms" data-view="fiche" aria-label="Voir ma fiche styl
   <button class="hx-oc2" data-go="o_photo"><span class="hx-oc2-i"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/></svg></span>
   <span class="hx-oc2-t"><small>Chaque jour</small><b>Outfit check</b><em>${oc?`Dernière note : ${esc(String(oc.note))}/10`:"Une note et les changements à faire"}</em></span><span class="hx-oc2-c">${cam}</span></button>
 </section>
- <section><h2 class="hz-h">Explorer</h2>
-  <div class="hz-cats">
-   <button data-go="boutique"><span class="hz-art">${HZ_PH("1483985988355-763728e1935b",ART.shop)}</span><b>Boutique</b></button>
-   <button data-go="beaute"><span class="hz-art">${HZ_PH("1512496015851-a90fb38ba796",ART.beaute)}</span><b>Beauté</b></button>
-   <button data-go="news"><span class="hz-art">${HZ_PH("1441984904996-e0b6ba687e04",ART.looks)}</span><b>Nouveautés</b></button>
-  </div></section>
+ ${typeof zfHomeCards==="function"?zfHomeCards():""}
+ <div class="hz-acts">
+  <button data-go="tenues"><span aria-hidden="true">${GR_HANGER}</span><b>Créer une tenue</b><small>Avec tes vêtements</small></button>
+  <button data-go="garde"><span aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 3v18M9.5 11v2M14.5 11v2"/></svg></span><b>Ma garde-robe</b><small>${grCount().tot?grCount().tot+" article"+(grCount().tot>1?"s":""):"À remplir"}</small></button>
+ </div>
  </div>`,
  say:"Bonjour "+NOM+", je suis contente de te voir. Touche le téléphone pour me parler, ou choisis ce qu’on fait aujourd’hui."}},
 garde:(asT)=>{const c=grCount(),rd=grReady(),occ=GR_OCC.some(o=>o[0]===S.grOcc)?S.grOcc:grOccs()[0][0],looks=GR.looks[occ],by=id=>GR.items.find(x=>x.id===id);
@@ -1787,7 +1801,7 @@ function render(sayIt){
  $("#dock").style.display=p.dock?"":"none";
  {const cur=DOCK_OF[S.page]||S.page;document.querySelectorAll("#dock button").forEach(b=>{if(b.dataset.go===cur)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")})}
  const fl=S.flow,ix=fl?fl.indexOf(S.page):-1;
- $("#mid").className=ix>=0?"bar":"brand";$("#mid").innerHTML=ix>=0?`<i style="width:${(ix+1)/fl.length*100}%"></i>`:`<span class="logo" role="img" aria-label="My Style"><span class="my" aria-hidden="true">My</span><span class="st" aria-hidden="true">STYLE</span></span>`;
+ $("#mid").className=ix>=0?"bar":"brand";$("#mid").innerHTML=ix>=0?`<i style="width:${(ix+1)/fl.length*100}%"></i>`:`<span class="logo" role="img" aria-label="My Style" data-noi18n><span class="my" aria-hidden="true">My</span><span class="st" aria-hidden="true">STYLE</span></span>`;
  $("#back").hidden=p.dock||p.back===false;$("#hprof").hidden=S.page!=="home";if(!p.dock)affStop();
  if(p.count)countUp(p.count);
  if(window.onPage)window.onPage(S.page);

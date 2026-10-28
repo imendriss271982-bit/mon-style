@@ -901,6 +901,7 @@ const I18N_D=[
 ["Une note et les changements à faire","A score and what to change","درجة وشنو تغيّرين"],
 ["Dernière note : {0}/10","Last score: {0}/10","آخر درجة: {0}/10"],
 ["My Stylist : parle avec Aura","My Stylist: talk to Aura","My Stylist: كلّمي أورا"],
+["Parle-moi, Aura","Talk to me, Aura","كلّمني أورا"],
 // ——— Lumière et caméra guidée ———
 ["Mets-toi face à une fenêtre ou une belle lumière.","Face a window or a nice bright light.","وقفي قدّام دريشة أو في مكان فيه إضاءة حلوة."],
 ["Place ton visage dans l’ovale.","Place your face inside the oval.","حطي وجهچ داخل الدائرة."],
@@ -919,6 +920,7 @@ const I18N_D=[
 ["Looks, beauté, art de vivre","Looks, beauty, lifestyle","إطلالات، جمال، أسلوب حياة"],
 ["Mon style au quotidien","My everyday style","ستايلي كل يوم"],
 ["My Stylist : parle avec Aura","My Stylist: talk to Aura","My Stylist: كلّمي أورا"],
+["Parle-moi, Aura","Talk to me, Aura","كلّمني أورا"],
 ];
 /* Liste d’installation (texte avec mise en forme). */
 const I18N_HTML={instL:{
