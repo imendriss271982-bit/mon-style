@@ -71,7 +71,7 @@ function zfDressSVG(r, big) {
 }
 // Petite silhouette de mariée pour les leçons : chaque étape est un schéma (pose, pas, mains, traîne, chaise, marches).
 function zfFig(o) {
-  o = o || {}; const line = "#702B3A", dress = "#F6EEDC", skin = "#E8D3C2", dy = o.stairs ? -16 : 0, hand = o.hand || "down";
+  o = o || {}; const line = "#8A6346", dress = "#F6EEDC", skin = "#E8D3C2", dy = o.stairs ? -16 : 0, hand = o.hand || "down";
   let g = "";
   if (o.stairs) g += `<path d="M10 150 H40 V134 H70 V118 H110" fill="none" stroke="#B9A99A" stroke-width="2"/><path d="M14 92 L104 60" stroke="#B9A99A" stroke-width="2"/>`;
   if (o.chair) g += `<path d="M70 98 h28 v-38 M70 98 v34 M98 98 v34 M66 98 h36" stroke="#B9A99A" stroke-width="3" fill="none" stroke-linecap="round"/>`;

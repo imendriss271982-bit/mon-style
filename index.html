@@ -34,7 +34,7 @@ chk();document.addEventListener("visibilitychange",function(){if(!document.hidde
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&family=Italiana&family=Jost:wght@300;400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Noto+Naskh+Arabic:wght@500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
-:root{--bg:#FFFFFF;--surface:#FFFFFF;--soft:#F5F5F5;--ink:#292421;--muted:#6E6E6E;--line:#E6E6E6;--accent:#702B3A;--on:#FFFFFF;--gold:#702B3A;--rose:#F5F5F5;--ok:#2E6B4A;--warn:#8A5310;--err:#B3261E;--ff:Jost,"IBM Plex Sans Arabic",system-ui,sans-serif;--fh:"Cormorant Garamond","Noto Naskh Arabic","IBM Plex Sans Arabic",Georgia,serif}
+:root{--bg:#FFFFFF;--surface:#FFFFFF;--soft:#F5F5F5;--ink:#292421;--muted:#6E6E6E;--line:#E6E6E6;--accent:#8A6346;--on:#FFFFFF;--gold:#8A6346;--rose:#F5F5F5;--ok:#2E6B4A;--warn:#8A5310;--err:#B3261E;--ff:Jost,"IBM Plex Sans Arabic",system-ui,sans-serif;--fh:"Cormorant Garamond","Noto Naskh Arabic","IBM Plex Sans Arabic",Georgia,serif}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#151311;--surface:#1E1B18;--soft:#28241F;--ink:#F3EDE6;--muted:#B5A898;--line:#353029;--accent:#E6A9B9;--on:#1E1517;--gold:#C9B49A;--rose:#2E2226}}
 :root[data-theme="dark"]{--bg:#151311;--surface:#1E1B18;--soft:#28241F;--ink:#F3EDE6;--muted:#B5A898;--line:#353029;--accent:#E6A9B9;--on:#1E1517;--gold:#C9B49A;--rose:#2E2226}
 *{box-sizing:border-box}
@@ -607,11 +607,11 @@ a.lb{text-decoration:none}
 /* Pas d’appel depuis l’écran d’ouverture : on appelle Aura une fois entrée (My Stylist) */
 #splash #talkbtn{display:none!important}
 /* v118 : écran d’ouverture sur le même fond pétales blanc et blanc cassé que l’app */
-#splash .spbot .btn{background:#702B3A;color:#FFFFFF;border:1px solid #702B3A;box-shadow:0 10px 24px rgba(112,43,58,.22)}
-#splash .spbot .btn.ghost{background:rgba(255,255,255,.85);color:#702B3A;border-color:#702B3A;box-shadow:none}
+#splash .spbot .btn{background:var(--accent);color:#FFFFFF;border:1px solid var(--accent);box-shadow:0 10px 24px rgba(138,99,70,.25)}
+#splash .spbot .btn.ghost{background:rgba(255,255,255,.85);color:var(--accent);border-color:var(--accent);box-shadow:none}
 #splash .sptop h1{color:#292421;text-shadow:0 2px 14px rgba(255,255,255,.95)}#splash .sptop p{color:#4A4340;text-shadow:0 1px 10px rgba(255,255,255,.95)}
-#splash .skip{color:#702B3A;text-shadow:0 1px 8px rgba(255,255,255,.9)}
-#splash .atelier{display:none}#splash{background:#FFFFFF url("fond-or.webp?v=1") center top/cover no-repeat!important}#splash .spbot:before{display:none}#splash .avatar.aura .fig{filter:drop-shadow(0 14px 26px rgba(41,36,33,.16))}
+#splash .skip{color:var(--accent);text-shadow:0 1px 8px rgba(255,255,255,.9)}
+#splash .atelier{display:none}#splash{background:#FFFFFF url("fond-soie.webp?v=1") center top/cover no-repeat!important}#splash .spbot:before{display:none}#splash .avatar.aura .fig{filter:drop-shadow(0 14px 26px rgba(41,36,33,.16))}
 /* Événements à Doha */
 .evl{display:flex;flex-direction:column;gap:10px;margin:0 0 22px}
 .ev{display:flex;gap:14px;align-items:flex-start;padding:14px;border-radius:20px;background:var(--surface);border:1px solid var(--line);color:var(--ink);text-decoration:none}
@@ -719,10 +719,10 @@ nav.dock button[aria-current="page"]{font-weight:500}
 /* v117 : fond pétales blancs en relief (image d'Imen, passée en blanc neutre), fixe derrière toute l'app ; cadres bien marqués */
 html{background:#FFFFFF}
 body{background:transparent}
-html::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:#FFFFFF url("fond-or.webp?v=1") center top/cover no-repeat}
+html::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:#FFFFFF url("fond-soie.webp?v=1") center top/cover no-repeat}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) html::before{display:none}:root:not([data-theme="light"]) body{background:var(--bg)}}
 :root[data-theme="dark"] html::before{display:none}:root[data-theme="dark"] body{background:var(--bg)}
-body::before{background:rgba(238,226,203,.94)}
+body::before{background:rgba(246,236,222,.94)}
 .hz-top:before{display:none}
 .hz-st,.hx-oc2,.hx-ms,.hr-card,.hz-cats button,.hz-insp,.hz-acts button,.zf-u,.card{background-color:#FFFFFF;border:1px solid #DCDCDC!important;box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 10px 26px rgba(41,36,33,.09),0 2px 6px rgba(41,36,33,.05)}
 nav.dock{background:#FFFFFF}
@@ -736,7 +736,7 @@ header .lgbtn{display:grid;place-items:center;padding:0;gap:0;cursor:pointer}hea
 #voice{color:var(--accent)}
 .logo .my{font-size:34px}.logo .st{font-size:20px}
 .hz-hi .hh{font-size:clamp(24px,7.4vw,31px)}
-.hz-st{background:linear-gradient(152deg,#FFFFFF 0 46%,#F5F5F5 46% 60%,#FFFFFF 60%)}
+.hz-st{background:linear-gradient(152deg,#FFFFFF 0 46%,#FAF4EC 46% 60%,#FFFFFF 60%)}
 .hz-st b{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;font-size:40px}
 .hz-insp-a{position:relative}
 @media (max-width:340px){header{gap:4px;padding-inline:10px}header .ib,header .lgbtn{width:40px;height:40px}.logo .my{font-size:28px}.brand{min-width:0}.logo .st{font-size:16px;letter-spacing:.18em;margin-right:-.18em}.lgbtn{padding:0 8px}.lgbtn svg{display:none}}
@@ -841,7 +841,7 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=2"></script>
 <script>
-const VERSION="119";
+const VERSION="120";
 // Bonjour d’Aura : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -1503,7 +1503,7 @@ home:()=>{const v=ok("visage"),bd=ok("corps"),c=season(),oc=ok("outfit");
   shop:'<svg viewBox="0 0 120 90" aria-hidden="true"><ellipse cx="60" cy="84" rx="38" ry="4" fill="#000" opacity=".06"/><path d="M34 34h52l-5 48H39z" fill="#B99A84"/><path d="M34 34h52l-2 8H36z" fill="#A6866F"/><path d="M48 34v-6a12 12 0 0 1 24 0v6" fill="none" stroke="#7C5E4A" stroke-width="3" stroke-linecap="round"/></svg>',
   beaute:'<svg viewBox="0 0 120 90" aria-hidden="true"><ellipse cx="60" cy="84" rx="44" ry="4" fill="#000" opacity=".06"/><rect x="22" y="44" width="16" height="38" rx="3" fill="#E9D8CC"/><rect x="25" y="30" width="10" height="15" rx="2" fill="#2A1F21"/><rect x="42" y="26" width="18" height="56" rx="4" fill="#5A3A30"/><rect x="45" y="14" width="12" height="13" rx="2" fill="#C9A86A"/><rect x="64" y="38" width="16" height="44" rx="3" fill="#C9A98F"/><rect x="67" y="26" width="10" height="13" rx="2" fill="#2A1F21"/><rect x="84" y="56" width="16" height="26" rx="6" fill="#F0E2D6"/><rect x="87" y="48" width="10" height="9" rx="2" fill="#C9A86A"/></svg>',
   looks:'<svg viewBox="0 0 120 90" aria-hidden="true"><path d="M14 12h92" stroke="#3A2C2A" stroke-width="2.5" stroke-linecap="round"/><g fill="none" stroke="#3A2C2A" stroke-width="1.5"><path d="M30 12v6M50 12v6M70 12v6M90 12v6"/></g><path d="M22 18h16l4 62H18z" fill="#4A3027"/><path d="M42 18h16l3 64H39z" fill="#6E4A3A"/><path d="M62 18h16l4 60H58z" fill="#2A1F21"/><path d="M82 18h16l5 62H77z" fill="#EFE3D6"/></svg>',
-  insp:'<svg viewBox="0 0 150 100" aria-hidden="true"><ellipse cx="78" cy="94" rx="64" ry="5" fill="#000" opacity=".06"/><path d="M104 46c0-9 4-14 10-14s10 5 10 14v42h-20z" fill="#EFE6DD"/><g stroke="#8A6F55" stroke-width="1.4" fill="none" stroke-linecap="round"><path d="M114 34c-2-10-10-18-20-22M114 34c1-12 6-22 16-28M114 34c4-6 12-10 22-10"/></g><g fill="#F3E6C8"><circle cx="94" cy="12" r="4"/><circle cx="100" cy="18" r="3"/><circle cx="130" cy="6" r="4"/><circle cx="124" cy="14" r="3"/><circle cx="136" cy="24" r="4"/></g><path d="M40 56h50l-4 34H44z" fill="#702B3A"/><path d="M52 56v-6a13 13 0 0 1 26 0v6" fill="none" stroke="#4F1426" stroke-width="3"/><rect x="60" y="62" width="10" height="7" rx="2" fill="#C9A86A"/></svg>'};
+  insp:'<svg viewBox="0 0 150 100" aria-hidden="true"><ellipse cx="78" cy="94" rx="64" ry="5" fill="#000" opacity=".06"/><path d="M104 46c0-9 4-14 10-14s10 5 10 14v42h-20z" fill="#EFE6DD"/><g stroke="#8A6F55" stroke-width="1.4" fill="none" stroke-linecap="round"><path d="M114 34c-2-10-10-18-20-22M114 34c1-12 6-22 16-28M114 34c4-6 12-10 22-10"/></g><g fill="#F3E6C8"><circle cx="94" cy="12" r="4"/><circle cx="100" cy="18" r="3"/><circle cx="130" cy="6" r="4"/><circle cx="124" cy="14" r="3"/><circle cx="136" cy="24" r="4"/></g><path d="M40 56h50l-4 34H44z" fill="#8A6346"/><path d="M52 56v-6a13 13 0 0 1 26 0v6" fill="none" stroke="#5E412C" stroke-width="3"/><rect x="60" y="62" width="10" height="7" rx="2" fill="#C9A86A"/></svg>'};
  const mins=GRATUIT?"🎁 Gratuit pendant le test":(()=>{const m=Math.max(0,Math.ceil(secLeft()/60));return premium()?`👑 ${m} min ce mois-ci`:m>0?"👑 Essai : 1 min offerte":"👑 Réservé aux abonnées"})();
  return {dock:1,html:`<div class="hx hz">
  <section class="hz-top">
@@ -2390,7 +2390,7 @@ $("#start").addEventListener("click",()=>{if(window.endCall)window.endCall();SKI
  SKIP=true;if(window.SKIPNOM)window.SKIPNOM();if(/formules|abo/i.test(location.hash)){go("abo");return}if(!window.CALLED){if(todoMods().length===3&&!S.later&&S.page==="home")startOnb();else if(!window.GREETED&&!HOME_HI)say(P.home().say)}markHi()});
 </script>
 <script src="aura-profile.js?v=3"></script>
-<script src="zifafi.js?v=2"></script>
+<script src="zifafi.js?v=3"></script>
 <script src="zifafi-plus.js?v=1"></script>
 <script type="module">
 let conv=null,busy=false,raf=0;
