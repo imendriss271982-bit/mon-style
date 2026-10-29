@@ -3,6 +3,10 @@
    Le texte affiché à l'écran et la voix d'Aura sont traduits automatiquement à partir de cette liste.
    Pour corriger une traduction : modifie simplement la 2e (anglais) ou la 3e (arabe) colonne. */
 const I18N_D=[
+// ——— v132 : analyse de style en 3 étapes sur l'accueil ———
+["Ton analyse de style","Your style analysis","تحليل ستايلچ"],
+["3 étapes, une seule fois : ensuite mes conseils sont faits pour toi.","3 steps, just once: then my advice is made for you.","3 خطوات، مرة وحدة بس: بعدين نصايحي تكون لچ إنتي."],
+["Couleurs","Colours","الألوان"],
 // ——— v107 : photo de la silhouette rassurante, résultat du visage d'abord, mesures sans photo ———
 ["Ta photo reste privée","Your photo stays private","صورتچ تظل خاصة"],
 ["Prends la photo habillée, avec des vêtements près du corps, pour qu’on voie tes épaules, ta taille et tes hanches.","Take the photo dressed, in close-fitting clothes, so we can see your shoulders, waist and hips.","صوّري وإنتي لابسة، بملابس قريبة من الجسم، عشان نشوف كتوفچ وخصرچ وأردافچ."],

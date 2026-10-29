@@ -21,7 +21,7 @@ const items=[['Abaya noire','abaya','#111111'],['Chemise soie','haut','#f5efe6']
  // ——— Accueil, nouvelle cliente ———
  await p.evaluate(()=>home());await p.waitForTimeout(200);
  ok(await p.evaluate(()=>!!document.querySelector('[data-view="chat"].hz-st')&&!!document.querySelector('.hz-acts [data-go="tenues"]')&&!!document.querySelector('.hz-acts [data-go="garde"]')),'Accueil : 3 actions (Aura, créer une tenue, garde-robe)');
- ok(await p.evaluate(()=>/Découvre ton style/.test(document.querySelector('.hr-card').innerText)&&!!document.querySelector('.hr-card [data-onb]')),'Nouvelle cliente : prochaine étape claire, sans tenue inventée');
+ ok(await p.evaluate(()=>/Découvre ton style/.test(document.querySelector('.hx-an').innerText)&&!!document.querySelector('.hx-an [data-onb]')&&document.querySelectorAll('.hx-an-s li').length===3&&document.querySelector('.hx-an').compareDocumentPosition(document.querySelector('.hx-oc2'))&4),'Nouvelle cliente : analyse en 3 étapes visible avant Outfit check');
  ok(await p.evaluate(()=>['boutique','beaute','news'].every(g=>document.querySelector(`.hz [data-go="${g}"]`))),'Boutique, Beauté, Nouveautés accessibles depuis l’accueil');
  await p.evaluate(()=>go('tenues'));ok(await p.evaluate(()=>!!document.querySelector('.gr-empty [data-go="garde"]')),'Mes tenues vide : renvoie vers la garde-robe');
  await p.evaluate(()=>go('garde'));ok(await p.evaluate(()=>!!document.querySelector('[data-gadd]')&&!!document.querySelector('[data-gmanual]')&&/vide/.test(document.querySelector('.gr-empty').innerText)),'Garde-robe vide : ajout visible et message clair');

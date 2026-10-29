@@ -414,6 +414,14 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 .hx-hero-b svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 @keyframes ring{0%,100%{box-shadow:0 6px 16px rgba(0,0,0,.18),0 0 0 0 rgba(255,255,255,.45)}50%{box-shadow:0 6px 16px rgba(0,0,0,.18),0 0 0 10px rgba(255,255,255,0)}}
 @media (prefers-reduced-motion:reduce){.hx-hero-b{animation:none}}
+.hx-an{position:relative;display:flex;flex-direction:column;gap:6px;width:100%;padding:18px;border-radius:18px;background:#FFFFFF;color:var(--ink);margin-bottom:14px}
+.hx-an b{font-family:var(--fh);font-size:22px;font-weight:500;line-height:1.2}
+.hx-an small{color:var(--muted);font-size:14px;line-height:1.45}
+.hx-an-s{display:flex;gap:8px;list-style:none;margin:8px 0 10px;padding:0}
+.hx-an-s li{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:13px;color:var(--muted)}
+.hx-an-s i{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;border:1.5px solid var(--accent);color:var(--accent);font-style:normal;font-weight:600}
+.hx-an-s li.ok i{background:var(--accent);color:#fff}.hx-an-s li.ok{color:var(--ink)}
+.hx-an .btn{width:100%}
 .hx-oc2{display:flex;align-items:center;gap:14px;width:100%;border:1px solid var(--line);border-radius:16px;padding:16px;text-align:start;color:var(--ink);cursor:pointer;background:var(--surface);transition:transform .15s}
 .hx-oc2-i{flex:none;width:48px;height:48px;border-radius:12px;background:var(--rose);display:grid;place-items:center}
 .hx-oc2-i svg{width:26px;height:26px;fill:none;stroke:var(--accent);stroke-width:1.5;stroke-linejoin:round}
@@ -742,8 +750,8 @@ html.fv-on::after,html.fv-on #splash::after{display:none}
 .hz-st,.hx-oc2,.hx-ms,.hr-card,.hz-cats button,.hz-insp,.hz-acts button,.zf-u,.card{background-color:#FFFFFF;border:1px solid #DCDCDC!important;box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 10px 26px rgba(41,36,33,.09),0 2px 6px rgba(41,36,33,.05)}
 nav.dock{background:#FFFFFF}
 /* v123 : effet ambre sur les encadrements (choix d'Imen) — bordure miel dégradée avec reflet + halo chaud */
-.hz-st,.hx-oc2,.hx-ms,.hr-card,.hz-cats button,.hz-insp,.hz-acts button,.zf-u,.card{position:relative;border-color:transparent!important;box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 0 0 3px rgba(232,170,72,.07),0 10px 26px rgba(150,96,24,.13),0 2px 8px rgba(196,132,40,.10)!important}
-.hz-st::after,.hx-oc2::after,.hx-ms::after,.hr-card::after,.hz-cats button::after,.hz-insp::after,.hz-acts button::after,.zf-u::after,.card::after{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1.6px;pointer-events:none;z-index:2;background:linear-gradient(135deg,#F7D58E 0%,#E3A64A 22%,#B9742A 45%,#F2C36E 62%,#C98A36 80%,#F6D08A 100%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.hz-st,.hx-oc2,.hx-ms,.hx-an,.hr-card,.hz-cats button,.hz-insp,.hz-acts button,.zf-u,.card{position:relative;border-color:transparent!important;box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 0 0 3px rgba(232,170,72,.07),0 10px 26px rgba(150,96,24,.13),0 2px 8px rgba(196,132,40,.10)!important}
+.hz-st::after,.hx-oc2::after,.hx-ms::after,.hx-an::after,.hr-card::after,.hz-cats button::after,.hz-insp::after,.hz-acts button::after,.zf-u::after,.card::after{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1.6px;pointer-events:none;z-index:2;background:linear-gradient(135deg,#F7D58E 0%,#E3A64A 22%,#B9742A 45%,#F2C36E 62%,#C98A36 80%,#F6D08A 100%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
 /* v122 : tous les boutons de la même couleur, dorés (choix d'Imen) */
 :root{--accent:#8C6D35;--gold:#8C6D35;--goldg:linear-gradient(135deg,#A8843F 0%,#8C6D35 50%,#765A2A 100%)}
 .btn,.btn.ghost,#splash .btn,#splash .btn.ghost,#splash .spbot .btn,#splash .spbot .btn.ghost,.hz-call,.zf-u-b,.zf-u.zw .zf-u-b,.gr-man,.an-r,.zf-big.alt,.hx-oc2-c{background:var(--goldg)!important;color:#FFFFFF!important;border:1px solid #8C6D35!important;box-shadow:0 6px 16px rgba(140,109,53,.25)}
@@ -868,13 +876,13 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 </nav>
 </div>
 <script src="zifafi-i18n.js?v=2"></script>
-<script src="i18n.js?v=17"></script>
+<script src="i18n.js?v=18"></script>
 <script src="aura-methode.js?v=1"></script>
 <script src="aura-mesure.js?v=1"></script>
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=2"></script>
 <script>
-const VERSION="131";
+const VERSION="132";
 // Bonjour d’Aura : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -1181,7 +1189,6 @@ function homeReco(nd){const by=id=>GR.items.find(x=>x.id===id),today=GR_JOURS[(n
  const td=GR.saved.find(t=>t.jour===today);if(td){const h=look(td,"Ta tenue d’aujourd’hui");if(h)return h}
  for(const [occ,ls] of Object.entries(GR.looks)){if(ls&&ls[0]){const h=look(ls[0],"Une tenue pour toi",occ);if(h)return h}}
  const step=(lab,t,d,attr,btn)=>`<div class="hr-card hr-step"><span class="hr-lab">${lab}</span><b>${t}</b><small>${d}</small><button class="btn ghost" ${attr}>${btn}</button></div>`;
- if(nd<3)return step("Prochaine étape",nd?"Termine ton analyse de style":"Découvre ton style","Visage, silhouette et couleurs, une seule fois : ensuite mes conseils sont faits pour toi.","data-onb",nd?"Continuer mon analyse":"Commencer mon analyse");
  if(!grReady())return step("Prochaine étape","Ajoute tes vêtements","Avec tes vraies pièces, je crée des tenues qui te ressemblent.",'data-go="garde"',"Ouvrir ma garde-robe");
  return step("Prochaine étape","Crée tes premières tenues","Ta garde-robe est prête : choisis une occasion.",'data-go="tenues"',"Créer une tenue")}
 function grHomeCard(){const c=grCount(),n=GR.items.filter(x=>!x.wait).slice(0,4),nl=Object.values(GR.looks).reduce((a,l)=>a+l.length,0),pct=Math.min(100,c.tot/GR_MIN*100);
@@ -1550,6 +1557,9 @@ home:()=>{const v=ok("visage"),bd=ok("corps"),c=season(),oc=ok("outfit");
   <span class="hz-call"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg>Appeler Aura</span>
  </button>
  <section class="hz-more"><h2 class="hz-h">Mon style</h2>
+${nd<3?`<div class="hx-an"><span class="hr-lab">Ton analyse de style</span><b>${nd?"Termine ton analyse de style":"Découvre ton style"}</b><small>3 étapes, une seule fois : ensuite mes conseils sont faits pour toi.</small>
+   <ol class="hx-an-s">${[["Visage",v],["Silhouette",bd],["Couleurs",c]].map((x,i)=>`<li class="${x[1]?"ok":""}"><i aria-hidden="true">${x[1]?"✓":i+1}</i><span>${x[0]}</span></li>`).join("")}</ol>
+   <button class="btn" data-onb>${nd?"Continuer mon analyse":"Commencer mon analyse"}</button></div>`:""}
 ${nd===3?`<button class="hx-ms" data-view="fiche" aria-label="Voir ma fiche style">
    <span class="hx-ms-h"><b>Ma fiche style</b><small>Voir le détail ›</small></span>
    <span class="hx-ms-g"><span><small>Visage</small><em>${esc(cap(v.forme))}</em></span><span><small>Silhouette</small><em>${esc(bd.kibbe?bd.forme+" · "+bd.kibbe:bd.forme)}</em></span><span><small>Saison</small><em>${esc(c)}</em>${sw}</span></span>
