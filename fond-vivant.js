@@ -1,4 +1,4 @@
-/* v127-128 : fond de soie vivant (choix d'Imen). Un petit dessin WebGL déforme l'image fond-soie.webp
+/* v127-129 : fond de soie vivant (choix d'Imen). Un petit dessin WebGL déforme l'image fond-soie.webp
    avec des vagues lentes et fait glisser la lumière sur les plis, comme un tissu qui ondule.
    L'image fixe (html::before / #splash) reste en dessous : si WebGL ne marche pas, rien ne casse. */
 (function(){
@@ -23,18 +23,20 @@ var FS=[
 /* image en « cover », calée en haut et au centre, un peu agrandie pour que les vagues ne montrent jamais le bord */
 " float sa=res.x/res.y; vec2 s=vec2(1.); if(sa>ia){s.y=ia/sa;}else{s.x=sa/ia;}",
 " vec2 q=vec2(.5+(uv.x-.5)*s.x, uv.y*s.y); q=.5+(q-.5)*.9;",
-/* vagues : plusieurs ondes lentes qui se croisent, comme de la soie qui respire */
-" float w1=sin(q.y*7.0+t*.9+sin(q.x*3.0+t*.4)*1.4);",
-" float w2=sin((q.x*1.3+q.y)*9.0-t*1.15);",
-" float w3=sin(q.x*5.0-t*.7+q.y*2.0);",
-" vec2 d=vec2(w1*.016+w2*.007, w3*.013+w1*.005)*amp;",
+/* v129 : vagues bien visibles — grands plis de soie qui avancent et se croisent */
+" float a1=q.y*5.0+q.x*2.0+t*1.3+sin(q.x*2.5+t*.6)*1.6;",
+" float a2=(q.x*1.4-q.y)*7.0-t*1.6;",
+" float a3=q.x*4.0-t*1.0+q.y*3.0;",
+" float w1=sin(a1),w2=sin(a2),w3=sin(a3);",
+" vec2 d=vec2(w1*.035+w2*.014, w3*.028+w1*.012)*amp;",
 " vec3 c=texture2D(tx,q+d).rgb;",
-/* lumière sur les plis : plus clair sur le haut des vagues, plus doux dans les creux */
-" float h=w1*.55+w2*.3+w3*.4;",
-" c*=1.0+h*.045*amp;",
-/* reflet satiné qui traverse lentement l'écran en diagonale */
-" float sw=fract(t*.045); float band=(uv.x*.75+uv.y*.55)-(sw*2.6-.6);",
-" c+=vec3(1.,.95,.86)*exp(-band*band*55.)*.16;",
+/* lumière sur les plis : la pente de la vague éclaire un côté et ombre l'autre, comme sur du satin */
+" float sl=cos(a1)*.6+cos(a2)*.3+cos(a3)*.35;",
+" c*=1.0+sl*.11*amp;",
+" c+=vec3(1.,.96,.88)*max(sl,0.)*.06*amp;",
+/* reflet satiné qui traverse l'écran en diagonale (toutes les 8 s environ) */
+" float sw=fract(t*.125); float band=(uv.x*.75+uv.y*.55)-(sw*2.6-.6);",
+" c+=vec3(1.,.95,.86)*exp(-band*band*40.)*.26;",
 " gl_FragColor=vec4(min(c,1.),1.);",
 "}"].join("\n");
 

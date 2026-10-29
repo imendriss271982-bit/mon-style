@@ -874,7 +874,7 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=2"></script>
 <script>
-const VERSION="128";
+const VERSION="129";
 // Bonjour d’Aura : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -2423,7 +2423,7 @@ $("#start").addEventListener("click",()=>{if(window.endCall)window.endCall();SKI
  SKIP=true;if(window.SKIPNOM)window.SKIPNOM();if(/formules|abo/i.test(location.hash)){go("abo");return}if(!window.CALLED){if(todoMods().length===3&&!S.later&&S.page==="home")startOnb();else if(!window.GREETED&&!HOME_HI)say(P.home().say)}markHi()});
 </script>
 <script src="aura-profile.js?v=3"></script>
-<script src="fond-vivant.js?v=2"></script>
+<script src="fond-vivant.js?v=3"></script>
 <script src="zifafi.js?v=3"></script>
 <script src="zifafi-plus.js?v=1"></script>
 <script type="module">
