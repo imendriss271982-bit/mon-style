@@ -607,7 +607,7 @@ a.lb{text-decoration:none}
 /* Pas d’appel depuis l’écran d’ouverture : on appelle Aura une fois entrée (My Stylist) */
 #splash #talkbtn{display:none!important}
 /* v118 : écran d’ouverture sur le même fond pétales blanc et blanc cassé que l’app */
-#splash .spbot .btn{background:var(--accent);color:#FFFFFF;border:1px solid var(--accent);box-shadow:0 10px 24px rgba(138,99,70,.25)}
+#splash .spbot .btn{background:var(--accent);color:#FFFFFF;border:1px solid var(--accent);box-shadow:0 10px 24px rgba(140,109,53,.25)}
 #splash .spbot .btn.ghost{background:rgba(255,255,255,.85);color:var(--accent);border-color:var(--accent);box-shadow:none}
 #splash .sptop h1{color:#292421;text-shadow:0 2px 14px rgba(255,255,255,.95)}#splash .sptop p{color:#4A4340;text-shadow:0 1px 10px rgba(255,255,255,.95)}
 #splash .skip{color:var(--accent);text-shadow:0 1px 8px rgba(255,255,255,.9)}
@@ -726,6 +726,10 @@ body::before{background:rgba(246,236,222,.94)}
 .hz-top:before{display:none}
 .hz-st,.hx-oc2,.hx-ms,.hr-card,.hz-cats button,.hz-insp,.hz-acts button,.zf-u,.card{background-color:#FFFFFF;border:1px solid #DCDCDC!important;box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 10px 26px rgba(41,36,33,.09),0 2px 6px rgba(41,36,33,.05)}
 nav.dock{background:#FFFFFF}
+/* v122 : tous les boutons de la même couleur, dorés (choix d'Imen) */
+:root{--accent:#8C6D35;--gold:#8C6D35;--goldg:linear-gradient(135deg,#A8843F 0%,#8C6D35 50%,#765A2A 100%)}
+.btn,.btn.ghost,#splash .btn,#splash .btn.ghost,#splash .spbot .btn,#splash .spbot .btn.ghost,.hz-call,.zf-u-b,.zf-u.zw .zf-u-b,.gr-man,.an-r,.zf-big.alt,.hx-oc2-c{background:var(--goldg)!important;color:#FFFFFF!important;border:1px solid #8C6D35!important;box-shadow:0 6px 16px rgba(140,109,53,.25)}
+.zf-big.alt *,.an-r *,.gr-man *{color:#FFFFFF!important}
 /* v113 : accueil selon la maquette (en-tête rond, logo centré, carte My Stylist) */
 header{position:relative;min-height:64px}
 header .brand{position:absolute;left:50%;top:50%;transform:translate(-50%,-38%);pointer-events:none}header .brand .logo{pointer-events:auto}
@@ -841,7 +845,7 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=2"></script>
 <script>
-const VERSION="121";
+const VERSION="122";
 // Bonjour d’Aura : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
