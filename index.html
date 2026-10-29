@@ -817,13 +817,19 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 .btn:disabled,.btn.ghost:disabled,#splash .btn:disabled,#splash .btn.ghost:disabled,#splash .spbot .btn:disabled,#splash .spbot .btn.ghost:disabled,.hz-call:disabled,.zf-u-b:disabled,.zf-u.zw .zf-u-b:disabled,.gr-man:disabled,.an-r:disabled,.zf-big.alt:disabled,.hx-oc2-c:disabled,.gr-add:disabled,.lb.pri:disabled,.callbtn:disabled,.mic:disabled,.sty button:disabled,.mys:disabled,.hp-b:disabled,.hx-mic:disabled,.tile.main:disabled,.zf-big:disabled,.zf-aura:disabled{opacity:.55}
 @media (prefers-reduced-transparency:reduce){.btn,.btn.ghost,#splash .btn,#splash .btn.ghost,#splash .spbot .btn,#splash .spbot .btn.ghost,.hz-call,.zf-u-b,.zf-u.zw .zf-u-b,.gr-man,.an-r,.zf-big.alt,.hx-oc2-c,.gr-add,.lb.pri,.callbtn,.mic,.sty button,.mys,.hp-b,.hx-mic,.tile.main,.zf-big,.zf-aura{-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--goldg)!important}}
 .gr-add *,.zf-big *,.mys *,.hp-b *{color:inherit}
-/* v134 : écran d'ouverture centré et équilibré (choix d'Imen) : logo en haut, Aura plus grande au centre, bouton en bas */
-#splash .sptop{padding-top:calc(clamp(56px,8svh,84px) + max(env(safe-area-inset-top,0px),var(--satfb,0px)))}
-#splash .sptop .logo{margin:0 auto}
-#splash .sptop .logo .my{font-size:clamp(58px,8.6svh,76px)}#splash .sptop .logo .st{font-size:clamp(30px,4.4svh,40px)}
-#splash .sptop .sp-tag{display:block;min-height:0;margin:10px auto 0;font:italic 500 clamp(16px,2.3svh,20px)/1.3 "Cormorant Garamond",Georgia,serif;letter-spacing:.04em;color:#6B5242;text-shadow:0 1px 10px rgba(255,255,255,.95)}
-#splash{--ah:min(58svh,calc((100vw - 24px)*1.3229));--ab:calc(15svh + env(safe-area-inset-bottom,0px))}
-@media (max-height:640px){#splash{--ah:min(50svh,calc((100vw - 24px)*1.3229))}#splash .sptop .sp-tag{display:none}}
+/* v135 : écran d'ouverture en grille précise (choix d'Imen) : 3 zones qui ne se chevauchent jamais.
+   Zone haute = logo + phrase (hauteur mesurée en JS → --top) ; zone basse = bouton (--ab) ; Aura occupe exactement l'espace entre les deux. */
+#splash .sptop{padding:calc(max(env(safe-area-inset-top,0px),var(--satfb,0px)) + clamp(28px,5svh,48px)) 22px 0}
+#splash .sptop .logo{margin:0 auto;gap:0}
+#splash .sptop .logo .my{font-size:clamp(50px,7.4svh,68px);line-height:1.05;padding:.1em .3em .14em;margin:-.1em -.3em -.3em}
+#splash .sptop .logo .st{font-size:clamp(23px,3.4svh,30px);letter-spacing:.42em;margin-inline-start:.42em;line-height:1.1;padding:0}
+#splash .sptop .sp-tag{display:block;min-height:0;margin:clamp(8px,1.4svh,14px) auto 0;font:italic 500 clamp(15px,2.1svh,18px)/1.25 "Cormorant Garamond",Georgia,serif;letter-spacing:.06em;color:#6B5242;text-shadow:0 1px 10px rgba(255,255,255,.95)}
+#splash .sptop .sp-tag::before,#splash .sptop .sp-tag::after{content:"";display:inline-block;vertical-align:middle;width:22px;height:1px;margin:0 10px;background:linear-gradient(90deg,transparent,#B8924A,transparent)}
+#splash{--top:34svh;--gap:clamp(14px,2.4svh,24px);--ab:calc(env(safe-area-inset-bottom,0px) + 78px + clamp(18px,3.2svh,32px));
+ --avail:calc(100svh - var(--top) - var(--gap) - var(--ab));--ah:min(var(--avail),calc((100vw - 24px)*1.3229));--abase:var(--ab)}
+/* Aura centrée verticalement dans sa zone quand la largeur la limite */
+#splash .avatar.aura{bottom:calc(var(--abase) + (var(--avail) - var(--ah))/2)}
+#splash .tapaura{bottom:calc(var(--abase) + (var(--avail) - var(--ah))/2 + var(--ah)*.80)}
 </style>
 <link rel="stylesheet" href="zifafi.css?v=3">
 </head>
@@ -903,7 +909,7 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=2"></script>
 <script>
-const VERSION="134";
+const VERSION="135";
 // Bonjour d’Aura : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -2450,6 +2456,8 @@ $("#install").addEventListener("click",async()=>{if(BIP){BIP.prompt();try{await 
  $("#inst").classList.add("show");$("#instOk").focus()});
 $("#instOk").addEventListener("click",()=>$("#inst").classList.remove("show"));
 $("#inst").addEventListener("click",e=>{if(e.target.id==="inst")$("#inst").classList.remove("show")});
+(function(){const fit=()=>{const sp=document.getElementById("splash");if(!sp)return;const t=sp.querySelector(".sptop .sp-tag")||sp.querySelector(".sptop .logo");if(!t)return;sp.style.setProperty("--top",Math.ceil(t.getBoundingClientRect().bottom)+"px")};
+ fit();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);addEventListener("resize",fit);setTimeout(fit,600);setTimeout(fit,1800)})();
 $("#start").addEventListener("click",()=>{if(window.endCall)window.endCall();SKIP=true;stopVoice();unlock();$("#splash").classList.add("out");setTimeout(()=>$("#splash").remove(),800);
  SKIP=true;if(window.SKIPNOM)window.SKIPNOM();if(/formules|abo/i.test(location.hash)){go("abo");return}if(!window.CALLED){if(todoMods().length===3&&!S.later&&S.page==="home")startOnb();else if(!window.GREETED&&!HOME_HI)say(P.home().say)}markHi()});
 </script>
