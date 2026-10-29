@@ -803,6 +803,20 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 .ch-sug{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px}
 .ch-sug button{min-height:40px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:14px;cursor:pointer}
 .clip{min-width:44px;min-height:44px}
+/* v133 : boutons effet cristal (choix d'Imen) : verre doré transparent et flouté, bord lumineux, reflet en haut, texte blanc lisible */
+.btn,.btn.ghost,#splash .btn,#splash .btn.ghost,#splash .spbot .btn,#splash .spbot .btn.ghost,.hz-call,.zf-u-b,.zf-u.zw .zf-u-b,.gr-man,.an-r,.zf-big.alt,.hx-oc2-c,.gr-add,.lb.pri,.callbtn,.mic,.sty button,.mys,.hp-b,.hx-mic,.tile.main,.zf-big,.zf-aura{position:relative;isolation:isolate;overflow:hidden;
+ background:linear-gradient(180deg,rgba(214,178,104,.80) 0%,rgba(168,132,63,.84) 48%,rgba(118,90,42,.92) 100%)!important;
+ -webkit-backdrop-filter:blur(14px) saturate(170%);backdrop-filter:blur(14px) saturate(170%);
+ border:1px solid rgba(255,238,196,.95)!important;color:#FFFFFF!important;font-weight:600;
+ text-shadow:0 1px 2px rgba(70,46,12,.55),0 0 1px rgba(70,46,12,.4);
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 0 0 1px rgba(255,236,190,.35),inset 0 -10px 18px rgba(92,66,24,.28),0 0 16px rgba(247,213,142,.55),0 8px 22px rgba(118,90,42,.30)!important;
+ transition:transform .15s,box-shadow .2s}
+.btn::before,.btn.ghost::before,#splash .btn::before,#splash .btn.ghost::before,#splash .spbot .btn::before,#splash .spbot .btn.ghost::before,.hz-call::before,.zf-u-b::before,.zf-u.zw .zf-u-b::before,.gr-man::before,.an-r::before,.zf-big.alt::before,.hx-oc2-c::before,.gr-add::before,.lb.pri::before,.callbtn::before,.mic::before,.sty button::before,.mys::before,.hp-b::before,.hx-mic::before,.tile.main::before,.zf-big::before,.zf-aura::before{content:"";position:absolute;left:8%;right:8%;top:2px;height:min(44%,24px);border-radius:999px;filter:blur(.6px);z-index:-1;pointer-events:none;
+ background:linear-gradient(180deg,rgba(255,255,255,.62) 0%,rgba(255,255,255,.14) 75%,rgba(255,255,255,0) 100%);-webkit-mask:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent);mask:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent)}
+.btn:active,.btn.ghost:active,#splash .btn:active,#splash .btn.ghost:active,#splash .spbot .btn:active,#splash .spbot .btn.ghost:active,.hz-call:active,.zf-u-b:active,.zf-u.zw .zf-u-b:active,.gr-man:active,.an-r:active,.zf-big.alt:active,.hx-oc2-c:active,.gr-add:active,.lb.pri:active,.callbtn:active,.mic:active,.sty button:active,.mys:active,.hp-b:active,.hx-mic:active,.tile.main:active,.zf-big:active,.zf-aura:active{transform:scale(.97);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 -6px 14px rgba(92,66,24,.35),0 0 10px rgba(247,213,142,.45),0 4px 12px rgba(118,90,42,.28)!important}
+.btn:disabled,.btn.ghost:disabled,#splash .btn:disabled,#splash .btn.ghost:disabled,#splash .spbot .btn:disabled,#splash .spbot .btn.ghost:disabled,.hz-call:disabled,.zf-u-b:disabled,.zf-u.zw .zf-u-b:disabled,.gr-man:disabled,.an-r:disabled,.zf-big.alt:disabled,.hx-oc2-c:disabled,.gr-add:disabled,.lb.pri:disabled,.callbtn:disabled,.mic:disabled,.sty button:disabled,.mys:disabled,.hp-b:disabled,.hx-mic:disabled,.tile.main:disabled,.zf-big:disabled,.zf-aura:disabled{opacity:.55}
+@media (prefers-reduced-transparency:reduce){.btn,.btn.ghost,#splash .btn,#splash .btn.ghost,#splash .spbot .btn,#splash .spbot .btn.ghost,.hz-call,.zf-u-b,.zf-u.zw .zf-u-b,.gr-man,.an-r,.zf-big.alt,.hx-oc2-c,.gr-add,.lb.pri,.callbtn,.mic,.sty button,.mys,.hp-b,.hx-mic,.tile.main,.zf-big,.zf-aura{-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--goldg)!important}}
+.gr-add *,.zf-big *,.mys *,.hp-b *{color:inherit}
 </style>
 <link rel="stylesheet" href="zifafi.css?v=3">
 </head>
@@ -882,7 +896,7 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=2"></script>
 <script>
-const VERSION="132";
+const VERSION="133";
 // Bonjour d’Aura : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
