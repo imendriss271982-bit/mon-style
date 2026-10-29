@@ -742,14 +742,17 @@ header .ib,header .lgbtn{width:46px;height:46px;border-radius:50%;border:1px sol
 header .lgbtn{display:grid;place-items:center;padding:0;gap:0;cursor:pointer}header .lgbtn .lgc{display:none}header .lgbtn svg{display:block;width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6}
 #voice{color:var(--accent)}
 .logo .my{font-size:34px}.logo .st{font-size:20px}
-/* v124 : logo principal en relief doré, plus grand et plus visible (choix d'Imen) */
-header{min-height:74px}
-header .logo .my,#splash .logo .my,header .logo .st,#splash .logo .st{background:linear-gradient(180deg,#E9C77E 0%,#C79A48 30%,#8C6D35 58%,#6E5226 78%,#B88C45 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;filter:drop-shadow(-.6px -.8px 0 rgba(255,255,255,.95)) drop-shadow(.8px 1.2px 0 rgba(84,58,20,.55)) drop-shadow(0 3px 5px rgba(84,58,20,.28))}
-header .logo .my{font-size:46px;margin:0 0 -7px;padding:0 6px}
-header .logo .st{font-size:24px;font-weight:600;letter-spacing:.3em;margin:0 -.3em 0 0}
-#splash .logo .my{font-size:76px;padding:0 10px}
-#splash .logo .st{font-size:40px;font-weight:600}
-@media (max-width:340px){header .logo .my{font-size:36px}header .logo .st{font-size:18px;letter-spacing:.2em;margin-right:-.2em}}
+/* v125 : logo principal en relief, en deux couleurs (« My » doré, « STYLE » expresso foncé), jamais coupé (choix d'Imen) */
+header{min-height:78px}
+header .logo,#splash .logo{overflow:visible}
+header .logo .my,#splash .logo .my,header .logo .st,#splash .logo .st{-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+header .logo .my,#splash .logo .my{background-image:linear-gradient(180deg,#F3D58E 0%,#D6A651 30%,#A9802F 58%,#8C6D35 78%,#C99A4C 100%);filter:drop-shadow(-.6px -.8px 0 rgba(255,255,255,.95)) drop-shadow(.8px 1.2px 0 rgba(84,58,20,.5)) drop-shadow(0 3px 5px rgba(84,58,20,.25))}
+header .logo .st,#splash .logo .st{background-image:linear-gradient(180deg,#6B5242 0%,#3A2B22 45%,#241A14 70%,#4E3A2D 100%);filter:drop-shadow(-.5px -.7px 0 rgba(255,255,255,.95)) drop-shadow(.7px 1px 0 rgba(0,0,0,.35)) drop-shadow(0 3px 4px rgba(36,26,20,.22))}
+header .logo .my{font-size:46px;line-height:1.25;padding:.12em .3em .18em;margin:-.22em -.3em -.42em}
+header .logo .st{font-size:23px;font-weight:600;line-height:1.2;letter-spacing:.3em;padding:.05em .05em .1em;margin:0 -.35em 0 -.05em}
+#splash .logo .my{font-size:76px;line-height:1.25;padding:.12em .3em .18em;margin:-.22em -.3em -.4em}
+#splash .logo .st{font-size:40px;font-weight:600;line-height:1.2;padding:.05em .05em .1em}
+@media (max-width:340px){header .logo .my{font-size:38px}header .logo .st{font-size:18px;letter-spacing:.2em;margin-right:-.25em}}
 .hz-hi .hh{font-size:clamp(24px,7.4vw,31px)}
 .hz-st{background:linear-gradient(152deg,#FFFFFF 0 46%,#FAF4EC 46% 60%,#FFFFFF 60%)}
 .hz-st b{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;font-size:40px}
@@ -856,7 +859,7 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=2"></script>
 <script>
-const VERSION="124";
+const VERSION="125";
 // Bonjour d’Aura : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
