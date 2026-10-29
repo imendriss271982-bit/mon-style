@@ -767,6 +767,11 @@ header .logo .my{font-size:46px;line-height:1.25;padding:.12em .3em .18em;margin
 header .logo .st{font-size:23px;font-weight:600;line-height:1.2;letter-spacing:.3em;padding:.05em .05em .1em;margin:0 -.35em 0 -.05em}
 #splash .logo .my{font-size:76px;line-height:1.25;padding:.12em .3em .18em;margin:-.22em -.3em -.4em}
 #splash .logo .st{font-size:40px;font-weight:600;line-height:1.2;padding:.05em .05em .1em}
+/* v130 : logo aux couleurs de l'icône de l'app (bordeaux #531D2A + ivoire #F2E6E1), choix d'Imen */
+header .logo .my,#splash .logo .my{background-image:linear-gradient(180deg,#A2475A 0%,#7E2E40 32%,#5E2131 62%,#531D2A 80%,#8A3A4C 100%);filter:drop-shadow(-.6px -.8px 0 #F2E6E1) drop-shadow(.8px 1.2px 0 rgba(58,16,26,.55)) drop-shadow(0 3px 5px rgba(83,29,42,.28))}
+header .logo .st,#splash .logo .st{background-image:linear-gradient(180deg,#6E2A39 0%,#531D2A 45%,#3E1520 72%,#5C2232 100%);filter:drop-shadow(-.5px -.7px 0 #F2E6E1) drop-shadow(.7px 1px 0 rgba(40,10,18,.45)) drop-shadow(0 3px 4px rgba(83,29,42,.24))}
+.logo .ln,#splash .logo .ln{background:linear-gradient(90deg,transparent,#531D2A,transparent)}
+.ring .n .logo .my,.ring .n .logo .st{color:#531D2A!important}
 @media (max-width:340px){header .logo .my{font-size:38px}header .logo .st{font-size:18px;letter-spacing:.2em;margin-right:-.25em}}
 .hz-hi .hh{font-size:clamp(24px,7.4vw,31px)}
 .hz-st{background:linear-gradient(152deg,#FFFFFF 0 46%,#FAF4EC 46% 60%,#FFFFFF 60%)}
@@ -874,7 +879,7 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=2"></script>
 <script>
-const VERSION="129";
+const VERSION="130";
 // Bonjour d’Aura : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
