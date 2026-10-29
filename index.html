@@ -841,7 +841,7 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=2"></script>
 <script>
-const VERSION="120";
+const VERSION="121";
 // Bonjour d’Aura : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -1524,18 +1524,18 @@ ${nd===3?`<button class="hx-ms" data-view="fiche" aria-label="Voir ma fiche styl
   <button class="hx-oc2" data-go="o_photo"><span class="hx-oc2-i"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/></svg></span>
   <span class="hx-oc2-t"><small>Chaque jour</small><b>Outfit check</b><em>${oc?`Dernière note : ${esc(String(oc.note))}/10`:"Une note et les changements à faire"}</em></span><span class="hx-oc2-c">${cam}</span></button>
 </section>
- <section><h2 class="hz-h">Pour toi aujourd’hui</h2>${homeReco(nd)}</section>
+ ${typeof zfHomeCards==="function"?zfHomeCards():""}
+ <div class="hz-acts">
+  <button data-go="tenues"><span aria-hidden="true">${GR_HANGER}</span><b>Créer une tenue</b><small>Avec tes vêtements</small></button>
+  <button data-go="garde"><span aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 3v18M9.5 11v2M14.5 11v2"/></svg></span><b>Ma garde-robe</b><small>${grCount().tot?grCount().tot+" article"+(grCount().tot>1?"s":""):"À remplir"}</small></button>
+ </div>
  <section><h2 class="hz-h">Tes rubriques préférées</h2>
   <div class="hz-cats">
    <button data-go="boutique"><span class="hz-art">${HZ_PH("1483985988355-763728e1935b",ART.shop)}</span><b>Shopping et nouveautés</b></button>
    <button data-go="beaute"><span class="hz-art">${HZ_PH("1512496015851-a90fb38ba796",ART.beaute)}</span><b>Conseils beauté</b></button>
    <button data-go="tenues"><span class="hz-art">${HZ_PH("1441984904996-e0b6ba687e04",ART.looks)}</span><b>Looks pour toi</b></button>
   </div></section>
- ${typeof zfHomeCards==="function"?zfHomeCards():""}
- <div class="hz-acts">
-  <button data-go="tenues"><span aria-hidden="true">${GR_HANGER}</span><b>Créer une tenue</b><small>Avec tes vêtements</small></button>
-  <button data-go="garde"><span aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 3v18M9.5 11v2M14.5 11v2"/></svg></span><b>Ma garde-robe</b><small>${grCount().tot?grCount().tot+" article"+(grCount().tot>1?"s":""):"À remplir"}</small></button>
- </div>
+ <section><h2 class="hz-h">Pour toi aujourd’hui</h2>${homeReco(nd)}</section>
  <button class="hz-insp" data-go="news"><span class="hz-insp-t"><b>Inspirations du jour</b><small>Looks, beauté, art de vivre</small><i aria-hidden="true">›</i></span><span class="hz-insp-a">${ART.insp}</span></button>
  </div>`,
  say:"Bonjour "+NOM+", je suis contente de te voir. Touche le téléphone pour me parler, ou choisis ce qu’on fait aujourd’hui."}},
