@@ -734,6 +734,10 @@ html::after,#splash::after{content:"";position:fixed;inset:0;z-index:-1;pointer-
 @media (prefers-reduced-motion:reduce){html::before,#splash::before{animation:none;inset:0}html::after,#splash::after{animation:none;display:none}}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) html::after{display:none}}
 :root[data-theme="dark"] html::after{display:none}
+/* v127 : vraie soie qui ondule (fond-vivant.js, WebGL) ; l'animation CSS ci-dessus ne sert plus que de secours */
+#fondVivant{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;display:block}
+.fv-on html::before,html.fv-on::before,html.fv-on #splash::before{animation:none;inset:0}
+html.fv-on::after,html.fv-on #splash::after{display:none}
 .hz-top:before{display:none}
 .hz-st,.hx-oc2,.hx-ms,.hr-card,.hz-cats button,.hz-insp,.hz-acts button,.zf-u,.card{background-color:#FFFFFF;border:1px solid #DCDCDC!important;box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 10px 26px rgba(41,36,33,.09),0 2px 6px rgba(41,36,33,.05)}
 nav.dock{background:#FFFFFF}
@@ -870,7 +874,7 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=2"></script>
 <script>
-const VERSION="126";
+const VERSION="128";
 // Bonjour d’Aura : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -2419,6 +2423,7 @@ $("#start").addEventListener("click",()=>{if(window.endCall)window.endCall();SKI
  SKIP=true;if(window.SKIPNOM)window.SKIPNOM();if(/formules|abo/i.test(location.hash)){go("abo");return}if(!window.CALLED){if(todoMods().length===3&&!S.later&&S.page==="home")startOnb();else if(!window.GREETED&&!HOME_HI)say(P.home().say)}markHi()});
 </script>
 <script src="aura-profile.js?v=3"></script>
+<script src="fond-vivant.js?v=2"></script>
 <script src="zifafi.js?v=3"></script>
 <script src="zifafi-plus.js?v=1"></script>
 <script type="module">
