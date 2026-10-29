@@ -726,6 +726,9 @@ body::before{background:rgba(246,236,222,.94)}
 .hz-top:before{display:none}
 .hz-st,.hx-oc2,.hx-ms,.hr-card,.hz-cats button,.hz-insp,.hz-acts button,.zf-u,.card{background-color:#FFFFFF;border:1px solid #DCDCDC!important;box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 10px 26px rgba(41,36,33,.09),0 2px 6px rgba(41,36,33,.05)}
 nav.dock{background:#FFFFFF}
+/* v123 : effet ambre sur les encadrements (choix d'Imen) — bordure miel dégradée avec reflet + halo chaud */
+.hz-st,.hx-oc2,.hx-ms,.hr-card,.hz-cats button,.hz-insp,.hz-acts button,.zf-u,.card{position:relative;border-color:transparent!important;box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 0 0 3px rgba(232,170,72,.07),0 10px 26px rgba(150,96,24,.13),0 2px 8px rgba(196,132,40,.10)!important}
+.hz-st::after,.hx-oc2::after,.hx-ms::after,.hr-card::after,.hz-cats button::after,.hz-insp::after,.hz-acts button::after,.zf-u::after,.card::after{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1.6px;pointer-events:none;z-index:2;background:linear-gradient(135deg,#F7D58E 0%,#E3A64A 22%,#B9742A 45%,#F2C36E 62%,#C98A36 80%,#F6D08A 100%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
 /* v122 : tous les boutons de la même couleur, dorés (choix d'Imen) */
 :root{--accent:#8C6D35;--gold:#8C6D35;--goldg:linear-gradient(135deg,#A8843F 0%,#8C6D35 50%,#765A2A 100%)}
 .btn,.btn.ghost,#splash .btn,#splash .btn.ghost,#splash .spbot .btn,#splash .spbot .btn.ghost,.hz-call,.zf-u-b,.zf-u.zw .zf-u-b,.gr-man,.an-r,.zf-big.alt,.hx-oc2-c{background:var(--goldg)!important;color:#FFFFFF!important;border:1px solid #8C6D35!important;box-shadow:0 6px 16px rgba(140,109,53,.25)}
@@ -845,7 +848,7 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=2"></script>
 <script>
-const VERSION="122";
+const VERSION="123";
 // Bonjour d’Aura : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
