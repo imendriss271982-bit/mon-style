@@ -742,6 +742,14 @@ header .ib,header .lgbtn{width:46px;height:46px;border-radius:50%;border:1px sol
 header .lgbtn{display:grid;place-items:center;padding:0;gap:0;cursor:pointer}header .lgbtn .lgc{display:none}header .lgbtn svg{display:block;width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6}
 #voice{color:var(--accent)}
 .logo .my{font-size:34px}.logo .st{font-size:20px}
+/* v124 : logo principal en relief doré, plus grand et plus visible (choix d'Imen) */
+header{min-height:74px}
+header .logo .my,#splash .logo .my,header .logo .st,#splash .logo .st{background:linear-gradient(180deg,#E9C77E 0%,#C79A48 30%,#8C6D35 58%,#6E5226 78%,#B88C45 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;filter:drop-shadow(-.6px -.8px 0 rgba(255,255,255,.95)) drop-shadow(.8px 1.2px 0 rgba(84,58,20,.55)) drop-shadow(0 3px 5px rgba(84,58,20,.28))}
+header .logo .my{font-size:46px;margin:0 0 -7px;padding:0 6px}
+header .logo .st{font-size:24px;font-weight:600;letter-spacing:.3em;margin:0 -.3em 0 0}
+#splash .logo .my{font-size:76px;padding:0 10px}
+#splash .logo .st{font-size:40px;font-weight:600}
+@media (max-width:340px){header .logo .my{font-size:36px}header .logo .st{font-size:18px;letter-spacing:.2em;margin-right:-.2em}}
 .hz-hi .hh{font-size:clamp(24px,7.4vw,31px)}
 .hz-st{background:linear-gradient(152deg,#FFFFFF 0 46%,#FAF4EC 46% 60%,#FFFFFF 60%)}
 .hz-st b{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;font-size:40px}
@@ -848,7 +856,7 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=2"></script>
 <script>
-const VERSION="123";
+const VERSION="124";
 // Bonjour d’Aura : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
