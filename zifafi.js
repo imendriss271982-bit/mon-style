@@ -189,10 +189,10 @@ function zfHomeCards() {
   return `<section class="zf-uni" aria-label="Mes deux univers">
   <article class="zf-u ms"><span class="zf-u-i">${zfIco.hanger}</span><h3>MY STYLE</h3><p class="zf-u-s">Découvre ton style. Exprime-toi.</p>
    <p class="zf-u-d">Ton espace de style au quotidien : tenues, garde-robe et conseils personnalisés d’Aura.</p>
-   <button type="button" class="zf-u-b" data-zfmystyle>Explorer My Style</button></article>
+   <button type="button" class="zf-u-b" data-zfmystyle>Explorer</button></article>
   <article class="zf-u zw"><span class="zf-u-i">${zfIco.ring}</span><h3>Zifafi <span>Wedding</span></h3><p class="zf-u-s">Ton style de mariée, guidé par Aura.</p>
    <p class="zf-u-d">Ta robe, tes accessoires, ton bouquet et ton look complet, à partir de ton profil My Style.</p>
-   <button type="button" class="zf-u-b" data-go="zf">Ouvrir Zifafi Wedding</button></article></section>`;
+   <button type="button" class="zf-u-b" data-go="zf">Ouvrir</button></article></section>`;
 }
 
 // ——— Tableau de bord ZIFAFI ———
