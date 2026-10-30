@@ -910,13 +910,13 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 </nav>
 </div>
 <script src="zifafi-i18n.js?v=2"></script>
-<script src="i18n.js?v=19"></script>
+<script src="i18n.js?v=20"></script>
 <script src="aura-methode.js?v=1"></script>
 <script src="aura-mesure.js?v=1"></script>
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=2"></script>
 <script>
-const VERSION="136";
+const VERSION="137";
 // Bonjour d’Aura : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -988,11 +988,12 @@ function prix(k){const c=PAYS[pays()];return c.p[k]+" "+c.cur}
      qui se termine par "url=" ; le lien de la recherche y est ajouté automatiquement.
    Tant que c'est vide, le bouton ouvre la boutique normalement (sans commission). */
 const SHOPS_ALL=[
- {n:"Ounass",site:"ounass.com",deep:"",pays:["QA","SA","AE","KW","BH","OM"]},
- {n:"Namshi",site:"namshi.com",deep:"",pays:["SA","AE","KW","BH","OM"]},
- {n:"Amazon",site:"amazon.ae",url:q=>"https://www.amazon.ae/s?k="+encodeURIComponent(q),tag:"",pays:["QA","AE","KW","BH","OM"]},
- {n:"Amazon",site:"amazon.sa",url:q=>"https://www.amazon.sa/s?k="+encodeURIComponent(q),tag:"",pays:["SA"]}];
+ {n:"Ounass",lab:"Luxe",site:"ounass.com",deep:"",pays:["QA","SA","AE","KW","BH","OM"]},
+ {n:"Namshi",lab:"Tendance",site:"namshi.com",deep:"",pays:["SA","AE","KW","BH","OM"]},
+ {n:"Amazon",lab:"Petits prix",site:"amazon.ae",url:q=>"https://www.amazon.ae/s?k="+encodeURIComponent(q),tag:"",pays:["QA","AE","KW","BH","OM"]},
+ {n:"Amazon",lab:"Petits prix",site:"amazon.sa",url:q=>"https://www.amazon.sa/s?k="+encodeURIComponent(q),tag:"",pays:["SA"]}];
 // Namshi n'est pas montré au Qatar tant que leur programme ne paie pas les commandes du Qatar.
+// v137 (choix d'Imen) : aucun nom de boutique n'est affiché ni dit par Aura ; la cliente voit seulement « lab ».
 function shops(){return SHOPS_ALL.filter(x=>x.pays.includes(pays()))}
 function shopUrl(s,q){const direct=s.url?s.url(q)+(s.tag?"&tag="+encodeURIComponent(s.tag):""):null;
  if(s.deep)return s.deep+encodeURIComponent(direct||"https://www."+s.site+"/");
@@ -1046,7 +1047,7 @@ const hideCodes=s=>String(s??"").replace(/\s*\[MS\d{2}\]/g,"");
 const norm=s=>String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
 function findArts(txt){const n=norm(txt),out=[];CATALOGUE.forEach(a=>{if((n.includes(a.id.toLowerCase())||n.includes(norm(a.nom)))&&out.length<3)out.push(a)});return out}
 const miniHTML=a=>`<button class="mini" data-art="${a.id}"><span class="ill">${garSVG(a)}</span><span><b>${esc(a.nom)}</b><small>Voir chez nos boutiques</small></span></button>`;
-function CATCTX(voice){return "PAYS DE LA CLIENTE : "+PAYS[pays()].n+" (prix en "+PAYS[pays()].cur+"). Ne recommande que ces boutiques partenaires : "+shops().map(x=>x.n+" ("+x.site+")").join(", ")+". VITRINE MY STYLE (pièces types disponibles chez ces boutiques, dans l’onglet Boutique) : "+CATALOGUE.map(a=>a.id+" "+a.nom+" (coupes idéales : "+a.formes.join(", ")+" ; "+a.occ.toLowerCase()+")").join(" ; ")+". Quand elle cherche une tenue ou te demande quoi acheter, choisis en priorité dans cette vitrine les pièces qui vont à sa morphologie et à sa saison de couleurs, explique pourquoi en une phrase, et cite chaque pièce avec son nom exact"+(voice?" (à l’oral, sans le code)":" suivi de son code entre crochets, par exemple « Robe portefeuille terracotta [MS01] »")+". Dis-lui qu’elle la retrouve dans l’onglet Boutique. N’invente ni prix ni stock."}
+function CATCTX(voice){return "PAYS DE LA CLIENTE : "+PAYS[pays()].n+" (prix en "+PAYS[pays()].cur+"). Les achats se font uniquement via les boutiques partenaires de l’onglet Boutique de My Style. Ne cite JAMAIS le nom d’une boutique, d’une enseigne ou d’un site de vente (ni Ounass, ni Namshi, ni Amazon, ni noon, ni aucun autre) : dis seulement « dans l’onglet Boutique ». VITRINE MY STYLE (pièces types disponibles chez ces boutiques, dans l’onglet Boutique) : "+CATALOGUE.map(a=>a.id+" "+a.nom+" (coupes idéales : "+a.formes.join(", ")+" ; "+a.occ.toLowerCase()+")").join(" ; ")+". Quand elle cherche une tenue ou te demande quoi acheter, choisis en priorité dans cette vitrine les pièces qui vont à sa morphologie et à sa saison de couleurs, explique pourquoi en une phrase, et cite chaque pièce avec son nom exact"+(voice?" (à l’oral, sans le code)":" suivi de son code entre crochets, par exemple « Robe portefeuille terracotta [MS01] »")+". Dis-lui qu’elle la retrouve dans l’onglet Boutique. N’invente ni prix ni stock."}
 window.addAuraBubble=txt=>{if(!txt||!findArts(txt).length)return;S.chat.push({r:"a",t:txt});try{save()}catch(_){}
  const c=S.page==="chat"&&document.querySelector(".chat");if(c){c.insertAdjacentHTML("beforeend",`<div class="bub a">${esc(hideCodes(txt))}${findArts(txt).map(miniHTML).join("")}</div>`);c.lastElementChild.scrollIntoView({behavior:"smooth",block:"nearest"})}};
 
@@ -1764,7 +1765,7 @@ boutique:()=>{const s=season(),cols=s?SEASONS[s].c.filter(x=>!/Noir|Blanc/.test(
  const list=fits.filter(x=>!S.vcat||x.a.cat===S.vcat).sort((x,y)=>y.f.sc-x.f.sc);
  const card=x=>`<button class="art" data-art="${x.a.id}"><span class="ill">${garSVG(x.a)}</span><b>${esc(x.a.nom)}</b><small>${esc(x.a.occ)}</small>${x.f.sc>=4?`<span class="tag">Parfait pour toi</span>`:x.f.sc>=2?`<span class="tag soft">Te va bien</span>`:""}</button>`;
  return {dock:1,html:`<h1>Ma boutique</h1><p class="sub">${known?"Des pièces choisies pour ta morphologie et ta saison.":"Fais ton analyse pour que je choisisse les pièces faites pour toi."}</p>
- <div class="card"><b>Nos boutiques partenaires</b><p class="sub" style="font-size:14px;margin:6px 0 0">${shops().map(s=>s.n).join(" · ")} — livraison : ${PAYS[pays()].n}.</p></div>
+ <div class="card"><b>Nos boutiques partenaires</b><p class="sub" style="font-size:14px;margin:6px 0 0">Boutiques en ligne sélectionnées par My Style. Livraison : ${PAYS[pays()].n}.</p></div>
  ${top.length?`<h2>La sélection d’Aura</h2><div class="vit">${top.map(card).join("")}</div>`:""}
  <button class="btn" data-askaura style="margin:14px 0 6px">Demander à Aura de choisir pour moi</button>
  <h2>La vitrine</h2><div class="fchips">${VCATS.map(c=>`<button data-vcat="${c[0]}" aria-pressed="${(S.vcat||"")===c[0]}">${c[1]}</button>`).join("")}</div>
@@ -1854,7 +1855,7 @@ async function loadNews(){
  catch(e){S.newsErr=ERRS[e&&e.code]||(e&&e.message&&e.message!=="erreur"?e.message:"Impossible de charger les tendances. Réessaie.")}
  S.newsBusy=false;if(S.page==="news"){render(false);if(S.news&&S.news.resume)say(S.news.resume);else if(S.newsErr)say(S.newsErr)}
 }
-function links(q){return `<div class="chips">${shops().map(s=>`<a target="_blank" rel="noopener sponsored" href="${shopUrl(s,q)}">${s.n}</a>`).join("")}</div>`}
+function links(q){return `<div class="chips">${shops().map(s=>`<a target="_blank" rel="noopener sponsored" href="${shopUrl(s,q)}">${s.lab}</a>`).join("")}</div>`}
 function lum(h){const n=parseInt(h.slice(1),16);return(0.299*(n>>16)+0.587*(n>>8&255)+0.114*(n&255))/255}
 
 const WAITBOX=`<div class="wait"><i id="waitbar"></i></div><p class="sub" id="waitmsg">Je regarde tes couleurs…</p>`;
