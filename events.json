@@ -1,5 +1,5 @@
 {
-  "maj": "2026-10-20",
+  "maj": "2026-11-01",
   "evenements": [
     {
       "debut": "2026-10-27", "fin": "2026-12-26",
@@ -26,12 +26,20 @@
       "lien": "https://qm.org.qa/en/stories/all-stories/fall-2026-exhibitions/"
     },
     {
-      "debut": "2026-11-27", "fin": "2026-11-27", "date_a_confirmer": true,
-      "lieu": "M7, Msheireb",
+      "debut": "2026-11-05", "fin": "2027-01-31",
+      "lieu": "Fereej Al Asmakh",
+      "titre": {"fr": "Threading the Ceremony", "en": "Threading the Ceremony", "ar": "Threading the Ceremony: خيوط العرس"},
+      "desc": {"fr": "Installation textile autour d'un rituel de mariage soudanais, avec tissus et tenues.", "en": "Textile installation around a Sudanese wedding ritual, with fabrics and attire.", "ar": "عمل فني بالقماش عن طقوس عرس سودانية، فيه أقمشة وأزياء."},
+      "type": "design",
+      "lien": "https://qm.org.qa/en/calendar/threading-the-ceremony/"
+    },
+    {
+      "debut": "2026-11-28", "fin": "2026-11-28",
+      "lieu": "Doha",
       "titre": {"fr": "Fashion Trust Arabia Awards 2026", "en": "Fashion Trust Arabia Awards 2026", "ar": "جوائز فاشن تراست أرابيا ٢٠٢٦"},
       "desc": {"fr": "Les prix des jeunes créateurs arabes, avec les finalistes à Doha.", "en": "Awards for young Arab designers, with the finalists in Doha.", "ar": "جوائز المصممين العرب الشباب، والمتأهلين في الدوحة."},
       "type": "mode",
-      "lien": "https://babble-up.com/luxury-events/fashion-trust-arabia-awards-2026-doha"
+      "lien": "https://emirateswoman.com/fashion-trust-arabia-unveils-the-finalists-for-its-2026-awards/"
     },
     {
       "debut": "2026-12-14", "fin": "2026-12-16",
