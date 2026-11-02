@@ -3,6 +3,24 @@
    Le texte affiché à l'écran et la voix d'Aura sont traduits automatiquement à partir de cette liste.
    Pour corriger une traduction : modifie simplement la 2e (anglais) ou la 3e (arabe) colonne. */
 const I18N_D=[
+// ——— v140 : Que porter aujourd’hui ? ———
+["Que porter aujourd’hui ?","What to wear today?","شنو ألبس اليوم؟"],
+["Une tenue avec tes vêtements, selon la météo","An outfit from your own clothes, based on the weather","لبسة من ملابسچ، على حسب الجو"],
+["Ton occasion du jour","Today’s occasion","مناسبتچ اليوم"],
+["Choisis ma tenue","Choose my outfit","اختاري لي لبستي"],
+["Je choisis ta tenue…","Choosing your outfit…","قاعدة أختار لبستچ…"],
+["Je choisis ta tenue, une seconde.","Choosing your outfit, one second.","قاعدة أختار لبستچ، ثانية وحدة."],
+["Je la porte aujourd’hui","I’m wearing it today","بلبسها اليوم"],
+["Portée aujourd’hui ✓","Worn today ✓","لبستها اليوم ✓"],
+["Autre idée","Another idea","فكرة ثانية"],
+["Voir ma tenue","See my outfit","شوفي لبستچ"],
+["À ajouter un jour : {0}","Worth adding one day: {0}","تقدرين تضيفينها يوم: {0}"],
+["Ajoute d’abord tes vêtements","Add your clothes first","ضيفي ملابسچ أول"],
+["Avec au moins {0} articles, je choisis chaque matin une tenue pour toi selon la météo et ton programme.","With at least {0} items, I’ll choose an outfit for you every morning based on the weather and your plans.","إذا ضفتي {0} قطع على الأقل، كل صبح أختار لچ لبسة على حسب الجو وبرنامجچ."],
+["Ajoute d’abord tes vêtements, et chaque matin je choisis ta tenue.","Add your clothes first, and every morning I’ll choose your outfit.","ضيفي ملابسچ أول، وكل صبح أختار لچ لبستچ."],
+["Dis-moi ton occasion du jour, et je choisis ta tenue.","Tell me today’s occasion, and I’ll choose your outfit.","قوليلي شنو مناسبتچ اليوم، وأنا أختار لچ لبستچ."],
+["Bonne journée {0}, tu vas être superbe.","Have a lovely day {0}, you’ll look stunning.","يومچ حلو يا {0}، بتطلعين تهبلين."],
+["Tenue du jour","Outfit of the day","لبسة اليوم"],
 // ——— v139 : Your Style Twin (jumeau de style, niveau 1 : fiche de données) ———
 ["Ta copie de style","Your style copy","نسختچ في الستايل"],
 ["Ton jumeau est complet","Your twin is complete","توأمچ كامل"],
