@@ -1,5 +1,9 @@
 {
   "name": "mon-style",
   "main": "worker/worker.js",
-  "compatibility_date": "2026-10-01"
+  "compatibility_date": "2026-10-01",
+  // Garde les variables réglées dans Cloudflare (MODEL, VOICE_ID…) à chaque déploiement.
+  "keep_vars": true,
+  // Boîte aux lettres « Vérifié par une vraie styliste » (v143).
+  "kv_namespaces": [{ "binding": "VERIF", "id": "87bde6aed77d480594db654a8975a93c" }]
 }

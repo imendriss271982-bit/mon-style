@@ -6,7 +6,7 @@ let GOOD_IMG = "";
 // Limite de demandes par adresse IP (par instance du Worker, au mieux) : l'en-tête Origin peut être imité
 // hors navigateur, cette limite évite qu'un robot épuise le crédit Gemini / ElevenLabs.
 const HITS = new Map();
-const LIMITS = { "/": 60, "/makeup": 6, "/tts": 60 }; // demandes par 10 minutes
+const LIMITS = { "/": 60, "/makeup": 6, "/tts": 60, "/verif/new": 4, "/verif/get": 60, "/verif/del": 30, "/verif/admin": 40 }; // demandes par 10 minutes
 function tooMany(ip, path) {
   const now = Date.now(), win = 600000, key = path + "|" + ip, max = LIMITS[path] || 30;
   const list = (HITS.get(key) || []).filter(t => now - t < win);
@@ -15,6 +15,69 @@ function tooMany(ip, path) {
   return list.length > max;
 }
 const MIMES = ["image/jpeg", "image/png", "image/webp"];
+
+// ——— « Vérifié par une vraie styliste » (v143) ———
+// Les demandes des clientes sont rangées dans le KV `VERIF` (namespace « mon-style-styliste », voir wrangler.jsonc),
+// 60 jours maximum. La cliente garde un jeton secret pour lire SA réponse ; seule son empreinte est stockée.
+// La styliste (page styliste.html) se connecte avec son code : seule l'empreinte SHA-256 du code est ici
+// (on peut la remplacer par la variable secrète Cloudflare STYLISTE_HASH sans toucher au code).
+const STYLISTE_HASH = "624ca31ccf446f30834dcf44699e41704be8a3956d30b942b89c32f68a81ef3a";
+const VERIF_TTL = 60 * 24 * 3600;
+async function sha256(t) { const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(String(t))); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join(""); }
+const rndHex = n => [...crypto.getRandomValues(new Uint8Array(n))].map(x => x.toString(16).padStart(2, "0")).join("");
+const txt = (v, n) => String(v == null ? "" : v).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "").slice(0, n);
+const okData = (v, mimes, max) => typeof v === "string" && v.length <= max && mimes.some(m => v.startsWith("data:" + m));
+async function verif(path, req, env, json) {
+  const KV = env.VERIF;
+  if (!KV) return json({ erreur: "Le service de la styliste n'est pas encore activé." }, 503);
+  let b = {}; try { b = await req.json(); } catch { return json({ erreur: "Requête invalide." }, 400); }
+  if (path === "/verif/new") {
+    const question = txt(b.question, 1200), profil = txt(b.profil, 6000), quoi = Array.isArray(b.quoi) ? b.quoi.map(x => txt(x, 30)).slice(0, 6) : [];
+    if (!question && !quoi.length) return json({ erreur: "Dis-moi ce que tu veux faire vérifier." }, 400);
+    const photo = b.photo ? (okData(b.photo, ["image/jpeg", "image/png", "image/webp"], 900000) ? b.photo : null) : "";
+    if (photo === null) return json({ erreur: "La photo est trop lourde." }, 400);
+    const id = rndHex(8), token = rndHex(16), cree = Date.now();
+    const doc = { id, t: await sha256(token), cree, nom: txt(b.nom, 30), lang: txt(b.lang, 2), pays: txt(b.pays, 2), quoi, question, profil, photo, statut: "attente", rep: null };
+    await KV.put("d:" + id, JSON.stringify(doc), { expirationTtl: VERIF_TTL, metadata: { statut: "attente", cree, nom: doc.nom, quoi } });
+    return json({ id, token, cree });
+  }
+  if (path === "/verif/get") {
+    const id = txt(b.id, 16).replace(/[^0-9a-f]/g, ""), doc = id && await KV.get("d:" + id, "json");
+    if (!doc || doc.t !== await sha256(txt(b.token, 64))) return json({ erreur: "Demande introuvable.", code: "introuvable" }, 404);
+    return json({ statut: doc.statut, cree: doc.cree, rep: doc.rep });
+  }
+  // La cliente efface ses données : sa demande est supprimée du serveur (avec son jeton).
+  if (path === "/verif/del") {
+    const id = txt(b.id, 16).replace(/[^0-9a-f]/g, ""), doc = id && await KV.get("d:" + id, "json");
+    if (doc && doc.t === await sha256(txt(b.token, 64))) await KV.delete("d:" + id);
+    return json({ ok: true });
+  }
+  if (path === "/verif/admin") {
+    if (await sha256(txt(b.code, 40).trim().toUpperCase()) !== (env.STYLISTE_HASH || STYLISTE_HASH)) return json({ erreur: "Code incorrect.", code: "code" }, 401);
+    const act = b.action;
+    if (act === "list") {
+      const out = []; let cur;
+      do { const r = await KV.list({ prefix: "d:", cursor: cur }); r.keys.forEach(k => out.push({ id: k.name.slice(2), ...(k.metadata || {}) })); cur = r.list_complete ? null : r.cursor; } while (cur && out.length < 500);
+      out.sort((x, y) => (x.statut === "attente" ? 0 : 1) - (y.statut === "attente" ? 0 : 1) || (y.cree || 0) - (x.cree || 0));
+      return json({ demandes: out });
+    }
+    const id = txt(b.id, 16).replace(/[^0-9a-f]/g, ""), doc = id && await KV.get("d:" + id, "json");
+    if (!doc) return json({ erreur: "Demande introuvable." }, 404);
+    if (act === "read") { const { t, ...rest } = doc; return json(rest); }
+    if (act === "reply") {
+      const texte = txt(b.texte, 3000), audio = b.audio ? (okData(b.audio, ["audio/"], 3500000) ? b.audio : null) : "";
+      if (audio === null) return json({ erreur: "Le message vocal est trop long (2 minutes maximum)." }, 400);
+      if (!texte && !audio) return json({ erreur: "Écris ou enregistre ta réponse." }, 400);
+      doc.rep = { texte, audio, quand: Date.now() }; doc.statut = "repondu";
+      const reste = Math.max(86400, Math.round(VERIF_TTL - (Date.now() - doc.cree) / 1000));
+      await KV.put("d:" + id, JSON.stringify(doc), { expirationTtl: reste, metadata: { statut: "repondu", cree: doc.cree, nom: doc.nom, quoi: doc.quoi } });
+      return json({ ok: true });
+    }
+    if (act === "delete") { await KV.delete("d:" + id); return json({ ok: true }); }
+    return json({ erreur: "Action inconnue." }, 400);
+  }
+  return json({ erreur: "Requête invalide." }, 400);
+}
 
 export default {
   async fetch(req, env) {
@@ -40,6 +103,8 @@ export default {
         const ip = req.headers.get("CF-Connecting-IP") || "?";
         if (tooMany(ip, LIMITS[path] ? path : "/")) return json({ erreur: "Trop de demandes. Réessaie dans quelques minutes.", code: "rate_limited" }, 429);
       }
+
+      { const vp = new URL(req.url).pathname; if (vp.startsWith("/verif/")) return await verif(vp, req, env, json); }
 
       // Voix d'Aura qui dit le prénom de la cliente (ElevenLabs), avec phrases fixes uniquement.
       if (new URL(req.url).pathname === "/tts") {
