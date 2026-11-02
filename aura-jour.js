@@ -88,7 +88,7 @@ async function jrChoisir(autre) {
   const v = jrVille(), rec = jrRecentes();
   const deja = autre && JR.look ? [...JR.vus, JR.look.pieces.join("+")] : [];
   const meteo = JR_METEO ? `Météo à ${v.fr} aujourd’hui : ${JR_METEO.t} °C maintenant (de ${JR_METEO.min} à ${JR_METEO.max} °C). Adapte les matières et les couches à cette température, et pense à la climatisation forte à l’intérieur (une veste légère si besoin).` : `Climat du Golfe (${v.fr}) : chaleur dehors, climatisation forte à l’intérieur.`;
-  const pr = REF + " Tu es styliste personnelle. Choisis UNE seule tenue pour aujourd’hui (" + JR_JOURS[new Date().getDay()] + "), occasion « " + o[1] + " » (" + o[2] + "). " + meteo +
+  const pr = REF + " Tu es styliste personnelle. Choisis UNE seule tenue pour aujourd’hui (" + JR_JOURS[new Date().getDay()] + "), occasion « " + o[1] + " » (" + o[2] + ")." + (typeof golfeRegle === "function" ? golfeRegle(occ) : "") + " " + meteo +
     (rec.length ? " Évite si possible ces pièces, portées ces 3 derniers jours : " + rec.map(x => x.id).join(", ") + "." : "") +
     (deja.length ? " Propose une tenue différente de celles-ci (change au moins deux pièces) : " + deja.join(" ; ") + "." : "") +
     " Utilise UNIQUEMENT les pièces de sa garde-robe ci-dessous (leurs identifiants) : un haut et un bas, ou une robe, ou une abaya (avec ce qu’on porte dessous si elle l’a), plus si possible chaussures, sac ou accessoire. Respecte son profil : " + (PROFIL() || "inconnu") + ". " + (typeof pfRules === "function" ? pfRules() : "") +
