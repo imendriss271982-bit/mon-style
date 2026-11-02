@@ -916,7 +916,7 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=2"></script>
 <script>
-const VERSION="137";
+const VERSION="138";
 // Bonjour d’Aura : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -2000,7 +2000,7 @@ async function run(k){if(RUNS[k])return runMod(k);
 }
 
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;S.micMsg="";
-function SYS(){return REF+" Tu es la styliste personnelle de l’application Mon style. Parle comme une amie styliste chaleureuse, à l’oral : 2 à 4 phrases courtes, sans liste, sans emoji. Elle s’appelle "+(S.nom||"(prénom inconnu)")+" : dis « ma belle » une seule fois, dans ta toute première réponse (« Salut ma belle, »), puis ne le répète plus jamais ; ensuite utilise seulement son prénom, de temps en temps. Réponds en français, ou en arabe ou en anglais si elle écrit dans ces langues. "+({en:"Elle a choisi l’anglais : réponds en anglais par défaut. ",ar:"Elle a choisi l’arabe : réponds par défaut en dialecte qatari du Golfe (jamais en arabe classique), en t’adressant à elle au féminin avec « چ ». "}[S.lang]||"")+" Son profil : "+(PROFIL()||"pas encore analysé : invite-la à faire son analyse")+". Pour les achats, donne le type de pièce, la couleur et les mots-clés à chercher chez les boutiques partenaires de son pays, dans l’onglet Boutique, sans inventer de lien ni de prix. "+CATCTX()}
+function SYS(){return REF+" Tu es la styliste personnelle de l’application Mon style. Parle comme une amie styliste chaleureuse, à l’oral. RÈGLE N°1 : l’essentiel seulement, 1 à 2 phrases courtes (30 mots maximum), la réponse tout de suite, sans introduction, sans résumé, sans compliments en trop, sans liste, sans emoji ; les détails seulement si elle les demande. Elle s’appelle "+(S.nom||"(prénom inconnu)")+" : ne dis jamais « ma belle », utilise seulement son prénom, de temps en temps. "+({en:"Elle a choisi l’anglais : réponds en anglais par défaut. ",ar:"Elle a choisi l’arabe : réponds par défaut en dialecte qatari du Golfe (jamais en arabe classique), en t’adressant à elle au féminin avec « چ ». "}[S.lang]||"")+" Son profil : "+(PROFIL()||"pas encore analysé : invite-la à faire son analyse")+". Pour les achats, donne le type de pièce, la couleur et les mots-clés à chercher chez les boutiques partenaires de son pays, dans l’onglet Boutique, sans inventer de lien ni de prix. "+CATCTX()}
 let TCONV=null;
 async function textConv(){
  if(TCONV)return TCONV;
@@ -2026,8 +2026,8 @@ async function send(text){
  catch(e){S.chat[S.chat.length-1].t=e&&e.code==="rate_limited"?"Trop de messages, réessaie dans un instant.":e&&e.code==="not_granted"?"Autorise la styliste pour discuter avec elle.":"Une erreur est survenue. Réessaie."}
  S.busy=false;if(S.page==="chat")render(false);
 }
-const PR_CHATPH=q=>SYS()+" Elle t’envoie une photo dans la discussion. "+(S.chat.length>2?"Votre échange récent : "+S.chat.slice(-8,-2).map(c=>(c.r==="u"?"Elle : ":"Toi : ")+(c.t||"(photo)")).join(" | ")+". ":"")+"Sa question sur la photo : "+(q||"Qu’en penses-tu ?")+". Regarde bien la photo (vêtement, tenue, couleur, coiffure, maquillage, accessoire) et réponds-lui directement, en t’appuyant sur ce que tu vois et sur son profil. Si la photo est inutilisable, dis-lui gentiment pourquoi. "+FMT+"Format : {\"reponse\":\"ta réponse, 2 à 5 phrases\"}";
-const PR_VPH=q=>SYS()+" Elle t’envoie une photo pendant votre appel vocal. Sa question : "+(q||"Qu’en penses-tu ?")+". Décris très précisément ce que tu vois (vêtements, coupe, couleurs, matières, coiffure, maquillage, accessoires, silhouette, lumière) puis donne ton avis de styliste en t’appuyant sur son profil. "+FMT+"Format : {\"vu\":\"description précise de la photo\",\"avis\":\"ton avis et tes conseils, 2 à 5 phrases\"}";
+const PR_CHATPH=q=>SYS()+" Elle t’envoie une photo dans la discussion. "+(S.chat.length>2?"Votre échange récent : "+S.chat.slice(-8,-2).map(c=>(c.r==="u"?"Elle : ":"Toi : ")+(c.t||"(photo)")).join(" | ")+". ":"")+"Sa question sur la photo : "+(q||"Qu’en penses-tu ?")+". Regarde bien la photo (vêtement, tenue, couleur, coiffure, maquillage, accessoire) et réponds-lui directement, en t’appuyant sur ce que tu vois et sur son profil. Si la photo est inutilisable, dis-lui gentiment pourquoi. "+FMT+"Format : {\"reponse\":\"ta réponse, 1 à 2 phrases courtes\"}";
+const PR_VPH=q=>SYS()+" Elle t’envoie une photo pendant votre appel vocal. Sa question : "+(q||"Qu’en penses-tu ?")+". Décris très précisément ce que tu vois (vêtements, coupe, couleurs, matières, coiffure, maquillage, accessoires, silhouette, lumière) puis donne ton avis de styliste en t’appuyant sur son profil. "+FMT+"Format : {\"vu\":\"description précise de la photo\",\"avis\":\"ton avis et un seul conseil, 1 à 2 phrases courtes\"}";
 async function voicePhoto(text){
  const c=window.liveConv&&window.liveConv();if(!c||!S.cphoto)return false;
  const ph=S.cphoto;S.cphoto=null;S.chat.push({r:"u",t:text||"(photo)",img:ph.url},{r:"a",t:"Aura regarde ta photo…"});S.draft="";S.busy=true;render(false);
@@ -2050,7 +2050,7 @@ async function sendPhoto(text){
  try{const sm=await getSample();if(!sm||!sm.json&&typeof sm!=="function")throw new Error("off");
   let t="";
   if(sm.json){const r=await sm.json(PR_CHATPH(text),{images:[ph.file]});t=(r&&(r.reponse||r.erreur))||""}
-  else{const r=await sm([{role:"user",content:[{type:"image",source:{type:"base64",media_type:"image/jpeg",data:await shrunk(ph.file)}},{type:"text",text:PR_CHATPH(text).replace(FMT,"").replace(/Format : .*$/,"Réponds en texte simple, 2 à 5 phrases.")}]}],{cache:false});t=r.text}
+  else{const r=await sm([{role:"user",content:[{type:"image",source:{type:"base64",media_type:"image/jpeg",data:await shrunk(ph.file)}},{type:"text",text:PR_CHATPH(text).replace(FMT,"").replace(/Format : .*$/,"Réponds en texte simple, 1 à 2 phrases courtes.")}]}],{cache:false});t=r.text}
   last.t=t||"Je n’ai pas réussi à bien voir la photo. Réessaie avec une autre.";if(S.page==="chat")say(last.t)}
  catch(e){last.t=e&&e.message==="off"?"L’envoi de photos n’est pas disponible ici.":errMsg(e)}
  S.busy=false;if(S.page==="chat")render(false);
@@ -2124,7 +2124,9 @@ function affPlay(){const ss=window.speechSynthesis;if(!ss){toast("Voix non dispo
   const u=new SpeechSynthesisUtterance(t);u.lang=AL==="en"?"en-US":"fr-FR";if(v)u.voice=v;u.rate=.82;u.pitch=1.05;u.volume=1;KEEP=[u];
   u.onend=()=>{i++;AFFT=setTimeout(one,2400)};u.onerror=()=>{i++;AFFT=setTimeout(one,300)};ss.resume();ss.speak(u)};
  AFFT=setTimeout(one,2500)}
-function say(t){if(!S.voice||!t)return;if(window.liveConv&&window.liveConv())return;stopVoice();t=tr(t);if(S.lang==="ar")return sayAR(t);speak(t)}
+// v138 (choix d’Imen) : à voix haute, Aura ne dit que l’essentiel (2 phrases courtes max) ; le texte complet reste affiché.
+function essentiel(t){const all=String(t||"").replace(/\s+/g," ").trim();const ss=all.match(/[^.!?؟…]+[.!?؟…]*/g)||[all];let o="",k=0;for(const x of ss){const y=x.trim();if(!y)continue;if(o&&(o+" "+y).length>200)break;o=o?o+" "+y:y;if(++k>=2)break}if(o.length>240){let c=o.lastIndexOf(" ",220);o=o.slice(0,c>80?c:220).replace(/[,،;:\s]+$/,"")+"."}return o||all}
+function say(t){if(!S.voice||!t)return;if(window.liveConv&&window.liveConv())return;stopVoice();t=essentiel(tr(t));if(S.lang==="ar")return sayAR(t);speak(t)}
 // Arabe : voix féminine khaleeji d'Aura (ElevenLabs via le Worker), jamais la voix masculine du téléphone.
 let ARTOK=0;
 // Le texte est découpé en phrases courtes : chaque morceau est prêt vite et rien n'est coupé à la fin.
