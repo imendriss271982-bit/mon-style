@@ -3,6 +3,32 @@
    Le texte affiché à l'écran et la voix d'Aura sont traduits automatiquement à partir de cette liste.
    Pour corriger une traduction : modifie simplement la 2e (anglais) ou la 3e (arabe) colonne. */
 const I18N_D=[
+// ——— v139 : Your Style Twin (jumeau de style, niveau 1 : fiche de données) ———
+["Ta copie de style","Your style copy","نسختچ في الستايل"],
+["Ton jumeau est complet","Your twin is complete","توأمچ كامل"],
+["Complet à {0} %","{0}% complete","كامل {0}٪"],
+["{0} sur {1}","{0} of {1}","{0} من {1}"],
+["Ta taille et tes mesures","Your height and measurements","طولچ ومقاساتچ"],
+["Ton teint et tes couleurs","Your skin tone and colours","لون بشرتچ وألوانچ"],
+["Tes goûts","Your tastes","ذوقچ"],
+["Ton budget","Your budget","ميزانيتچ"],
+["Tes occasions","Your occasions","مناسباتچ"],
+["Ta garde-robe","Your wardrobe","كبتچ"],
+["À compléter","To complete","ناقص"],
+["Ton jumeau de style garde ta silhouette, ton teint, tes goûts et chaque pièce de ta garde-robe. Plus il est complet, plus Aura te conseille juste.","Your style twin keeps your silhouette, skin tone, tastes and every piece of your wardrobe. The more complete it is, the better Aura can advise you.","توأم ستايلچ يحفظ شكل جسمچ، لون بشرتچ، ذوقچ وكل قطعة في كبتچ. كل ما كان كامل أكثر، كل ما نصايح أورا تكون أدق."],
+["Tout reste sur ton téléphone. Tu peux tout modifier ou effacer dans ton profil.","Everything stays on your phone. You can edit or delete it all in your profile.","كل شي يظل في تلفونچ. تقدرين تعدلين أو تمسحين كل شي من ملفچ."],
+["Compléter : {0}","Complete: {0}","كمّلي: {0}"],
+["ta silhouette","your silhouette","جسمچ"],
+["ta taille et tes mesures","your height and measurements","طولچ ومقاساتچ"],
+["ton visage","your face","وجهچ"],
+["ton teint et tes couleurs","your skin tone and colours","لون بشرتچ وألوانچ"],
+["tes goûts","your tastes","ذوقچ"],
+["ton budget","your budget","ميزانيتچ"],
+["tes occasions","your occasions","مناسباتچ"],
+["ta garde-robe","your wardrobe","كبتچ"],
+["Parler à Aura","Talk to Aura","كلّمي أورا"],
+["Voici ton Style Twin. Il est complet : je te connais bien maintenant.","Here’s your Style Twin. It’s complete: I know you well now.","هذا توأم ستايلچ. صار كامل: الحين أعرفچ زين."],
+["Voici ton Style Twin. Il est complet à {0} %. Complète-le pour que je te conseille encore plus juste.","Here’s your Style Twin. It’s {0}% complete. Fill it in so I can advise you even better.","هذا توأم ستايلچ. كامل {0}٪. كمّليه عشان أنصحچ أدق."],
 ["Cherche un look…","Search a look…","دوّري على لوك…"],
 ["Ouvrir","Open","افتحي"],
 // ——— v132 : analyse de style en 3 étapes sur l'accueil ———
