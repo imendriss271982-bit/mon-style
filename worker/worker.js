@@ -1,12 +1,14 @@
 // My Style — Worker corrigé : répond toujours avec les en-têtes CORS,
 // même en cas de plantage, pour que l'app affiche la vraie erreur.
 const ALLOWED = ["https://imendriss271982-bit.github.io"];
+// Site vitrine (mystyle.divadivina.app) : seulement la liste d'attente (/liste/…), jamais l'IA.
+const SITE = ["https://mystyle.divadivina.app"];
 let GOOD_MODEL = "";
 let GOOD_IMG = "";
 // Limite de demandes par adresse IP (par instance du Worker, au mieux) : l'en-tête Origin peut être imité
 // hors navigateur, cette limite évite qu'un robot épuise le crédit Gemini / ElevenLabs.
 const HITS = new Map();
-const LIMITS = { "/": 60, "/makeup": 6, "/tts": 60, "/verif/new": 4, "/verif/get": 60, "/verif/del": 30, "/verif/admin": 40 }; // demandes par 10 minutes
+const LIMITS = { "/": 60, "/makeup": 6, "/tts": 60, "/verif/new": 4, "/verif/get": 60, "/verif/del": 30, "/verif/admin": 40, "/liste/add": 5, "/liste/admin": 40 }; // demandes par 10 minutes
 function tooMany(ip, path) {
   const now = Date.now(), win = 600000, key = path + "|" + ip, max = LIMITS[path] || 30;
   const list = (HITS.get(key) || []).filter(t => now - t < win);
@@ -79,11 +81,48 @@ async function verif(path, req, env, json) {
   return json({ erreur: "Requête invalide." }, 400);
 }
 
+// ——— Liste d'attente du site vitrine ———
+// Rangée dans le même KV (`VERIF`) avec le préfixe « w: », sans date d'expiration.
+// Une inscrite = une clé (empreinte de l'email), donc pas de doublon. Lecture : code de la styliste (page inscrites.html du site).
+const EMAIL_RE = /^[^\s@<>"']{1,64}@[^\s@<>"']{1,190}\.[a-z]{2,24}$/i;
+async function liste(path, req, env, json) {
+  const KV = env.VERIF;
+  if (!KV) return json({ erreur: "La liste n'est pas encore activée." }, 503);
+  let b = {}; try { b = await req.json(); } catch { return json({ erreur: "Requête invalide." }, 400); }
+  if (path === "/liste/add") {
+    if (b.site) return json({ ok: true }); // champ piège rempli par les robots : on ignore sans le dire
+    const email = txt(b.email, 254).trim().toLowerCase();
+    if (!EMAIL_RE.test(email)) return json({ erreur: "email", code: "email" }, 400);
+    const key = "w:" + (await sha256(email)).slice(0, 32);
+    const old = await KV.get(key, "json");
+    const o = old || {};
+    const doc = { email, prenom: txt(b.prenom, 40).trim() || o.prenom || "", pays: txt(b.pays, 30).trim() || o.pays || "", lang: ["fr", "en", "ar"].includes(b.lang) ? b.lang : (o.lang || "fr"), cree: o.cree || Date.now() };
+    await KV.put(key, JSON.stringify(doc), { metadata: doc });
+    return json({ ok: true, deja: !!old });
+  }
+  if (path === "/liste/admin") {
+    if (await sha256(txt(b.code, 40).trim().toUpperCase()) !== (env.STYLISTE_HASH || STYLISTE_HASH)) return json({ erreur: "Code incorrect.", code: "code" }, 401);
+    if (b.action === "list") {
+      const out = []; let cur;
+      do { const r = await KV.list({ prefix: "w:", cursor: cur }); r.keys.forEach(k => k.metadata && out.push(k.metadata)); cur = r.list_complete ? null : r.cursor; } while (cur && out.length < 20000);
+      out.sort((x, y) => (y.cree || 0) - (x.cree || 0));
+      return json({ inscrites: out });
+    }
+    if (b.action === "delete") {
+      const email = txt(b.email, 254).trim().toLowerCase();
+      await KV.delete("w:" + (await sha256(email)).slice(0, 32));
+      return json({ ok: true });
+    }
+    return json({ erreur: "Action inconnue." }, 400);
+  }
+  return json({ erreur: "Requête invalide." }, 400);
+}
+
 export default {
   async fetch(req, env) {
     const origin = req.headers.get("Origin") || "";
     const cors = {
-      "Access-Control-Allow-Origin": ALLOWED.includes(origin) ? origin : ALLOWED[0],
+      "Access-Control-Allow-Origin": (ALLOWED.includes(origin) || SITE.includes(origin)) ? origin : ALLOWED[0],
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type",
       "Access-Control-Max-Age": "86400",
@@ -97,14 +136,15 @@ export default {
 
     try {
       if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
-      if (req.method !== "POST" || !ALLOWED.includes(origin)) return json({ erreur: "Accès refusé." }, 403);
+      const pth = new URL(req.url).pathname, deSite = SITE.includes(origin) && pth.startsWith("/liste/");
+      if (req.method !== "POST" || !(ALLOWED.includes(origin) || deSite)) return json({ erreur: "Accès refusé." }, 403);
       {
         const path = new URL(req.url).pathname;
         const ip = req.headers.get("CF-Connecting-IP") || "?";
         if (tooMany(ip, LIMITS[path] ? path : "/")) return json({ erreur: "Trop de demandes. Réessaie dans quelques minutes.", code: "rate_limited" }, 429);
       }
 
-      { const vp = new URL(req.url).pathname; if (vp.startsWith("/verif/")) return await verif(vp, req, env, json); }
+      { const vp = new URL(req.url).pathname; if (vp.startsWith("/verif/")) return await verif(vp, req, env, json); if (vp.startsWith("/liste/")) return await liste(vp, req, env, json); }
 
       // Voix d'Aura qui dit le prénom de la cliente (ElevenLabs), avec phrases fixes uniquement.
       if (new URL(req.url).pathname === "/tts") {
