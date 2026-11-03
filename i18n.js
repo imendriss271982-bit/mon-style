@@ -3,6 +3,10 @@
    Le texte affiché à l'écran et la voix d'Aura sont traduits automatiquement à partir de cette liste.
    Pour corriger une traduction : modifie simplement la 2e (anglais) ou la 3e (arabe) colonne. */
 const I18N_D=[
+// ——— v155 : événements du Golfe ———
+["Événements mode et beauté","Fashion and beauty events","فعاليات الموضة والجمال"],
+["Dans ton pays et dans tout le Golfe, mis à jour chaque semaine.","In your country and across the Gulf, updated every week.","في بلدچ وفي كل الخليج، نحدّثها كل أسبوع."],
+["Je cherche les événements mode et beauté…","Looking for fashion and beauty events…","أدوّر على فعاليات الموضة والجمال…"],
 // ——— v153 : accueil en 4 portes ———
 ["Pour toi maintenant", "For you now", "لچ الحين"],
 ["Tout My Style", "All of My Style", "كل My Style"],

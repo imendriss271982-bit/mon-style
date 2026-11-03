@@ -1,61 +1,204 @@
 {
-  "maj": "2026-11-01",
+  "maj": "2026-11-04",
   "evenements": [
     {
-      "debut": "2026-10-27", "fin": "2026-12-26",
+      "debut": "2026-10-27",
+      "fin": "2026-12-26",
       "lieu": "M7, Msheireb",
-      "titre": {"fr": "ERDEM : About Time, About Her", "en": "ERDEM: About Time, About Her", "ar": "إرديم: About Time, About Her"},
-      "desc": {"fr": "Exposition sur 20 ans de la maison ERDEM : robes, croquis et archives.", "en": "Exhibition on 20 years of the ERDEM label: gowns, sketches and archives.", "ar": "معرض عن ٢٠ سنة من دار إرديم: فساتين ورسومات وأرشيف."},
+      "titre": {
+        "fr": "ERDEM : About Time, About Her",
+        "en": "ERDEM: About Time, About Her",
+        "ar": "إرديم: About Time, About Her"
+      },
+      "desc": {
+        "fr": "Exposition sur 20 ans de la maison ERDEM : robes, croquis et archives.",
+        "en": "Exhibition on 20 years of the ERDEM label: gowns, sketches and archives.",
+        "ar": "معرض عن ٢٠ سنة من دار إرديم: فساتين ورسومات وأرشيف."
+      },
       "type": "mode",
-      "lien": "https://qm.org.qa/en/stories/all-stories/fall-2026-exhibitions/"
+      "lien": "https://qm.org.qa/en/stories/all-stories/fall-2026-exhibitions/",
+      "pays": "QA"
     },
     {
-      "debut": "2026-10-27", "fin": "2026-12-26",
+      "debut": "2026-10-27",
+      "fin": "2026-12-26",
       "lieu": "M7, Msheireb",
-      "titre": {"fr": "Around the World in Jewellery", "en": "Around the World in Jewellery", "ar": "حول العالم في المجوهرات"},
-      "desc": {"fr": "Plus de 500 bijoux des collections de Qatar Museums.", "en": "More than 500 jewellery pieces from the Qatar Museums collections.", "ar": "أكثر من ٥٠٠ قطعة مجوهرات من مجموعات متاحف قطر."},
+      "titre": {
+        "fr": "Around the World in Jewellery",
+        "en": "Around the World in Jewellery",
+        "ar": "حول العالم في المجوهرات"
+      },
+      "desc": {
+        "fr": "Plus de 500 bijoux des collections de Qatar Museums.",
+        "en": "More than 500 jewellery pieces from the Qatar Museums collections.",
+        "ar": "أكثر من ٥٠٠ قطعة مجوهرات من مجموعات متاحف قطر."
+      },
       "type": "bijoux",
-      "lien": "https://qm.org.qa/en/stories/all-stories/fall-2026-exhibitions/"
+      "lien": "https://qm.org.qa/en/stories/all-stories/fall-2026-exhibitions/",
+      "pays": "QA"
     },
     {
-      "debut": "2026-11-05", "fin": "2027-01-31",
+      "debut": "2026-11-05",
+      "fin": "2027-01-31",
       "lieu": "Doha",
-      "titre": {"fr": "Design Doha 2026", "en": "Design Doha 2026", "ar": "تصميم الدوحة ٢٠٢٦"},
-      "desc": {"fr": "Biennale du design du Moyen-Orient : expositions et rencontres dans plusieurs lieux.", "en": "Middle East design biennial: exhibitions and talks across several venues.", "ar": "بينالي التصميم في الشرق الأوسط: معارض ولقاءات في أكثر من مكان."},
+      "titre": {
+        "fr": "Design Doha 2026",
+        "en": "Design Doha 2026",
+        "ar": "تصميم الدوحة ٢٠٢٦"
+      },
+      "desc": {
+        "fr": "Biennale du design du Moyen-Orient : expositions et rencontres dans plusieurs lieux.",
+        "en": "Middle East design biennial: exhibitions and talks across several venues.",
+        "ar": "بينالي التصميم في الشرق الأوسط: معارض ولقاءات في أكثر من مكان."
+      },
       "type": "design",
-      "lien": "https://qm.org.qa/en/stories/all-stories/fall-2026-exhibitions/"
+      "lien": "https://qm.org.qa/en/stories/all-stories/fall-2026-exhibitions/",
+      "pays": "QA"
     },
     {
-      "debut": "2026-11-05", "fin": "2027-01-31",
+      "debut": "2026-11-05",
+      "fin": "2027-01-31",
       "lieu": "Fereej Al Asmakh",
-      "titre": {"fr": "Threading the Ceremony", "en": "Threading the Ceremony", "ar": "Threading the Ceremony: خيوط العرس"},
-      "desc": {"fr": "Installation textile autour d'un rituel de mariage soudanais, avec tissus et tenues.", "en": "Textile installation around a Sudanese wedding ritual, with fabrics and attire.", "ar": "عمل فني بالقماش عن طقوس عرس سودانية، فيه أقمشة وأزياء."},
+      "titre": {
+        "fr": "Threading the Ceremony",
+        "en": "Threading the Ceremony",
+        "ar": "Threading the Ceremony: خيوط العرس"
+      },
+      "desc": {
+        "fr": "Installation textile autour d'un rituel de mariage soudanais, avec tissus et tenues.",
+        "en": "Textile installation around a Sudanese wedding ritual, with fabrics and attire.",
+        "ar": "عمل فني بالقماش عن طقوس عرس سودانية، فيه أقمشة وأزياء."
+      },
       "type": "design",
-      "lien": "https://qm.org.qa/en/calendar/threading-the-ceremony/"
+      "lien": "https://qm.org.qa/en/calendar/threading-the-ceremony/",
+      "pays": "QA"
     },
     {
-      "debut": "2026-11-28", "fin": "2026-11-28",
+      "debut": "2026-11-28",
+      "fin": "2026-11-28",
       "lieu": "Doha",
-      "titre": {"fr": "Fashion Trust Arabia Awards 2026", "en": "Fashion Trust Arabia Awards 2026", "ar": "جوائز فاشن تراست أرابيا ٢٠٢٦"},
-      "desc": {"fr": "Les prix des jeunes créateurs arabes, avec les finalistes à Doha.", "en": "Awards for young Arab designers, with the finalists in Doha.", "ar": "جوائز المصممين العرب الشباب، والمتأهلين في الدوحة."},
+      "titre": {
+        "fr": "Fashion Trust Arabia Awards 2026",
+        "en": "Fashion Trust Arabia Awards 2026",
+        "ar": "جوائز فاشن تراست أرابيا ٢٠٢٦"
+      },
+      "desc": {
+        "fr": "Les prix des jeunes créateurs arabes, avec les finalistes à Doha.",
+        "en": "Awards for young Arab designers, with the finalists in Doha.",
+        "ar": "جوائز المصممين العرب الشباب، والمتأهلين في الدوحة."
+      },
       "type": "mode",
-      "lien": "https://emirateswoman.com/fashion-trust-arabia-unveils-the-finalists-for-its-2026-awards/"
+      "lien": "https://emirateswoman.com/fashion-trust-arabia-unveils-the-finalists-for-its-2026-awards/",
+      "pays": "QA"
     },
     {
-      "debut": "2026-12-14", "fin": "2026-12-16",
+      "debut": "2026-12-14",
+      "fin": "2026-12-16",
       "lieu": "DECC",
-      "titre": {"fr": "Qatar Beauty & Wellcare 2026", "en": "Qatar Beauty & Wellcare 2026", "ar": "معرض قطر للجمال والعناية ٢٠٢٦"},
-      "desc": {"fr": "Salon beauté : soins de la peau, maquillage, spa et bien-être.", "en": "Beauty show: skincare, make-up, spa and wellness.", "ar": "معرض الجمال: العناية بالبشرة، المكياج، السبا والعافية."},
+      "titre": {
+        "fr": "Qatar Beauty & Wellcare 2026",
+        "en": "Qatar Beauty & Wellcare 2026",
+        "ar": "معرض قطر للجمال والعناية ٢٠٢٦"
+      },
+      "desc": {
+        "fr": "Salon beauté : soins de la peau, maquillage, spa et bien-être.",
+        "en": "Beauty show: skincare, make-up, spa and wellness.",
+        "ar": "معرض الجمال: العناية بالبشرة، المكياج، السبا والعافية."
+      },
       "type": "beaute",
-      "lien": "https://www.decc.qa/decc_events/qatar-beauty-and-wellcare-2026/"
+      "lien": "https://www.decc.qa/decc_events/qatar-beauty-and-wellcare-2026/",
+      "pays": "QA"
     },
     {
-      "debut": "2027-04-26", "fin": "2027-05-01",
+      "debut": "2027-04-26",
+      "fin": "2027-05-01",
       "lieu": "DECC",
-      "titre": {"fr": "Doha Jewellery & Watches Exhibition", "en": "Doha Jewellery & Watches Exhibition", "ar": "معرض الدوحة للمجوهرات والساعات"},
-      "desc": {"fr": "Le grand salon de la joaillerie et des montres de luxe au Qatar.", "en": "Qatar's big show for fine jewellery and luxury watches.", "ar": "أكبر معرض للمجوهرات والساعات الفاخرة في قطر."},
+      "titre": {
+        "fr": "Doha Jewellery & Watches Exhibition",
+        "en": "Doha Jewellery & Watches Exhibition",
+        "ar": "معرض الدوحة للمجوهرات والساعات"
+      },
+      "desc": {
+        "fr": "Le grand salon de la joaillerie et des montres de luxe au Qatar.",
+        "en": "Qatar's big show for fine jewellery and luxury watches.",
+        "ar": "أكبر معرض للمجوهرات والساعات الفاخرة في قطر."
+      },
       "type": "bijoux",
-      "lien": "https://www.qatarliving.com/en/article/doha-jewellery-watches-exhibition-2026-successfully-concludes-22nd-edition-and-announces-2027-dates"
+      "lien": "https://www.qatarliving.com/en/article/doha-jewellery-watches-exhibition-2026-successfully-concludes-22nd-edition-and-announces-2027-dates",
+      "pays": "QA"
+    },
+    {
+      "pays": "AE",
+      "debut": "2026-11-03",
+      "fin": "2026-11-08",
+      "lieu": "d3, Dubaï",
+      "titre": {
+        "fr": "Dubai Design Week 2026",
+        "en": "Dubai Design Week 2026",
+        "ar": "أسبوع دبي للتصميم ٢٠٢٦"
+      },
+      "desc": {
+        "fr": "12e édition au Dubai Design District : design, créateurs et marché pour toute la famille les 7 et 8 novembre.",
+        "en": "12th edition at Dubai Design District: design, creatives and a family marketplace on 7–8 November.",
+        "ar": "النسخة ١٢ في حي دبي للتصميم: تصميم ومبدعين وسوق للعائلة يومي ٧ و٨ نوفمبر."
+      },
+      "type": "design",
+      "lien": "https://www.emirates247.com/uae-guide/dubai-design-week-2026-dates-tickets-highlights-and-whats-free-at-the-12th-edition/7287"
+    },
+    {
+      "pays": "AE",
+      "debut": "2026-12-04",
+      "fin": "2027-01-17",
+      "lieu": "Dubaï",
+      "titre": {
+        "fr": "Dubai Shopping Festival",
+        "en": "Dubai Shopping Festival",
+        "ar": "مهرجان دبي للتسوق"
+      },
+      "desc": {
+        "fr": "32e édition : grandes promotions mode et beauté dans les centres commerciaux de Dubaï.",
+        "en": "32nd edition: big fashion and beauty sales across Dubai's malls.",
+        "ar": "النسخة ٣٢: تخفيضات كبيرة على الموضة والجمال في مولات دبي."
+      },
+      "type": "shopping",
+      "lien": "https://tradearabia.com/News/487977/Dubai-Shopping-Festival-returns-for-32nd-edition-from-December-4-to-January-17"
+    },
+    {
+      "pays": "BH",
+      "debut": "2026-11-24",
+      "fin": "2026-11-28",
+      "lieu": "Exhibition World Bahrain",
+      "titre": {
+        "fr": "Jewellery Arabia 2026",
+        "en": "Jewellery Arabia 2026",
+        "ar": "معرض الجواهر العربية ٢٠٢٦"
+      },
+      "desc": {
+        "fr": "Le grand salon de la joaillerie et des montres du Golfe, avec des créateurs du monde entier.",
+        "en": "The Gulf's major jewellery and watch show, with makers from around the world.",
+        "ar": "أكبر معرض للمجوهرات والساعات في الخليج، بمصممين من كل العالم."
+      },
+      "type": "bijoux",
+      "lien": "https://www.ice.it/it/area-clienti/eventi/dettaglio-evento/2026/@@/216"
+    },
+    {
+      "pays": "SA",
+      "debut": "2026-10-21",
+      "fin": "2026-12-31",
+      "date_a_confirmer": true,
+      "lieu": "Riyad",
+      "titre": {
+        "fr": "Riyadh Season 2026",
+        "en": "Riyadh Season 2026",
+        "ar": "موسم الرياض ٢٠٢٦"
+      },
+      "desc": {
+        "fr": "10 semaines de sorties : Boulevard World, Via Riyadh… autant d'occasions de soigner ta tenue.",
+        "en": "10 weeks of outings: Boulevard World, Via Riyadh… plenty of occasions to dress up.",
+        "ar": "١٠ أسابيع طلعات: بوليفارد وورلد، ڤيا رياض… مناسبات واجد تتكشخين فيها."
+      },
+      "type": "sortie",
+      "lien": "https://gulfnews.com/world/gulf/saudi/riyadh-season-2026-to-begin-on-october-21-with-10-weeks-of-entertainment-1.500689955"
     }
   ]
 }

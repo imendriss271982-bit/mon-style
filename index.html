@@ -616,7 +616,8 @@ a.lb{text-decoration:none}
 #splash .sptop h1{color:#292421;text-shadow:0 2px 14px rgba(255,255,255,.95)}#splash .sptop p{color:#4A4340;text-shadow:0 1px 10px rgba(255,255,255,.95)}
 #splash .skip{color:var(--accent);text-shadow:0 1px 8px rgba(255,255,255,.9)}
 #splash .atelier{display:none}#splash{background:#FFFFFF url("fond-soie.webp?v=1") center top/cover no-repeat!important}#splash .spbot:before{display:none}#splash .avatar.aura .fig{filter:drop-shadow(0 14px 26px rgba(41,36,33,.16))}
-/* Événements à Doha */
+/* Événements mode et beauté (pays de la cliente, puis le Golfe) */
+.ev-ail{margin:18px 0 8px;font-size:16px;color:var(--muted)}
 .evl{display:flex;flex-direction:column;gap:10px;margin:0 0 22px}
 .ev{display:flex;gap:14px;align-items:flex-start;padding:14px;border-radius:20px;background:var(--surface);border:1px solid var(--line);color:var(--ink);text-decoration:none}
 .ev-d{flex:none;width:54px;height:58px;border-radius:14px;background:var(--accent);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05}
@@ -911,13 +912,13 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 </nav>
 </div>
 <script src="zifafi-i18n.js?v=3"></script>
-<script src="i18n.js?v=33"></script>
+<script src="i18n.js?v=34"></script>
 <script src="aura-methode.js?v=1"></script>
 <script src="aura-mesure.js?v=1"></script>
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=2"></script>
 <script>
-const VERSION="154";
+const VERSION="155";
 // Bonjour d’Aura : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -1789,7 +1790,7 @@ news:()=>{const n=S.news,prof=PROFIL();
   :n&&n.tendances?n.tendances.map(t=>`<div class="card"><b>${esc(t.titre||"")}</b><p style="margin:0 0 8px">${esc(t.description||"")}</p>${t.pour_toi?`<p class="sub" style="font-size:14px;margin:0 0 10px">Pour toi : ${esc(t.pour_toi)}</p>`:""}${t.recherche?links(t.recherche):""}</div>`).join("")
   :`<div class="note">${S.newsErr?esc(S.newsErr):"Découvre les tendances mode de la saison, adaptées à ton profil."}</div>`;
  return {dock:1,html:`<h1>Nouveautés fashion</h1>
- <h2>Événements à Doha</h2><p class="sub">${pays()==="QA"?"Mode et beauté au Qatar, mis à jour chaque semaine.":"Mode et beauté au Qatar ; les événements de ton pays arrivent bientôt."}</p>
+ <h2>Événements mode et beauté</h2><p class="sub">Dans ton pays et dans tout le Golfe, mis à jour chaque semaine.</p>
  ${evHTML()}
  <h2>Tendances du moment</h2><p class="sub">${prof?"Choisies pour ta saison et ta morphologie.":"Fais ton analyse pour des conseils sur mesure."}</p>
  ${body}
@@ -1837,19 +1838,24 @@ function bmCalc(){const r=CORPS_MES.resultat(S.bm||{});
   toast(r.erreur==="vide"?"Il manque "+BM_NOM[r.champ]+".":"Vérifie "+BM_NOM[r.champ]+" : entre "+r.min+" et "+r.max+" cm.");return}
  S.res.corps={...r.res,lang:S.lang||"fr"};S.wait=S.wait||{};S.wait.corps=false;save();S.bm=undefined;
  if(S.flow&&S.flow.includes("b_mes"))return next();S.flow=null;go("r_corps")}
-// Événements mode & beauté à Doha : liste dans events.json (mise à jour chaque semaine).
+// Événements mode & beauté du Golfe : liste dans events.json (champ "pays" : QA, SA, AE, KW, BH, OM ; mise à jour chaque semaine).
 let EVTS=null;
 fetch("events.json?t="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>{EVTS=j&&Array.isArray(j.evenements)?j.evenements:[];if(S.page==="news")render(false)}).catch(()=>{EVTS=[]});
 const EV_M={fr:["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."],en:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],ar:["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"]};
 function evHTML(){const lg=EV_M[S.lang]?S.lang:"fr",M=EV_M[lg],today=new Date().toISOString().slice(0,10);
- if(EVTS===null)return `<div class="note">Je cherche les événements à Doha…</div>`;
- const list=EVTS.filter(e=>(e.fin||e.debut)>=today).sort((a,b)=>a.debut<b.debut?-1:1);
- if(!list.length)return `<div class="note">Aucun événement annoncé pour le moment.</div>`;
+ if(EVTS===null)return `<div class="note">Je cherche les événements mode et beauté…</div>`;
+ const tous=EVTS.filter(e=>(e.fin||e.debut)>=today).sort((a,b)=>a.debut<b.debut?-1:1),pz=pays();
+ // v155 : d'abord les événements du pays de la cliente, puis « Ailleurs dans le Golfe ».
+ const list=tous.filter(e=>(e.pays||"QA")===pz),ail=tous.filter(e=>(e.pays||"QA")!==pz);
+ if(!tous.length)return `<div class="note">Aucun événement annoncé pour le moment.</div>`;
  const d=x=>{const t=x.split("-");return{j:+t[2],m:M[+t[1]-1],y:t[0]}};
  const per=e=>{const a=d(e.debut),b=d(e.fin||e.debut);if(e.debut===(e.fin||e.debut))return a.j+" "+a.m+" "+a.y;if(a.m===b.m&&a.y===b.y)return a.j+"–"+b.j+" "+b.m+" "+b.y;return a.j+" "+a.m+(a.y!==b.y?" "+a.y:"")+" – "+b.j+" "+b.m+" "+b.y};
  const tbc={fr:"date à confirmer",en:"date to be confirmed",ar:"التاريخ بيتأكد"}[lg],see={fr:"Voir",en:"See",ar:"شوفي"}[lg],now={fr:"En ce moment",en:"On now",ar:"الحين"}[lg];
- return `<div class="evl" data-noi18n>${list.map(e=>{const a=d(e.debut),on=e.debut<=today;const L=o=>o&&(o[lg]||o.fr)||"";
-  return `<a class="ev" ${e.lien?`href="${esc(e.lien)}" target="_blank" rel="noopener"`:""}><span class="ev-d"><b>${on?"•":a.j}</b><small>${on?now:a.m}</small></span><span class="ev-t"><b>${esc(L(e.titre))}</b><small>${esc(per(e))}${e.date_a_confirmer?" · "+tbc:""} · ${esc(e.lieu||"")}</small><p>${esc(L(e.desc))}</p></span>${e.lien?`<span class="ev-go">${see} ${lg==="ar"?"‹":"›"}</span>`:""}</a>`}).join("")}</div>`}
+ const carte=e=>{const a=d(e.debut),on=e.debut<=today;const L=o=>o&&(o[lg]||o.fr)||"";
+  return `<a class="ev" ${e.lien?`href="${esc(e.lien)}" target="_blank" rel="noopener"`:""}><span class="ev-d"><b>${on?"•":a.j}</b><small>${on?now:a.m}</small></span><span class="ev-t"><b>${esc(L(e.titre))}</b><small>${esc(per(e))}${e.date_a_confirmer?" · "+tbc:""} · ${esc(e.lieu||"")}</small><p>${esc(L(e.desc))}</p></span>${e.lien?`<span class="ev-go">${see} ${lg==="ar"?"‹":"›"}</span>`:""}</a>`};
+ const pn=e=>{const n=PAYS[e.pays||"QA"];return n?n.n:""};
+ const autres={fr:"Ailleurs dans le Golfe",en:"Elsewhere in the Gulf",ar:"في باقي الخليج"}[lg],rien={fr:"Pas encore d’événement annoncé dans ton pays : voici ce qui se passe ailleurs dans le Golfe.",en:"No event announced in your country yet: here’s what’s on elsewhere in the Gulf.",ar:"ما في فعاليات معلنة في بلدچ للحين: هذا اللي صاير في باقي الخليج."}[lg];
+ return `${list.length?`<div class="evl" data-noi18n>${list.map(carte).join("")}</div>`:`<div class="note" data-noi18n>${rien}</div>`}${ail.length?`<h3 class="ev-ail" data-noi18n>${autres}</h3><div class="evl" data-noi18n>${ail.map(e=>carte({...e,lieu:[e.lieu,tr(pn(e))].filter(Boolean).join(", ")})).join("")}</div>`:""}`}
 const MAGS=[["Vogue Arabia","https://www.vogue.me/fashion/"],["Harper’s Bazaar Arabia","https://www.harpersbazaararabia.com/fashion"],["Elle Arabia","https://www.ellearabia.com/fashion/"],["Vogue France","https://www.vogue.fr/mode"]];
 async function loadNews(){
  const sm=await getSample();if(!sm){S.newsErr="Les tendances ne sont pas disponibles ici.";render(false);return}
