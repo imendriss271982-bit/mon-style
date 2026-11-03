@@ -9,7 +9,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
 const MS={nom:'Lina',lang:'fr',later:true,res:{corps:{forme:'X · Sablier',kibbe:'Soft Classic'},couleurs:{saison:'Hiver Vif'},visage:{forme:'Ovale'}}};
 (async()=>{const b=await chromium.launch();const errs=[];
  const open=async(w,ms,extra)=>{const p=await b.newPage({viewport:{width:w,height:820}});p.on('pageerror',e=>errs.push(w+': '+e.message));p.on('dialog',d=>d.accept());
-  await p.goto(URL);await p.evaluate(([ms,extra])=>{localStorage.clear();localStorage.setItem('monstyle',JSON.stringify(ms));if(extra)localStorage.setItem('monstyle_zf',extra)},[ms,extra||null]);
+  await p.goto(URL);await p.evaluate(([ms,extra])=>{localStorage.clear();localStorage.setItem('monstyle_portes','0');localStorage.setItem('monstyle',JSON.stringify(ms));if(extra)localStorage.setItem('monstyle_zf',extra)},[ms,extra||null]);
   await p.goto(URL);await p.waitForTimeout(900);await p.evaluate(()=>{document.getElementById('splash')?.remove();home()});return p};
  const st=p=>p.evaluate(()=>JSON.parse(localStorage.getItem('monstyle_zf')||'null'));
  const click=async(p,sel)=>{await p.click(sel);await p.waitForTimeout(160)};
