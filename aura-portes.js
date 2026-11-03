@@ -97,6 +97,8 @@ function ptPortesHTML() {
 }
 
 if (PORTES && typeof P.home === "function") {
+  // v154 : une cliente qui avait choisi « Tout afficher » sur l'ancien accueil voit quand même les portes une première fois.
+  try { if (!localStorage.getItem("monstyle_portes_vu") && typeof FX !== "undefined") { FX.all = false; if (typeof fxSave === "function") fxSave(); localStorage.setItem("monstyle_portes_vu", "1"); } } catch (e) {}
   const ptHomeAvant = P.home;
   P.home = (...a) => {
     const o = ptHomeAvant(...a);
