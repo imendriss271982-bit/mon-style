@@ -13,11 +13,7 @@
  document.addEventListener("DOMContentLoaded",fix);addEventListener("load",fix);addEventListener("resize",fix);addEventListener("orientationchange",()=>setTimeout(fix,300))})();
 </script>
 <script>/* Mise à jour automatique : si une nouvelle version est publiée, l'app se recharge toute seule */
-(function(){var B="__BUILD__";if(B.indexOf("__")===0)return;
-function chk(){fetch("version.txt?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(v){v=(v||"").trim();if(!v||v===B)return;
- try{var k="ms_upd_"+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,"1")}catch(e){}
- location.replace(location.pathname+"?v="+v.slice(0,7))}).catch(function(){})}
-chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+(function(){var B="__BUILD__";if(B.indexOf("__")!==0)window.MS_BUILD=B})();</script>
 <title>My Style</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png?v=3">
@@ -28,8 +24,8 @@ chk();document.addEventListener("visibilitychange",function(){if(!document.hidde
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#FFFFFF"><meta name="color-scheme" content="light">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preload" href="sons/aura-1.mp3" as="fetch" crossorigin>
-<link rel="preload" href="sons/aura-retour.mp3" as="fetch" crossorigin>
+<link rel="preload" href="sons/aura-1.mp3?v=c1" as="fetch" crossorigin>
+<link rel="preload" href="sons/aura-retour.mp3?v=c1" as="fetch" crossorigin>
 <link rel="preload" href="aura-pose.webp?v=2" as="image" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&family=Italiana&family=Jost:wght@300;400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Noto+Naskh+Arabic:wght@500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -916,7 +912,7 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=2"></script>
 <script>
-const VERSION="143";
+const VERSION="144";
 // Bonjour d’Aura : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -2248,7 +2244,8 @@ setInterval(()=>{if(AFFON)return;el.classList.add("off");setTimeout(()=>{k++;if(
 function typeInto(el,t,ms){return new Promise(r=>{let i=0;const h=setInterval(()=>{el.textContent=t.slice(0,++i);if(i>=t.length){clearInterval(h);r()}},ms)})}
 render(false);
 // Mise à jour automatique : si une nouvelle version est en ligne, l'app se recharge toute seule.
-function checkUpdate(){fetch(location.pathname+"?v="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{const m=t.match(/const VERSION="([^"]+)"/);if(!m||m[1]===VERSION)return;
+// v144 : en ligne, on lit d'abord version.txt (quelques octets) ; la page entière (335 Ko) n'est téléchargée que s'il y a vraiment une nouvelle version.
+function checkUpdate(){(window.MS_BUILD?fetch("version.txt?t="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(v=>{v=(v||"").trim();if(!v||v===window.MS_BUILD)throw 0}):Promise.resolve()).then(()=>fetch(location.pathname+"?v="+Date.now(),{cache:"no-store"})).then(r=>r.ok?r.text():"").then(t=>{const m=t.match(/const VERSION="([^"]+)"/);if(!m||m[1]===VERSION)return;
  try{if(sessionStorage.getItem("maj")===m[1])return;sessionStorage.setItem("maj",m[1])}catch(e){}
  if(document.getElementById("splash")&&(window.GREETED||window.CALLED)){try{sessionStorage.removeItem("maj")}catch(e){}return}
  if(!S.busy&&!/_run$/.test(S.page))location.replace(location.pathname+"?v="+m[1])}).catch(()=>{})}
@@ -2275,7 +2272,7 @@ function voiceLine(t){return new Promise(r=>{const ss=window.speechSynthesis;let
   let iv=0;u.onstart=()=>{SPOKE=true;window.GREETED=true;talk(true);iv=setInterval(()=>mouthKick(.3+Math.random()*.6),130)};u.onend=()=>{clearInterval(iv);fin()};u.onerror=()=>{clearInterval(iv);talk(false)};ss.resume();ss.speak(u)}catch(e){}})}
 // Voix enregistrée d'Aura (ElevenLabs) ; si le fichier manque, voix du téléphone.
 // Vidéos d'Aura (fond vert retiré en direct) : remplacent l'image pendant la phrase correspondante.
-const VIDS={"aura-1":"videos/aura-1.mp4?v=2","aura-2":"videos/aura-2.mp4?v=1","aura-nom":"videos/aura-nom.mp4?v=1","aura-go":"videos/aura-go.mp4?v=1","aura-retour":"videos/aura-retour.mp4?v=1","aura-3":"videos/aura-3.mp4?v=1","aura-enchantee":"videos/aura-enchantee.mp4?v=1","aura-aventure":"videos/aura-aventure.mp4?v=1"};
+const VIDS={"aura-1":"videos/aura-1.mp4?v=c1","aura-2":"videos/aura-2.mp4?v=c1","aura-nom":"videos/aura-nom.mp4?v=c1","aura-go":"videos/aura-go.mp4?v=c1","aura-retour":"videos/aura-retour.mp4?v=c1","aura-3":"videos/aura-3.mp4?v=c1","aura-enchantee":"videos/aura-enchantee.mp4?v=c1","aura-aventure":"videos/aura-aventure.mp4?v=c1"};
 Object.keys(VIDS).filter(n=>n!=="aura-1").forEach(n=>{fetch(VIDS[n]).then(r=>r.ok?r.blob():null).then(b=>{if(b)VIDS[n]=URL.createObjectURL(b)}).catch(()=>{})});
 const AVID=document.createElement("video");AVID.muted=true;AVID.playsInline=true;AVID.setAttribute("playsinline","");AVID.setAttribute("muted","");AVID.preload="auto";{AVID.src=VIDS["aura-1"];AVID.dataset.n="aura-1"}
 // Détourage du fond vert sur la carte graphique (WebGL) ; v118 : bord resserré d’environ 2 px (plus de liseré sombre sur fond blanc) : fluide même pendant l'appel. Deux vidéos peuvent se fondre l'une dans l'autre.
@@ -2308,9 +2305,9 @@ function vidOn(name){if(RM||!VIDS[name])return;const a=document.querySelector("#
  window.VIDOFF=()=>{on=false;a.classList.remove("vplay");try{v.pause()}catch(e){}};v.onended=()=>window.VIDOFF();
  const q=v.play();if(q&&q.then)q.then(draw).catch(()=>window.VIDOFF());else draw()}
 // Aura au repos : vidéo en boucle (respire, cligne, sourit), fond vert retiré, sur toutes ses apparitions.
-const IDLE=document.createElement("video");IDLE.muted=true;IDLE.loop=true;IDLE.playsInline=true;IDLE.setAttribute("playsinline","");IDLE.setAttribute("muted","");IDLE.preload="auto";IDLE.src="videos/aura-idle.mp4?v=1";
+const IDLE=document.createElement("video");IDLE.muted=true;IDLE.loop=true;IDLE.playsInline=true;IDLE.setAttribute("playsinline","");IDLE.setAttribute("muted","");IDLE.preload="auto";IDLE.src="videos/aura-idle.mp4?v=c1";
 // Aura qui parle avec les mains (boucle) : utilisée pendant l'appel quand elle répond.
-const TALK=document.createElement("video");TALK.muted=true;TALK.loop=true;TALK.playsInline=true;TALK.setAttribute("playsinline","");TALK.setAttribute("muted","");TALK.preload="auto";TALK.src="videos/aura-talk.mp4?v=3";
+const TALK=document.createElement("video");TALK.muted=true;TALK.loop=true;TALK.playsInline=true;TALK.setAttribute("playsinline","");TALK.setAttribute("muted","");TALK.preload="auto";TALK.src="videos/aura-talk.mp4?v=c1";
 // iPhone : les vidéos doivent être dans la page (invisibles) pour être lues de façon fiable.
 (()=>{const h=document.createElement("div");h.style.cssText="position:fixed;left:0;top:0;width:2px;height:2px;opacity:0;pointer-events:none;overflow:hidden;z-index:-1";[IDLE,TALK,AVID].forEach(v=>{v.style.cssText="width:2px;height:2px";h.appendChild(v)});(document.body||document.documentElement).appendChild(h)})();
 // Passage repos ↔ parole en fondu ; elle reste « en train de parler » pendant les petites pauses pour éviter les à-coups.
@@ -2328,14 +2325,14 @@ window.auraTalking=on=>{if(on){clearTimeout(TALK_OFF);TALK_OFF=0;if(!window.AURA
    if(f.classList.contains("vplay"))return;
    if(keyer(c)(IDLE,TALK,mixT))f.classList.add("iplay")})};
  requestAnimationFrame(tick)})();
-let AUDTOK=0;const AUD=new Audio();AUD.preload="auto";const CLIPS={};["aura-1","aura-2","aura-3","aura-nom","aura-enchantee","aura-aventure","aura-go","aura-retour"].forEach(n=>{fetch("sons/"+n+".mp3").then(r=>r.ok?r.blob():null).then(b=>{if(b&&!CLIPS[n])CLIPS[n]=URL.createObjectURL(b)}).catch(()=>{})});
+let AUDTOK=0;const AUD=new Audio();AUD.preload="auto";const CLIPS={};["aura-1","aura-2","aura-3","aura-nom","aura-enchantee","aura-aventure","aura-go","aura-retour"].forEach(n=>{fetch("sons/"+n+".mp3?v=c1").then(r=>r.ok?r.blob():null).then(b=>{if(b&&!CLIPS[n])CLIPS[n]=URL.createObjectURL(b)}).catch(()=>{})});
 function clipLine(name,t){return new Promise(r=>{let done=false,iv=0;const fin=v=>{if(done)return;done=true;clearInterval(iv);if(window.VIDOFF)VIDOFF();talk(false);r(v)};
  if(!S.voice||!name){(S.voice?voiceLine(t):wait(Math.max(2200,t.length*60))).then(()=>fin());return}
  try{affStop();if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}
  const dev=()=>{clearInterval(iv);if(!done)voiceLine(t).then(()=>fin())};
  AUD.onended=()=>fin();AUD.onerror=dev;
  AUD.onplay=()=>{SPOKE=true;window.GREETED=true;talk(true);vidOn(name);clearInterval(iv);iv=setInterval(()=>mouthKick(.3+Math.random()*.65),120)};
- AUDTOK++;AUD.src=CLIPS[name]||("sons/"+name+".mp3");
+ AUDTOK++;AUD.src=CLIPS[name]||("sons/"+name+".mp3?v=c1");
  try{const p=AUD.play();if(p&&p.catch)p.catch(e=>{if(e&&e.name==="NotAllowedError"){clearInterval(iv);done=true;r("blocked")}else dev()})}catch(e){dev()}})}
 // Si le téléphone bloque le son avant le premier toucher, Aura continue quand même :
 // elle bouge, sa bouche parle, et au premier toucher la voix démarre.
