@@ -3,6 +3,8 @@
    Le texte affiché à l'écran et la voix d'Aura sont traduits automatiquement à partir de cette liste.
    Pour corriger une traduction : modifie simplement la 2e (anglais) ou la 3e (arabe) colonne. */
 const I18N_D=[
+// ——— v145 : politique de confidentialité ———
+["Politique de confidentialité","Privacy policy","سياسة الخصوصية"],
 // ——— v143 : Vérifié par une vraie styliste ———
 ["Vérifié par une vraie styliste", "Checked by a real stylist", "مراجعة من ستايلست حقيقية"],
 ["Ta styliste", "Your stylist", "الستايلست مالتچ"],
