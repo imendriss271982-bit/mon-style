@@ -16,6 +16,8 @@ const I18N_D=[
 ["Pour passer à {0}/10","To reach {0}/10","عشان توصلين {0}/10"],
 ["Pour aller plus loin","To take it further","عشان يصير أحلى"],
 ["Ajoute","Add","زيدي"],
+["Le souci","The issue","المشكلة"],
+["L’idée d’Aura","Aura’s idea","فكرة أورا"],
 ["Change","Swap","بدّلي"],
 ["✓ Tu l’as déjà dans ta garde-robe","✓ Already in your wardrobe","✓ عندچ في خزانتچ"],
 ["Tu l’as déjà.","You already have it.","عندچ ياه."],

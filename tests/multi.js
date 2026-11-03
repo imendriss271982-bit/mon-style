@@ -45,9 +45,9 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  ok(await p.evaluate(()=>GR.items.length===5&&GR.items[0].todo===1&&!GR.items[0].wait),'Erreur : article à compléter, jamais bloqué');
  ok(await p.evaluate(()=>JSON.parse(localStorage.getItem('monstyle_gr')).items.some(x=>x.type==='Blazer court')),'Sauvegardé dans le téléphone');
  // ——— Outfit check en solutions ———
- ok(await p.evaluate(()=>{const pr=PR_OUT();return /solutions/.test(pr)&&pr.includes(GR.items[1].id)&&/JAMAIS une liste d’erreurs/.test(pr)}),'Prompt Outfit check : solutions + garde-robe avec ids');
+ ok(await p.evaluate(()=>{const pr=PR_OUT();return /solutions/.test(pr)&&pr.includes(GR.items[1].id)&&/jamais un souci sans sa solution/.test(pr)}),'Prompt Outfit check : solutions + garde-robe avec ids');
  await p.evaluate(()=>{const b=GR.items.find(x=>x.cat==='veste');S.res.outfit={note:7,resume:'Belle base, très élégante.',points_forts:['Couleurs harmonieuses'],note_apres:9,solutions:[
-  {action:'changer',texte:'Remplace la veste par ton blazer court noir.',id:b.id,achat:''},
+  {action:'changer',probleme:'La veste en jean casse l’élégance de la tenue.',texte:'Remplace la veste par ton blazer court noir.',id:b.id,achat:''},
   {action:'ajouter',texte:'Ajoute un collier doré fin.',id:'',achat:'Collier doré fin'},
   {action:'changer',texte:'Mets des escarpins.',id:'zzz',achat:''}]};go('o_res')});await p.waitForTimeout(400);
  const t=await p.$eval('#app,main,body',e=>e.innerText);
@@ -56,6 +56,9 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  ok(await p.$$eval('.oc-ok',e=>e.length)===1,'Une pièce « Tu l’as déjà » (id inventé ignoré)');
  ok(await p.$$eval('.oc-go[data-go="boutique"]',e=>e.length)===2,'Sinon : achat facultatif → Boutique');
  ok(await p.$('.oc-sol button.oc-ph[data-gitem]'),'Photo de la pièce de sa garde-robe');
+ ok(/Le souci/i.test(t)&&/casse l’élégance/.test(t)&&/L’idée d’Aura/i.test(t),'Le souci puis l’idée d’Aura');
+ ok(await p.evaluate(()=>/jamais un souci sans sa solution/.test(PR_OUT())&&/probleme/.test(PR_OUT())),'Prompt : souci + idée');
+ ok(/casse l’élégance/.test(await p.evaluate(()=>ocSay(S.res.outfit))),'Aura dit le souci puis l’idée');
  ok(await p.evaluate(()=>/blazer court noir/.test(ocSay(S.res.outfit))&&/Tu l’as déjà/.test(ocSay(S.res.outfit))),'Aura dit la 1re solution et « Tu l’as déjà »');
  // Ancien résultat (changements) toujours lisible
  await p.evaluate(()=>{S.res.outfit={note:6,resume:'Ok.',points_forts:[],changements:['Ajoute une ceinture.']};go('o_res')});await p.waitForTimeout(300);

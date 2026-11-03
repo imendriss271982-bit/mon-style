@@ -114,14 +114,14 @@ if(typeof grItemsTxt==="function"){grItemsTxt=function(){return GR.items.filter(
 // Nettoie les solutions : un id qui n'existe pas dans la garde-robe est retiré (jamais de pièce inventée).
 function ocSols(o){if(!o||!Array.isArray(o.solutions))return [];const by=id=>GR.items.find(x=>x.id===String(id)&&!x.wait);
  return o.solutions.filter(s=>s&&typeof s==="object"&&s.texte).slice(0,4).map(s=>{const it=s.id?by(s.id):null;
-  return {action:s.action==="ajouter"?"ajouter":"changer",texte:String(s.texte).slice(0,200),it:it||null,achat:it?"":String(s.achat||"").slice(0,80)}})}
+  return {action:s.action==="ajouter"?"ajouter":"changer",probleme:String(s.probleme||"").slice(0,160),texte:String(s.texte).slice(0,200),it:it||null,achat:it?"":String(s.achat||"").slice(0,80)}})}
 function ocHtml(o){const sols=ocSols(o),apres=Math.round(+o.note_apres||0);
  if(!sols.length)return (o.changements||[]).length?`<h2>Pour aller plus loin</h2><ul class="tips">${o.changements.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:"";
  return `<h2>${apres>+o.note&&apres<=10?"Pour passer à "+apres+"/10":"Pour aller plus loin"}</h2><div class="oc-sols">${sols.map(s=>`<div class="oc-sol">
   ${s.it?`<button class="oc-ph" data-gitem="${s.it.id}" aria-label="${esc(s.it.nom||"Article")}">${grImg(s.it)}</button>`:`<span class="oc-ph oc-buy" aria-hidden="true">🛍️</span>`}
-  <div class="oc-tx"><span class="oc-tag">${s.action==="ajouter"?"Ajoute":"Change"}</span><p>${esc(s.texte)}</p>
+  <div class="oc-tx">${s.probleme?`<span class="oc-tag oc-pb">Le souci</span><p class="oc-pbt">${esc(s.probleme)}</p>`:""}<span class="oc-tag">${s.probleme?"L’idée d’Aura":(s.action==="ajouter"?"Ajoute":"Change")}</span><p>${esc(s.texte)}</p>
   ${s.it?`<small class="oc-ok">✓ Tu l’as déjà dans ta garde-robe</small>`:`<small class="oc-no">${s.achat?esc(s.achat)+" · ":""}<span>achat facultatif</span></small><button class="link oc-go" data-go="boutique">Voir dans la Boutique</button>`}</div></div>`).join("")}</div>`}
-function ocSay(o){const s=ocSols(o)[0];if(!s)return (o.changements||[]).length?" "+o.changements[0]:"";return " "+s.texte+(s.it?" Tu l’as déjà.":"")}
+function ocSay(o){const s=ocSols(o)[0];if(!s)return (o.changements||[]).length?" "+o.changements[0]:"";return (s.probleme?" "+s.probleme:"")+" "+s.texte+(s.it?" Tu l’as déjà.":"")}
 
 (function(){const st=document.createElement("style");st.textContent=`
 .gr-tip{font-size:13px;color:var(--mut,#6E6E6E);margin:4px 0 10px;line-height:1.45}
@@ -132,5 +132,6 @@ function ocSay(o){const s=ocSols(o)[0];if(!s)return (o.changements||[]).length?"
 .oc-ph img,.oc-ph .gr-ph{width:100%;height:100%;object-fit:cover;border-radius:14px}.oc-buy{cursor:default}
 .oc-tx{min-width:0;flex:1}.oc-tx p{margin:4px 0;font-size:14.5px;line-height:1.4}
 .oc-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--accent)}
+.oc-pb{color:#A0522D}.oc-pbt{color:#5A4F48}.oc-pbt+.oc-tag{margin-top:2px}
 .oc-ok{color:#3C7A3F;font-weight:600}.oc-no{color:var(--mut,#6E6E6E)}.oc-go{display:block;padding:4px 0 0;font-size:13px}
 @media (prefers-color-scheme:dark){.oc-sol{background:var(--card,#1f1c1a);border-color:#3a3530}.oc-ok{color:#8FCB8F}}`;document.head.appendChild(st)})();
