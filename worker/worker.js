@@ -8,7 +8,7 @@ let GOOD_IMG = "";
 // Limite de demandes par adresse IP (par instance du Worker, au mieux) : l'en-tête Origin peut être imité
 // hors navigateur, cette limite évite qu'un robot épuise le crédit Gemini / ElevenLabs.
 const HITS = new Map();
-const LIMITS = { "/": 60, "/makeup": 6, "/tts": 60, "/verif/new": 4, "/verif/get": 60, "/verif/del": 30, "/verif/admin": 40, "/liste/add": 5, "/liste/admin": 40 }; // demandes par 10 minutes
+const LIMITS = { "/": 60, "/makeup": 6, "/tts": 60, "/verif/new": 4, "/verif/get": 60, "/verif/del": 30, "/verif/admin": 40, "/liste/add": 5, "/liste/admin": 40, "/contact/new": 5 }; // demandes par 10 minutes
 function tooMany(ip, path) {
   const now = Date.now(), win = 600000, key = path + "|" + ip, max = LIMITS[path] || 30;
   const list = (HITS.get(key) || []).filter(t => now - t < win);
@@ -118,6 +118,54 @@ async function liste(path, req, env, json) {
   return json({ erreur: "Requête invalide." }, 400);
 }
 
+// ——— Contact et séance privée (v156) ———
+// La cliente écrit depuis la page Contact de l'app : le message part par email (API Brevo) vers l'adresse d'Imen.
+// Variables Cloudflare : BREVO_KEY (secrète, obligatoire), CONTACT_TO et CONTACT_FROM (facultatives,
+// imendriss@divadivina.app par défaut ; l'expéditeur doit être validé dans Brevo). Rien n'est gardé sur le serveur.
+const CONTACT_MAIL = "imendriss@divadivina.app";
+const h = v => String(v == null ? "" : v).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+async function contact(req, env, json) {
+  const BK = String(env.BREVO_KEY || "").replace(/[^\x21-\x7E]/g, "");
+  if (!BK) return json({ erreur: "L'envoi des messages n'est pas encore activé.", code: "off" }, 503);
+  let b = {}; try { b = await req.json(); } catch { return json({ erreur: "Requête invalide." }, 400); }
+  if (b.site) return json({ ok: true }); // champ piège
+  const type = b.type === "seance" ? "seance" : "aide";
+  const email = txt(b.email, 254).trim().toLowerCase();
+  if (!EMAIL_RE.test(email)) return json({ erreur: "Vérifie ton email.", code: "email" }, 400);
+  const nom = txt(b.nom, 40).trim(), tel = txt(b.tel, 30).trim(), message = txt(b.message, 3000).trim();
+  const photo = b.photo ? (okData(b.photo, ["image/jpeg", "image/png", "image/webp"], 900000) ? b.photo : null) : "";
+  if (photo === null) return json({ erreur: "La photo est trop lourde." }, 400);
+  const lignes = [["Prénom", nom || "—"], ["Email", email], ["WhatsApp", tel || "—"], ["Pays", txt(b.pays, 30) || "—"], ["Langue", txt(b.lang, 2) || "—"]];
+  let sujet;
+  if (type === "aide") {
+    if (!message) return json({ erreur: "Écris ton message.", code: "vide" }, 400);
+    const quoi = { bug: "Problème technique", question: "Question", idee: "Suggestion" }[b.quoi] || "Message";
+    lignes.unshift(["Type", quoi]);
+    lignes.push(["Version de l'app", txt(b.version, 12) || "—"], ["Téléphone", txt(b.appareil, 160) || "—"]);
+    sujet = `[My Style] ${quoi} — ${nom || email}`;
+  } else {
+    const mode = b.mode === "doha" ? "En présentiel à Doha" : "En ligne (appel vidéo)";
+    const date = /^\d{4}-\d{2}-\d{2}$/.test(String(b.date || "")) ? b.date : "";
+    if (!date) return json({ erreur: "Choisis une date.", code: "date" }, 400);
+    const creneau = { matin: "Matin (9 h – 12 h)", aprem: "Après-midi (13 h – 17 h)", soir: "Soir (18 h – 21 h)" }[b.creneau] || "Peu importe";
+    const obj = Array.isArray(b.objectifs) ? b.objectifs.map(x => txt(x, 40)).slice(0, 6).join(", ") : "";
+    lignes.unshift(["Type", "Demande de séance privée (1 heure)"], ["Prix affiché", txt(b.prix, 20) || "—"], ["Format", mode], ["Date souhaitée", date], ["Créneau", creneau], ["Objectif", obj || "—"]);
+    lignes.push(["Ses résultats My Style", txt(b.profil, 6000) || "Pas encore d'analyse"]);
+    sujet = `[My Style] Séance privée — ${nom || email} — ${date}`;
+  }
+  const html = `<div style="font-family:Arial,sans-serif;font-size:15px;color:#292421">
+<h2 style="color:#8C6D35;margin:0 0 12px">${h(sujet.replace("[My Style] ", ""))}</h2>
+<table style="border-collapse:collapse">${lignes.map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0;color:#6E6E6E;vertical-align:top;white-space:nowrap">${h(k)}</td><td style="padding:4px 0">${h(v)}</td></tr>`).join("")}</table>
+${message ? `<p style="margin:16px 0 4px;color:#6E6E6E">Son message :</p><div style="white-space:pre-wrap;padding:12px;background:#F5F5F5;border-radius:8px">${h(message)}</div>` : ""}
+<p style="margin-top:18px;color:#6E6E6E;font-size:13px">Réponds simplement à cet email : ta réponse ira directement à la cliente.</p></div>`;
+  const mail = { sender: { name: "My Style", email: env.CONTACT_FROM || CONTACT_MAIL }, to: [{ email: env.CONTACT_TO || CONTACT_MAIL }],
+    replyTo: { email, name: nom || email }, subject: sujet, htmlContent: html };
+  if (photo) mail.attachment = [{ name: "photo." + (photo.startsWith("data:image/png") ? "png" : photo.startsWith("data:image/webp") ? "webp" : "jpg"), content: photo.split(",")[1] }];
+  const r = await fetch("https://api.brevo.com/v3/smtp/email", { method: "POST", headers: { "api-key": BK, "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(mail) });
+  if (!r.ok) { console.error("Brevo", r.status, (await r.text()).slice(0, 300)); return json({ erreur: "Le message n'est pas parti. Réessaie ou écris directement par email.", code: "envoi" }, 502); }
+  return json({ ok: true });
+}
+
 export default {
   async fetch(req, env) {
     const origin = req.headers.get("Origin") || "";
@@ -144,7 +192,7 @@ export default {
         if (tooMany(ip, LIMITS[path] ? path : "/")) return json({ erreur: "Trop de demandes. Réessaie dans quelques minutes.", code: "rate_limited" }, 429);
       }
 
-      { const vp = new URL(req.url).pathname; if (vp.startsWith("/verif/")) return await verif(vp, req, env, json); if (vp.startsWith("/liste/")) return await liste(vp, req, env, json); }
+      { const vp = new URL(req.url).pathname; if (vp.startsWith("/verif/")) return await verif(vp, req, env, json); if (vp.startsWith("/liste/")) return await liste(vp, req, env, json); if (vp === "/contact/new") return await contact(req, env, json); }
 
       // Voix d'Aura qui dit le prénom de la cliente (ElevenLabs), avec phrases fixes uniquement.
       if (new URL(req.url).pathname === "/tts") {
