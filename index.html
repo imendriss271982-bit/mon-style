@@ -833,6 +833,11 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 .hz-q{max-width:240px}.hz-q input{text-overflow:ellipsis}
 .zf-u{height:100%}.zf-uni{align-items:stretch}
 .zf-u .zf-u-b{margin-top:auto;width:100%;min-height:50px;padding:12px 8px;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* v151 : Aura cadrée à la taille (la main dans la poche ne se voit plus) en attendant la nouvelle image et les nouvelles vidéos */
+#splash .avatar.aura,.avatar.aura.inchat{aspect-ratio:480/419}
+#splash .avatar.aura{height:min(calc(var(--ah)*.9),calc((100vw - 24px)*.873));bottom:calc(var(--ab) + 11svh)}
+.avatar.aura.inchat{height:min(34svh,calc((100vw - 40px)*.873))}
+#splash .avatar.aura .fig,.avatar.aura.inchat .fig{inset:0 0 auto 0;height:151.5%;-webkit-mask-image:linear-gradient(to bottom,#000 54%,transparent 65.5%);mask-image:linear-gradient(to bottom,#000 54%,transparent 65.5%)}
 </style>
 <link rel="stylesheet" href="zifafi.css?v=3">
 </head>
@@ -975,7 +980,9 @@ const PAYS={
  BH:{n:"Bahreïn",v:"Manama",cur:"BHD",p:{base:2.9,vip:7.9,annuel:24.9,pdf:4.9,occasion:9.9,seance:29}},
  OM:{n:"Oman",v:"Mascate",cur:"OMR",p:{base:2.9,vip:7.9,annuel:24.9,pdf:4.9,occasion:9.9,seance:29}}};
 const TZPAYS={"Asia/Qatar":"QA","Asia/Riyadh":"SA","Asia/Dubai":"AE","Asia/Kuwait":"KW","Asia/Bahrain":"BH","Asia/Muscat":"OM"};
-function pays(){if(!PAYS[S.pays]){let z="";try{z=Intl.DateTimeFormat().resolvedOptions().timeZone}catch(e){}S.pays=TZPAYS[z]||"QA"}return S.pays}
+function pays(){if(!PAYS[S.pays]){let g="";try{for(const l of (navigator.languages||[navigator.language])){const m=String(l||"").toUpperCase().match(/[-_]([A-Z]{2})\b/);if(m&&PAYS[m[1]]){g=m[1];break}}}catch(e){}if(!g){let z="";try{z=Intl.DateTimeFormat().resolvedOptions().timeZone}catch(e){}g=TZPAYS[z]||"QA"}S.pays=g}return S.pays}
+// Prénom avec majuscule (nermine → Nermine, marie-claire → Marie-Claire) ; l’arabe ne change pas.
+function capNom(n){return String(n||"").trim().replace(/\s+/g," ").replace(/(^|[\s\-'’])(\p{Ll})/gu,(m,a,b)=>a+b.toUpperCase())}
 function prix(k){const c=PAYS[pays()];return c.p[k]+" "+c.cur}
 /* Boutiques partenaires (affiliation ; chaque boutique n’apparaît que dans les pays où elle paie la commission).
    Quand un programme t'accepte, colle ton identifiant ou ton lien ici :
@@ -1050,7 +1057,7 @@ window.addAuraBubble=txt=>{if(!txt||!findArts(txt).length)return;S.chat.push({r:
 let S={rid:0,wait:{},page:"home",hist:[],dir:"f",ans:{},file:{},url:{},res:{},busy:false,err:"",voice:true,chat:[],draft:"",shopQ:"",listen:false,flow:null,news:null,newsBusy:false,newsErr:""};
 try{if(localStorage.getItem("monstyle_voix")==="0")S.voice=false}catch(e){}
 S.info={};
-try{const j=JSON.parse(localStorage.getItem("monstyle")||"null");if(j){S.res=j.res||{};S.ans=j.ans||{};S.info=j.info||{};if(j.nom){S.nom=j.nom;NOM=j.nom}if(j.later)S.later=true;if(j.lang)S.lang=j.lang;if(j.pays)S.pays=j.pays}}catch(e){}
+try{const j=JSON.parse(localStorage.getItem("monstyle")||"null");if(j){S.res=j.res||{};S.ans=j.ans||{};S.info=j.info||{};if(j.nom){S.nom=capNom(j.nom);NOM=S.nom}if(j.later)S.later=true;if(j.lang)S.lang=j.lang;if(j.pays)S.pays=j.pays}}catch(e){}
 function save(){try{localStorage.setItem("monstyle",JSON.stringify({res:{visage:S.res.visage,corps:S.res.corps,couleurs:S.res.couleurs,outfit:S.res.outfit},ans:S.ans,nom:S.nom,info:S.info,later:S.later,lang:S.lang,pays:S.pays}))}catch(e){}}
 // Lien de test « nouvelle cliente » : ?nouvelle → Aura redemande le prénom, en français.
 try{if(/[?&]nouvelle\b/.test(location.search)){delete S.nom;NOM="ma belle";S.lang="fr";save();history.replaceState(null,"",location.pathname)}}catch(e){}
@@ -1763,7 +1770,7 @@ boutique:()=>{const s=season(),cols=s?SEASONS[s].c.filter(x=>!/Noir|Blanc/.test(
  const list=fits.filter(x=>!S.vcat||x.a.cat===S.vcat).sort((x,y)=>y.f.sc-x.f.sc);
  const card=x=>`<button class="art" data-art="${x.a.id}"><span class="ill">${garSVG(x.a)}</span><b>${esc(x.a.nom)}</b><small>${esc(x.a.occ)}</small>${x.f.sc>=4?`<span class="tag">Parfait pour toi</span>`:x.f.sc>=2?`<span class="tag soft">Te va bien</span>`:""}</button>`;
  return {dock:1,html:`<h1>Ma boutique</h1><p class="sub">${known?"Des pièces choisies pour ta morphologie et ta saison.":"Fais ton analyse pour que je choisisse les pièces faites pour toi."}</p>
- <div class="card"><b>Nos boutiques partenaires</b><p class="sub" style="font-size:14px;margin:6px 0 0">Boutiques en ligne sélectionnées par My Style. Livraison : ${PAYS[pays()].n}.</p></div>
+ <div class="card"><b>Nos boutiques partenaires</b><p class="sub" style="font-size:14px;margin:6px 0 0">Boutiques en ligne sélectionnées par My Style. Livraison : ${PAYS[pays()].n}.</p><div class="pk" style="margin-top:10px">${Object.keys(PAYS).map(k=>`<button type="button" data-setpays="${k}" aria-pressed="${pays()===k}">${PAYS[k].n}</button>`).join("")}</div></div>
  ${top.length?`<h2>La sélection d’Aura</h2><div class="vit">${top.map(card).join("")}</div>`:""}
  <button class="btn" data-askaura style="margin:14px 0 6px">Demander à Aura de choisir pour moi</button>
  <h2>La vitrine</h2><div class="fchips">${VCATS.map(c=>`<button data-vcat="${c[0]}" aria-pressed="${(S.vcat||"")===c[0]}">${c[1]}</button>`).join("")}</div>
@@ -1915,7 +1922,7 @@ function saveInfo(){const d=S.idraft;if(!d)return;const bad=(id,m)=>{const f=$("
  const tel=String(d.tel||"").replace(/[^\d+ ]/g,"").replace(/\s+/g," ").trim();if(tel&&tel.replace(/\D/g,"").length<8)return bad("i_tel","Vérifie ton numéro WhatsApp");
  const nouvelle=email!==((S.info||{}).email||"");
  S.info={email,tel,taille:ta===""?"":Math.round(ta),poids:po===""?"":Math.round(po*10)/10,age:d.age||"",tvet:d.tvet||"",budget:d.budget||"",styles:[...(d.styles||[])]};
- const n=String(d.nom||"").trim();if(n){S.nom=n;NOM=n}
+ const n=capNom(d.nom);if(n){S.nom=n;NOM=n}
  save();if(nouvelle)n8nInscription();S.idraft=undefined;toast("Profil enregistré");S.hist=S.hist.filter(h=>h!=="infos");if(S.hist[S.hist.length-1]==="profil")S.hist.pop();S.page="profil";S.dir="b";render(true)}
 function go(page,dir){if(page==="infos")S.idraft=undefined;if(page!==S.page&&!/_run$/.test(S.page))S.hist.push(S.page);S.page=page;S.dir=dir||"f";S.err="";if(DOCK.includes(page)&&page!=="o_photo"){S.flow=null}render(true)}
 function back(){stopVoice();const p=S.hist.pop();if(!p){S.page="home";S.flow=null}else S.page=p;S.dir="b";S.err="";if(S.flow&&!S.flow.includes(S.page))S.flow=null;render(false)}
@@ -2210,7 +2217,7 @@ document.addEventListener("click",e=>{
  if(t.hasAttribute("data-isave"))return saveInfo();
  if(t.hasAttribute("data-wipe")){if(!confirm(tr("Effacer ton profil, tes résultats, ta garde-robe, ton espace mariée et ton email de ce téléphone ?")))return;
   try{localStorage.removeItem("monstyle");localStorage.removeItem("monstyle_gr");localStorage.removeItem("monstyle_pref");localStorage.removeItem("monstyle_jour");localStorage.removeItem("monstyle_meteo")}catch(e){}if(typeof vfWipe==="function")vfWipe();if(typeof JR!=="undefined")JR={d:"",occ:"",look:null,porte:0,vus:[]};GRDB.clear();GR_IN_DB.clear();GR={items:[],looks:{},saved:[]};if(typeof PF!=="undefined")PF=pfClean(null);if(typeof zfWipe==="function")zfWipe();S.info={};S.res={};S.ans={};S.later=false;S.nom=undefined;NOM="ma belle";S.idraft=undefined;toast("Tes données sont effacées");home();return}
- if(t.hasAttribute("data-nom")){const v=(S.nomDraft??S.nom??"").trim();if(!v)return;S.nom=v;NOM=v;S.nomDraft=undefined;save();return next()}
+ if(t.hasAttribute("data-nom")){const v=capNom(S.nomDraft??S.nom??"");if(!v)return;S.nom=v;NOM=v;S.nomDraft=undefined;save();return next()}
  if(t.hasAttribute("data-retry")){run(S.page);S.err="";render(false);return}
  if(t.dataset.ans){S.ans[t.dataset.ans]=t.dataset.v;render(false);setTimeout(()=>{if(S.page==="q_"+t.dataset.ans)next()},380);return}
  if(t.dataset.vcat!==undefined){S.vcat=t.dataset.vcat;render(false);return}
@@ -2439,7 +2446,7 @@ async function introRun(){const gen=GEN,ok=()=>gen===GEN&&!SKIP,lg=SCR[S.lang]?S
  // Cliente déjà inscrite : « Salut, je suis ta personal stylist », puis son rôle et la suite (sans redemander le prénom).
  for(const t of C.INTRO){if(!ok())return;await line(...t)}
  if(S.nom){for(const t of [...C.SUITE,...C.FIN]){if(!ok())return;await line(...t)}return}
- if(!ok())return;await line(...C.ASKNOM);if(!ok())return;const n=await askNom();if(!ok())return;
+ if(!ok())return;await line(...C.ASKNOM);if(!ok())return;const n=capNom(await askNom());if(!ok())return;
  if(n){S.nom=n;NOM=n;save();$("#hi").textContent=L("hi")+" "+n+(lg==="fr"?" !":"!");if(lg==="fr")await ttsNom(n,"enchantee");else sayUrl(C.OUTRO(n)[0][0]);for(const t of C.OUTRO(n)){if(!ok())return;await line(...t)}if(lg!=="fr")for(const t of [...C.SUITE,...C.FIN]){if(!ok())return;await line(...t)}}
  else for(const t of [...C.SUITE,...C.FIN]){if(!ok())return;await line(...t)}}
 // Déjà saluée pendant cette ouverture (rechargement de mise à jour) : l’écran d’accueil reste silencieux.
