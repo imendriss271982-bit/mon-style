@@ -3,6 +3,11 @@
    Le texte affiché à l'écran et la voix d'Aura sont traduits automatiquement à partir de cette liste.
    Pour corriger une traduction : modifie simplement la 2e (anglais) ou la 3e (arabe) colonne. */
 const I18N_D=[
+// ——— v151 : fond blanc conseillé (pas d'IA payante) ———
+["Pose tes pièces à plat sur un fond blanc (drap blanc, sol clair), sans qu’elles se touchent : Aura enlève le fond toute seule.","Lay your pieces flat on a white background (white sheet, light floor), not touching: Aura removes the background by herself.","حطي قطعچ مفرودة على خلفية بيضا (شرشف أبيض، أرضية فاتحة)، بدون ما يلمسون بعض: أورا تشيل الخلفية بروحها."],
+["Tu peux en photographier plusieurs ensemble, elle range chacune à sa place.","You can photograph several together, she files each one in its place.","تقدرين تصورين كذا قطعة مع بعض، وهي تحط كل وحدة في مكانها."],
+["Le fond de ta photo est trop chargé pour l’enlever.","Your photo’s background is too busy to remove.","خلفية صورتچ فيها نقوش واجد وما تنشال."],
+["Pose tes pièces sur un fond blanc et reprends la photo.","Lay your pieces on a white background and retake the photo.","حطي قطعچ على خلفية بيضا وصوّري مرة ثانية."],
 // ——— v149 : photo studio de l'Outfit check ———
 ["Studio crème","Cream studio","ستوديو كريمي"],
 ["Gris pro","Pro grey","رمادي احترافي"],

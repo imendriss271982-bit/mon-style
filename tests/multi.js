@@ -44,6 +44,18 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  await p.evaluate(()=>grAdd([__f]));await p.waitForTimeout(300);
  ok(await p.evaluate(()=>GR.items.length===5&&GR.items[0].todo===1&&!GR.items[0].wait),'Erreur : article à compléter, jamais bloqué');
  ok(await p.evaluate(()=>JSON.parse(localStorage.getItem('monstyle_gr')).items.some(x=>x.type==='Blazer court')),'Sauvegardé dans le téléphone');
+ // Fond à motifs : pas d'IA payante, message « fond blanc »
+ await p.evaluate(async()=>{const c=document.createElement('canvas');c.width=800;c.height=800;const g=c.getContext('2d');
+  for(let y=0;y<800;y+=20)for(let x=0;x<800;x+=20){g.fillStyle=((x+y)/20)%3===0?'#C2185B':((x+y)/20)%3===1?'#E8A33D':'#F5F0E6';g.fillRect(x,y,20,20)}
+  g.fillStyle='#151515';g.fillRect(200,150,400,500);window.__m=new File([await new Promise(r=>c.toBlob(r,'image/jpeg',.9))],'m.jpg',{type:'image/jpeg'});
+  window.__fx=0;const F=window.fetch;window.fetch=(u,o)=>{if(/detour|makeup/.test(String(u)))__fx++;return F(u,o)};
+  SAMPLE={json:async()=>({pieces:[{box_2d:[160,220,640,580],categorie:'veste',type:'Blazer oversize',nom:'Blazer noir',couleur:'Noir',hex:'#151515'}]})};go('garde')});
+ await p.evaluate(()=>grAdd([__m]));await p.waitForTimeout(500);
+ ok(await p.evaluate(()=>GR.items[0].fond===1&&__fx===0),'Fond chargé : aucune IA d’image appelée');
+ ok(/fond blanc/.test(await p.$eval('.gr-tip',e=>e.innerText)),'Astuce : fond blanc');
+ await p.evaluate(()=>{S.grItem=GR.items[0].id;go('g_item')});await p.waitForTimeout(200);
+ ok(/trop chargé/.test(await p.$eval('.gr-fond',e=>e.innerText)),'Fiche : conseil de reprendre sur fond blanc');
+ await p.evaluate(()=>{GR.items.shift();grSave();go('garde')});
  // ——— Outfit check en solutions ———
  ok(await p.evaluate(()=>{const pr=PR_OUT();return /solutions/.test(pr)&&pr.includes(GR.items[1].id)&&/jamais un souci sans sa solution/.test(pr)}),'Prompt Outfit check : solutions + garde-robe avec ids');
  await p.evaluate(()=>{const b=GR.items.find(x=>x.cat==='veste');S.res.outfit={note:7,resume:'Belle base, très élégante.',points_forts:['Couleurs harmonieuses'],note_apres:9,solutions:[

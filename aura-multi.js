@@ -75,6 +75,7 @@ function grDecoupe(im,box){const W=im.naturalWidth||im.width,H=im.naturalHeight|
  if(!det){const f=document.createElement("canvas");f.width=w;f.height=h;const x=f.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,w,h);x.drawImage(c,0,0);fin=f}
  return {img:fin.toDataURL("image/jpeg",.78),det}}
 
+const GR_FOND_MSG="Le fond de ta photo est trop chargé pour l’enlever. Pose tes pièces sur un fond blanc et reprends la photo.";
 const grNewId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 // Remplace l'ancien ajout (une photo = une pièce) : une photo = toutes les pièces qu'elle contient.
 grAdd=async function(files){const sm=await getSample();
@@ -87,24 +88,29 @@ grAdd=async function(files){const sm=await getSample();
   if(!ps.length){Object.assign(tmp,{wait:0,cat:"haut",nom:"Article",todo:1});if(r&&r.erreur)toast(r.erreur);GR.looks={};grSave();if(S.page==="garde"||S.page==="g_item")render(false);continue}
   let im=null;if(ps.length>1||ps[0].box){try{im=await grImage(f)}catch(e){}}
   const nouv=[];let det=0;
-  for(const p of ps){let pic=img;if(im&&p.box){try{const d=grDecoupe(im,p.box);pic=d.img;if(d.det)det++}catch(e){}}
-   nouv.push({id:grNewId(),img:pic,cat:p.cat,type:p.type,nom:p.nom||p.type||grCat(p.cat),couleur:p.couleur,hex:p.hex,style:p.style,matiere:p.matiere,wait:0})}
+  let charge=0;
+  for(const p of ps){let pic=img,d=null;if(im&&p.box){try{d=grDecoupe(im,p.box);pic=d.img;if(d.det)det++}catch(e){}}
+   const x={id:grNewId(),img:pic,cat:p.cat,type:p.type,nom:p.nom||p.type||grCat(p.cat),couleur:p.couleur,hex:p.hex,style:p.style,matiere:p.matiere,wait:0};
+   if(d&&!d.det){x.fond=1;charge++}   // fond trop chargé : pas de détourage (v151 : pas d'IA payante, on conseille un fond blanc)
+   nouv.push(x)}
   const at=GR.items.indexOf(tmp);GR.items.splice(at<0?0:at,at<0?0:1,...nouv);GRDB.del(tmp.id);GR_IN_DB.delete(tmp.id);
   for(const x of nouv)await grKeep(x);GR.looks={};
   if(!grSave()){GR.items=GR.items.filter(x=>!nouv.includes(x));nouv.forEach(x=>GRDB.del(x.id));render(false);break}
   if(S.page==="garde"||S.page==="g_item")render(false);
   if(S.page==="garde"&&!GR.items.some(x=>x.wait)){const c=grCount(),noms=nouv.map(x=>(x.type||x.nom).toLowerCase());
-   say((nouv.length>1?"J’ai trouvé "+nouv.length+" pièces : "+noms.join(", ")+".":"C’est noté : "+noms[0]+".")+" "+(c.tot>=GR_MIN?"Ta garde-robe est prête.":"Encore "+(GR_MIN-c.tot)+" article"+(GR_MIN-c.tot>1?"s":"")+" et je coordonne tes tenues."))}}
+   say((nouv.length>1?"J’ai trouvé "+nouv.length+" pièces : "+noms.join(", ")+".":"C’est noté : "+noms[0]+".")+" "+(charge?GR_FOND_MSG:(c.tot>=GR_MIN?"Ta garde-robe est prête.":"Encore "+(GR_MIN-c.tot)+" article"+(GR_MIN-c.tot>1?"s":"")+" et je coordonne tes tenues.")))}
+  else if(charge)toast(GR_FOND_MSG)}
 };
 
 // Garde-robe : astuce pour la photo groupée + le type précis sous le nom de chaque pièce.
 if(typeof P!=="undefined"&&P.garde){const _g=P.garde;P.garde=(asT)=>{const r=_g(asT);if(!r||asT||typeof r.html!=="string")return r;
- r.html=r.html.replace('<div class="gr-adds">','<p class="gr-tip"><span aria-hidden="true">📸 </span><span>Tu peux photographier plusieurs pièces ensemble : pose-les à plat sur un fond uni, sans qu’elles se touchent.</span> <span>Aura les sépare et range chacune à sa place.</span></p><div class="gr-adds">');
+ r.html=r.html.replace('<div class="gr-adds">','<p class="gr-tip"><span aria-hidden="true">📸 </span><span>Pose tes pièces à plat sur un fond blanc (drap blanc, sol clair), sans qu’elles se touchent : Aura enlève le fond toute seule.</span> <span>Tu peux en photographier plusieurs ensemble, elle range chacune à sa place.</span></p><div class="gr-adds">');
  GR.items.forEach(x=>{if(x.type&&!x.wait&&norm(x.type)!==norm(x.nom||"")){const a=`data-gitem="${x.id}" aria-label="${esc(x.nom||"Article")}">`,i=r.html.indexOf(a);
   if(i>=0){const s=r.html.indexOf("</span></button>",i);if(s>0)r.html=r.html.slice(0,s)+`<small class="gr-ty">${esc(x.type)}</small>`+r.html.slice(s)}}});
  return r}}
 if(typeof P!=="undefined"&&P.g_item){const _i=P.g_item;P.g_item=()=>{const r=_i(),x=GR.items.find(i=>i.id===S.grItem);if(!x||!r||typeof r.html!=="string")return r;
  const ty=x.cat&&GR_TYPES[x.cat]?GR_TYPES[x.cat]:[];
+ if(x.fond)r.html=r.html.replace('<label class="lbl" for="g_nom">','<p class="gr-fond">'+esc(GR_FOND_MSG)+'</p><label class="lbl" for="g_nom">');
  r.html=r.html.replace('<label class="lbl" for="g_coul">',`<label class="lbl" for="g_type">Type précis</label><input class="field" id="g_type" data-gi="type" list="g_types" value="${esc(x.type||"")}" placeholder="Par exemple : blazer long"><datalist id="g_types">${ty.map(t=>`<option value="${esc(t)}">`).join("")}</datalist><label class="lbl" for="g_coul">`);
  return r}}
 // Le type précis part aussi chez Aura (tenues, Outfit check, appel vocal).
@@ -124,6 +130,7 @@ function ocHtml(o){const sols=ocSols(o),apres=Math.round(+o.note_apres||0);
 function ocSay(o){const s=ocSols(o)[0];if(!s)return (o.changements||[]).length?" "+o.changements[0]:"";return (s.probleme?" "+s.probleme:"")+" "+s.texte+(s.it?" Tu l’as déjà.":"")}
 
 (function(){const st=document.createElement("style");st.textContent=`
+.gr-fond{font-size:13px;color:#8C6D35;background:#FBF6EE;border-radius:12px;padding:8px 10px;margin:10px 0}
 .gr-tip{font-size:13px;color:var(--mut,#6E6E6E);margin:4px 0 10px;line-height:1.45}
 .gr-it .gr-ty{display:block;font-size:11px;color:var(--accent);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .oc-sols{display:grid;gap:10px;margin:6px 0 14px}
