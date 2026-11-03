@@ -3,6 +3,24 @@
    Le texte affiché à l'écran et la voix d'Aura sont traduits automatiquement à partir de cette liste.
    Pour corriger une traduction : modifie simplement la 2e (anglais) ou la 3e (arabe) colonne. */
 const I18N_D=[
+// ——— v147 : plusieurs pièces sur une photo + Outfit check en solutions ———
+["Tu peux photographier plusieurs pièces ensemble : pose-les à plat sur un fond uni, sans qu’elles se touchent.","You can photograph several pieces together: lay them flat on a plain background, without touching.","تقدرين تصورين كذا قطعة مع بعض: حطيهم مفرودين على خلفية سادة، بدون ما يلمسون بعض."],
+["Aura les sépare et range chacune à sa place.","Aura separates them and files each one in its place.","أورا تفصلهم وتحط كل وحدة في مكانها."],
+["Type précis","Exact type","النوع بالضبط"],
+["Par exemple : blazer long","For example: long blazer","مثلاً: بليزر طويل"],
+["J’ai trouvé {0} pièces : {1}.","I found {0} pieces: {1}.","لقيت {0} قطع: {1}."],
+["C’est noté : {0}.","Got it: {0}.","تمام: {0}."],
+["Ta garde-robe est prête.","Your wardrobe is ready.","خزانتچ جاهزة."],
+["Encore {0} article et je coordonne tes tenues.","{0} more item and I’ll put your outfits together.","قطعة وحدة بعد وأنسّق لوكاتچ."],
+["Encore {0} articles et je coordonne tes tenues.","{0} more items and I’ll put your outfits together.","{0} قطع بعد وأنسّق لوكاتچ."],
+["Pour passer à {0}/10","To reach {0}/10","عشان توصلين {0}/10"],
+["Pour aller plus loin","To take it further","عشان يصير أحلى"],
+["Ajoute","Add","زيدي"],
+["Change","Swap","بدّلي"],
+["✓ Tu l’as déjà dans ta garde-robe","✓ Already in your wardrobe","✓ عندچ في خزانتچ"],
+["Tu l’as déjà.","You already have it.","عندچ ياه."],
+["achat facultatif","optional purchase","شراء اختياري"],
+["Voir dans la Boutique","See in the Shop","شوفي في المتجر"],
 // ——— v146 : accueil focus ———
 ["Nouveau pour toi","New for you","جديد لچ"],
 ["Ta garde-robe, la tenue du jour, le shopping et la beauté sont maintenant ouverts.","Your wardrobe, outfit of the day, shopping and beauty are now open.","خزانتچ، لبسة اليوم، التسوق والجمال صارت مفتوحة لچ."],
