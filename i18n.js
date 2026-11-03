@@ -3,6 +3,13 @@
    Le texte affiché à l'écran et la voix d'Aura sont traduits automatiquement à partir de cette liste.
    Pour corriger une traduction : modifie simplement la 2e (anglais) ou la 3e (arabe) colonne. */
 const I18N_D=[
+// ——— v150 : fond pro (IA) ———
+["Fond pro","Pro background","خلفية احترافية"],
+["Aura prépare la photo pro…","Aura is preparing the pro photo…","أورا تجهّز الصورة الاحترافية…"],
+["Ça n’a pas marché cette fois.","It didn’t work this time.","ما زبطت هالمرة."],
+["Réessaie.","Try again.","جرّبي مرة ثانية."],
+["Fond pro pour mes pièces ({0})","Pro background for my pieces ({0})","خلفية احترافية لقطعي ({0})"],
+["Le fond pro a besoin de la facturation Gemini.","The pro background needs Gemini billing.","الخلفية الاحترافية تحتاج تفعيل الدفع في Gemini."],
 // ——— v149 : photo studio de l'Outfit check ———
 ["Studio crème","Cream studio","ستوديو كريمي"],
 ["Gris pro","Pro grey","رمادي احترافي"],

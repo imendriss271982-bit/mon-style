@@ -87,24 +87,58 @@ grAdd=async function(files){const sm=await getSample();
   if(!ps.length){Object.assign(tmp,{wait:0,cat:"haut",nom:"Article",todo:1});if(r&&r.erreur)toast(r.erreur);GR.looks={};grSave();if(S.page==="garde"||S.page==="g_item")render(false);continue}
   let im=null;if(ps.length>1||ps[0].box){try{im=await grImage(f)}catch(e){}}
   const nouv=[];let det=0;
-  for(const p of ps){let pic=img;if(im&&p.box){try{const d=grDecoupe(im,p.box);pic=d.img;if(d.det)det++}catch(e){}}
-   nouv.push({id:grNewId(),img:pic,cat:p.cat,type:p.type,nom:p.nom||p.type||grCat(p.cat),couleur:p.couleur,hex:p.hex,style:p.style,matiere:p.matiere,wait:0})}
+  const aPro=[];
+  for(const p of ps){let pic=img,d=null;if(im&&p.box){try{d=grDecoupe(im,p.box);pic=d.img;if(d.det)det++}catch(e){}}
+   const x={id:grNewId(),img:pic,cat:p.cat,type:p.type,nom:p.nom||p.type||grCat(p.cat),couleur:p.couleur,hex:p.hex,style:p.style,matiere:p.matiere,wait:0};
+   if(d&&d.det)x.det=1;else{let hd="";try{hd=im&&p.box?grCrop(im,p.box,800):""}catch(e){}aPro.push([x,hd])}
+   nouv.push(x)}
   const at=GR.items.indexOf(tmp);GR.items.splice(at<0?0:at,at<0?0:1,...nouv);GRDB.del(tmp.id);GR_IN_DB.delete(tmp.id);
   for(const x of nouv)await grKeep(x);GR.looks={};
   if(!grSave()){GR.items=GR.items.filter(x=>!nouv.includes(x));nouv.forEach(x=>GRDB.del(x.id));render(false);break}
+  aPro.forEach(([x,hd])=>grProQ(x,hd));
   if(S.page==="garde"||S.page==="g_item")render(false);
   if(S.page==="garde"&&!GR.items.some(x=>x.wait)){const c=grCount(),noms=nouv.map(x=>(x.type||x.nom).toLowerCase());
    say((nouv.length>1?"J’ai trouvé "+nouv.length+" pièces : "+noms.join(", ")+".":"C’est noté : "+noms[0]+".")+" "+(c.tot>=GR_MIN?"Ta garde-robe est prête.":"Encore "+(GR_MIN-c.tot)+" article"+(GR_MIN-c.tot>1?"s":"")+" et je coordonne tes tenues."))}}
 };
 
+
+// ——— v150 : « Fond pro » par l'IA quand le fond est chargé (tissu à motifs, lit, sol…) ———
+// Le modèle d'images de Gemini (route /detour du Worker) refait la pièce en photo produit sur fond blanc,
+// sans la changer. En attendant, la pièce garde sa découpe. Échec → la découpe reste, rien n'est perdu.
+const PR_DETOUR="Product photo for an online fashion boutique. Take ONLY the main clothing item or accessory in this photo and show it alone, centered and fully visible, laid flat as a clean packshot on a pure white seamless background (#FFFFFF) with a very soft natural shadow. Keep the item EXACTLY identical: same shape, cut, length, sleeves, neckline, colour, shade, pattern, texture, shine, buttons, zips and every detail. Do not redesign, recolour, add or remove anything. Remove everything else: bed, floor, fabric, hanger, hands, labels around it. No person, no text, no logo.";
+function grCrop(im,box,max){const W=im.naturalWidth||im.width,H=im.naturalHeight||im.height;let [y0,x0,y1,x1]=box.map((v,k)=>v/1000*(k%2?W:H));const py=(y1-y0)*.04,px=(x1-x0)*.04;
+ y0=Math.max(0,y0-py);x0=Math.max(0,x0-px);y1=Math.min(H,y1+py);x1=Math.min(W,x1+px);const sw=x1-x0,sh=y1-y0,k=Math.min(1,max/Math.max(sw,sh));
+ const c=document.createElement("canvas");c.width=Math.max(8,Math.round(sw*k));c.height=Math.max(8,Math.round(sh*k));c.getContext("2d").drawImage(im,x0,y0,sw,sh,0,0,c.width,c.height);return c.toDataURL("image/jpeg",.88).split(",")[1]}
+const GR_PRO={q:[],run:false,busy:new Set(),dit:false};
+function grProQ(x,b64){if(!x||x.pro||GR_PRO.busy.has(x.id))return;if(!b64){const m=String(x.img||"").match(/^data:image\/[a-z]+;base64,(.+)$/);if(!m)return;b64=m[1]}
+ if(typeof AI_URL==="undefined"||!AI_URL)return;GR_PRO.busy.add(x.id);GR_PRO.q.push([x,b64]);grProRun();if(S.page==="garde"||S.page==="g_item")render(false)}
+async function grProRun(){if(GR_PRO.run)return;GR_PRO.run=true;
+ while(GR_PRO.q.length){const [x,b64]=GR_PRO.q.shift();let ok=false;
+  try{const r=await fetch(AI_URL+"/detour",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:PR_DETOUR,image:b64})});let j={};try{j=await r.json()}catch(e){}
+   if(r.ok&&j.image){const im=new Image();im.src="data:"+(j.mime||"image/png")+";base64,"+j.image;await im.decode();
+    const s=420,c=document.createElement("canvas");c.width=s;c.height=s;const g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,s,s);
+    const k=Math.min(s/im.naturalWidth,s/im.naturalHeight);g.drawImage(im,(s-im.naturalWidth*k)/2,(s-im.naturalHeight*k)/2,im.naturalWidth*k,im.naturalHeight*k);
+    if(GR.items.includes(x)){x.img=c.toDataURL("image/jpeg",.82);x.pro=1;GR_IN_DB.delete(x.id);await grKeep(x);grSave();ok=true}}
+   else if(j.code==="no_billing"&&!GR_PRO.dit){GR_PRO.dit=true;toast("Le fond pro a besoin de la facturation Gemini.")}}catch(e){}
+  GR_PRO.busy.delete(x.id);if(!ok)x.proKo=1;if(S.page==="garde"||S.page==="g_item")render(false)}
+ GR_PRO.run=false}
+const grProTodo=()=>GR.items.filter(x=>!x.wait&&x.img&&!x.pro&&!x.det&&!GR_PRO.busy.has(x.id));
+document.addEventListener("click",e=>{const t=e.target.closest("[data-grpro],[data-grproall]");if(!t)return;
+ if(t.hasAttribute("data-grproall")){grProTodo().forEach(x=>grProQ(x));return}
+ const x=GR.items.find(i=>i.id===t.dataset.grpro);if(x){delete x.proKo;grProQ(x)}});
+
 // Garde-robe : astuce pour la photo groupée + le type précis sous le nom de chaque pièce.
 if(typeof P!=="undefined"&&P.garde){const _g=P.garde;P.garde=(asT)=>{const r=_g(asT);if(!r||asT||typeof r.html!=="string")return r;
+ {const n=grProTodo().length;if(n)r.html=r.html.replace('<div class="gr-adds">','<button type="button" class="link gr-proall" data-grproall>✨ Fond pro pour mes pièces ('+n+')</button><div class="gr-adds">')}
  r.html=r.html.replace('<div class="gr-adds">','<p class="gr-tip"><span aria-hidden="true">📸 </span><span>Tu peux photographier plusieurs pièces ensemble : pose-les à plat sur un fond uni, sans qu’elles se touchent.</span> <span>Aura les sépare et range chacune à sa place.</span></p><div class="gr-adds">');
+ GR_PRO.busy.forEach(id=>{const k=r.html.indexOf(`data-gitem="${id}"`);if(k<0)return;const c=r.html.lastIndexOf('class="gr-it',k);if(c>=0)r.html=r.html.slice(0,c+12)+' polish'+r.html.slice(c+12)});
  GR.items.forEach(x=>{if(x.type&&!x.wait&&norm(x.type)!==norm(x.nom||"")){const a=`data-gitem="${x.id}" aria-label="${esc(x.nom||"Article")}">`,i=r.html.indexOf(a);
   if(i>=0){const s=r.html.indexOf("</span></button>",i);if(s>0)r.html=r.html.slice(0,s)+`<small class="gr-ty">${esc(x.type)}</small>`+r.html.slice(s)}}});
  return r}}
 if(typeof P!=="undefined"&&P.g_item){const _i=P.g_item;P.g_item=()=>{const r=_i(),x=GR.items.find(i=>i.id===S.grItem);if(!x||!r||typeof r.html!=="string")return r;
  const ty=x.cat&&GR_TYPES[x.cat]?GR_TYPES[x.cat]:[];
+ const pb=x.pro||x.det?"":GR_PRO.busy.has(x.id)?`<p class="gr-pro-st">✨ Aura prépare la photo pro…</p>`:`<button type="button" class="btn gr-pro-b" data-grpro="${x.id}">✨ Fond pro</button>${x.proKo?`<p class="gr-pro-st">Ça n’a pas marché cette fois. Réessaie.</p>`:""}`;
+ r.html=r.html.replace('<label class="lbl" for="g_nom">',pb+'<label class="lbl" for="g_nom">');
  r.html=r.html.replace('<label class="lbl" for="g_coul">',`<label class="lbl" for="g_type">Type précis</label><input class="field" id="g_type" data-gi="type" list="g_types" value="${esc(x.type||"")}" placeholder="Par exemple : blazer long"><datalist id="g_types">${ty.map(t=>`<option value="${esc(t)}">`).join("")}</datalist><label class="lbl" for="g_coul">`);
  return r}}
 // Le type précis part aussi chez Aura (tenues, Outfit check, appel vocal).
@@ -124,6 +158,9 @@ function ocHtml(o){const sols=ocSols(o),apres=Math.round(+o.note_apres||0);
 function ocSay(o){const s=ocSols(o)[0];if(!s)return (o.changements||[]).length?" "+o.changements[0]:"";return (s.probleme?" "+s.probleme:"")+" "+s.texte+(s.it?" Tu l’as déjà.":"")}
 
 (function(){const st=document.createElement("style");st.textContent=`
+
+.gr-it.polish{position:relative}.gr-it.polish img,.gr-it.polish .gr-ph{animation:grp 1.1s ease-in-out infinite alternate}.gr-it.polish::after{content:"✨";position:absolute;top:6px;right:8px;font-size:18px}
+.gr-proall{display:block;margin:2px 0 6px;font-weight:600}.gr-pro-b{margin:10px 0 4px}.gr-pro-st{font-size:13px;color:#6E6E6E;margin:8px 0}
 .gr-tip{font-size:13px;color:var(--mut,#6E6E6E);margin:4px 0 10px;line-height:1.45}
 .gr-it .gr-ty{display:block;font-size:11px;color:var(--accent);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .oc-sols{display:grid;gap:10px;margin:6px 0 14px}

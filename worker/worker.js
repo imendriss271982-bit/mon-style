@@ -8,7 +8,7 @@ let GOOD_IMG = "";
 // Limite de demandes par adresse IP (par instance du Worker, au mieux) : l'en-tête Origin peut être imité
 // hors navigateur, cette limite évite qu'un robot épuise le crédit Gemini / ElevenLabs.
 const HITS = new Map();
-const LIMITS = { "/": 60, "/makeup": 6, "/tts": 60, "/verif/new": 4, "/verif/get": 60, "/verif/del": 30, "/verif/admin": 40, "/liste/add": 5, "/liste/admin": 40 }; // demandes par 10 minutes
+const LIMITS = { "/": 60, "/makeup": 6, "/detour": 40, "/tts": 60, "/verif/new": 4, "/verif/get": 60, "/verif/del": 30, "/verif/admin": 40, "/liste/add": 5, "/liste/admin": 40 }; // demandes par 10 minutes
 function tooMany(ip, path) {
   const now = Date.now(), win = 600000, key = path + "|" + ip, max = LIMITS[path] || 30;
   const list = (HITS.get(key) || []).filter(t => now - t < win);
@@ -204,7 +204,8 @@ export default {
       if (!KEY) return json({ erreur: "La clé Gemini n'est pas configurée sur Cloudflare." }, 500);
 
       // Essai make-up : Gemini (modèle d'images) maquille la photo de la cliente selon sa tenue. Réservé aux abonnées dans l'app.
-      if (new URL(req.url).pathname === "/makeup") {
+      // /detour (v150) : même appel au modèle d'images, pour la photo « produit » d'une pièce de la garde-robe (fond blanc), avec sa propre limite.
+      if (new URL(req.url).pathname === "/makeup" || new URL(req.url).pathname === "/detour") {
         let b3 = {};
         try { b3 = await req.json(); } catch { return json({ erreur: "Requête invalide." }, 400); }
         const img = b3 && b3.image, mp = String((b3 && b3.prompt) || "").slice(0, 5000);
