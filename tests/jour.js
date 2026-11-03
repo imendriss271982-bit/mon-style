@@ -11,7 +11,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  items[0].w=[hier];
  const boot=async(lang)=>{await p.goto(URL);await p.waitForTimeout(900);await p.evaluate(()=>{document.getElementById('splash')?.remove();home()});await p.waitForTimeout(200)};
  await p.goto(URL);
- await p.evaluate(()=>{localStorage.clear();localStorage.setItem('monstyle',JSON.stringify({nom:'Test',lang:'fr',later:true,res:{corps:{forme:'Sablier',kibbe:'Soft Classic'}}}))});
+ await p.evaluate(()=>{localStorage.clear();localStorage.setItem('monstyle_focus','{"all":true}');localStorage.setItem('monstyle',JSON.stringify({nom:'Test',lang:'fr',later:true,res:{corps:{forme:'Sablier',kibbe:'Soft Classic'}}}))});
  // Garde-robe vide : invitation à ajouter des vêtements
  await boot();
  await p.evaluate(()=>go('jour'));await p.waitForTimeout(200);

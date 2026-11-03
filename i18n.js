@@ -3,6 +3,14 @@
    Le texte affiché à l'écran et la voix d'Aura sont traduits automatiquement à partir de cette liste.
    Pour corriger une traduction : modifie simplement la 2e (anglais) ou la 3e (arabe) colonne. */
 const I18N_D=[
+// ——— v146 : accueil focus ———
+["Nouveau pour toi","New for you","جديد لچ"],
+["Ta garde-robe, la tenue du jour, le shopping et la beauté sont maintenant ouverts.","Your wardrobe, outfit of the day, shopping and beauty are now open.","خزانتچ، لبسة اليوم، التسوق والجمال صارت مفتوحة لچ."],
+["Ton Style Twin et ton abaya selon ta silhouette sont maintenant ouverts.","Your Style Twin and your abaya for your silhouette are now open.","Style Twin وعبايتچ حسب قوامچ صارت مفتوحة لچ."],
+["Les inspirations et les événements mode sont maintenant ouverts.","Inspirations and fashion events are now open.","الإلهام وفعاليات الموضة صارت مفتوحة لچ."],
+["D'autres rubriques s'ouvriront au fil de ton parcours.","More sections will open as you go.","أقسام ثانية بتنفتح لچ وياه رحلتچ."],
+["Tout afficher","Show everything","اعرضي كل شي"],
+["Accueil simplifié","Simple home","الصفحة الرئيسية المبسّطة"],
 // ——— v145 : politique de confidentialité ———
 ["Politique de confidentialité","Privacy policy","سياسة الخصوصية"],
 // ——— v143 : Vérifié par une vraie styliste ———

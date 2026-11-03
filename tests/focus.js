@@ -1,0 +1,31 @@
+// Accueil « focus » (v146) : les rubriques s'ouvrent au fil du parcours.
+// Lancer : python3 -m http.server 8765, puis : node tests/focus.js
+const {chromium}=require('playwright');
+const URL=process.env.URL||'http://localhost:8765/';
+(async()=>{const b=await chromium.launch(),p=await b.newPage({viewport:{width:390,height:844}}),errs=[];let bad=0;
+p.on('pageerror',e=>errs.push(e.message));
+const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)bad++};
+const RES={corps:{forme:'Sablier'},couleurs:{saison:'Hiver Profond'},visage:{forme:'ovale'}};
+const items=[1,2,3].map(i=>({id:'a'+i,fam:'haut',nom:'x'+i,col:'#000'}));
+const vu=()=>p.evaluate(()=>{const q=s=>!!document.querySelector('#page '+s);return{acts:q('.hz-acts'),rub:q('[data-go="beaute"]'),twin:q('.tw-card'),golfe:q('.go-entree'),insp:q('.hz-insp'),oc:q('[data-go="o_photo"]'),zf:q('.zf-uni'),st:q('.hz-st'),nouv:q('.fx-new'),all:q('[data-fxall="1"]'),simple:q('[data-fxall="0"]')}});
+const open=async(s,lang='fr')=>{await p.goto(URL);await p.evaluate(([s,l])=>{localStorage.clear();localStorage.setItem('monstyle',JSON.stringify({nom:'T',lang:l,later:true,...s.m}));if(s.gr)localStorage.setItem('monstyle_gr',JSON.stringify(s.gr));if(s.fx)localStorage.setItem('monstyle_focus',JSON.stringify(s.fx))},[s,lang]);await p.goto(URL);await p.waitForTimeout(1200);await p.evaluate(()=>{document.getElementById('splash')?.remove();S.hist=[];home()});await p.waitForTimeout(400);return vu()};
+let v=await open({m:{}});
+ok(v.st&&v.oc&&v.zf,'Nouvelle cliente : Aura, Outfit check et My Style / Zifafi visibles');
+ok(!v.acts&&!v.rub&&!v.twin&&!v.golfe&&!v.insp,'Nouvelle cliente : le reste est caché');
+ok(v.all,'Lien « Tout afficher » présent');
+await p.click('[data-fxall="1"]');await p.waitForTimeout(300);v=await vu();
+ok(v.acts&&v.rub&&v.twin&&v.golfe&&v.insp&&v.simple,'« Tout afficher » montre tout, puis propose l’accueil simplifié');
+ok(await p.evaluate(()=>JSON.parse(localStorage.getItem('monstyle_focus')).all===true),'Choix « Tout afficher » gardé');
+await p.click('[data-fxall="0"]');await p.waitForTimeout(300);v=await vu();ok(!v.acts&&v.all,'Retour à l’accueil simplifié');
+v=await open({m:{res:RES}});
+ok(v.acts&&v.rub&&!v.twin&&!v.golfe&&!v.insp,'Analyse finie : garde-robe et rubriques ouvertes');
+ok(v.nouv,'Carte « Nouveau pour toi » affichée');
+await p.click('[data-fxok]');await p.waitForTimeout(300);v=await vu();ok(!v.nouv,'Carte fermée après ✓');
+v=await open({m:{res:RES},gr:{items,looks:[],saved:[]},fx:{first:new Date().toISOString().slice(0,10),seen:1}});
+ok(v.twin&&v.golfe&&!v.insp&&v.nouv,'3 vêtements : Style Twin et Golfe ouverts');
+v=await open({m:{res:RES},gr:{items,looks:[],saved:[]},fx:{first:'2020-01-01',seen:3}});
+ok(v.insp&&!v.all&&!v.nouv,'Après 7 jours : tout est ouvert, plus de lien ni d’annonce');
+v=await open({m:{}},'ar');
+ok(!v.acts&&await p.evaluate(()=>/اعرضي/.test(document.querySelector('[data-fxall]').textContent)),'Arabe : lien traduit');
+ok(!errs.length,'Aucune erreur JavaScript'+(errs.length?' : '+errs.join(' | '):''));
+console.log(bad?bad+' test(s) en échec':'Tous les tests passent');await b.close();process.exit(bad?1:0)})();
