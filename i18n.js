@@ -3,6 +3,19 @@
    Le texte affiché à l'écran et la voix d'Aura sont traduits automatiquement à partir de cette liste.
    Pour corriger une traduction : modifie simplement la 2e (anglais) ou la 3e (arabe) colonne. */
 const I18N_D=[
+// ——— v149 : photo studio de l'Outfit check ———
+["Studio crème","Cream studio","ستوديو كريمي"],
+["Gris pro","Pro grey","رمادي احترافي"],
+["Blanc boutique","Boutique white","أبيض بوتيك"],
+["Soie My Style","My Style silk","حرير My Style"],
+["Ta tenue en photo studio","Your outfit in a studio photo","لبسچ بصورة ستوديو"],
+["Le fond est enlevé sur ton téléphone : ta photo ne part nulle part.","The background is removed on your phone: your photo never leaves it.","الخلفية تنشال على تلفونچ: صورتچ ما تطلع لأي مكان."],
+["Le fond studio n’a pas marché sur cette photo.","The studio background didn’t work on this photo.","خلفية الستوديو ما زبطت على هالصورة."],
+["Prends-toi en pied, bien détachée du décor.","Take a full-length photo, standing clear of the background.","تصوّري بالطول الكامل، وبعيدة شوي عن اللي وراچ."],
+["Enregistrer la photo","Save the photo","احفظي الصورة"],
+["Partager","Share","شاركي"],
+["Photo enregistrée","Photo saved","انحفظت الصورة"],
+["Fond","Background","الخلفية"],
 // ——— v147 : plusieurs pièces sur une photo + Outfit check en solutions ———
 ["Tu peux photographier plusieurs pièces ensemble : pose-les à plat sur un fond uni, sans qu’elles se touchent.","You can photograph several pieces together: lay them flat on a plain background, without touching.","تقدرين تصورين كذا قطعة مع بعض: حطيهم مفرودين على خلفية سادة، بدون ما يلمسون بعض."],
 ["Aura les sépare et range chacune à sa place.","Aura separates them and files each one in its place.","أورا تفصلهم وتحط كل وحدة في مكانها."],
