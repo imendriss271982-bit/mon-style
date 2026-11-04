@@ -10,7 +10,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  const boot=async()=>{await p.goto(URL);await p.waitForTimeout(900);await p.evaluate(()=>{document.getElementById('splash')?.remove();home()});await p.waitForTimeout(200)};
  await p.goto(URL);
  // Sans analyse
- await p.evaluate(()=>{localStorage.clear();localStorage.setItem('monstyle_focus','{"all":true}');localStorage.setItem('monstyle',JSON.stringify({nom:'Test',lang:'fr',later:true}))});
+ await p.evaluate(()=>{localStorage.clear();localStorage.setItem('monstyle_focus','{"all":true}');localStorage.setItem('monstyle_portes_vu','1');localStorage.setItem('monstyle',JSON.stringify({nom:'Test',lang:'fr',later:true}))});
  await boot();
  ok(await p.$('.go-entree[data-view="golfe"]'),'Accueil : carte « Abaya et occasions »');
  ok(await p.evaluate(()=>{const c=document.querySelector('.go-entree'),h=[...document.querySelectorAll('.hz-h')].find(x=>/Pour toi/.test(x.textContent));return c&&h&&(c.compareDocumentPosition(h)&Node.DOCUMENT_POSITION_FOLLOWING)}),'Carte placée juste avant « Pour toi aujourd’hui »');
