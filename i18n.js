@@ -3,6 +3,29 @@
    Le texte affiché à l'écran et la voix d'Aura sont traduits automatiquement à partir de cette liste.
    Pour corriger une traduction : modifie simplement la 2e (anglais) ou la 3e (arabe) colonne. */
 const I18N_D=[
+// ——— v158 : bien photographier ses pièces ———
+["Bien photographier tes pièces","Photograph your pieces well","صوري قطعچ صح"],
+["Une pièce bien posée, c’est une garde-robe propre et des tenues justes.","A well-placed piece means a neat wardrobe and spot-on outfits.","القطعة المحطوطة صح يعني دولاب مرتب ولبسات مضبوطة."],
+["Comme ça","Like this","چذي"],
+["Pas comme ça","Not like this","مو چذي"],
+["Le bon sens de chaque pièce","The right way up for each piece","الاتجاه الصح لكل قطعة"],
+["Hauts, vestes, robes, abayas","Tops, jackets, dresses, abayas","البلايز، الجواكيت، الفساتين، العبايات"],
+["Le col en haut, les manches dépliées sur les côtés.","Collar at the top, sleeves spread out to the sides.","الياقة فوق، والأكمام مفرودة على الجوانب."],
+["Pantalons et jupes","Trousers and skirts","البناطيل والتنانير"],
+["La taille en haut, les jambes ou l’ourlet vers le bas.","Waistband at the top, legs or hem towards the bottom.","الخصر فوق، والرجول أو الطرف تحت."],
+["Posées sur leur semelle, de profil, la paire côte à côte.","Standing on their soles, side view, the pair side by side.","على نعلها، من الجنب، والفردتين جنب بعض."],
+["Sacs","Bags","الشنط"],
+["Debout, l’anse en haut.","Standing up, handle at the top.","واقفة، والمسكة فوق."],
+["4 règles pour une belle photo","4 rules for a great photo","٤ قواعد لصورة حلوة"],
+["Téléphone bien au-dessus, droit, pas en biais.","Phone right above, straight, not at an angle.","التلفون فوق القطع على طول، مستوي، مو مايل."],
+["Fond blanc (drap, sol clair), pièces qui ne se touchent pas.","White background (sheet, light floor), pieces not touching.","خلفية بيضا (شرشف، أرضية فاتحة)، والقطع ما تلمس بعض."],
+["Lumière du jour, sans flash ni ombre.","Daylight, no flash, no shadows.","ضو النهار، بدون فلاش ولا ظل."],
+["Toute la pièce dans le cadre, rien de coupé.","The whole piece in the frame, nothing cut off.","القطعة كلها داخل الصورة، ولا شي مقصوص."],
+["Une pièce arrive quand même de travers ? Aura la redresse ; sinon, touche « Pivoter » dans sa fiche.","A piece still comes out crooked? Aura straightens it; if not, tap “Rotate” on its page.","طلعت قطعة مايلة؟ أورا تعدلها؛ وإذا لا، اضغطي «دوّري» في صفحتها."],
+["Choisir dans ma galerie","Choose from my gallery","اختاري من الصور"],
+["Comment bien photographier ?","How to take a good photo?","شلون أصور صح؟"],
+["Pivoter","Rotate","دوّري"],
+["Cette photo n’a pas pu être tournée","This photo couldn’t be rotated","ما قدرنا ندور هالصورة"],
 // ——— v157 : avatar du Style Twin ———
 ["Ton avatar", "Your avatar", "أفاتارچ"],
 ["Ta tenue du jour", "Your outfit of the day", "لبستچ اليوم"],

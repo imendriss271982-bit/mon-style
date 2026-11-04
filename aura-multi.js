@@ -22,8 +22,9 @@ const GR_MAXP=8;
 const PR_MULTI=()=>"Tu es styliste. Voici une photo de la garde-robe d’une cliente : elle peut contenir UNE ou PLUSIEURS pièces (posées à plat, sur un cintre, ou portées). Repère CHAQUE pièce séparément (vêtement, chaussures — une paire = une pièce —, sac, accessoire), "+GR_MAXP+" au maximum, les plus visibles d’abord. Ignore le décor, les cintres, les meubles et la personne. Pour chaque pièce, donne son cadre box_2d = [ymin, xmin, ymax, xmax] en entiers de 0 à 1000 (relatif à la photo), bien serré autour de la pièce entière. "+
  "Catégorie parmi : haut, pantalon, jupe, robe, veste, abaya, chaussures, sac, accessoire (un jean ou un short = pantalon, une combinaison ou une robe blazer = robe, un gilet ou un manteau = veste). "+
  "Donne aussi son type précis, comme une styliste : "+Object.keys(GR_TYPES).map(k=>k+" → "+GR_TYPES[k].join(", ")).join(" ; ")+". Choisis le plus juste (longueur, coupe) ; un autre type est permis s’il est plus exact. "+
+ "Donne aussi rot = la rotation (0, 90, 180 ou 270 degrés, dans le sens des aiguilles d’une montre) à appliquer à la pièce pour la mettre à l’endroit, comme dans une boutique : col, épaules ou taille en haut, ourlet et jambes en bas ; sac debout, anse en haut ; chaussures posées sur leur semelle. rot = 0 si elle est déjà droite. "+
  "S’il n’y a aucun vêtement, réponds {\"erreur\":\"Je ne vois pas de vêtement sur cette photo.\"}. "+FMT+
- "Format : {\"pieces\":[{\"box_2d\":[0,0,1000,1000],\"categorie\":\"\",\"type\":\"type précis\",\"nom\":\"2 à 4 mots, ex. Blazer long beige\",\"couleur\":\"1 à 2 mots\",\"hex\":\"#RRGGBB couleur dominante\",\"matiere\":\"1 mot ou vide\",\"style\":\"1 mot : classique, casual, chic, sport, romantique, bohème…\"}]}";
+ "Format : {\"pieces\":[{\"box_2d\":[0,0,1000,1000],\"rot\":0,\"categorie\":\"\",\"type\":\"type précis\",\"nom\":\"2 à 4 mots, ex. Blazer long beige\",\"couleur\":\"1 à 2 mots\",\"hex\":\"#RRGGBB couleur dominante\",\"matiere\":\"1 mot ou vide\",\"style\":\"1 mot : classique, casual, chic, sport, romantique, bohème…\"}]}";
 
 // Nettoie la réponse de Gemini. Ancien format (une seule pièce, sans cadre) accepté.
 function grPieces(r){if(!r||typeof r!=="object"||r.erreur)return [];
@@ -32,7 +33,7 @@ function grPieces(r){if(!r||typeof r!=="object"||r.erreur)return [];
   let b=Array.isArray(p.box_2d)&&p.box_2d.length===4?p.box_2d.map(Number):null;
   if(b&&b.every(n=>isFinite(n))){b=b.map(n=>Math.max(0,Math.min(1000,n)));if(b[2]-b[0]<25||b[3]-b[1]<25)b=null}else b=null;
   const cat=GR_CATS.some(c=>c[0]===p.categorie)&&p.categorie!=="bas"?p.categorie:"haut";
-  return {box:b,cat,type:String(p.type||"").slice(0,30),nom:String(p.nom||"").slice(0,40),couleur:String(p.couleur||"").slice(0,24),
+  return {box:b,rot:[90,180,270].includes(+p.rot)?+p.rot:0,cat,type:String(p.type||"").slice(0,30),nom:String(p.nom||"").slice(0,40),couleur:String(p.couleur||"").slice(0,24),
    hex:/^#[0-9a-f]{6}$/i.test(p.hex||"")?p.hex:"",matiere:String(p.matiere||"").slice(0,20),style:String(p.style||"").slice(0,20)}});
  // Deux cadres presque identiques = la même pièce : on n'en garde qu'un.
  const out=[];for(const p of ok){if(p.box&&out.some(q=>q.box&&grIoU(p.box,q.box)>.8))continue;out.push(p);if(out.length>=GR_MAXP)break}
@@ -58,7 +59,7 @@ function grMasque(d,w,h){const n=w*h,bd=[];
 
 function grImage(file){return new Promise((ok,ko)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{URL.revokeObjectURL(u);ok(im)};im.onerror=()=>{URL.revokeObjectURL(u);ko(new Error("photo"))};im.src=u})}
 // Découpe une pièce (cadre 0–1000), détoure, recadre au plus près, pose sur blanc (comme les autres vignettes).
-function grDecoupe(im,box){const W=im.naturalWidth||im.width,H=im.naturalHeight||im.height;
+function grDecoupe(im,box,rot){const W=im.naturalWidth||im.width,H=im.naturalHeight||im.height;
  let [y0,x0,y1,x1]=box.map((v,k)=>v/1000*(k%2?W:H));const py=(y1-y0)*.05,px=(x1-x0)*.05;
  y0=Math.max(0,y0-py);x0=Math.max(0,x0-px);y1=Math.min(H,y1+py);x1=Math.min(W,x1+px);
  const sw=x1-x0,sh=y1-y0,k=Math.min(1,420/Math.max(sw,sh)),w=Math.max(8,Math.round(sw*k)),h=Math.max(8,Math.round(sh*k));
@@ -73,7 +74,11 @@ function grDecoupe(im,box){const W=im.naturalWidth||im.width,H=im.naturalHeight|
    const cw=r-l+1,chh=b-t+1,s=Math.max(cw,chh);fin=document.createElement("canvas");fin.width=s;fin.height=s;const f=fin.getContext("2d");
    f.fillStyle="#fff";f.fillRect(0,0,s,s);f.drawImage(c,l,t,cw,chh,(s-cw)/2,(s-chh)/2,cw,chh)}}catch(e){}
  if(!det){const f=document.createElement("canvas");f.width=w;f.height=h;const x=f.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,w,h);x.drawImage(c,0,0);fin=f}
+ if(rot)fin=grTourneC(fin,rot);   // v158 : pièce remise à l’endroit (col / taille en haut)
  return {img:fin.toDataURL("image/jpeg",.78),det}}
+// Tourne un canvas de 90, 180 ou 270° (sens des aiguilles d’une montre).
+function grTourneC(c,rot){rot=((+rot%360)+360)%360;if(!rot)return c;const q=rot%180!==0,o=document.createElement("canvas");o.width=q?c.height:c.width;o.height=q?c.width:c.height;
+ const g=o.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,o.width,o.height);g.translate(o.width/2,o.height/2);g.rotate(rot*Math.PI/180);g.drawImage(c,-c.width/2,-c.height/2);return o}
 
 const GR_FOND_MSG="Le fond de ta photo est trop chargé pour l’enlever. Pose tes pièces sur un fond blanc et reprends la photo.";
 const grNewId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
@@ -89,7 +94,7 @@ grAdd=async function(files){const sm=await getSample();
   let im=null;if(ps.length>1||ps[0].box){try{im=await grImage(f)}catch(e){}}
   const nouv=[];let det=0;
   let charge=0;
-  for(const p of ps){let pic=img,d=null;if(im&&p.box){try{d=grDecoupe(im,p.box);pic=d.img;if(d.det)det++}catch(e){}}
+  for(const p of ps){let pic=img,d=null;if(!p.box&&p.rot&&typeof grTourne==="function"){try{pic=await grTourne(img,p.rot)}catch(e){}}if(im&&p.box){try{d=grDecoupe(im,p.box,p.rot);pic=d.img;if(d.det)det++}catch(e){}}
    const x={id:grNewId(),img:pic,cat:p.cat,type:p.type,nom:p.nom||p.type||grCat(p.cat),couleur:p.couleur,hex:p.hex,style:p.style,matiere:p.matiere,wait:0};
    if(d&&!d.det){x.fond=1;charge++}   // fond trop chargé : pas de détourage (v151 : pas d'IA payante, on conseille un fond blanc)
    nouv.push(x)}
