@@ -20,7 +20,7 @@ const URL=process.env.URL||'http://localhost:8765/',SHOTS=process.env.SHOTS||'';
  // 2. Les 5 silhouettes changent la forme
  const largeurs={};
  for(const f of ['X · Sablier','A · Poire','V · Triangle inversé','H · Rectangle','O · Pomme']){await open({res:{corps:{forme:f}}});
-  largeurs[f]=await p.evaluate(()=>{const d=avSVG(null);return d.match(/<path d="M([\d.]+),96/)[1]})}
+  largeurs[f]=await p.evaluate(()=>{const d=avSVG(null);return d.match(/<path d="M([\d.]+),84 Q100/)[1]})}
  ok(new Set(Object.values(largeurs)).size>=4,'Les silhouettes donnent des épaules différentes : '+JSON.stringify(largeurs));
  // 3. Vraies pièces : tenue enregistrée, couleurs, « Autre tenue »
  await open({res:{corps:{forme:'X · Sablier'}},gr:GR,saved,ans:{cheveux:'noir'}});await p.evaluate(()=>go('twin'));await p.waitForTimeout(400);
