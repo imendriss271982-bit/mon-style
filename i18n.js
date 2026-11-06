@@ -3,6 +3,8 @@
    Le texte affiché à l'écran et la voix d'Aura sont traduits automatiquement à partir de cette liste.
    Pour corriger une traduction : modifie simplement la 2e (anglais) ou la 3e (arabe) colonne. */
 const I18N_D=[
+["💬 Envoyer à une amie","💬 Send to a friend","💬 ارسليها لصديقة"],
+["💬 À une amie","💬 To a friend","💬 لصديقة"],
 ["✨ Écris « Aura » dans ton message : ta styliste vous donne son avis par écrit.","✨ Write “Aura” in your message: your stylist gives you her opinion in writing.","✨ اكتبي «أورا» في رسالتچ: الستايلست تعطيكم رايها كتابة."],
 ["Majlis","Majlis","المجلس"],
 ["Discute avec tes amies","Chat with your friends","سولفي مع صديقاتچ"],
