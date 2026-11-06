@@ -5,5 +5,7 @@
   // Garde les variables réglées dans Cloudflare (MODEL, VOICE_ID…) à chaque déploiement.
   "keep_vars": true,
   // Boîte aux lettres « Vérifié par une vraie styliste » (v143).
+  // Le Majlis (v159) : discussions entre amies.
+  "d1_databases": [{ "binding": "MAJLIS", "database_name": "mon-style-majlis", "database_id": "93a8be4f-59e7-4ef9-bef2-6cf2142aaa64" }],
   "kv_namespaces": [{ "binding": "VERIF", "id": "87bde6aed77d480594db654a8975a93c" }]
 }

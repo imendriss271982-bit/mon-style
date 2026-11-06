@@ -8,7 +8,7 @@ let GOOD_IMG = "";
 // Limite de demandes par adresse IP (par instance du Worker, au mieux) : l'en-tête Origin peut être imité
 // hors navigateur, cette limite évite qu'un robot épuise le crédit Gemini / ElevenLabs.
 const HITS = new Map();
-const LIMITS = { "/": 60, "/makeup": 6, "/tts": 60, "/verif/new": 4, "/verif/get": 60, "/verif/del": 30, "/verif/admin": 40, "/liste/add": 5, "/liste/admin": 40, "/contact/new": 5 }; // demandes par 10 minutes
+const LIMITS = { "/": 60, "/makeup": 6, "/tts": 60, "/verif/new": 4, "/verif/get": 60, "/verif/del": 30, "/verif/admin": 40, "/liste/add": 5, "/liste/admin": 40, "/contact/new": 5, "/majlis/msgs": 500, "/majlis/amis": 240, "/majlis/nonlus": 120, "/majlis/send": 150, "/majlis/moi": 20, "/majlis/join": 20, "/majlis/code": 40, "/majlis/quitter": 20, "/majlis/wipe": 10 }; // demandes par 10 minutes
 function tooMany(ip, path) {
   const now = Date.now(), win = 600000, key = path + "|" + ip, max = LIMITS[path] || 30;
   const list = (HITS.get(key) || []).filter(t => now - t < win);
@@ -166,6 +166,143 @@ ${message ? `<p style="margin:16px 0 4px;color:#6E6E6E">Son message :</p><div st
   return json({ ok: true });
 }
 
+// My Style — « Le Majlis » (v159, demandé par Imen) : discuter avec ses amies qui ont aussi My Style.
+// Base D1 `MAJLIS` (base « mon-style-majlis », id dans wrangler.jsonc). Tables :
+//   mj_users (id, th = empreinte SHA-256 du jeton, nom, code d'invitation, cree, vu)
+//   mj_amis  (a, b, cree)  — rangée dans les deux sens
+//   mj_msgs  (id, conv = "idA|idB" triés, de, t, txt, img = photo JPEG en data URL, look = titre de tenue, lu)
+// Pas de compte ni d'email : chaque téléphone reçoit un identifiant + un jeton secret (seule son empreinte est gardée).
+// On ne devient amies QUE par le lien d'invitation (code). Les messages sont effacés au bout de 60 jours.
+// Les photos arrivent déjà avec le visage caché (fait sur le téléphone, aura-majlis.js).
+
+const MJ_TTL = 60 * 24 * 3600 * 1000;
+const MJ_ALPHA = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"; // sans 0/O, 1/I/L
+const mjHex = n => [...crypto.getRandomValues(new Uint8Array(n))].map(x => x.toString(16).padStart(2, "0")).join("");
+const mjCode6 = () => [...crypto.getRandomValues(new Uint8Array(6))].map(x => MJ_ALPHA[x % MJ_ALPHA.length]).join("");
+async function mjSha(t) { const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(String(t))); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join(""); }
+const mjTxt = (v, n) => String(v == null ? "" : v).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "").trim().slice(0, n);
+const mjIdOk = v => /^[0-9a-f]{16}$/.test(String(v || ""));
+const mjConv = (a, b) => (a < b ? a + "|" + b : b + "|" + a);
+
+async function majlis(path, req, env, json) {
+  const DB = env.MAJLIS;
+  if (!DB) return json({ erreur: "Le Majlis n'est pas encore activé." }, 503);
+  let b = {}; try { b = await req.json(); } catch { return json({ erreur: "Requête invalide." }, 400); }
+  const now = Date.now();
+
+  // Aperçu d'une invitation (sans compte) : seulement le prénom de celle qui invite.
+  if (path === "/majlis/code") {
+    const c = mjTxt(b.code, 8).toUpperCase().replace(/[^A-Z0-9]/g, "");
+    const u = c && await DB.prepare("SELECT nom FROM mj_users WHERE code=?").bind(c).first();
+    if (!u) return json({ erreur: "Ce lien d'invitation ne marche plus.", code: "introuvable" }, 404);
+    return json({ nom: u.nom || "" });
+  }
+
+  // Création du compte du téléphone, ou mise à jour du prénom.
+  if (path === "/majlis/moi") {
+    const nom = mjTxt(b.nom, 30);
+    if (mjIdOk(b.uid)) {
+      const u = await DB.prepare("SELECT th, code FROM mj_users WHERE id=?").bind(b.uid).first();
+      if (u && u.th === await mjSha(mjTxt(b.token, 64))) {
+        if (nom) await DB.prepare("UPDATE mj_users SET nom=?, vu=? WHERE id=?").bind(nom, now, b.uid).run();
+        return json({ uid: b.uid, code: u.code });
+      }
+    }
+    if (!nom) return json({ erreur: "Dis-moi ton prénom." }, 400);
+    const uid = mjHex(8), token = mjHex(16), th = await mjSha(token);
+    for (let i = 0; i < 6; i++) {
+      const c = mjCode6();
+      try { await DB.prepare("INSERT INTO mj_users (id, th, nom, code, cree, vu) VALUES (?,?,?,?,?,?)").bind(uid, th, nom, c, now, now).run(); return json({ uid, token, code: c }); }
+      catch (e) { if (!/UNIQUE/i.test(String(e && e.message))) throw e; }
+    }
+    return json({ erreur: "Réessaie dans un instant." }, 500);
+  }
+
+  // Toutes les autres routes : identifiant + jeton du téléphone.
+  if (!mjIdOk(b.uid)) return json({ erreur: "Ouvre d'abord ton Majlis.", code: "compte" }, 401);
+  const me = await DB.prepare("SELECT th, nom FROM mj_users WHERE id=?").bind(b.uid).first();
+  if (!me || me.th !== await mjSha(mjTxt(b.token, 64))) return json({ erreur: "Ouvre d'abord ton Majlis.", code: "compte" }, 401);
+  const uid = b.uid;
+  const amie = async id => mjIdOk(id) && !!(await DB.prepare("SELECT 1 FROM mj_amis WHERE a=? AND b=?").bind(uid, id).first());
+
+  if (path === "/majlis/join") {
+    const c = mjTxt(b.code, 8).toUpperCase().replace(/[^A-Z0-9]/g, "");
+    const o = c && await DB.prepare("SELECT id, nom FROM mj_users WHERE code=?").bind(c).first();
+    if (!o) return json({ erreur: "Ce lien d'invitation ne marche plus.", code: "introuvable" }, 404);
+    if (o.id === uid) return json({ erreur: "C'est ton propre lien : envoie-le à une amie.", code: "moi" }, 400);
+    await DB.batch([
+      DB.prepare("INSERT OR IGNORE INTO mj_amis (a, b, cree) VALUES (?,?,?)").bind(uid, o.id, now),
+      DB.prepare("INSERT OR IGNORE INTO mj_amis (a, b, cree) VALUES (?,?,?)").bind(o.id, uid, now)
+    ]);
+    return json({ ami: { id: o.id, nom: o.nom || "" } });
+  }
+
+  if (path === "/majlis/amis") {
+    await DB.prepare("UPDATE mj_users SET vu=? WHERE id=?").bind(now, uid).run();
+    const r = await DB.prepare(
+      `SELECT u.id, u.nom, a.cree,
+        (SELECT COUNT(*) FROM mj_msgs m WHERE m.conv = CASE WHEN u.id < ?1 THEN u.id||'|'||?1 ELSE ?1||'|'||u.id END AND m.de = u.id AND m.lu = 0) AS nl,
+        (SELECT m.id||'\u0001'||m.de||'\u0001'||m.t||'\u0001'||COALESCE(m.txt,'')||'\u0001'||(m.img IS NOT NULL AND m.img!='')||'\u0001'||COALESCE(m.look,'')
+           FROM mj_msgs m WHERE m.conv = CASE WHEN u.id < ?1 THEN u.id||'|'||?1 ELSE ?1||'|'||u.id END ORDER BY m.id DESC LIMIT 1) AS der
+       FROM mj_amis a JOIN mj_users u ON u.id = a.b WHERE a.a = ?1`).bind(uid).all();
+    const amis = (r.results || []).map(x => {
+      let d = null;
+      if (x.der) { const p = String(x.der).split("\u0001"); d = { id: +p[0], de: p[1], t: +p[2], txt: (p[3] || "").slice(0, 80), img: p[4] === "1", look: p[5] || "" }; }
+      return { id: x.id, nom: x.nom || "", cree: x.cree, nl: x.nl || 0, der: d };
+    }).sort((x, y) => ((y.der && y.der.t) || y.cree || 0) - ((x.der && x.der.t) || x.cree || 0));
+    return json({ amis });
+  }
+
+  if (path === "/majlis/nonlus") {
+    const r = await DB.prepare("SELECT COUNT(*) AS n FROM mj_msgs WHERE (conv LIKE ?1||'|%' OR conv LIKE '%|'||?1) AND de != ?1 AND lu = 0").bind(uid).first();
+    return json({ n: (r && r.n) || 0 });
+  }
+
+  if (path === "/majlis/msgs") {
+    if (!await amie(b.ami)) return json({ erreur: "Cette amie n'est plus dans ton Majlis.", code: "amie" }, 404);
+    const cv = mjConv(uid, b.ami), apres = Math.max(0, parseInt(b.apres, 10) || 0);
+    const r = await DB.prepare("SELECT id, de, t, txt, img, look, lu FROM mj_msgs WHERE conv=? AND id>? ORDER BY id DESC LIMIT 60").bind(cv, apres).all();
+    const msgs = (r.results || []).reverse();
+    if (msgs.some(m => m.de === b.ami && !m.lu)) await DB.prepare("UPDATE mj_msgs SET lu=1 WHERE conv=? AND de=? AND lu=0").bind(cv, b.ami).run();
+    // « Vu » : jusqu'où l'amie a lu mes messages
+    const v = await DB.prepare("SELECT MAX(id) AS v FROM mj_msgs WHERE conv=? AND de=? AND lu=1").bind(cv, uid).first();
+    return json({ msgs: msgs.map(m => ({ id: m.id, moi: m.de === uid, t: m.t, txt: m.txt || "", img: m.img || "", look: m.look || "" })), vu: (v && v.v) || 0 });
+  }
+
+  if (path === "/majlis/send") {
+    if (!await amie(b.ami)) return json({ erreur: "Cette amie n'est plus dans ton Majlis.", code: "amie" }, 404);
+    const t = mjTxt(b.txt, 1000), look = mjTxt(b.look, 120);
+    const img = b.img ? (typeof b.img === "string" && b.img.length <= 700000 && /^data:image\/(jpeg|webp|png);base64,/.test(b.img) ? b.img : null) : "";
+    if (img === null) return json({ erreur: "La photo est trop lourde." }, 400);
+    if (!t && !img) return json({ erreur: "Écris ton message." }, 400);
+    const r = await DB.prepare("INSERT INTO mj_msgs (conv, de, t, txt, img, look, lu) VALUES (?,?,?,?,?,?,0)").bind(mjConv(uid, b.ami), uid, now, t, img, look).run();
+    if (Math.random() < 0.05) await DB.prepare("DELETE FROM mj_msgs WHERE t < ?").bind(now - MJ_TTL).run();
+    return json({ id: (r.meta && r.meta.last_row_id) || 0, t: now });
+  }
+
+  // Retirer une amie : l'amitié et la conversation disparaissent des deux côtés.
+  if (path === "/majlis/quitter") {
+    if (!mjIdOk(b.ami)) return json({ erreur: "Amie introuvable." }, 400);
+    await DB.batch([
+      DB.prepare("DELETE FROM mj_amis WHERE (a=? AND b=?) OR (a=? AND b=?)").bind(uid, b.ami, b.ami, uid),
+      DB.prepare("DELETE FROM mj_msgs WHERE conv=?").bind(mjConv(uid, b.ami))
+    ]);
+    return json({ ok: true });
+  }
+
+  // « Effacer toutes mes données » : tout ce qui concerne ce téléphone est supprimé du serveur.
+  if (path === "/majlis/wipe") {
+    await DB.batch([
+      DB.prepare("DELETE FROM mj_msgs WHERE conv LIKE ?1||'|%' OR conv LIKE '%|'||?1").bind(uid),
+      DB.prepare("DELETE FROM mj_amis WHERE a=?1 OR b=?1").bind(uid),
+      DB.prepare("DELETE FROM mj_users WHERE id=?").bind(uid)
+    ]);
+    return json({ ok: true });
+  }
+
+  return json({ erreur: "Action inconnue." }, 400);
+}
+
 export default {
   async fetch(req, env) {
     const origin = req.headers.get("Origin") || "";
@@ -192,7 +329,7 @@ export default {
         if (tooMany(ip, LIMITS[path] ? path : "/")) return json({ erreur: "Trop de demandes. Réessaie dans quelques minutes.", code: "rate_limited" }, 429);
       }
 
-      { const vp = new URL(req.url).pathname; if (vp.startsWith("/verif/")) return await verif(vp, req, env, json); if (vp.startsWith("/liste/")) return await liste(vp, req, env, json); if (vp === "/contact/new") return await contact(req, env, json); }
+      { const vp = new URL(req.url).pathname; if (vp.startsWith("/verif/")) return await verif(vp, req, env, json); if (vp.startsWith("/liste/")) return await liste(vp, req, env, json); if (vp === "/contact/new") return await contact(req, env, json); if (vp.startsWith("/majlis/")) return await majlis(vp, req, env, json); }
 
       // Voix d'Aura qui dit le prénom de la cliente (ElevenLabs), avec phrases fixes uniquement.
       if (new URL(req.url).pathname === "/tts") {
