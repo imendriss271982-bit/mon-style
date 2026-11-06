@@ -196,6 +196,9 @@ async function mjPartagerA(ami, nom) {
 // pour que les deux amies le voient. Au plus MJ_AURA_MAX conseils par jour et par téléphone.
 const MJ_APPEL = /(^|[^\p{L}])(aura|أورا|اورا|آورا|ئورا)(?![\p{L}])/iu;
 const MJ_AURA_MAX = 25;
+// v164 (choix d'Imen) : Aura ne vient dans le Majlis QUE quand on l'appelle par son nom (écrit, jamais de voix).
+// auto = true remet les interventions d'elle-même (photo, question de style, mot de fin).
+const MJ_AURA_OPT = { auto: false };
 const MJ_STYLE = /(لبس|ألبس|البس|فستان|عباي|شنط|حذا|جزم|كعب|لون|ألوان|الوان|يليق|يناسب|ينفع|ستايل|تنسيق|اكسسوار|إكسسوار|outfit|wear|dress|shoe|heel|bag|colou?r|style|look|porter|mettre|robe|tenue|chaussure|talon|sac|couleur|abaya)/iu;
 const MJ_QUESTION = /[?؟]|(^|\s)(شو|ايش|إيش|وش|شنو|شلون|كيف|هل|وين|اي|أي)(\s|$)|\b(quoi|quel|quelle|comment|what|which|how|should)\b/iu;
 const mjAuraBesoin = t => MJ_STYLE.test(t) && MJ_QUESTION.test(t);
@@ -258,6 +261,7 @@ async function mjAura(ami, photo, ref, question, kind) {
 const mjDernierePhoto = ami => { const cv = MJC[ami], ph = cv ? [...cv.msgs.slice(-12)].reverse().find(m => m.img) : null; return ph ? { img: ph.img, look: ph.look || "", moi: !!ph.moi } : null; };
 // 3) Elles parlent de style : Aura glisse un conseil si c'est utile (pas si elle vient de parler).
 function mjAuraSiBesoin(ami, t) {
+  if (!MJ_AURA_OPT.auto) return;
   const cv = MJC[ami];
   if (!mjAuraBesoin(t) || (cv && cv.msgs.slice(-4).some(m => m.aura))) return;
   mjAura(ami, mjDernierePhoto(ami), 0, t, "conseil");
@@ -269,16 +273,16 @@ function mjAuraFinPossible(ami) {
   const h = cv.msgs.slice(k);
   return h.length >= 6 && h.some(m => m.moi) && h.some(m => !m.moi);
 }
-function mjAuraFin(ami) { if (mjAuraFinPossible(ami)) mjAura(ami, mjDernierePhoto(ami), 0, "", "fin"); }
+function mjAuraFin(ami) { if (MJ_AURA_OPT.auto && mjAuraFinPossible(ami)) mjAura(ami, mjDernierePhoto(ami), 0, "", "fin"); }
 // Minuteur : 3 minutes sans nouveau message, et c'est MOI qui ai écrit en dernier (un seul téléphone le fait).
 function mjFinMinuteur(ami) {
-  const cv = MJC[ami]; if (!cv) return;
+  const cv = MJC[ami]; if (!cv || !MJ_AURA_OPT.auto) return;
   clearTimeout(cv.finT);
   const h = cv.msgs.filter(m => !m.aura), der = h[h.length - 1];
   if (der && der.moi) cv.finT = setTimeout(() => { if (S.page === "mj_chat" && S.mjAmi === ami) mjAuraFin(ami); }, MJ_FIN_DELAI);
 }
 // 1) Photo ou tenue envoyée : Aura la commente une fois.
-function mjAuraPhoto(ami, id, m) { if (id && m && m.img) mjAura(ami, { img: m.img, look: m.look || "", moi: true }, id, ""); }
+function mjAuraPhoto(ami, id, m) { if (MJ_AURA_OPT.auto && id && m && m.img) mjAura(ami, { img: m.img, look: m.look || "", moi: true }, id, ""); }
 // 2) On écrit son nom : elle répond, en regardant la dernière photo de la conversation (si elle est récente).
 function mjAuraAppel(ami, question) { mjAura(ami, mjDernierePhoto(ami), 0, question); }
 
@@ -326,7 +330,7 @@ P.majlis = () => {
   }
   const part = S.mjPart ? `<div class="mj-part"><b>${S.mjPart.kind === "look" ? "Envoie ta tenue à une amie" : "Envoie ton outfit check à une amie"}</b><small>Choisis à qui l’envoyer. Le visage est caché automatiquement.</small><button class="link" data-mjpartno>Annuler</button></div>` : "";
   return { dock: true, html: `${tete}${part}${mjInvCarte()}${MJ.busy && S.mjPart ? `<p class="hint">J’envoie…</p>` : ""}${mjListe()}${S.mjPart ? "" : mjInviter()}
-    <ul class="mj-why"><li>✨ Aura, ta styliste, donne son avis sur vos tenues pendant la discussion.</li><li>🙈 Les visages sont cachés sur les photos envoyées.</li><li>🗓️ Les messages s’effacent au bout de 60 jours.</li></ul>`, say: "" };
+    <ul class="mj-why"><li>✨ Écris « Aura » dans ton message : ta styliste vous donne son avis par écrit.</li><li>🙈 Les visages sont cachés sur les photos envoyées.</li><li>🗓️ Les messages s’effacent au bout de 60 jours.</li></ul>`, say: "" };
 };
 
 function mjBulles(ami) {

@@ -54,6 +54,10 @@ const piece='data:image/png;base64,'+png.toString('base64');
  ok(await sara.evaluate(()=>S.page==='mj_chat'&&document.querySelectorAll('.mj-b.elle').length===2&&/Montre-moi/.test(document.getElementById('mjList').textContent)),'Sara lit les messages de Noura');
  ok(await sara.evaluate(()=>MJ.nl===0&&document.querySelector('#dkmj .mj-bd').hidden),'Pastille remise à zéro');
  await sara.fill('#mj_txt','Oui ! Je t’envoie mon look');await sara.click('[data-mjsend]');await sara.waitForTimeout(400);
+ // ——— v164 : par défaut Aura ne vient QUE si on l'appelle ———
+ {const n0=AI.length;await sara.evaluate(()=>{mjAuraPhoto(S.mjAmi,999,{img:'data:image/jpeg;base64,AAAA',look:'x'});mjAuraSiBesoin(S.mjAmi,'Quelle couleur de sac avec ma robe ?');mjAuraFin(S.mjAmi)});await sara.waitForTimeout(800);
+  ok(AI.length===n0&&await sara.evaluate(()=>!document.querySelector('.mj-b.mj-aura')),'Par défaut : photo, question de style ou fin de discussion → Aura ne dit rien (seulement si on l’appelle)');
+  await sara.evaluate(()=>{MJ_AURA_OPT.auto=true});await noura.evaluate(()=>{MJ_AURA_OPT.auto=true});}
  // tenue enregistrée depuis le sélecteur
  await sara.click('.mj-plus');await sara.waitForTimeout(200);
  ok(await sara.evaluate(()=>!!document.querySelector('[data-mjsendlook="L1"]')&&!!document.querySelector('[data-mjphoto]')),'Bouton + : photo ou tenue enregistrée');
