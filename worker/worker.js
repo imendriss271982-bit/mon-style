@@ -8,7 +8,7 @@ let GOOD_IMG = "";
 // Limite de demandes par adresse IP (par instance du Worker, au mieux) : l'en-tête Origin peut être imité
 // hors navigateur, cette limite évite qu'un robot épuise le crédit Gemini / ElevenLabs.
 const HITS = new Map();
-const LIMITS = { "/": 60, "/makeup": 6, "/tts": 60, "/verif/new": 4, "/verif/get": 60, "/verif/del": 30, "/verif/admin": 40, "/liste/add": 5, "/liste/admin": 40, "/contact/new": 5, "/majlis/msgs": 500, "/majlis/amis": 240, "/majlis/nonlus": 120, "/majlis/send": 150, "/majlis/moi": 20, "/majlis/join": 20, "/majlis/code": 40, "/majlis/quitter": 20, "/majlis/wipe": 10 }; // demandes par 10 minutes
+const LIMITS = { "/": 60, "/makeup": 6, "/tts": 60, "/verif/new": 4, "/verif/get": 60, "/verif/del": 30, "/verif/admin": 40, "/liste/add": 5, "/liste/admin": 40, "/contact/new": 5, "/majlis/msgs": 500, "/majlis/amis": 240, "/majlis/nonlus": 120, "/majlis/send": 150, "/majlis/aura": 60, "/majlis/moi": 20, "/majlis/join": 20, "/majlis/code": 40, "/majlis/quitter": 20, "/majlis/wipe": 10 }; // demandes par 10 minutes
 function tooMany(ip, path) {
   const now = Date.now(), win = 600000, key = path + "|" + ip, max = LIMITS[path] || 30;
   const list = (HITS.get(key) || []).filter(t => now - t < win);
@@ -266,7 +266,10 @@ async function majlis(path, req, env, json) {
     if (msgs.some(m => m.de === b.ami && !m.lu)) await DB.prepare("UPDATE mj_msgs SET lu=1 WHERE conv=? AND de=? AND lu=0").bind(cv, b.ami).run();
     // « Vu » : jusqu'où l'amie a lu mes messages
     const v = await DB.prepare("SELECT MAX(id) AS v FROM mj_msgs WHERE conv=? AND de=? AND lu=1").bind(cv, uid).first();
-    return json({ msgs: msgs.map(m => ({ id: m.id, moi: m.de === uid, t: m.t, txt: m.txt || "", img: m.img || "", look: m.look || "" })), vu: (v && v.v) || 0 });
+    // Messages d'Aura (de = "aura") : le conseil de la styliste, visible par les deux amies ; « ref » = la photo commentée.
+    return json({ msgs: msgs.map(m => m.de === "aura"
+      ? { id: m.id, aura: true, moi: false, t: m.t, txt: m.txt || "", img: "", look: "", ref: parseInt(String(m.look || "").slice(1), 10) || 0 }
+      : { id: m.id, moi: m.de === uid, t: m.t, txt: m.txt || "", img: m.img || "", look: m.look || "" }), vu: (v && v.v) || 0 });
   }
 
   if (path === "/majlis/send") {
@@ -278,6 +281,23 @@ async function majlis(path, req, env, json) {
     const r = await DB.prepare("INSERT INTO mj_msgs (conv, de, t, txt, img, look, lu) VALUES (?,?,?,?,?,?,0)").bind(mjConv(uid, b.ami), uid, now, t, img, look).run();
     if (Math.random() < 0.05) await DB.prepare("DELETE FROM mj_msgs WHERE t < ?").bind(now - MJ_TTL).run();
     return json({ id: (r.meta && r.meta.last_row_id) || 0, t: now });
+  }
+
+  // Aura (v160, demandé par Imen) : un conseil ÉCRIT de la styliste au milieu de la conversation (pas de voix : moins cher).
+  // Le téléphone de celle qui envoie la photo (ou qui écrit « Aura ») prépare le conseil avec l'IA, puis le range ici.
+  // Un seul conseil par photo (ref = id du message photo) ; rangé déjà lu, pour ne pas faire sonner les pastilles.
+  if (path === "/majlis/aura") {
+    if (!await amie(b.ami)) return json({ erreur: "Cette amie n'est plus dans ton Majlis.", code: "amie" }, 404);
+    const t = mjTxt(b.txt, 400), cv = mjConv(uid, b.ami), ref = Math.max(0, parseInt(b.ref, 10) || 0);
+    if (!t) return json({ erreur: "Conseil vide." }, 400);
+    if (ref) {
+      const ph = await DB.prepare("SELECT id FROM mj_msgs WHERE id=? AND conv=? AND img IS NOT NULL AND img!=''").bind(ref, cv).first();
+      if (!ph) return json({ erreur: "Photo introuvable." }, 404);
+      const deja = await DB.prepare("SELECT id, t, txt FROM mj_msgs WHERE conv=? AND de='aura' AND look=?").bind(cv, "@" + ref).first();
+      if (deja) return json({ id: deja.id, t: deja.t, txt: deja.txt, deja: true });
+    }
+    const r = await DB.prepare("INSERT INTO mj_msgs (conv, de, t, txt, img, look, lu) VALUES (?,?,?,?,?,?,1)").bind(cv, "aura", now, t, "", ref ? "@" + ref : "").run();
+    return json({ id: (r.meta && r.meta.last_row_id) || 0, t: now, txt: t });
   }
 
   // Retirer une amie : l'amitié et la conversation disparaissent des deux côtés.

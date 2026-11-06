@@ -38,6 +38,10 @@ const I18N_D=[
 ["(visage caché)","(face hidden)","(الوجه مخفي)"],
 ["Enregistre une tenue dans ta garde-robe pour pouvoir l’envoyer ici.","Save an outfit in your wardrobe to send it here.","احفظي لبسة في دولابچ عشان تقدرين ترسلينها هني."],
 ["Écris un message…","Write a message…","اكتبي رسالة…"],
+// v160 : Aura dans le Majlis (conseil écrit)
+["Aura écrit","Aura is typing","أورا تكتب"],
+["✨ Aura donne son avis sur vos tenues. Écris « Aura » pour l’appeler.","✨ Aura gives her opinion on your outfits. Write “Aura” to call her.","✨ أورا تعطيكم رايها في لبسكم. اكتبي «أورا» عشان تناديها."],
+["Aura a déjà beaucoup conseillé aujourd’hui. À demain 💛","Aura has given lots of advice today. See you tomorrow 💛","أورا عطت نصايح واجد اليوم. نشوفچ باچر 💛"],
 ["Envoyer une photo ou une tenue","Send a photo or an outfit","ارسلي صورة أو لبسة"],
 ["Je cache le visage…","Hiding the face…","قاعد أخفي الوجه…"],
 ["Je n’ai pas pu cacher le visage : la photo n’est pas envoyée.","I couldn't hide the face: the photo was not sent.","ما قدرت أخفي الوجه: الصورة ما انرسلت."],

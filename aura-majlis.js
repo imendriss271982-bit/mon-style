@@ -180,8 +180,72 @@ async function mjPrepare(p) {
 async function mjPartagerA(ami, nom) {
   const p = S.mjPart; if (!p || MJ.busy) return;
   MJ.busy = 1; mjRedraw();
-  try { const m = await mjPrepare(p); await mjEnvoyer(ami, m); S.mjPart = null; MJ.busy = 0; S.mjAmi = ami; S.mjAmiNom = nom; go("mj_chat"); }
+  try { const m = await mjPrepare(p), r = await mjEnvoyer(ami, m); mjAuraPhoto(ami, r.id, m); S.mjPart = null; MJ.busy = 0; S.mjAmi = ami; S.mjAmiNom = nom; go("mj_chat"); }
   catch (e) { MJ.busy = 0; toast(e.message); mjRedraw(); }
+}
+
+// ——— Aura dans le Majlis (v160, choix d'Imen) ———
+// Aura donne UN point de styliste, PAR ÉCRIT (pas de voix : moins cher), seulement :
+//  1) quand une amie envoie une photo / une tenue (une seule fois par photo),
+//  2) quand quelqu'une écrit son nom (« Aura », « أورا »…) dans un message.
+// Le téléphone qui déclenche prépare le conseil avec l'IA (route « / ») puis le range sur le serveur (/majlis/aura),
+// pour que les deux amies le voient. Au plus MJ_AURA_MAX conseils par jour et par téléphone.
+const MJ_APPEL = /(^|[^\p{L}])(aura|أورا|اورا|آورا|ئورا)(?![\p{L}])/iu;
+const MJ_AURA_MAX = 25;
+function mjAuraQuota() {
+  const j = new Date().toDateString(); let q = { j, n: 0 };
+  try { const v = JSON.parse(localStorage.getItem("monstyle_mj_aura") || "null"); if (v && v.j === j) q = v; } catch (e) {}
+  if (q.n >= MJ_AURA_MAX) return false;
+  q.n++; try { localStorage.setItem("monstyle_mj_aura", JSON.stringify(q)); } catch (e) {}
+  return true;
+}
+async function mjBlob(url) { const b = await (await fetch(url)).blob(); b.mx = 900; return b; }
+function mjAuraEcrit(ami, on) {
+  const cv = MJC[ami] || (MJC[ami] = { msgs: [], vu: 0, last: 0, ok: 0 });
+  cv.aura = on ? 1 : 0;
+  if (S.page === "mj_chat" && S.mjAmi === ami) mjListeMaj();
+}
+// Prépare le conseil. photo = { img (data URL), look, moi } ou null ; question = message qui appelle Aura.
+async function mjAuraConseil(ami, photo, question) {
+  const sm = await getSample();
+  if (!sm || !sm.json) return "";
+  const amie = ((MJ.amis || []).find(a => a.id === ami) || {}).nom || (S.mjAmi === ami && S.mjAmiNom) || "son amie";
+  const moi = S.nom || "elle";
+  const cv = MJC[ami], fil = cv ? cv.msgs.filter(m => !m.aura && m.txt).slice(-6).map(m => (m.moi ? moi : amie) + " : " + m.txt).join(" | ") : "";
+  const aMoi = photo && photo.moi;
+  const pr = REF + " Tu es Aura, la styliste de My Style. Tu interviens dans le Majlis : une discussion privée entre deux amies, " + moi + " et " + amie + ". " +
+    (photo ? "Photo envoyée par " + (aMoi ? moi : amie) + (photo.look ? " (« " + photo.look + " »)" : "") + ". " +
+      (aMoi ? "Son profil : " + ((typeof PROFIL === "function" && PROFIL()) || "inconnu") + ". " + (typeof pfRules === "function" ? pfRules() : "") + " "
+            : "Tu ne connais pas le profil de " + amie + " : donne un conseil valable pour elle sans parler de sa morphologie ni de ses couleurs personnelles. ") +
+      "Le visage est caché exprès (pixellisé) pour la vie privée : ne parle JAMAIS du visage, du maquillage ni de la coiffure, et ne dis pas que la photo est floue. " : "") +
+    (fil ? "Derniers messages : " + fil + ". " : "") +
+    (question ? "On t’appelle avec ce message : « " + question + " ». Réponds à cette demande" + (photo ? " en regardant la photo" : "") + ". "
+              : "Donne UN seul point utile sur la tenue : une vraie qualité, ou UNE petite amélioration concrète (couleur, pièce, accessoire, chaussures). ") +
+    "Ton chaleureux et bienveillant, comme une amie styliste ; jamais de critique blessante. Maximum 2 phrases courtes, sans liste, sans marque ni prix inventés. Appelle la personne par son prénom. " +
+    FMT + 'Format : {"reponse":"1 à 2 phrases courtes"}';
+  const r = await sm.json(pr, photo ? { images: [await mjBlob(photo.img)] } : {});
+  if (r && r.erreur) throw new Error(r.erreur);
+  return String((r && r.reponse) || "").trim().slice(0, 400);
+}
+async function mjAuraRanger(ami, txt, ref) {
+  const r = await mjApi("aura", { ...mjAuth(), ami, txt, ref: ref || 0 });
+  const cv = MJC[ami] || (MJC[ami] = { msgs: [], vu: 0, last: 0, ok: 0 });
+  if (!cv.msgs.some(x => x.id === r.id)) cv.msgs.push({ id: r.id, aura: true, moi: false, t: r.t, txt: r.txt || txt, img: "", look: "", ref: ref || 0 });
+  cv.msgs.sort((a, b) => a.id - b.id); cv.last = Math.max(cv.last, r.id);
+}
+async function mjAura(ami, photo, ref, question) {
+  if (!mjAuraQuota()) { if (question) toast("Aura a déjà beaucoup conseillé aujourd’hui. À demain 💛"); return; }
+  mjAuraEcrit(ami, 1);
+  try { const t = await mjAuraConseil(ami, photo, question); if (t) await mjAuraRanger(ami, t, ref); }
+  catch (e) { if (question) toast(errMsg(e)); }
+  mjAuraEcrit(ami, 0);
+}
+// 1) Photo ou tenue envoyée : Aura la commente une fois.
+function mjAuraPhoto(ami, id, m) { if (id && m && m.img) mjAura(ami, { img: m.img, look: m.look || "", moi: true }, id, ""); }
+// 2) On écrit son nom : elle répond, en regardant la dernière photo de la conversation (si elle est récente).
+function mjAuraAppel(ami, question) {
+  const cv = MJC[ami], recents = cv ? cv.msgs.slice(-12) : [], ph = [...recents].reverse().find(m => m.img);
+  mjAura(ami, ph ? { img: ph.img, look: ph.look || "", moi: !!ph.moi } : null, 0, question);
 }
 
 // ——— Affichage ———
@@ -207,7 +271,7 @@ function mjListe() {
   if (MJ.amis === null) return `<p class="hint mj-load">${MJ.err ? esc(MJ.err) + ` <button class="link" data-mjre>Réessayer</button>` : "Un instant…"}</p>`;
   if (!MJ.amis.length) return `<div class="mj-vide"><span aria-hidden="true">🫖</span><b>Ton Majlis est encore vide</b><small>Invite ta première amie avec ton lien.</small></div>`;
   return `<ul class="mj-amis">${MJ.amis.map(a => {
-    const d = a.der, apercu = !d ? `<span>Dis-lui bonjour 👋</span>` : d.img ? `<span>${d.de === MJ.uid ? "Toi : " : ""}📷 ${d.look ? `<span data-noi18n>${esc(d.look)}</span>` : "Photo"}</span>` : `<span>${d.de === MJ.uid ? "Toi : " : ""}<bdi data-noi18n>${esc(d.txt)}</bdi></span>`;
+    const d = a.der, apercu = d && d.de === "aura" ? `<span>✨ Aura : <bdi data-noi18n>${esc(d.txt)}</bdi></span>` : !d ? `<span>Dis-lui bonjour 👋</span>` : d.img ? `<span>${d.de === MJ.uid ? "Toi : " : ""}📷 ${d.look ? `<span data-noi18n>${esc(d.look)}</span>` : "Photo"}</span>` : `<span>${d.de === MJ.uid ? "Toi : " : ""}<bdi data-noi18n>${esc(d.txt)}</bdi></span>`;
     return `<li><button class="mj-ami${a.nl ? " nl" : ""}" data-mjami="${esc(a.id)}" data-mjnom="${esc(a.nom)}"><span class="mj-av" aria-hidden="true">${mjInit(a.nom)}</span><span class="mj-t"><b data-noi18n>${esc(a.nom)}</b>${apercu}</span><span class="mj-m">${d ? `<small>${esc(mjHeure(d.t))}</small>` : ""}${a.nl ? `<i class="mj-nl">${a.nl}</i>` : ""}</span></button></li>`;
   }).join("")}</ul>`;
 }
@@ -228,7 +292,7 @@ P.majlis = () => {
   }
   const part = S.mjPart ? `<div class="mj-part"><b>${S.mjPart.kind === "look" ? "Envoie ta tenue à une amie" : "Envoie ton outfit check à une amie"}</b><small>Choisis à qui l’envoyer. Le visage est caché automatiquement.</small><button class="link" data-mjpartno>Annuler</button></div>` : "";
   return { back: true, html: `${tete}${part}${mjInvCarte()}${MJ.busy && S.mjPart ? `<p class="hint">J’envoie…</p>` : ""}${mjListe()}${S.mjPart ? "" : mjInviter()}
-    <ul class="mj-why"><li>🙈 Les visages sont cachés sur les photos envoyées.</li><li>🗓️ Les messages s’effacent au bout de 60 jours.</li></ul>`, say: "" };
+    <ul class="mj-why"><li>✨ Aura donne son avis sur vos tenues. Écris « Aura » pour l’appeler.</li><li>🙈 Les visages sont cachés sur les photos envoyées.</li><li>🗓️ Les messages s’effacent au bout de 60 jours.</li></ul>`, say: "" };
 };
 
 function mjBulles(ami) {
@@ -236,7 +300,7 @@ function mjBulles(ami) {
   if (!cv || !cv.ok) return `<p class="hint mj-load">${cv && cv.err ? esc(cv.err) : "Un instant…"}</p>`;
   if (!cv.msgs.length) return `<div class="mj-vide"><span aria-hidden="true">💬</span><b>Commencez à discuter</b><small>Envoie un message, une photo ou une de tes tenues.</small></div>`;
   const dernierMoi = [...cv.msgs].reverse().find(m => m.moi);
-  return cv.msgs.map(m => `<div class="mj-b ${m.moi ? "moi" : "elle"}">${m.img ? `<img src="${m.img}" alt="${esc(m.look || "Photo")}" loading="lazy" data-mjzoom>` : ""}${m.look ? `<em dir="auto" data-noi18n>${esc(m.look)}</em>` : ""}${m.txt ? `<p dir="auto" data-noi18n>${esc(m.txt)}</p>` : ""}<small>${esc(mjHeure(m.t))}${m.moi && dernierMoi && m.id === dernierMoi.id && cv.vu >= m.id ? ` · <span>Vu</span>` : ""}</small></div>`).join("");
+  return cv.msgs.map(m => m.aura ? `<div class="mj-b mj-aura"><b class="mj-aura-n"><span aria-hidden="true">✨</span> Aura</b><p dir="auto" data-noi18n>${esc(m.txt)}</p><small>${esc(mjHeure(m.t))}</small></div>` : `<div class="mj-b ${m.moi ? "moi" : "elle"}">${m.img ? `<img src="${m.img}" alt="${esc(m.look || "Photo")}" loading="lazy" data-mjzoom>` : ""}${m.look ? `<em dir="auto" data-noi18n>${esc(m.look)}</em>` : ""}${m.txt ? `<p dir="auto" data-noi18n>${esc(m.txt)}</p>` : ""}<small>${esc(mjHeure(m.t))}${m.moi && dernierMoi && m.id === dernierMoi.id && cv.vu >= m.id ? ` · <span>Vu</span>` : ""}</small></div>`).join("") + (cv.aura ? `<div class="mj-b mj-aura mj-ecrit"><b class="mj-aura-n"><span aria-hidden="true">✨</span> Aura</b><p><span>Aura écrit</span><i aria-hidden="true"> …</i></p></div>` : "");
 }
 async function mjCharger(ami, tout) {
   const cv = MJC[ami] || (MJC[ami] = { msgs: [], vu: 0, last: 0, ok: 0 });
@@ -287,13 +351,13 @@ async function mjEnvoyerTexte() {
   const el = document.getElementById("mj_txt"), t = el ? el.value.trim() : "";
   if (!t || !S.mjAmi) return;
   el.value = ""; S.mjDraft = "";
-  try { await mjEnvoyer(S.mjAmi, { txt: t }); mjListeMaj(); window.scrollTo(0, document.body.scrollHeight); }
+  try { await mjEnvoyer(S.mjAmi, { txt: t }); mjListeMaj(); window.scrollTo(0, document.body.scrollHeight); if (MJ_APPEL.test(t)) mjAuraAppel(S.mjAmi, t); }
   catch (e) { if (el) el.value = t; S.mjDraft = t; toast(e.message); }
 }
 async function mjEnvoyerChoix(p) {
   if (MJ.busy) return; MJ.busy = 1; S.mjPick = 0; S.mjDraft = (document.getElementById("mj_txt") || {}).value || S.mjDraft || ""; render(false);
   toast(p.kind === "photo" ? "Je cache le visage…" : "J’envoie…");
-  try { const m = await mjPrepare(p); await mjEnvoyer(S.mjAmi, m); }
+  try { const m = await mjPrepare(p), r = await mjEnvoyer(S.mjAmi, m); mjAuraPhoto(S.mjAmi, r.id, m); }
   catch (e) { toast(e.message); }
   MJ.busy = 0; if (S.page === "mj_chat") { render(false); window.scrollTo(0, document.body.scrollHeight); }
 }
@@ -424,6 +488,7 @@ function mjWipe() {
 .mj-looks{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
 .mj-lk{display:flex;flex-direction:column;gap:6px;padding:8px;border:1px solid #E6E6E6;border-radius:14px;background:#fff;font:inherit;color:var(--ink);cursor:pointer;text-align:start}.mj-lk b{font-size:.85rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mj-lk .gr-col{display:grid;grid-template-columns:1fr 1fr;gap:3px;aspect-ratio:1;overflow:hidden;border-radius:10px}.mj-lk .gr-col.n1{grid-template-columns:1fr}.mj-lk .gr-col img{width:100%;height:100%;object-fit:cover}
+.mj-b.mj-aura{align-self:center;max-width:88%;background:#FFFDF8;border:1px solid #D9B977;border-radius:18px;box-shadow:0 2px 10px rgba(140,109,53,.14)}.mj-aura-n{font:600 .8rem/1.2 Georgia,serif;color:var(--accent)}.mj-ecrit i{font-style:normal;animation:mjEc 1.2s infinite}@keyframes mjEc{50%{opacity:.25}}
 .mj-out{width:100%;margin:16px 0 4px}.mj-out-h{text-align:center;margin:0 0 8px}
 `;
   document.head.appendChild(st);

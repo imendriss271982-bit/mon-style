@@ -14,13 +14,14 @@ const piece='data:image/png;base64,'+png.toString('base64');
  CREATE TABLE mj_amis (a TEXT NOT NULL, b TEXT NOT NULL, cree INTEGER, PRIMARY KEY (a, b));
  CREATE TABLE mj_msgs (id INTEGER PRIMARY KEY AUTOINCREMENT, conv TEXT NOT NULL, de TEXT NOT NULL, t INTEGER, txt TEXT, img TEXT, look TEXT, lu INTEGER DEFAULT 0);`);
  const D1={prepare(sql){const st={args:[],bind(...a){st.args=a;return st},async first(){return db.prepare(sql).get(...st.args)||null},async all(){return {results:db.prepare(sql).all(...st.args)}},async run(){const r=db.prepare(sql).run(...st.args);return {meta:{last_row_id:Number(r.lastInsertRowid)}}}};return st},async batch(l){for(const s of l)await s.run()}};
- const env={MAJLIS:D1};let ip=0;
+ const env={MAJLIS:D1};const AI=[];let AI_REP='Le blanc et le noir, c’est très chic, Sara ! Ajoute une ceinture dorée.';let ip=0;
  const route=async r=>{const q=r.request();if(q.method()==='OPTIONS')return r.fulfill({status:204,headers:{'Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'Content-Type','Access-Control-Allow-Methods':'POST'}});
   const res=await W.fetch(new Request(q.url(),{method:'POST',headers:{Origin:'https://imendriss271982-bit.github.io','Content-Type':'application/json','CF-Connecting-IP':'10.4.'+(++ip%200)+'.1'},body:q.postData()}),env);
   r.fulfill({status:res.status,headers:{'Access-Control-Allow-Origin':'*','Content-Type':'application/json'},body:await res.text()})};
  const b=await chromium.launch();
  const tel=async(nom,lang,extra,q='')=>{const ctx=await b.newContext({viewport:{width:390,height:844}});await ctx.route('https://mon-style.imendriss271982.workers.dev/majlis/**',route);
   await ctx.route('https://cdn.jsdelivr.net/**',r=>r.abort());
+  await ctx.route(u=>u.href==='https://mon-style.imendriss271982.workers.dev/',r=>{AI.push(JSON.parse(r.request().postData()));r.fulfill({status:200,headers:{'Access-Control-Allow-Origin':'*','Content-Type':'application/json'},body:JSON.stringify({reponse:AI_REP})})});
   const p=await ctx.newPage();p.errs=[];p.on('pageerror',e=>p.errs.push(e.message));p.on('dialog',d=>d.accept());
   await p.goto(URL);await p.evaluate(([nom,lang,extra])=>{localStorage.clear();localStorage.setItem('monstyle',JSON.stringify({nom,lang,later:true,pays:'QA',res:{corps:{forme:'Sablier'}}}));for(const k in extra)localStorage.setItem(k,extra[k])},[nom,lang,extra]);
   await p.goto(URL+q);await p.waitForTimeout(900);await p.evaluate(()=>{document.getElementById('splash')?.remove();home()});await p.waitForTimeout(250);return p};
@@ -58,10 +59,24 @@ const piece='data:image/png;base64,'+png.toString('base64');
  ok(await sara.evaluate(()=>!!document.querySelector('[data-mjsendlook="L1"]')&&!!document.querySelector('[data-mjphoto]')),'Bouton + : photo ou tenue enregistrée');
  await sara.click('[data-mjsendlook="L1"]');await sara.waitForTimeout(1200);
  ok(await sara.evaluate(()=>{const l=[...document.querySelectorAll('.mj-b.moi')].pop();return l&&l.querySelector('img')&&/^data:image\/jpeg/.test(l.querySelector('img').src)&&/Look bureau chic/.test(l.textContent)}),'Tenue envoyée : collage des vraies pièces + titre');
+ await sara.waitForTimeout(800);
+ ok(AI.length===1&&AI[0].images.length===1&&/Majlis/.test(AI[0].prompt)&&/visage/i.test(AI[0].prompt),'Aura : l’IA reçoit la tenue (une seule demande)');
+ ok(await sara.evaluate(()=>{const a=[...document.querySelectorAll('.mj-b.mj-aura')];return a.length===1&&/ceinture dorée/.test(a[0].textContent)&&/Aura/.test(a[0].textContent)}),'Aura commente la tenue par écrit dans la conversation');
+ ok(db.prepare("SELECT COUNT(*) n FROM mj_msgs WHERE de='aura' AND lu=1 AND look LIKE '@%'").get().n===1,'Conseil d’Aura rangé sur le serveur (lié à la photo, déjà lu)');
  // Noura voit tout arriver (boucle de 3 s)
  await noura.waitForTimeout(3600);
  ok(await noura.evaluate(()=>document.querySelectorAll('.mj-b.elle').length===2&&!!document.querySelector('.mj-b.elle img')),'Noura reçoit le message et la tenue sans recharger');
+ ok(await noura.evaluate(()=>{const a=document.querySelector('.mj-b.mj-aura');return a&&/ceinture dorée/.test(a.textContent)}),'Noura voit aussi le conseil d’Aura');
  ok(await noura.evaluate(()=>/Vu/.test([...document.querySelectorAll('.mj-b.moi')].pop().textContent)),'Noura voit « Vu » sous son dernier message');
+ // Noura appelle Aura par son nom (sans photo à elle : conseil général)
+ AI_REP='Noura, une sandale nude allongera la silhouette de Sara.';
+ await noura.fill('#mj_txt','أورا شو رأيك بالحذاء؟');await noura.click('[data-mjsend]');await noura.waitForTimeout(900);
+ ok(AI.length===2&&AI[1].images.length===1&&/On t’appelle/.test(AI[1].prompt)&&/ne connais pas le profil/.test(AI[1].prompt),'« أورا » dans un message → Aura répond en regardant la dernière photo');
+ ok(await noura.evaluate(()=>document.querySelectorAll('.mj-b.mj-aura').length===2),'Réponse d’Aura affichée');
+ await noura.fill('#mj_txt','Laura vient aussi');await noura.click('[data-mjsend]');await noura.waitForTimeout(700);
+ ok(AI.length===2,'« Laura » n’appelle pas Aura');
+ const rAura=await noura.evaluate(async()=>{const cv=MJC[S.mjAmi],ph=cv.msgs.find(m=>m.img);try{const r=await mjApi('aura',{...mjAuth(),ami:S.mjAmi,txt:'encore',ref:ph.id});return r.deja}catch(e){return 'err'}});
+ ok(rAura===true,'Un seul conseil d’Aura par photo (serveur)');
  // ——— Photo : visage caché sur le téléphone ———
  const zone=await sara.evaluate(async()=>{
   const c=document.createElement('canvas');c.width=200;c.height=200;const g=c.getContext('2d'),d=g.createImageData(200,200);for(let i=0;i<d.data.length;i+=4){const v=(i/4)%2?255:0;d.data[i]=d.data[i+1]=d.data[i+2]=v;d.data[i+3]=255}g.putImageData(d,0,0);
@@ -84,7 +99,8 @@ const piece='data:image/png;base64,'+png.toString('base64');
  ok(await sara.evaluate(()=>S.page==='majlis'&&!!document.querySelector('.mj-part')&&!!document.querySelector('[data-mjami]')),'Choisir l’amie à qui envoyer');
  const avant=await sara.evaluate(()=>MJC[MJ.amis[0].id].msgs.length);
  await sara.click('[data-mjami]');await sara.waitForTimeout(1200);
- ok(await sara.evaluate(a=>S.page==='mj_chat'&&MJC[S.mjAmi].msgs.length===a+1&&!S.mjPart,avant),'Tenue envoyée, conversation ouverte');
+ await sara.waitForTimeout(800);
+ ok(await sara.evaluate(a=>S.page==='mj_chat'&&MJC[S.mjAmi].msgs.length===a+2&&MJC[S.mjAmi].msgs.slice(-1)[0].aura&&!S.mjPart,avant),'Tenue envoyée, conversation ouverte');
  // ——— Arabe + petit écran ———
  await noura.evaluate(()=>{S.lang='ar';save();i18nApply();home()});await noura.setViewportSize({width:320,height:640});await noura.waitForTimeout(400);
  ok(await noura.evaluate(()=>{const a=document.getElementById('hmj').getBoundingClientRect(),l=document.querySelector('header .logo').getBoundingClientRect();return document.documentElement.dir==='rtl'&&(a.right<=l.left+1||a.left>=l.right-1)&&document.documentElement.scrollWidth<=320}),'320 px en arabe : bouton du Majlis sans chevaucher le logo, pas de défilement horizontal');
