@@ -427,6 +427,8 @@ if (typeof P.home === "function") {
     let carte = "";
     if (MJ.inv) carte = mjInvCarte();
     else if (MJ.nl && MJ.amis) { const a1 = MJ.amis.find(x => x.nl); if (a1) carte = `<button class="mj-msg" data-mjami="${esc(a1.id)}" data-mjnom="${esc(a1.nom)}"><span class="mj-av" aria-hidden="true">${mjInit(a1.nom)}</span><span><b><span data-noi18n>${esc(a1.nom)}</span> <span>t’a écrit dans le Majlis</span></b><small>${MJ.nl > 1 ? MJ.nl + " " : ""}<span>${MJ.nl > 1 ? "nouveaux messages" : "Nouveau message"}</span></small></span><i class="mj-nl">${MJ.nl}</i></button>`; }
+    // Sinon : bande « Le Majlis » toujours visible juste sous le bandeau (v161, demandé par Imen).
+    if (!carte) carte = `<button class="mj-bar" data-go="majlis"><span class="mj-bar-i" aria-hidden="true">${MJ_SVG}</span><span class="mj-bar-t"><b>Le Majlis</b><small>Discute avec tes amies</small></span><span class="mj-bar-c" aria-hidden="true">›</span></button>`;
     if (carte) { const k = o.html.indexOf('<section class="hz-st'); o.html = k > 0 ? o.html.slice(0, k) + carte + o.html.slice(k) : carte + o.html; }
     return o;
   };
@@ -497,6 +499,9 @@ function mjWipe() {
 .mj-invite,.mj-msg{display:flex;flex-wrap:wrap;align-items:center;gap:12px;width:100%;margin:6px 0 14px;padding:14px 16px;border:0;border-radius:18px;background:#fff;box-shadow:0 4px 18px rgba(140,109,53,.16);text-align:start;font:inherit;color:var(--ink)}
 .mj-invite>div,.mj-msg>span:nth-child(2){flex:1;min-width:150px;display:flex;flex-direction:column;gap:2px}.mj-invite small,.mj-msg small{color:#6E6E6E}
 .mj-invite-b{display:flex;align-items:center;gap:12px;width:100%}.mj-invite-b .btn{flex:1;margin:0}
+.mj-bar{display:flex;align-items:center;gap:12px;width:100%;margin:4px 0 14px;padding:12px 16px;border:1px solid #EADBB9;border-radius:18px;background:#fff;box-shadow:0 4px 16px rgba(140,109,53,.14);font:inherit;color:var(--ink);text-align:start;cursor:pointer}
+.mj-bar-i{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(160deg,#F3E3C2,#D9B977);color:#5A4220}.mj-bar-i svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linejoin:round}
+.mj-bar-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}.mj-bar-t b{font-size:1.05rem}.mj-bar-t small{color:#6E6E6E}.mj-bar-c{flex:none;font-size:1.6rem;color:var(--accent);line-height:1}[dir=rtl] .mj-bar-c{transform:scaleX(-1)}
 .mj-msg{cursor:pointer;flex-wrap:nowrap}.mj-nl{flex:none;min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:#B3261E;color:#fff;font:700 12px/22px system-ui,sans-serif;font-style:normal;text-align:center}
 .mj-amis{list-style:none;margin:6px 0 18px;padding:0;display:flex;flex-direction:column;gap:8px}
 .mj-ami{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;border:1px solid #E6E6E6;border-radius:16px;background:#fff;font:inherit;color:var(--ink);text-align:start;cursor:pointer}
