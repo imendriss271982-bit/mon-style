@@ -28,11 +28,11 @@ const piece='data:image/png;base64,'+png.toString('base64');
  const gr=JSON.stringify({items:[{id:'a1',cat:'haut',nom:'Chemise blanche',couleur:'Blanc',img:piece},{id:'a2',cat:'bas',nom:'Pantalon noir',couleur:'Noir',img:piece}],looks:{},saved:[{id:'L1',titre:'Look bureau chic',pieces:['a1','a2'],occ:'bureau',jour:'',d:'2026-11-01'}]});
  const sara=await tel('Sara','fr',{monstyle_gr:gr,monstyle_portes_vu:'1'});
  // ——— Sara : l'en-tête et son Majlis ———
- ok(await sara.evaluate(()=>{const h=document.getElementById('hmj');return h&&!h.hidden&&h.getBoundingClientRect().width>30}),'Accueil : bouton du Majlis dans l’en-tête');
- await sara.click('#hmj');await sara.waitForTimeout(700);
+ ok(await sara.evaluate(()=>{const h=document.getElementById('dkmj');return h&&h.getBoundingClientRect().width>30&&!document.querySelector('#dock [data-go="profil"]')&&!!document.querySelector('.mj-bar')}),'Barre du bas : onglet Majlis à la place de Profil + bande sous le bandeau');
+ await sara.click('#dkmj');await sara.waitForTimeout(700);
  ok(await sara.evaluate(()=>S.page==='majlis'&&/^[0-9a-f]{16}$/.test(MJ.uid)&&/^[A-Z2-9]{6}$/.test(MJ.code)),'Majlis ouvert : compte créé tout seul avec son prénom');
  ok(await sara.evaluate(()=>!!document.querySelector('.mj-vide')&&/wa\.me\/\?text=.*majlis%3D[A-Z2-9]{6}/.test(document.querySelector('.mj-wa').href)),'Majlis vide + bouton WhatsApp avec le lien d’invitation');
- ok(await sara.evaluate(()=>!document.getElementById('hmj')||document.getElementById('hmj').hidden),'Le bouton de l’en-tête est caché hors de l’accueil');
+ ok(await sara.evaluate(()=>document.getElementById('dkmj').getAttribute('aria-current')==='page'&&document.getElementById('back').hidden),'Onglet Majlis allumé, page principale (sans retour)');
  const code=await sara.evaluate(()=>MJ.code);
  ok(JSON.parse(await sara.evaluate(()=>localStorage.getItem('monstyle_majlis'))).token.length===32,'Jeton gardé sur le téléphone');
  // ——— Noura ouvre le lien ———
@@ -48,11 +48,11 @@ const piece='data:image/png;base64,'+png.toString('base64');
  ok(await noura.evaluate(()=>document.querySelectorAll('.mj-b.moi').length===2),'Touche Entrée = envoyer');
  // ——— Sara reçoit ———
  await sara.evaluate(()=>home());await sara.evaluate(()=>mjNonLus());await sara.waitForTimeout(800);
- ok(await sara.evaluate(()=>{const i=document.querySelector('#hmj .mj-bd');return i&&!i.hidden&&i.textContent==='2'}),'Pastille : 2 messages non lus');
+ ok(await sara.evaluate(()=>{const i=document.querySelector('#dkmj .mj-bd');return i&&!i.hidden&&i.textContent==='2'}),'Pastille : 2 messages non lus');
  ok(await sara.evaluate(()=>{const c=document.querySelector('.mj-msg');return c&&/Noura/.test(c.textContent)&&/t’a écrit/.test(c.textContent)}),'Accueil : « Noura t’a écrit dans le Majlis »');
  await sara.click('.mj-msg');await sara.waitForTimeout(800);
  ok(await sara.evaluate(()=>S.page==='mj_chat'&&document.querySelectorAll('.mj-b.elle').length===2&&/Montre-moi/.test(document.getElementById('mjList').textContent)),'Sara lit les messages de Noura');
- ok(await sara.evaluate(()=>MJ.nl===0&&document.querySelector('#hmj .mj-bd').hidden),'Pastille remise à zéro');
+ ok(await sara.evaluate(()=>MJ.nl===0&&document.querySelector('#dkmj .mj-bd').hidden),'Pastille remise à zéro');
  await sara.fill('#mj_txt','Oui ! Je t’envoie mon look');await sara.click('[data-mjsend]');await sara.waitForTimeout(400);
  // tenue enregistrée depuis le sélecteur
  await sara.click('.mj-plus');await sara.waitForTimeout(200);
@@ -128,8 +128,8 @@ const piece='data:image/png;base64,'+png.toString('base64');
  AI_REP='Le blanc et le noir, c’est très chic, Sara ! Ajoute une ceinture dorée.';
  // ——— Arabe + petit écran ———
  await noura.evaluate(()=>{S.lang='ar';save();i18nApply();home()});await noura.setViewportSize({width:320,height:640});await noura.waitForTimeout(400);
- ok(await noura.evaluate(()=>{const a=document.getElementById('hmj').getBoundingClientRect(),l=document.querySelector('header .logo').getBoundingClientRect();return document.documentElement.dir==='rtl'&&(a.right<=l.left+1||a.left>=l.right-1)&&document.documentElement.scrollWidth<=320}),'320 px en arabe : bouton du Majlis sans chevaucher le logo, pas de défilement horizontal');
- await noura.click('#hmj');await noura.waitForTimeout(700);
+ ok(await noura.evaluate(()=>{const d=document.getElementById('dkmj');return document.documentElement.dir==='rtl'&&/المجلس/.test(d.textContent)&&d.getBoundingClientRect().right<=321&&document.documentElement.scrollWidth<=320}),'320 px en arabe : onglet « المجلس » dans la barre du bas, pas de défilement horizontal');
+ await noura.click('#dkmj');await noura.waitForTimeout(700);
  ok(await noura.evaluate(()=>/المجلس/.test(document.querySelector('h1').textContent)&&!!document.querySelector('.mj-ami')),'« المجلس » traduit, Sara dans la liste');
  await noura.screenshot({path:path.join(os.tmpdir(),'majlis-ar.png')});
  await noura.click('.mj-ami');await noura.waitForTimeout(900);

@@ -12,11 +12,11 @@ const items=[['Abaya noire','abaya','#111111'],['Chemise soie','haut','#f5efe6']
  // ——— Navigation ———
  let p=await open(390,fresh);
  const labels=await p.$$eval('#dock button',bs=>bs.map(x=>x.textContent.trim()));
- ok(labels.join('|')==='Accueil|Garde-robe|Aura|Boutique|Profil','Barre du bas : 5 onglets nommés ('+labels.join(', ')+')');
- for(const g of ['garde','chat','boutique','profil','home']){await p.click(`#dock [data-go="${g}"]`);await p.waitForTimeout(200);
+ ok(labels.join('|')==='Accueil|Garde-robe|Aura|Boutique|Majlis','Barre du bas : 5 onglets nommés ('+labels.join(', ')+')');
+ for(const g of ['garde','chat','boutique','majlis','home']){await p.click(`#dock [data-go="${g}"]`);await p.waitForTimeout(200);
   ok(await p.evaluate(g=>S.page===g&&document.querySelector(`#dock [data-go="${g}"]`).getAttribute('aria-current')==='page'&&document.querySelectorAll('#dock [aria-current]').length===1,g),'Onglet '+g+' ouvert et marqué actif')}
  ok(await p.$$eval('#dock button',bs=>bs.every(x=>{const r=x.getBoundingClientRect();return r.height>=44&&r.width>=44})),'Cibles tactiles de la barre ≥ 44 px');
- for(const [pg,tab] of [['tenues','garde'],['beaute','home'],['news','home'],['o_photo','home'],['prefs','profil']]){await p.evaluate(x=>go(x),pg);await p.waitForTimeout(150);
+ for(const [pg,tab] of [['tenues','garde'],['beaute','home'],['news','home'],['o_photo','home'],['mj_chat','majlis']]){await p.evaluate(x=>go(x),pg);await p.waitForTimeout(150);
   ok(await p.evaluate(t=>document.querySelector(`#dock [data-go="${t}"]`).getAttribute('aria-current')==='page',tab),`Page ${pg} : onglet ${tab} reste actif`)}
  // ——— Accueil, nouvelle cliente ———
  await p.evaluate(()=>home());await p.waitForTimeout(200);

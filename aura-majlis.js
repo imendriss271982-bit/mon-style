@@ -318,14 +318,14 @@ P.majlis = () => {
   if (!MJ.uid) {
     if (S.nom && !MJ.busy && !MJ.err && !MJ.inv) { MJ.busy = 1; mjCompte(S.nom).then(() => { MJ.busy = 0; return mjAmis(); }, e => { MJ.busy = 0; MJ.err = e.message; }).then(() => { if (S.page === "majlis") mjRedraw(); }); }
     const demande = !S.nom || MJ.inv;
-    return { back: true, html: `${tete}<p class="sub">Discute avec tes amies qui ont My Style : montre ta tenue, demande leur avis.</p>${mjInvCarte()}
+    return { dock: true, html: `${tete}<p class="sub">Discute avec tes amies qui ont My Style : montre ta tenue, demande leur avis.</p>${mjInvCarte()}
       ${demande && !S.nom ? `<label class="vf-lab" for="mj_nom">Ton prénom (tes amies le verront)</label><input class="field" id="mj_nom" autocomplete="given-name" maxlength="30" value="${esc(S.nom || "")}">` : ""}
       ${MJ.err ? `<div class="note">${esc(MJ.err)} <button class="link" data-mjre>Réessayer</button></div>` : MJ.busy ? `<p class="hint">Un instant…</p>` : ""}
       <ul class="mj-why"><li>🔗 Seules les amies qui ont ton lien peuvent t’écrire.</li><li>🙈 Les visages sont cachés sur les photos envoyées.</li><li>🗓️ Les messages s’effacent au bout de 60 jours.</li></ul>`,
       say: "", foot: MJ.inv ? "" : (!S.nom ? `<button class="btn" data-mjopen>Ouvrir mon Majlis</button>` : "") };
   }
   const part = S.mjPart ? `<div class="mj-part"><b>${S.mjPart.kind === "look" ? "Envoie ta tenue à une amie" : "Envoie ton outfit check à une amie"}</b><small>Choisis à qui l’envoyer. Le visage est caché automatiquement.</small><button class="link" data-mjpartno>Annuler</button></div>` : "";
-  return { back: true, html: `${tete}${part}${mjInvCarte()}${MJ.busy && S.mjPart ? `<p class="hint">J’envoie…</p>` : ""}${mjListe()}${S.mjPart ? "" : mjInviter()}
+  return { dock: true, html: `${tete}${part}${mjInvCarte()}${MJ.busy && S.mjPart ? `<p class="hint">J’envoie…</p>` : ""}${mjListe()}${S.mjPart ? "" : mjInviter()}
     <ul class="mj-why"><li>✨ Aura, ta styliste, donne son avis sur vos tenues pendant la discussion.</li><li>🙈 Les visages sont cachés sur les photos envoyées.</li><li>🗓️ Les messages s’effacent au bout de 60 jours.</li></ul>`, say: "" };
 };
 
@@ -396,24 +396,18 @@ async function mjEnvoyerChoix(p) {
   MJ.busy = 0; if (S.page === "mj_chat") { render(false); window.scrollTo(0, document.body.scrollHeight); }
 }
 
-// ——— Pastille dans l'en-tête (accueil) ———
+// ——— Pastille sur l'onglet « Majlis » de la barre du bas (v163 : l'onglet remplace Profil, choix d'Imen) ———
 function mjBadge() {
-  const b = document.getElementById("hmj"); if (!b) return;
-  const i = b.querySelector(".mj-bd"); if (i) { i.textContent = MJ.nl > 9 ? "9+" : MJ.nl; i.hidden = !MJ.nl; }
+  const b = document.getElementById("dkmj"); if (!b) return;
+  const i = b.querySelector(".mj-bd"); if (i) { i.textContent = MJ.nl ? (MJ.nl > 9 ? "9+" : MJ.nl) : ""; i.hidden = !MJ.nl; }
   b.setAttribute("aria-label", tr("Le Majlis") + (MJ.nl ? " · " + MJ.nl : ""));
 }
-(function mjEntete() {
-  const h = document.querySelector("header"); if (!h || document.getElementById("hmj")) return;
-  const b = document.createElement("button"); b.className = "ib"; b.id = "hmj"; b.type = "button"; b.dataset.go = "majlis"; b.setAttribute("aria-label", "Le Majlis");
-  b.innerHTML = MJ_SVG + `<i class="mj-bd" hidden data-noi18n></i>`; b.hidden = S.page !== "home";
-  const p = document.getElementById("hprof"); p ? p.after(b) : h.appendChild(b);
-  mjBadge();
-})();
+mjBadge();
 let MJ_CHAT_AMI = "";
-{ const prev = window.onPage; window.onPage = pg => { const b = document.getElementById("hmj"); if (b) b.hidden = pg !== "home";
+{ const prev = window.onPage; window.onPage = pg => {
   if (pg === "mj_chat") MJ_CHAT_AMI = S.mjAmi; else if (MJ_CHAT_AMI) { const a = MJ_CHAT_AMI; MJ_CHAT_AMI = ""; if (MJC[a]) clearTimeout(MJC[a].finT); mjAuraFin(a); }
   if (pg !== "mj_chat") { S.mjPick = 0; mjBoucle(); } if (prev) prev(pg); }; }
-if (typeof DOCK_OF !== "undefined") { DOCK_OF.majlis = "home"; DOCK_OF.mj_chat = "home"; }
+if (typeof DOCK_OF !== "undefined") { DOCK_OF.mj_chat = "majlis"; }
 setTimeout(() => { mjNonLus(); if (MJ.inv) mjInvInfo(); }, 1500);
 setInterval(mjNonLus, 60000);
 document.addEventListener("visibilitychange", () => { if (!document.hidden) { mjNonLus(); if (S.page === "mj_chat" && S.mjAmi) mjCharger(S.mjAmi); } });
@@ -492,8 +486,7 @@ function mjWipe() {
 (function mjCSS() {
   const st = document.createElement("style");
   st.textContent = `
-#hmj{order:2;position:relative;display:grid;place-items:center;color:var(--accent);cursor:pointer}#hmj[hidden]{display:none}
-#hmj svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round}
+#dkmj{position:relative}#dkmj .mj-bd{top:2px;inset-inline-end:auto;inset-inline-start:calc(50% + 4px)}
 .mj-bd{position:absolute;top:-3px;inset-inline-end:-3px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#B3261E;color:#fff;font:700 11px/18px system-ui,sans-serif;font-style:normal;text-align:center;box-shadow:0 0 0 2px #fff}
 .mj-av{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(160deg,#F3E3C2,#D9B977);color:#5A4220;font:700 18px/1 Georgia,serif}
 .mj-invite,.mj-msg{display:flex;flex-wrap:wrap;align-items:center;gap:12px;width:100%;margin:6px 0 14px;padding:14px 16px;border:0;border-radius:18px;background:#fff;box-shadow:0 4px 18px rgba(140,109,53,.16);text-align:start;font:inherit;color:var(--ink)}
