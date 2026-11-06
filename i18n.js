@@ -40,7 +40,7 @@ const I18N_D=[
 ["Écris un message…","Write a message…","اكتبي رسالة…"],
 // v160 : Aura dans le Majlis (conseil écrit)
 ["Aura écrit","Aura is typing","أورا تكتب"],
-["✨ Aura donne son avis sur vos tenues. Écris « Aura » pour l’appeler.","✨ Aura gives her opinion on your outfits. Write “Aura” to call her.","✨ أورا تعطيكم رايها في لبسكم. اكتبي «أورا» عشان تناديها."],
+["✨ Aura, ta styliste, donne son avis sur vos tenues pendant la discussion.","✨ Aura, your stylist, gives her opinion on your outfits during the chat.","✨ أورا، الستايلست، تعطيكم رايها في لبسكم وانتو تسولفون."],
 ["Aura a déjà beaucoup conseillé aujourd’hui. À demain 💛","Aura has given lots of advice today. See you tomorrow 💛","أورا عطت نصايح واجد اليوم. نشوفچ باچر 💛"],
 ["Envoyer une photo ou une tenue","Send a photo or an outfit","ارسلي صورة أو لبسة"],
 ["Je cache le visage…","Hiding the face…","قاعد أخفي الوجه…"],

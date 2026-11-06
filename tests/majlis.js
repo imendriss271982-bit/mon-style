@@ -101,6 +101,31 @@ const piece='data:image/png;base64,'+png.toString('base64');
  await sara.click('[data-mjami]');await sara.waitForTimeout(1200);
  await sara.waitForTimeout(800);
  ok(await sara.evaluate(a=>S.page==='mj_chat'&&MJC[S.mjAmi].msgs.length===a+2&&MJC[S.mjAmi].msgs.slice(-1)[0].aura&&!S.mjPart,avant),'Tenue envoyée, conversation ouverte');
+ // ——— Aura toute seule (v161) : mot de fin, puis conseil quand on parle de style ———
+ const nAI=AI.length;
+ await noura.evaluate(()=>{go('majlis')});await noura.waitForTimeout(300);
+ const sId=await noura.evaluate(()=>MJ.amis[0].id);
+ for(let i=0;i<3;i++){await sara.evaluate(i=>mjEnvoyer(S.mjAmi,{txt:'msg Sara '+i}),i);await noura.evaluate(([a,i])=>mjEnvoyer(a,{txt:'msg Noura '+i}),[sId,i]);}
+ await sara.evaluate(()=>mjCharger(S.mjAmi,true));await sara.waitForTimeout(500);
+ AI_REP='يا بنات، ما أحلى جمعتكم 💛';
+ await sara.evaluate(()=>home());await sara.waitForTimeout(1200);
+ ok(AI.length===nAI+1&&/La discussion se termine/.test(AI[nAI].prompt),'Sara quitte la conversation → Aura prépare un mot de fin');
+ ok(db.prepare("SELECT COUNT(*) n FROM mj_msgs WHERE de='aura' AND txt LIKE '%جمعتكم%'").get().n===1,'Mot de fin d’Aura rangé (vu par les deux)');
+ await sara.evaluate(()=>{go('mj_chat')});await sara.waitForTimeout(900);await sara.evaluate(()=>home());await sara.waitForTimeout(800);
+ ok(AI.length===nAI+1,'Pas de deuxième mot de fin sans nouvelle discussion');
+ // conseil quand on parle de style
+ await noura.evaluate(a=>{S.mjAmi=a;S.mjAmiNom='Sara';go('mj_chat')},sId);await noura.waitForTimeout(900);
+ await noura.fill('#mj_txt','On se voit à 20h');await noura.click('[data-mjsend]');await noura.waitForTimeout(600);
+ ok(AI.length===nAI+1,'Message ordinaire → Aura ne dit rien');
+ for(let i=0;i<3;i++)await noura.evaluate(([a,i])=>mjEnvoyer(a,{txt:'ok '+i}),[sId,i]);
+ AI_REP='';const DBA=db.prepare("SELECT COUNT(*) n FROM mj_msgs WHERE de='aura'").get().n;
+ await noura.fill('#mj_txt','شو لون الشنطة اللي يليق مع الفستان؟');await noura.click('[data-mjsend]');await noura.waitForTimeout(900);
+ ok(AI.length===nAI+2&&/renvoie une réponse vide/.test(AI[nAI+1].prompt),'Question de style → Aura est consultée');
+ ok(db.prepare("SELECT COUNT(*) n FROM mj_msgs WHERE de='aura'").get().n===DBA,'Réponse vide de l’IA → Aura ne publie rien');
+ AI_REP='Avec un fstan noir, une pochette dorée, Noura 💛';
+ await noura.fill('#mj_txt','Et quelles chaussures je mets ?');await noura.click('[data-mjsend]');await noura.waitForTimeout(900);
+ ok(await noura.evaluate(()=>/pochette dorée/.test([...document.querySelectorAll('.mj-b.mj-aura')].pop().textContent)),'Aura glisse son conseil dans la discussion');
+ AI_REP='Le blanc et le noir, c’est très chic, Sara ! Ajoute une ceinture dorée.';
  // ——— Arabe + petit écran ———
  await noura.evaluate(()=>{S.lang='ar';save();i18nApply();home()});await noura.setViewportSize({width:320,height:640});await noura.waitForTimeout(400);
  ok(await noura.evaluate(()=>{const a=document.getElementById('hmj').getBoundingClientRect(),l=document.querySelector('header .logo').getBoundingClientRect();return document.documentElement.dir==='rtl'&&(a.right<=l.left+1||a.left>=l.right-1)&&document.documentElement.scrollWidth<=320}),'320 px en arabe : bouton du Majlis sans chevaucher le logo, pas de défilement horizontal');

@@ -288,7 +288,23 @@ async function majlis(path, req, env, json) {
   // Un seul conseil par photo (ref = id du message photo) ; rangé déjà lu, pour ne pas faire sonner les pastilles.
   if (path === "/majlis/aura") {
     if (!await amie(b.ami)) return json({ erreur: "Cette amie n'est plus dans ton Majlis.", code: "amie" }, 404);
-    const t = mjTxt(b.txt, 400), cv = mjConv(uid, b.ami), ref = Math.max(0, parseInt(b.ref, 10) || 0);
+    const cv = mjConv(uid, b.ami), ref = Math.max(0, parseInt(b.ref, 10) || 0), kind = String(b.kind || "");
+    // « fin » (petit mot à la fin d'une vraie discussion) et « conseil » (quand elles parlent de style) : Aura ne parle
+    // pas trop. fin = au moins 6 messages des DEUX amies depuis le dernier mot d'Aura ; conseil = Aura n'a rien dit
+    // dans les 4 derniers messages. check = 1 : on demande seulement la permission (avant de payer l'IA).
+    if (kind === "fin" || kind === "conseil") {
+      const der = await DB.prepare("SELECT MAX(id) AS id FROM mj_msgs WHERE conv=? AND de='aura'").bind(cv).first();
+      const apres = (der && der.id) || 0;
+      if (kind === "fin") {
+        const c = await DB.prepare("SELECT COUNT(*) AS n, COUNT(DISTINCT de) AS d FROM mj_msgs WHERE conv=? AND id>? AND de!='aura'").bind(cv, apres).first();
+        if (!c || c.n < 6 || c.d < 2) return json({ non: true });
+      } else {
+        const r4 = await DB.prepare("SELECT de FROM mj_msgs WHERE conv=? ORDER BY id DESC LIMIT 4").bind(cv).all();
+        if ((r4.results || []).some(m => m.de === "aura")) return json({ non: true });
+      }
+      if (b.check) return json({ ok: true });
+    }
+    const t = mjTxt(b.txt, 400);
     if (!t) return json({ erreur: "Conseil vide." }, 400);
     if (ref) {
       const ph = await DB.prepare("SELECT id FROM mj_msgs WHERE id=? AND conv=? AND img IS NOT NULL AND img!=''").bind(ref, cv).first();
