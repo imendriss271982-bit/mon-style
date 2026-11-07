@@ -38,7 +38,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  d=await dim();ok(d.w>d.h*2,'Pivoter tourne la photo : '+JSON.stringify(d));
  // Après 3 utilisations, ajout direct
  await p.evaluate(()=>{localStorage.setItem('monstyle_gguide','3');go('garde')});await p.waitForTimeout(300);
- ok(await p.$('label.gr-add input[data-gadd]')&&!(await p.$('button.gr-add[data-gguide]')),'Après 3 fois : ajout direct, lien du guide gardé');
+ ok(await p.$('label.gr-add input[data-gadd][capture]')&&!(await p.$('button.gr-add[data-gguide]')),'Après 3 fois : ajout direct, lien du guide gardé');
  // Arabe
  await p.evaluate(()=>localStorage.setItem('monstyle',JSON.stringify({nom:'Test',lang:'ar',later:true})));await p.goto(URL);await p.waitForTimeout(900);
  await p.evaluate(()=>{document.getElementById('splash')?.remove();go('g_guide')});await p.waitForTimeout(500);

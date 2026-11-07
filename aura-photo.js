@@ -56,7 +56,7 @@ if(typeof DOCK_OF!=="undefined")DOCK_OF.g_guide="garde";
 
 // Garde-robe : les 3 premières fois, « Ajouter en photo » ouvre le guide ; ensuite lien pour le revoir.
 if(P.garde){const _g=P.garde;P.garde=(asT)=>{const r=_g(asT);if(!r||asT||typeof r.html!=="string")return r;
- if(ggVu()<GG_MAX)r.html=r.html.replace(/<label class="gr-add">([^<]*)(<span aria-hidden="true">→<\/span>)<input type="file" accept="image\/\*" multiple data-gadd hidden><\/label>/,'<button type="button" class="gr-add" data-gguide>$1$2</button>');
+ if(ggVu()<GG_MAX)r.html=r.html.replace(/<label class="gr-add">([^<]*)(<span aria-hidden="true">📷<\/span>)<input type="file" accept="image\/\*" capture="environment" data-gadd hidden><\/label>/,'<button type="button" class="gr-add" data-gguide>$1$2</button>');
  r.html=r.html.replace('<div class="gr-adds">','<button type="button" class="link gg-lien" data-gguide>Comment bien photographier ?</button><div class="gr-adds">');
  return r}}
 
