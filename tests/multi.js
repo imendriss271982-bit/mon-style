@@ -57,29 +57,29 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  ok(/trop chargé/.test(await p.$eval('.gr-fond',e=>e.innerText)),'Fiche : conseil de reprendre sur fond blanc');
  await p.evaluate(()=>{GR.items.shift();grSave();go('garde')});
  // ——— Outfit check en solutions ———
- ok(await p.evaluate(()=>{const pr=PR_OUT();return /solutions/.test(pr)&&pr.includes(GR.items[1].id)&&/jamais un souci sans sa solution/.test(pr)}),'Prompt Outfit check : solutions + garde-robe avec ids');
+ ok(await p.evaluate(()=>{const pr=PR_OUT();return /solutions/.test(pr)&&pr.includes(GR.items[1].id)&&/SUBLIMER son look/.test(pr)&&/sans jamais lui dire d’acheter/.test(pr)&&/SANS justifier la note/.test(pr)}),'Prompt Outfit check : sublimer le look avec la garde-robe, sans achat ni justification');
  await p.evaluate(()=>{const b=GR.items.find(x=>x.cat==='veste');S.res.outfit={note:7,resume:'Belle base, très élégante.',points_forts:['Couleurs harmonieuses'],note_apres:9,solutions:[
   {action:'changer',probleme:'La veste en jean casse l’élégance de la tenue.',texte:'Remplace la veste par ton blazer court noir.',id:b.id,achat:''},
   {action:'ajouter',texte:'Ajoute un collier doré fin.',id:'',achat:'Collier doré fin'},
   {action:'changer',texte:'Mets des escarpins.',id:'zzz',achat:''}]};go('o_res')});await p.waitForTimeout(400);
  const t=await p.$eval('#app,main,body',e=>e.innerText);
- ok(/Pour passer à 9\/10/.test(t),'Titre « Pour passer à 9/10 »');ok(!/À changer/.test(t),'Plus de liste « À changer »');
+ ok(/Pour sublimer ton look/.test(t)&&!/Pour passer à/.test(t)&&!/Ce qui marche/.test(t),'Titre « Pour sublimer ton look », sans justifier la note');ok(!/À changer/.test(t),'Plus de liste « À changer »');
  ok(await p.$$eval('.oc-sol',e=>e.length)===3,'3 solutions affichées');
- ok(await p.$$eval('.oc-ok',e=>e.length)===1,'Une pièce « Tu l’as déjà » (id inventé ignoré)');
- ok(await p.$$eval('.oc-go[data-go="boutique"]',e=>e.length)===2,'Sinon : achat facultatif → Boutique');
+ ok(await p.$$eval('.oc-ok',e=>e.length)===1,'Une pièce « Dans ta garde-robe » (id inventé ignoré)');
+ ok(await p.$$eval('.oc-go',e=>e.length)===0&&!/achat/i.test(t)&&await p.$$eval('.oc-idee',e=>e.length)===2,'Sinon : idée d’Aura, jamais « achète »');
  ok(await p.$('.oc-sol button.oc-ph[data-gitem]'),'Photo de la pièce de sa garde-robe');
- ok(/Le souci/i.test(t)&&/casse l’élégance/.test(t)&&/L’idée d’Aura/i.test(t),'Le souci puis l’idée d’Aura');
- ok(await p.evaluate(()=>/jamais un souci sans sa solution/.test(PR_OUT())&&/probleme/.test(PR_OUT())),'Prompt : souci + idée');
- ok(/casse l’élégance/.test(await p.evaluate(()=>ocSay(S.res.outfit))),'Aura dit le souci puis l’idée');
- ok(await p.evaluate(()=>/blazer court noir/.test(ocSay(S.res.outfit))&&/Tu l’as déjà/.test(ocSay(S.res.outfit))),'Aura dit la 1re solution et « Tu l’as déjà »');
+ ok(!/Le souci/i.test(t)&&!/casse l’élégance/.test(t),'Pas de défaut expliqué');
+
+ ok(!/casse l’élégance/.test(await p.evaluate(()=>ocSay(S.res.outfit))),'Aura ne dit pas de défaut');
+ ok(await p.evaluate(()=>/blazer court noir/.test(ocSay(S.res.outfit))),'Aura dit la 1re idée');
  // Ancien résultat (changements) toujours lisible
  await p.evaluate(()=>{S.res.outfit={note:6,resume:'Ok.',points_forts:[],changements:['Ajoute une ceinture.']};go('o_res')});await p.waitForTimeout(300);
- ok(/Pour aller plus loin/.test(await p.$eval('body',e=>e.innerText)),'Ancien résultat : « Pour aller plus loin »');
+ ok(/Pour sublimer ton look/.test(await p.$eval('body',e=>e.innerText))&&/ceinture/.test(await p.$eval('body',e=>e.innerText)),'Ancien résultat lisible');
  // Arabe + petite largeur
  await p.evaluate(()=>{S.res.outfit={note:7,resume:'Bien.',points_forts:[],note_apres:9,solutions:[{action:'ajouter',texte:'Ajoute un sac.',id:'',achat:'Sac'}]};S.lang='ar';save();go('garde')});await p.waitForTimeout(400);
  ok(/تصورين كذا قطعة/.test(await p.$eval('.gr-tip',e=>e.innerText)),'Astuce traduite en arabe');
  await p.evaluate(()=>go('o_res'));await p.waitForTimeout(300);
- ok(/شراء اختياري/.test(await p.$eval('.oc-sols',e=>e.innerText)),'Solutions traduites en arabe');
+ ok(/فكرة أورا/.test(await p.$eval('.oc-sols',e=>e.innerText))&&/ترفعين لوكچ/.test(await p.$eval('body',e=>e.innerText)),'Idées traduites en arabe');
  await p.setViewportSize({width:320,height:700});await p.waitForTimeout(200);
  ok(await p.evaluate(()=>document.documentElement.scrollWidth<=321),'320 px : pas de défilement horizontal');
  ok(!errs.length,'Aucune erreur JS'+(errs.length?' : '+errs.join(' | '):''));

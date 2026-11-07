@@ -126,19 +126,20 @@ if(typeof grItemsTxt==="function"){grItemsTxt=function(){return GR.items.filter(
 function ocSols(o){if(!o||!Array.isArray(o.solutions))return [];const by=id=>GR.items.find(x=>x.id===String(id)&&!x.wait);
  return o.solutions.filter(s=>s&&typeof s==="object"&&s.texte).slice(0,4).map(s=>{const it=s.id?by(s.id):null;
   return {action:s.action==="ajouter"?"ajouter":"changer",probleme:String(s.probleme||"").slice(0,160),texte:String(s.texte).slice(0,200),it:it||null,achat:it?"":String(s.achat||"").slice(0,80)}})}
-function ocHtml(o){const sols=ocSols(o),apres=Math.round(+o.note_apres||0);
- if(!sols.length)return (o.changements||[]).length?`<h2>Pour aller plus loin</h2><ul class="tips">${o.changements.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:"";
- return `<h2>${apres>+o.note&&apres<=10?"Pour passer à "+apres+"/10":"Pour aller plus loin"}</h2><div class="oc-sols">${sols.map(s=>`<div class="oc-sol">
-  ${s.it?`<button class="oc-ph" data-gitem="${s.it.id}" aria-label="${esc(s.it.nom||"Article")}">${grImg(s.it)}</button>`:`<span class="oc-ph oc-buy" aria-hidden="true">🛍️</span>`}
-  <div class="oc-tx">${s.probleme?`<span class="oc-tag oc-pb">Le souci</span><p class="oc-pbt">${esc(s.probleme)}</p>`:""}<span class="oc-tag">${s.probleme?"L’idée d’Aura":(s.action==="ajouter"?"Ajoute":"Change")}</span><p>${esc(s.texte)}</p>
-  ${s.it?`<small class="oc-ok">✓ Tu l’as déjà dans ta garde-robe</small>`:`<small class="oc-no">${s.achat?esc(s.achat)+" · ":""}<span>achat facultatif</span></small><button class="link oc-go" data-go="boutique">Voir dans la Boutique</button>`}</div></div>`).join("")}</div>`}
-function ocSay(o){const s=ocSols(o)[0];if(!s)return (o.changements||[]).length?" "+o.changements[0]:"";return (s.probleme?" "+s.probleme:"")+" "+s.texte+(s.it?" Tu l’as déjà.":"")}
+function ocHtml(o){const sols=ocSols(o);
+ if(!sols.length)return (o.changements||[]).length?`<h2>Pour sublimer ton look</h2><ul class="tips">${o.changements.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:"";
+ return `<h2>Pour sublimer ton look</h2><div class="oc-sols">${sols.map(s=>`<div class="oc-sol">
+  ${s.it?`<button class="oc-ph" data-gitem="${s.it.id}" aria-label="${esc(s.it.nom||"Article")}">${grImg(s.it)}</button>`:`<span class="oc-ph oc-idee" aria-hidden="true">✨</span>`}
+  <div class="oc-tx"><span class="oc-tag">${s.action==="ajouter"?"Ajoute":"Change"}</span><p>${esc(s.texte)}</p>
+  ${s.it?`<small class="oc-ok">✓ Dans ta garde-robe</small>`:`<small class="oc-no">💡 L’idée d’Aura</small>`}</div></div>`).join("")}</div>`}
+function ocSay(o){const s=ocSols(o)[0];if(!s)return (o.changements||[]).length?" "+o.changements[0]:"";return " "+s.texte}
 
 (function(){const st=document.createElement("style");st.textContent=`
 .gr-fond{font-size:13px;color:#8C6D35;background:#FBF6EE;border-radius:12px;padding:8px 10px;margin:10px 0}
 .gr-tip{font-size:13px;color:var(--mut,#6E6E6E);margin:4px 0 10px;line-height:1.45}
 .gr-it .gr-ty{display:block;font-size:11px;color:var(--accent);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .oc-sols{display:grid;gap:10px;margin:6px 0 14px}
+.oc-idee{display:grid;place-items:center;font-size:26px;background:#FBF6EE}
 .oc-sol{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid #E6E6E6;border-radius:18px;padding:10px}
 .oc-ph{flex:0 0 72px;width:72px;height:72px;border:0;padding:0;border-radius:14px;overflow:hidden;background:var(--soft,#F5F5F5);display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer}
 .oc-ph img,.oc-ph .gr-ph{width:100%;height:100%;object-fit:cover;border-radius:14px}.oc-buy{cursor:default}
