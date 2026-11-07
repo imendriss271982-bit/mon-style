@@ -7,8 +7,8 @@ const items=[['Abaya noire','abaya','#111111'],['Chemise soie','haut','#f5efe6']
 (async()=>{const b=await chromium.launch();const errs=[];
  const open=async(w,setup)=>{const p=await b.newPage({viewport:{width:w,height:820}});p.on('pageerror',e=>errs.push(w+': '+e.message));p.on('dialog',d=>d.dismiss());
   await p.goto(URL);await p.evaluate(setup);await p.goto(URL);await p.waitForTimeout(900);await p.evaluate(()=>{document.getElementById('splash')?.remove();home()});return p};
- const fresh=()=>{localStorage.clear();localStorage.setItem('monstyle_focus','{"all":true}');localStorage.setItem('monstyle_portes_vu','1');localStorage.setItem('monstyle',JSON.stringify({nom:'Test',lang:'fr',later:true}))};
- const full=new Function('items',`localStorage.clear();localStorage.setItem('monstyle_focus','{"all":true}');localStorage.setItem('monstyle_portes_vu','1');localStorage.setItem('monstyle',JSON.stringify({nom:'Test',lang:'fr',later:true}));localStorage.setItem('monstyle_gr',JSON.stringify({items:${JSON.stringify(items)},looks:{quotidien:[{titre:'Chic du lundi',pieces:['i1','i2','i4'],conseil:'Le camel réchauffe le beige.',manque:''}]},saved:[]}))`);
+ const fresh=()=>{localStorage.clear();localStorage.setItem('monstyle_focus','{"all":true}');localStorage.setItem('monstyle_portes_vu','1');localStorage.setItem('monstyle_accueil','0');localStorage.setItem('monstyle',JSON.stringify({nom:'Test',lang:'fr',later:true}))};
+ const full=new Function('items',`localStorage.clear();localStorage.setItem('monstyle_focus','{"all":true}');localStorage.setItem('monstyle_portes_vu','1');localStorage.setItem('monstyle_accueil','0');localStorage.setItem('monstyle',JSON.stringify({nom:'Test',lang:'fr',later:true}));localStorage.setItem('monstyle_gr',JSON.stringify({items:${JSON.stringify(items)},looks:{quotidien:[{titre:'Chic du lundi',pieces:['i1','i2','i4'],conseil:'Le camel réchauffe le beige.',manque:''}]},saved:[]}))`);
  // ——— Navigation ———
  let p=await open(390,fresh);
  const labels=await p.$$eval('#dock button',bs=>bs.map(x=>x.textContent.trim()));

@@ -28,7 +28,7 @@ const piece='data:image/png;base64,'+png.toString('base64');
  const gr=JSON.stringify({items:[{id:'a1',cat:'haut',nom:'Chemise blanche',couleur:'Blanc',img:piece},{id:'a2',cat:'bas',nom:'Pantalon noir',couleur:'Noir',img:piece}],looks:{},saved:[{id:'L1',titre:'Look bureau chic',pieces:['a1','a2'],occ:'bureau',jour:'',d:'2026-11-01'}]});
  const sara=await tel('Sara','fr',{monstyle_gr:gr,monstyle_portes_vu:'1'});
  // ——— Sara : l'en-tête et son Majlis ———
- ok(await sara.evaluate(()=>{const h=document.getElementById('dkmj');return h&&h.getBoundingClientRect().width>30&&!document.querySelector('#dock [data-go="profil"]')&&!!document.querySelector('.mj-bar')}),'Barre du bas : onglet Majlis à la place de Profil + bande sous le bandeau');
+ ok(await sara.evaluate(()=>{const h=document.getElementById('dkmj');return h&&h.getBoundingClientRect().width>30&&!document.querySelector('#dock [data-go="profil"]')&&!document.querySelector('.mj-bar')}),'Barre du bas : onglet Majlis à la place de Profil, plus de bande en haut (v174)');
  await sara.click('#dkmj');await sara.waitForTimeout(700);
  ok(await sara.evaluate(()=>S.page==='majlis'&&/^[0-9a-f]{16}$/.test(MJ.uid)&&/^[A-Z2-9]{6}$/.test(MJ.code)),'Majlis ouvert : compte créé tout seul avec son prénom');
  ok(await sara.evaluate(()=>!!document.querySelector('.mj-vide')&&/wa\.me\/\?text=.*majlis%3D[A-Z2-9]{6}/.test(document.querySelector('.mj-wa').href)),'Majlis vide + bouton WhatsApp avec le lien d’invitation');

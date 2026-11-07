@@ -7,7 +7,7 @@ const SHOTS=process.env.SHOTS||'';
  const p=await b.newPage({viewport:{width:390,height:844}});
  p.on('pageerror',e=>errs.push(e.message));
  const RES={corps:{forme:'Sablier',kibbe:'Soft Classic'},visage:{forme:'ovale'}};
- const open=async(st,lang='fr')=>{await p.goto(URL);await p.evaluate(([st,lang])=>{localStorage.clear();localStorage.setItem('monstyle',JSON.stringify({nom:'Imen',lang,later:true,res:st.res}));
+ const open=async(st,lang='fr')=>{await p.goto(URL);await p.evaluate(([st,lang])=>{localStorage.clear();localStorage.setItem('monstyle_accueil','0');localStorage.setItem('monstyle',JSON.stringify({nom:'Imen',lang,later:true,res:st.res}));
    if(st.gr)localStorage.setItem('monstyle_gr',JSON.stringify({items:st.gr,looks:[],saved:[]}));if(st.zf)localStorage.setItem('monstyle_zf',JSON.stringify({prof:st.zf}));sessionStorage.setItem('ms_hi','1')},[st,lang]);
    await p.goto(URL);await p.waitForTimeout(1200);await p.evaluate(()=>{document.getElementById('splash')?.remove();S.hist=[];home()});await p.waitForTimeout(500)};
  const txt=()=>p.evaluate(()=>document.querySelector('#page').innerText);
