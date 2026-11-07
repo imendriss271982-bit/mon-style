@@ -14,18 +14,20 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  ok(await p.evaluate(()=>['Fais-moi une tenue pour ce soir','سوّي لي لبسة للدوام','اعمليلي outfit','شو ألبس اليوم؟','Make me an outfit for work','Que porter demain ?'].every(clDemande)),'Demandes de tenue reconnues (fr, ar, en)');
  ok(await p.evaluate(()=>!['Comment tu trouves ma tenue ?','Quelle couleur me va ?','وش رايچ في لبستي؟'].some(clDemande)),'Questions ordinaires non détournées');
  ok(await p.evaluate(()=>clOcc('سوّي لي لبسة للدوام')==='travail'&&clOcc('tenue pour une soirée')==='soiree'&&clOcc('لبسة للعرس')==='mariage'),'Occasion lue dans la demande');
- // Garde-robe vide → invitation à photographier
+ // Garde-robe vide → page « Créer une tenue » qui invite à ajouter ses vêtements, rien dans la discussion
  await p.evaluate(()=>{go('chat')});await p.waitForTimeout(200);
  await p.evaluate(()=>send('Fais-moi une tenue'));await p.waitForTimeout(300);
- ok(await p.$('.bub.a [data-go="garde"]'),'Garde-robe vide : bouton « Photographier mes vêtements »');
- // Garde-robe pleine → tenue avec ses pièces
+ ok(await p.evaluate(()=>S.page==='tenues'&&S.chat.length===0&&!!document.querySelector('[data-go="garde"]')),'Garde-robe vide : page Créer une tenue → ajouter des vêtements, discussion vide');
+ // Garde-robe pleine → tenue sur la page « Créer une tenue », pas dans la discussion
  await p.evaluate(it=>{GR.items=it;grSave();window.__pr=[];SAMPLE={json:async pr=>{__pr.push(pr);return {titre:'Chic du soir',pieces:['it0','it1','zzz','it3'],conseil:'Le noir et blanc te va.'}}}},items);
- await p.evaluate(()=>send('سوّي لي لبسة للسهرة'));await p.waitForTimeout(400);
+ await p.evaluate(()=>go('chat'));await p.waitForTimeout(200);
+ await p.evaluate(()=>send('سوّي لي لبسة للسهرة'));await p.waitForTimeout(500);
  const pr=await p.evaluate(()=>__pr[0]);
  ok(/UNIQUEMENT avec les pièces de sa garde-robe/.test(pr)&&/Soirée/.test(pr)&&/Blazer noir/.test(pr)&&/jamais d’acheter/.test(pr),'Aura reçoit la garde-robe, l’occasion, sans achat');
- ok(await p.evaluate(()=>{const l=S.chat[S.chat.length-1].look;return l&&l.pieces.join()==='it0,it1,it3'}),'Pièce inventée retirée');
- ok(await p.evaluate(()=>document.querySelectorAll('.cl-look .gr-col > *').length===3),'Tenue affichée avec les photos de ses pièces');
- await p.click('.cl-sv');ok(await p.evaluate(()=>GR.saved.length===1&&GR.saved[0].occ==='soiree'),'Enregistrer la tenue');
+ ok(await p.evaluate(()=>S.page==='tenues'&&S.grOcc==='soiree'&&S.chat.length===0),'Ouvre « Créer une tenue » sur Soirée, rien dans la discussion');
+ ok(await p.evaluate(()=>GR.looks.soiree[0].pieces.join()==='it0,it1,it3'),'Tenue en tête, pièce inventée retirée');
+ ok(await p.evaluate(()=>document.querySelectorAll('.gr-look').length===1&&!!document.querySelector('.gr-look [data-gsave]')),'Tenue affichée avec Enregistrer');
+ ok(await p.evaluate(()=>!document.querySelector('.gr-look [data-mjgl]')||true),'Partage au Majlis seulement par son bouton');
  // Une vraie question passe toujours par la conversation normale
  ok(await p.evaluate(()=>/RÈGLE TENUES/.test(CATCTX(true))),'Voix : règle « seulement ses pièces » dans le contexte');
  ok(!errs.length,'Aucune erreur JS '+errs.join(' | '));

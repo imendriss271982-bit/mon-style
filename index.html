@@ -919,7 +919,7 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=2"></script>
 <script>
-const VERSION="170";
+const VERSION="171";
 // Bonjour d’Aura : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -1633,15 +1633,15 @@ garde:(asT)=>{const c=grCount(),rd=grReady(),occ=GR_OCC.some(o=>o[0]===S.grOcc)?
  const occs=`<h2>Tenues de ma garde-robe</h2><div class="gr-occ" role="tablist">${grOccs().map(o=>{const n=(GR.looks[o[0]]||[]).length;return `<button role="tab" data-gocc="${o[0]}" aria-selected="${occ===o[0]}"><span class="gr-oi" style="background:${o[3]}">${o[4]}</span><span><b>${o[1]}</b><small>${n} tenue${n>1?"s":""}</small></span></button>`}).join("")}</div>`;
  let body;
  if(S.grBusy===occ)body=`<div class="note">Je coordonne tes vêtements…</div>`;
- else if(!rd)body=`<div class="gr-empty"><span class="gr-ex">${["blazer","jupe","sac","escarpins"].map(k=>capIco(k)).join("")}</span><p>Ajoute tes articles : ton styliste les coordonne en tenues ${esc(GR_OCC.find(o=>o[0]===occ)[1].toLowerCase())}.</p></div>`;
  else if(looks&&looks.length)body=`<div class="gr-looks">${looks.map((l,li)=>{const it=l.pieces.map(by).filter(Boolean);return `<article class="gr-look"><div class="gr-col n${Math.min(it.length,4)}">${it.slice(0,4).map(x=>grImg(x)).join("")}</div><b>${esc(l.titre)}</b><small>${it.map(x=>esc(x.nom||grCat(x.cat))).join(" · ")}</small><p>${esc(l.conseil)}</p>${l.manque?`<p class="gr-miss">Achat facultatif : ${esc(l.manque)}</p>${links(l.manque)}`:""}${grActs(l,occ,li)}</article>`}).join("")}</div><button class="btn ghost" data-glooks="${occ}">Créer d’autres tenues</button>`;
+ else if(!rd)body=`<div class="gr-empty"><span class="gr-ex">${["blazer","jupe","sac","escarpins"].map(k=>capIco(k)).join("")}</span><p>Ajoute tes articles : ton styliste les coordonne en tenues ${esc(GR_OCC.find(o=>o[0]===occ)[1].toLowerCase())}.</p></div>`;
  else body=`${S.grErr?`<div class="note">${esc(S.grErr)}</div>`:""}<button class="btn" data-glooks="${occ}">Créer mes tenues ${esc(GR_OCC.find(o=>o[0]===occ)[1].toLowerCase())}</button>`;
  const cats=GR_CATS.filter(k=>GR.items.some(x=>x.cat===k[0])),fl=cats.some(k=>k[0]===S.grF)?S.grF:"",shown=GR.items.filter(x=>!fl||x.cat===fl);
  const filt=cats.length>1?`<div class="fchips gr-f">${[["","Tout"],...cats].map(k=>`<button data-gf="${k[0]}" aria-pressed="${fl===k[0]}">${k[1]}${k[0]?` <small>${GR.items.filter(x=>x.cat===k[0]).length}</small>`:""}</button>`).join("")}</div>`:"";
  const list=GR.items.length?`<h2>Mes articles <small class="gr-n">${GR.items.length}</small></h2>${filt}<div class="gr-grid">${shown.map(x=>`<button class="gr-it${x.wait?" wait":""}${x.todo?" todo":""}" ${x.wait?"disabled":`data-gitem="${x.id}"`} aria-label="${esc(x.nom||"Article")}">${grImg(x)}<span>${x.wait?"Je regarde…":esc(x.nom||grCat(x.cat))}</span></button>`).join("")}</div>`:"";
  if(asT){const oc=S.res&&S.res.outfit;
   return {dock:1,html:`<h1>Créer une tenue</h1><p class="sub">Choisis une occasion : Aura assemble des tenues avec tes vrais vêtements.</p>
-  ${occs}${rd?body:`<div class="gr-empty"><p>${GR.items.length?"Ajoute encore "+(GR_MIN-c.tot)+" article"+(GR_MIN-c.tot>1?"s":"")+" à ta garde-robe, et je les coordonne en tenues.":"Ajoute d’abord quelques vêtements à ta garde-robe : je les coordonne ensuite en tenues pour toi."}</p><button class="btn" data-go="garde">Ajouter des vêtements</button></div>`}
+  ${occs}${rd||(looks&&looks.length)||S.grBusy===occ?body:`<div class="gr-empty"><p>${GR.items.length?"Ajoute encore "+(GR_MIN-c.tot)+" article"+(GR_MIN-c.tot>1?"s":"")+" à ta garde-robe, et je les coordonne en tenues.":"Ajoute d’abord quelques vêtements à ta garde-robe : je les coordonne ensuite en tenues pour toi."}</p><button class="btn" data-go="garde">Ajouter des vêtements</button></div>`}
   ${grSavedHTML()}
   <h2 class="tn-oc">Tu es déjà habillée ?</h2>
   <button class="hx-oc2" data-go="o_photo"><span class="hx-oc2-i">${GR_HANGER}</span><span class="hx-oc2-t"><small>Chaque jour</small><b>Outfit check</b><em>${oc&&oc.note!=null?`Dernière note : ${esc(String(oc.note))}/10`:"Une photo de ta tenue : une note et quoi ajuster"}</em></span><span class="hx-chev" aria-hidden="true">›</span></button>
@@ -1805,7 +1805,7 @@ beaute:()=>{const tab=S.btab||"mk",v=ok("visage");
  ${tab==="et"?beauteEt():beauteMk()}</div>`,
  say:tab==="et"?BL(BX.etS):(v?{fr:"Voici ton make-up sur mesure, ",en:"Here is your made-to-measure make-up, ",ar:"هذا مكياجچ على مقاسچ يا "}[S.lang||"fr"]+NOM+".":BL(BX.noFace))}},
 chat:()=>({dock:1,html:`<div class="avatar aura inchat" id="ava2"><div class="fig"><img class="pose" src="aura-pose.webp?v=2" alt="Aura, ta styliste personnelle"><img class="body" src="aura-full.webp?v=3" alt="Aura, ta styliste"><img class="bras" src="aura-bras2.webp?v=3" alt=""><img class="mf" src="aura-m1.jpg?v=3" alt=""><img class="mf" src="aura-m2.jpg?v=3" alt=""><img class="mf" src="aura-m3.jpg?v=3" alt=""><img class="blink" src="aura-blink.webp?v=3" alt=""></div><button class="micbadge show${window.liveConv&&window.liveConv()?" live":""}" id="callbtn" type="button" aria-label="Parler à ma styliste"><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg><svg class="hg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15.5c5.3-4.7 12.7-4.7 18 0l-2.6 2.6-3.2-1.6v-2.7c-2.7-.9-4.7-.9-6.4 0v2.7l-3.2 1.6z"/></svg></button></div><h1>Ta styliste</h1>${typeof zfChatCtx==="function"?zfChatCtx():""}<p id="callst" class="sub" style="text-align:center">Appuie pour parler avec ta styliste</p><h2>Ou écris-lui</h2>
- <div class="chat">${S.chat.map((c,i)=>`<div class="bub ${c.r}" id="b${i}">${c.img?`<img src="${c.img}" alt="Photo envoyée">`:""}${esc(hideCodes(c.t))||(c.img?"":"…")}${(c.look||c.gogarde)&&typeof clLookHTML==="function"?clLookHTML(c):""}${c.r==="a"&&c.t?findArts(c.t).map(miniHTML).join(""):""}</div>`).join("")}</div>
+ <div class="chat">${S.chat.map((c,i)=>`<div class="bub ${c.r}" id="b${i}">${c.img?`<img src="${c.img}" alt="Photo envoyée">`:""}${esc(hideCodes(c.t))||(c.img?"":"…")}${c.r==="a"&&c.t?findArts(c.t).map(miniHTML).join(""):""}</div>`).join("")}</div>
  ${S.cphoto?`<div class="prev"><img src="${S.cphoto.url}" alt="Photo à envoyer"><button data-unphoto aria-label="Retirer la photo">×</button></div>`:""}
 
  ${typeof zfChatSug==="function"&&zfChatSug()||`<div class="ch-sug" role="group" aria-label="Idées pour commencer"><button type="button" data-go="tenues">Créer une tenue</button><button type="button" data-go="o_photo">Améliorer mon look</button><button type="button" data-chsay="Aide-moi à choisir une tenue pour une occasion.">Pour une occasion</button><button type="button" data-chsay="Aide-moi à décider avant d’acheter une pièce.">Avant d’acheter</button></div>`}
@@ -2503,7 +2503,7 @@ $("#start").addEventListener("click",()=>{if(window.endCall)window.endCall();SKI
 <script src="aura-photo.js?v=2"></script>
 <script src="aura-majlis.js?v=7"></script>
 <script src="aura-piece.js?v=1"></script>
-<script src="aura-chatlook.js?v=1"></script>
+<script src="aura-chatlook.js?v=2"></script>
 <script type="module">
 let conv=null,busy=false,raf=0;
 window.liveConv=()=>conv;
