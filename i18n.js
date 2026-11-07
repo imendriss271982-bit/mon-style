@@ -525,6 +525,15 @@ const I18N_D=[
 ["Dis-moi ton occasion du jour, et je choisis ta tenue.","Tell me today’s occasion, and I’ll choose your outfit.","قوليلي شنو مناسبتچ اليوم، وأنا أختار لچ لبستچ."],
 ["Bonne journée {0}, tu vas être superbe.","Have a lovely day {0}, you’ll look stunning.","يومچ حلو يا {0}، بتطلعين تهبلين."],
 ["Tenue du jour","Outfit of the day","لبسة اليوم"],
+// ——— v176 : carte du jour selon la garde-robe (Imen : plus de « Ajoute 7 pièces » quand il y a des vêtements) ———
+["Ajoute tes premières pièces ›","Add your first pieces ›","ضيفي أول قطعچ ›"],
+["Ajouter mes vêtements ›","Add my clothes ›","ضيفي ملابسچ ›"],
+["Ajoute un haut et un bas, ou une robe, et je compose ta tenue","Add a top and a bottom, or a dress, and I’ll put your outfit together","ضيفي بلوزة وتحت، أو فستان، وأنا أنسّق لچ لبستچ"],
+["Ajoute un haut et un bas, ou une robe, et je compose ta tenue.","Add a top and a bottom, or a dress, and I’ll put your outfit together.","ضيفي بلوزة وتحت، أو فستان، وأنا أنسّق لچ لبستچ."],
+["Ajoute d’autres pièces pour plus d’idées ›","Add more pieces for more ideas ›","ضيفي قطع ثانية عشان أفكار أكثر ›"],
+["Ajoute quelques vêtements, et chaque matin je choisis une tenue pour toi selon la météo et ton programme.","Add a few clothes, and every morning I’ll choose an outfit for you based on the weather and your plans.","ضيفي كم قطعة، وكل صبح أختار لچ لبسة على حسب الجو وبرنامجچ."],
+["Je la porte ✓","I’m wearing it ✓","بلبسها ✓"],
+["Autre idée ↻","Another idea ↻","فكرة ثانية ↻"],
 // ——— v139 : Your Style Twin (jumeau de style, niveau 1 : fiche de données) ———
 ["Ta copie de style","Your style copy","نسختچ في الستايل"],
 ["Ton jumeau est complet","Your twin is complete","توأمچ كامل"],

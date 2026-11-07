@@ -1,4 +1,5 @@
-/* My Style — Accueil v175 : plus de question en double (météo en haut près d'Aura, la question seulement dans la carte du jour).
+/* My Style — Accueil v176 : carte du jour selon la garde-robe (plus de « Ajoute 7 pièces » quand il y a des vêtements ; la tenue avec ses pièces, « Je la porte » et « Autre idée »).
+   Accueil v175 : plus de question en double (météo en haut près d'Aura, la question seulement dans la carte du jour).
    Accueil v174 (ordre voulu par Imen, 7 novembre 2026).
    « المجلس حنشيلها من فوق نخليها بس تحت » : la bande du Majlis disparaît du haut de l'accueil (l'onglet Majlis de la barre du bas reste).
    Ordre : salutation + Aura → (cartes d'avis : invitation / message du Majlis, réponse de la styliste, nouveauté)
@@ -21,16 +22,38 @@ function acConseil(pret) {
   return "Il fait frais : pense à une veste";
 }
 function acJour() {
-  let l = null, pret = false;
+  // v176 (Imen, 8 novembre 2026 : « الواردروب فيها لبس، ليش هحقله حط 7 ملابس ؟ ») : la carte change selon la garde-robe.
+  //  0 pièce → « Ajoute tes premières pièces » ; pas encore de quoi faire une tenue → « Ajouter mes vêtements » ;
+  //  de quoi faire une tenue → « Choisis ma tenue » (+ petit lien si moins de GR_MIN pièces) ;
+  //  tenue choisie → la tenue avec ses pièces, « Je la porte ✓ » et « Autre idée ↻ ». Plus jamais « Ajoute 7 pièces » quand il y a des vêtements.
+  let l = null, pret = false, plein = false, n = 0;
   try { if (typeof jrMeteo === "function") jrMeteo(); } catch (e) {}
   try { l = typeof JR !== "undefined" && typeof jrAuj === "function" && JR.d === jrAuj() ? JR.look : null; } catch (e) {}
-  try { pret = typeof grReady === "function" && grReady(); } catch (e) {}
-  if (l && l.titre) return `<button class="hr-card jr-home ac-jour" data-view="jour"><span class="hr-lab">Ta tenue d’aujourd’hui</span><b>${esc(l.titre)}</b>
-   ${l.conseil ? `<small>${esc(l.conseil)}</small>` : ""}<em>${typeof JR !== "undefined" && JR.porte ? "Portée aujourd’hui ✓" : "Voir ma tenue"} ›</em></button>`;
-  const n = typeof GR_MIN !== "undefined" ? GR_MIN : 7;
-  return `<button class="hr-card jr-home ac-jour" data-view="jour"><span class="hr-lab">Ma tenue du jour</span><b>Que porter aujourd’hui ?</b>
-   <small>${acConseil(pret)}</small><span class="ac-cta">${pret ? "Choisis ma tenue" : `Ajoute tes ${n} premières pièces`} ›</span></button>`;
+  try { pret = typeof jrPret === "function" ? jrPret() : grReady(); } catch (e) {}
+  try { plein = grReady(); } catch (e) {}
+  try { n = grCount().tot; } catch (e) {}
+  if (l && l.titre) {
+    const by = id => GR.items.find(x => x.id === id), it = (l.pieces || []).map(by).filter(Boolean).slice(0, 4);
+    const porte = typeof JR !== "undefined" && JR.porte;
+    return `<div class="hr-card jr-home ac-jour ac-pret" data-go="jour"><span class="hr-lab">Ma tenue du jour</span><b>${esc(l.titre)}</b>
+     ${it.length ? `<span class="ac-ph" style="--n:${it.length}">${it.map(x => `<span>${grImg(x)}</span>`).join("")}</span>` : ""}
+     ${l.conseil ? `<small>${esc(l.conseil)}</small>` : ""}
+     <span class="ac-2">${porte ? `<span class="ac-ok">Portée aujourd’hui ✓</span>` : `<button class="ac-cta" data-jporte>Je la porte ✓</button>`}<button class="ac-sec" data-acshuf>Autre idée ↻</button></span></div>`;
+  }
+  const cta = pret ? `<button class="ac-cta" data-acgo>Choisis ma tenue ›</button>`
+    : `<button class="ac-cta" data-go="garde">${n ? "Ajouter mes vêtements ›" : "Ajoute tes premières pièces ›"}</button>`;
+  const txt = pret ? acConseil(true) : n ? "Ajoute un haut et un bas, ou une robe, et je compose ta tenue" : acConseil(false);
+  return `<div class="hr-card jr-home ac-jour" data-go="jour"><span class="hr-lab">Ma tenue du jour</span><b>Que porter aujourd’hui ?</b>
+   <small>${txt}</small>${cta}${pret && !plein ? `<button class="ac-plus" data-go="garde">Ajoute d’autres pièces pour plus d’idées ›</button>` : ""}</div>`;
 }
+
+// « Choisis ma tenue » / « Autre idée » depuis l'accueil : on ouvre la page du jour et Aura compose tout de suite.
+addEventListener("click", e => {
+  const t = e.target.closest("[data-acgo],[data-acshuf]");
+  if (!t || typeof jrChoisir !== "function") return;
+  e.stopPropagation();
+  S.flow = null; go("jour"); jrChoisir(t.hasAttribute("data-acshuf"));
+}, true);
 
 // En haut, près d'Aura : la météo à la place de « Qu'est-ce qu'on porte aujourd'hui ? » (la question est dans la carte).
 const AC_SOLEIL = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>';
@@ -106,7 +129,17 @@ ${acPortes()}`;
 .hz .ac-jour{margin-top:16px}
 .hz .ac-jour b{font-size:19px}
 .hz .ac-jour small{display:block;margin-top:4px}
-.hz .ac-jour .ac-cta{display:inline-flex;align-self:flex-start;margin-top:12px;padding:9px 16px;border-radius:999px;background:var(--goldg,linear-gradient(135deg,#A8843F,#8C6D35 55%,#765A2A));color:#fff;font-weight:600;font-size:14px;box-shadow:0 4px 12px rgba(140,109,53,.25)}
+.hz .ac-jour{cursor:pointer}
+.hz .ac-jour .ac-cta{display:inline-flex;align-items:center;justify-content:center;align-self:flex-start;min-height:44px;margin-top:12px;padding:9px 18px;border:0;border-radius:999px;background:var(--goldg,linear-gradient(135deg,#A8843F,#8C6D35 55%,#765A2A));color:#fff;font:inherit;font-weight:600;font-size:14px;box-shadow:0 4px 12px rgba(140,109,53,.25);cursor:pointer}
+.hz .ac-jour .ac-sec{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin-top:12px;padding:9px 16px;border-radius:999px;border:1.5px solid #C9A063;background:#fff;color:var(--accent,#8C6D35);font:inherit;font-weight:600;font-size:14px;cursor:pointer}
+.hz .ac-jour .ac-2{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.hz .ac-jour .ac-2 .ac-cta{flex:1 1 140px}
+.hz .ac-jour .ac-ok{margin-top:12px;color:var(--accent,#8C6D35);font-weight:600;font-size:14px;flex:1 1 140px}
+.hz .ac-jour .ac-plus{display:block;margin-top:8px;padding:6px 0;border:0;background:none;color:var(--accent,#8C6D35);font:inherit;font-size:13px;text-decoration:underline;text-underline-offset:3px;cursor:pointer;text-align:start}
+.hz .ac-jour .ac-ph{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:8px;margin-top:12px;max-width:calc(var(--n) * 110px)}
+.hz .ac-jour .ac-ph>span{aspect-ratio:1;border-radius:14px;background:#F5F1EB;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.hz .ac-jour .ac-ph img{width:100%;height:100%;object-fit:contain}
+.hz .ac-jour .ac-ph svg{max-width:70%;max-height:70%}
 .hz .ac-met{display:inline-flex;align-items:center;gap:6px;margin:8px 0 14px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.75);border:1px solid #E6D6B8;color:var(--accent,#8C6D35);font-weight:600;font-size:15px}
 .hz .ac-met svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
 .hz .tw-card{margin-top:14px}

@@ -36,6 +36,17 @@ const SHOTS=process.env.SHOTS||'';
  const gr=[];for(let i=0;i<8;i++)gr.push({id:'x'+i,cat:i<4?'haut':'pantalon',nom:'Pièce '+i,coul:'noir',img:''});
  await open({gr});await p.evaluate(()=>{JR={d:jrAuj(),occ:'quotidien',look:{titre:'Chic du jeudi',conseil:'Blazer noir et pantalon',pieces:['x0','x4']},porte:0,vus:[]};render(false)});await p.waitForTimeout(300);
  okk(await p.evaluate(()=>document.querySelector('.ac-jour').innerText.includes('Chic du jeudi')),'Tenue du jour affichée dans la 1re carte');
+ okk(await p.evaluate(()=>document.querySelectorAll('.ac-jour .ac-ph img,.ac-jour .ac-ph svg').length)===2,'v176 : les pièces de la tenue sont montrées');
+ okk(await p.evaluate(()=>!!document.querySelector('.ac-jour [data-jporte]')&&!!document.querySelector('.ac-jour [data-acshuf]')),'v176 : « Je la porte » et « Autre idée »');
+ okk(!(await p.evaluate(()=>/7/.test(document.querySelector('.ac-jour').innerText))),'v176 : plus de « 7 pièces »');
+ // v176 : carte selon la garde-robe
+ await open();okk(await p.evaluate(()=>{const c=document.querySelector('.ac-jour .ac-cta');return c&&c.dataset.go==='garde'&&/premières pièces/.test(c.innerText)&&!/\d/.test(c.innerText)}),'v176 : garde-robe vide → « Ajoute tes premières pièces » sans chiffre');
+ await open({gr:[{id:'a',cat:'haut',nom:'Chemise',img:''}]});okk(await p.evaluate(()=>{const c=document.querySelector('.ac-jour .ac-cta');return c.dataset.go==='garde'&&/vêtements/.test(c.innerText)}),'v176 : une seule pièce → « Ajouter mes vêtements »');
+ await open({gr:[{id:'a',cat:'haut',nom:'Chemise',img:''},{id:'b',cat:'pantalon',nom:'Pantalon',img:''}]});
+ okk(await p.evaluate(()=>!!document.querySelector('.ac-jour [data-acgo]')&&!!document.querySelector('.ac-jour .ac-plus')),'v176 : un haut + un bas → « Choisis ma tenue » + petit lien');
+ await open({gr});okk(await p.evaluate(()=>!!document.querySelector('.ac-jour [data-acgo]')&&!document.querySelector('.ac-jour .ac-plus')),'v176 : garde-robe pleine → « Choisis ma tenue » sans lien');
+ await p.evaluate(()=>{window.jrChoisir=a=>{window.JRA=a===true?'autre':'go'}});await p.click('.ac-jour [data-acgo]');await p.waitForTimeout(300);
+ okk(await p.evaluate(()=>S.page==='jour'&&window.JRA==='go'),'v176 : « Choisis ma tenue » ouvre la page et lance Aura');
  // Arabe + largeurs
  await open({},'ar');await p.waitForTimeout(400);
  okk(await p.evaluate(()=>document.documentElement.dir)==='rtl','Arabe : RTL');

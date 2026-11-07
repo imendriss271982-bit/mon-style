@@ -19,7 +19,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  // Garde-robe prête
  await p.evaluate(it=>localStorage.setItem('monstyle_gr',JSON.stringify({items:it,looks:{},saved:[]})),items);
  await boot();
- ok(await p.$('.jr-home[data-view="jour"]'),'Accueil : carte « Que porter aujourd’hui ? »');
+ ok(await p.$('.jr-home[data-view="jour"],.jr-home[data-go="jour"]'),'Accueil : carte « Que porter aujourd’hui ? »');
  ok(await p.evaluate(()=>!document.querySelector('.jr-home img')),'Accueil : aucune photo de vêtement sur la carte');
  await p.waitForTimeout(300);
  ok(await p.evaluate(()=>/°C/.test((document.querySelector('.ac-met')||document.querySelector('.jr-home')).textContent)),'Accueil : météo affichée (près d’Aura)');

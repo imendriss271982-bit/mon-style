@@ -1,4 +1,5 @@
-/* My Style — « Que porter aujourd'hui ? » (v140).
+/* v176 : jrPret() — tenue du jour possible avant GR_MIN pièces (un haut + un bas, ou une robe).
+   My Style — « Que porter aujourd'hui ? » (v140).
    Le geste quotidien : un bouton, et Aura choisit UNE tenue pour aujourd'hui avec les vraies pièces
    de la garde-robe, selon l'occasion du jour et la météo de la ville de la cliente.
    - Météo : Open-Meteo (gratuit, sans clé). La ville vient du fuseau horaire du téléphone (Golfe), sans demander la position.
@@ -76,10 +77,14 @@ function jrRecentes() {
   return GR.items.filter(x => Array.isArray(x.w) && x.w.some(d => d >= lim && d < auj));
 }
 
+// v176 (Imen : « ليش هحقله حط 7 ملابس ؟ ») : une tenue dès qu'il y a de quoi en faire une
+// (un haut + un bas, ou une robe/abaya + une autre pièce), sans attendre GR_MIN pièces.
+function jrPret() { try { const c = grCount(); return grReady() || (c.tot >= 2 && c.hauts >= 1 && c.bas >= 1); } catch (e) { return false; } }
+
 const JR_JOURS = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"];
 async function jrChoisir(autre) {
   if (typeof isVip === "function" && !isVip()) return paywall("garde");
-  if (!grReady() || S.jrBusy) return;
+  if (!jrPret() || S.jrBusy) return;
   const occ = jrOcc(), o = GR_OCC.find(x => x[0] === occ);
   const sm = await getSample();
   if (!sm || !sm.json) { toast("La création de tenues n’est pas disponible ici."); return; }
@@ -123,8 +128,8 @@ P.jour = () => {
   const occ = jrOcc(), by = id => GR.items.find(x => x.id === id);
   const head = `<p class="step">Chaque jour</p><h1>Que porter aujourd’hui ?</h1>
   <p class="jr-meteo"><span aria-hidden="true">☀️</span><span data-noi18n>${esc(jrMeteoTxt())}</span></p>`;
-  if (!grReady()) return { back: true,
-    html: head + `<div class="hr-card hr-step"><span class="hr-lab">Prochaine étape</span><b>Ajoute d’abord tes vêtements</b><small>Avec au moins ${GR_MIN} articles, je choisis chaque matin une tenue pour toi selon la météo et ton programme.</small></div>`,
+  if (!jrPret()) return { back: true,
+    html: head + `<div class="hr-card hr-step"><span class="hr-lab">Prochaine étape</span><b>Ajoute d’abord tes vêtements</b><small>${GR.items.length ? "Ajoute un haut et un bas, ou une robe, et je compose ta tenue." : "Ajoute quelques vêtements, et chaque matin je choisis une tenue pour toi selon la météo et ton programme."}</small></div>`,
     say: "Ajoute d’abord tes vêtements, et chaque matin je choisis ta tenue.",
     foot: `<button class="btn" data-go="garde">Ouvrir ma garde-robe</button>` };
   const chips = `<h2 class="jr-h">Ton occasion du jour</h2><div class="jr-occ">${grOccs().map(o => `<button data-jocc="${o[0]}" aria-pressed="${o[0] === occ}"><span aria-hidden="true">${o[4]}</span>${o[1]}</button>`).join("")}</div>`;
@@ -141,7 +146,8 @@ P.jour = () => {
      <div class="jr-acts">${JR.porte ? `<span class="jr-ok">Portée aujourd’hui ✓</span>` : `<button class="btn" data-jporte>Je la porte aujourd’hui</button>`}
      <button class="btn ghost" data-jautre>Autre idée</button></div></section>`;
   }
-  return { back: true, html: head + chips + body,
+  const plus = grReady() ? "" : `<button class="link jr-plus" data-go="garde">Ajoute d’autres pièces pour plus d’idées ›</button>`;
+  return { back: true, html: head + chips + body + plus,
     say: l ? "" : "Dis-moi ton occasion du jour, et je choisis ta tenue.",
     foot: l || S.jrBusy ? "" : `<button class="btn" data-jgo>Choisis ma tenue</button>` };
 };
