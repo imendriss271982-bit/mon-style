@@ -14,8 +14,8 @@ const SHOTS=process.env.SHOTS||'';
  const shot=async n=>{if(SHOTS)await p.screenshot({path:SHOTS+'/'+n+'.png',fullPage:true})};
  // 1. Nouvelle cliente
  await open({res:{}});let t=await txt();await shot('1-nouvelle');
- okk(t.includes('Découvre ton style'),'Nouvelle : action « Découvre ton style »');
- okk(await p.evaluate(()=>document.querySelectorAll('.pt-act').length)===1,'Nouvelle : une seule action');
+ okk(!t.includes('Commencer mon analyse')&&!t.includes('Découvre ton style'),'Nouvelle : les 3 étapes ne sont plus sur l’accueil (v173, dans le profil)');
+ okk(await p.evaluate(()=>document.querySelectorAll('.pt-act').length)>=1,'Nouvelle : au moins une action (Outfit check)');
  okk(await p.evaluate(()=>document.querySelectorAll('.pt-door').length)===4,'4 portes');
  okk(!(await p.evaluate(()=>!!document.querySelector('.pt-sug'))),'Nouvelle : pas de suggestion (une seule chose à faire)');
  okk(await p.evaluate(()=>!!document.querySelector('.hz-st')),'My Stylist reste visible');

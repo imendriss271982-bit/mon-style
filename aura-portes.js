@@ -56,8 +56,7 @@ function ptPortes() {
 function ptActions() {
   const out = [], reste = ptAnalyseRestante();
   if (ptMariageActif()) out.push({ ic: "💍", t: "Zifafi Wedding", s: "Ton style de mariée", a: 'data-go="zf"' });
-  if (reste) out.push({ ic: "✨", t: reste === 3 ? "Découvre ton style" : "Termine ton analyse", s: reste === 3 ? "3 étapes, une seule fois" : "Encore " + reste + " étape(s)", a: 'data-onb=""', big: 1 });
-  else {
+  {
     if (ptGardeOk()) out.push({ ic: "☀️", t: "Tenue du jour", s: "Avec tes vêtements", a: 'data-go="jour"' });
     out.push({ ic: "📸", t: "Outfit check", s: "Une note et quoi changer", a: 'data-go="o_photo"' });
     if (!ptGardeOk()) out.push({ ic: "👗", t: "Ma garde-robe", s: ptPieces() ? ptPieces() + " pièce(s)" : "Ajoute tes vêtements", a: 'data-go="garde"' });

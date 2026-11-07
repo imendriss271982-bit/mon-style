@@ -418,6 +418,7 @@ nav.dock button{font-weight:300;letter-spacing:.02em}
 .hx-an-s i{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;border:1.5px solid var(--accent);color:var(--accent);font-style:normal;font-weight:600}
 .hx-an-s li.ok i{background:var(--accent);color:#fff}.hx-an-s li.ok{color:var(--ink)}
 .hx-an .btn{width:100%}
+.view .hx-an{margin:4px 0 14px}
 .hx-oc2{display:flex;align-items:center;gap:14px;width:100%;border:1px solid var(--line);border-radius:16px;padding:16px;text-align:start;color:var(--ink);cursor:pointer;background:var(--surface);transition:transform .15s}
 .hx-oc2-i{flex:none;width:48px;height:48px;border-radius:12px;background:var(--rose);display:grid;place-items:center}
 .hx-oc2-i svg{width:26px;height:26px;fill:none;stroke:var(--accent);stroke-width:1.5;stroke-linejoin:round}
@@ -847,7 +848,7 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 .avatar.aura.inchat{height:min(34svh,calc((100vw - 40px)*.873))}
 #splash .avatar.aura .fig,.avatar.aura.inchat .fig{inset:0 0 auto 0;height:151.5%;-webkit-mask-image:linear-gradient(to bottom,#000 54%,transparent 65.5%);mask-image:linear-gradient(to bottom,#000 54%,transparent 65.5%)}
 </style>
-<link rel="stylesheet" href="zifafi.css?v=3">
+<link rel="stylesheet" href="zifafi.css?v=4">
 </head>
 <body>
 <div id="splash"><svg class="atelier" viewBox="0 0 400 860" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
@@ -1603,9 +1604,7 @@ home:()=>{const v=ok("visage"),bd=ok("corps"),c=season(),oc=ok("outfit");
   <span class="hz-call"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg>Appeler Aura</span>
  </button>
  <section class="hz-more"><h2 class="hz-h">Mon style</h2>
-${nd<3?`<div class="hx-an"><span class="hr-lab">Ton analyse de style</span><b>${nd?"Termine ton analyse de style":"Découvre ton style"}</b><small>3 étapes, une seule fois : ensuite mes conseils sont faits pour toi.</small>
-   <ol class="hx-an-s">${[["Visage",v],["Silhouette",bd],["Couleurs",c]].map((x,i)=>`<li class="${x[1]?"ok":""}"><i aria-hidden="true">${x[1]?"✓":i+1}</i><span>${x[0]}</span></li>`).join("")}</ol>
-   <button class="btn" data-onb>${nd?"Continuer mon analyse":"Commencer mon analyse"}</button></div>`:""}
+
 ${nd===3?`<button class="hx-ms" data-view="fiche" aria-label="Voir ma fiche style">
    <span class="hx-ms-h"><b>Ma fiche style</b><small>Voir le détail ›</small></span>
    <span class="hx-ms-g"><span><small>Visage</small><em>${esc(cap(v.forme))}</em></span><span><small>Silhouette</small><em>${esc(bd.kibbe?bd.forme+" · "+bd.kibbe:bd.forme)}</em></span><span><small>Saison</small><em>${esc(c)}</em>${sw}</span></span>
@@ -1722,6 +1721,9 @@ profil:()=>{const i=S.info||{},has=!!i.email,pick=(k,l)=>`<div class="row"><span
  ${has?`<h2 style="margin-top:0">Mes informations</h2>${pick(i.tel,"WhatsApp")}${pick(i.taille?i.taille+" cm":"","Taille")}${pick(i.poids?i.poids+" kg":"","Poids (privé)")}${pick(i.age,"Âge")}${pick(i.tvet,"Taille de vêtements")}${pick(i.budget,"Budget")}${pick((i.styles||[]).join(", "),"Styles préférés")}
  <button class="btn ghost" data-go="infos" style="margin:6px 0 4px">Modifier mes informations</button>`
  :`<button class="tile main" data-go="infos"><b>Créer mon profil</b><span>Ton email, ta taille, ton style : je m’en sers pour mieux te conseiller.</span></button>`}
+ ${(()=>{const v=ok("visage"),bd=ok("corps"),c=season(),nd=[v,bd,c].filter(Boolean).length;return nd<3?`<div class="hx-an"><span class="hr-lab">Ton analyse de style</span><b>${nd?"Termine ton analyse de style":"Découvre ton style"}</b><small>3 étapes, une seule fois : ensuite mes conseils sont faits pour toi.</small>
+   <ol class="hx-an-s">${[["Visage",v],["Silhouette",bd],["Couleurs",c]].map((x,i)=>`<li class="${x[1]?"ok":""}"><i aria-hidden="true">${x[1]?"✓":i+1}</i><span>${x[0]}</span></li>`).join("")}</ol>
+   <button class="btn" data-onb>${nd?"Continuer mon analyse":"Commencer mon analyse"}</button></div>`:""})()}
  <button class="tile main" data-view="prefs"><b>Mes préférences de style</b><span>${typeof pfEmpty==="function"&&!pfEmpty()?"Couleurs, pièces, occasions, mode pudique : touche pour modifier":"Dis à Aura les couleurs, pièces et occasions que tu aimes"}</span></button>
  ${GRATUIT?"":`<button class="tile" data-go="abo"><b>${PLANS[plan()].nom}</b><span>${Math.max(0,Math.floor(secLeft()/60))} min avec Aura restantes ce mois-ci · voir les formules</span></button>`}
  <h2>Mon pays</h2><div class="pk">${Object.keys(PAYS).map(k=>`<button type="button" data-setpays="${k}" aria-pressed="${pays()===k}">${PAYS[k].n}</button>`).join("")}</div>
@@ -2493,7 +2495,7 @@ $("#start").addEventListener("click",()=>{if(window.endCall)window.endCall();SKI
 </script>
 <script src="aura-profile.js?v=3"></script>
 <script src="fond-vivant.js?v=3"></script>
-<script src="zifafi.js?v=4"></script>
+<script src="zifafi.js?v=5"></script>
 <script src="zifafi-plus.js?v=1"></script>
 <script src="aura-twin.js?v=1"></script>
 <script src="aura-jour.js?v=2"></script>
@@ -2503,7 +2505,7 @@ $("#start").addEventListener("click",()=>{if(window.endCall)window.endCall();SKI
 <script src="aura-focus.js?v=1"></script>
 <script src="aura-multi.js?v=7"></script>
 <script src="aura-studio.js?v=1"></script>
-<script src="aura-portes.js?v=2"></script>
+<script src="aura-portes.js?v=3"></script>
 <script src="aura-contact.js?v=1"></script>
 <script src="aura-avatar.js?v=1"></script>
 <script src="aura-photo.js?v=2"></script>

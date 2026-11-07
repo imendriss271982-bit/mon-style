@@ -21,6 +21,7 @@
 .zf-u-b{margin-top:6px;border:1px solid var(--accent);border-radius:999px;background:none;color:var(--accent);font:inherit;font-size:14px;font-weight:500;padding:11px 10px;min-height:44px;cursor:pointer}
 .zf-u.zw .zf-u-b{background:var(--accent);color:var(--on)}
 @media (max-width:359px){.zf-uni{grid-template-columns:1fr}}
+.zf-uni.solo{grid-template-columns:1fr}
 /* Tableau de bord */
 .zf-hero{text-align:center;padding:18px 8px 22px;border-bottom:1px solid var(--line);margin-bottom:8px}
 .zf-hero h1{font-size:44px;margin:4px 0 2px;font-style:italic;color:var(--accent);line-height:1}
