@@ -22,7 +22,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  ok(await p.$('.jr-home[data-view="jour"]'),'Accueil : carte « Que porter aujourd’hui ? »');
  ok(await p.evaluate(()=>!document.querySelector('.jr-home img')),'Accueil : aucune photo de vêtement sur la carte');
  await p.waitForTimeout(300);
- ok(await p.evaluate(()=>/°C/.test(document.querySelector('.jr-home').textContent)),'Accueil : météo affichée');
+ ok(await p.evaluate(()=>/°C/.test((document.querySelector('.ac-met')||document.querySelector('.jr-home')).textContent)),'Accueil : météo affichée (près d’Aura)');
  await p.click('.jr-home');await p.waitForTimeout(300);
  ok(await p.evaluate(()=>S.page==='jour'),'La carte ouvre la page du jour');
  ok(await p.evaluate(()=>document.querySelectorAll('[data-jocc]').length>=6),'Choix de l’occasion');

@@ -1,4 +1,5 @@
-/* My Style — Accueil v174 (ordre voulu par Imen, 7 novembre 2026).
+/* My Style — Accueil v175 : plus de question en double (météo en haut près d'Aura, la question seulement dans la carte du jour).
+   Accueil v174 (ordre voulu par Imen, 7 novembre 2026).
    « المجلس حنشيلها من فوق نخليها بس تحت » : la bande du Majlis disparaît du haut de l'accueil (l'onglet Majlis de la barre du bas reste).
    Ordre : salutation + Aura → (cartes d'avis : invitation / message du Majlis, réponse de la styliste, nouveauté)
            1. Que porter aujourd'hui ?  2. Your Style Twin  3. My Stylist (« Appeler Aura » qui bat comme un cœur)
@@ -9,17 +10,34 @@
 const ACC_ON = (() => { try { return localStorage.getItem("monstyle_accueil") !== "0" && localStorage.getItem("monstyle_portes") !== "0"; } catch (e) { return true; } })();
 
 // 1. Que porter aujourd'hui ? — toujours visible, même si la garde-robe n'est pas prête.
+// v175 (Imen, 8 novembre 2026) : le titre n'est plus répété. La météo monte près d'Aura (en haut),
+// la carte garde LA question + un conseil selon la température + une action claire.
+function acTemp() { try { return typeof JR_METEO !== "undefined" && JR_METEO && typeof JR_METEO.t === "number" ? JR_METEO.t : null; } catch (e) { return null; } }
+function acConseil(pret) {
+  const t = acTemp();
+  if (t == null) return pret ? "Une tenue avec tes vêtements, selon la météo" : "Chaque matin, je choisis ta tenue avec tes vêtements";
+  if (t >= 30) return "Il fait chaud : matières légères et couleurs claires";
+  if (t >= 22) return "Temps doux : une couche légère pour le soir";
+  return "Il fait frais : pense à une veste";
+}
 function acJour() {
-  let l = null, met = "", pret = false;
+  let l = null, pret = false;
   try { if (typeof jrMeteo === "function") jrMeteo(); } catch (e) {}
   try { l = typeof JR !== "undefined" && typeof jrAuj === "function" && JR.d === jrAuj() ? JR.look : null; } catch (e) {}
-  try { met = typeof jrMeteoTxt === "function" ? jrMeteoTxt() : ""; } catch (e) {}
   try { pret = typeof grReady === "function" && grReady(); } catch (e) {}
-  const meteo = met ? `<span data-noi18n>${esc(met)}</span> ›` : "›";
   if (l && l.titre) return `<button class="hr-card jr-home ac-jour" data-view="jour"><span class="hr-lab">Ta tenue d’aujourd’hui</span><b>${esc(l.titre)}</b>
    ${l.conseil ? `<small>${esc(l.conseil)}</small>` : ""}<em>${typeof JR !== "undefined" && JR.porte ? "Portée aujourd’hui ✓" : "Voir ma tenue"} ›</em></button>`;
-  return `<button class="hr-card jr-home ac-jour" data-view="jour"><span class="hr-lab">Chaque jour</span><b>Que porter aujourd’hui ?</b>
-   <small>${pret ? "Une tenue avec tes vêtements, selon la météo" : "Ajoute d’abord tes vêtements"}</small><em>${meteo}</em></button>`;
+  const n = typeof GR_MIN !== "undefined" ? GR_MIN : 7;
+  return `<button class="hr-card jr-home ac-jour" data-view="jour"><span class="hr-lab">Ma tenue du jour</span><b>Que porter aujourd’hui ?</b>
+   <small>${acConseil(pret)}</small><span class="ac-cta">${pret ? "Choisis ma tenue" : `Ajoute tes ${n} premières pièces`} ›</span></button>`;
+}
+
+// En haut, près d'Aura : la météo à la place de « Qu'est-ce qu'on porte aujourd'hui ? » (la question est dans la carte).
+const AC_SOLEIL = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>';
+function acMeteoHaut() {
+  let met = "";
+  try { met = typeof jrMeteoTxt === "function" ? jrMeteoTxt() : ""; } catch (e) {}
+  return met ? `<p class="ac-met">${AC_SOLEIL}<span data-noi18n>${esc(met)}</span></p>` : "";
 }
 
 // 4. Outfit check
@@ -66,6 +84,8 @@ if (ACC_ON && typeof P.home === "function") {
     const avis = [".mj-invite", ".mj-msg", ".vf-home", ".fx-new"].map(s => t.content.querySelector(s)).filter(Boolean);
     t.content.querySelectorAll(".mj-bar").forEach(x => x.remove());
     if (st) st.classList.add("ac-st");
+    const q = top && top.querySelector(".hz-hi > p");
+    if (q) { const m = acMeteoHaut(); if (m) q.outerHTML = m; else q.remove(); }
     const neuf = document.createElement("template");
     neuf.innerHTML = `${acJour()}
 ${typeof twinCard === "function" ? twinCard() : ""}
@@ -85,6 +105,10 @@ ${acPortes()}`;
   st.textContent = `
 .hz .ac-jour{margin-top:16px}
 .hz .ac-jour b{font-size:19px}
+.hz .ac-jour small{display:block;margin-top:4px}
+.hz .ac-jour .ac-cta{display:inline-flex;align-self:flex-start;margin-top:12px;padding:9px 16px;border-radius:999px;background:var(--goldg,linear-gradient(135deg,#A8843F,#8C6D35 55%,#765A2A));color:#fff;font-weight:600;font-size:14px;box-shadow:0 4px 12px rgba(140,109,53,.25)}
+.hz .ac-met{display:inline-flex;align-items:center;gap:6px;margin:8px 0 14px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.75);border:1px solid #E6D6B8;color:var(--accent,#8C6D35);font-weight:600;font-size:15px}
+.hz .ac-met svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
 .hz .tw-card{margin-top:14px}
 .hz .ac-st{margin-top:14px}
 .hz .ac-oc{margin-top:14px}
