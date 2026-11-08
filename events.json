@@ -1,5 +1,5 @@
 {
-  "maj": "2026-11-04",
+  "maj": "2026-11-08",
   "evenements": [
     {
       "debut": "2026-10-27",
@@ -74,6 +74,42 @@
       "pays": "QA"
     },
     {
+      "debut": "2026-11-17",
+      "fin": "2026-11-19",
+      "lieu": "The St. Regis Doha, West Bay",
+      "titre": {
+        "fr": "Doha Fashion Show – Saison IV",
+        "en": "Doha Fashion Show Season IV",
+        "ar": "عرض أزياء الدوحة – الموسم الرابع"
+      },
+      "desc": {
+        "fr": "4e édition du défilé de Doha, en petit comité (environ 300 invités).",
+        "en": "Fourth edition of the Doha runway show, an intimate event for about 300 guests.",
+        "ar": "النسخة الرابعة من عرض أزياء الدوحة، جو خاص وحوالي ٣٠٠ ضيف بس."
+      },
+      "type": "mode",
+      "lien": "https://www.qatarliving.com/en/article/doha-fashion-show-season-iv-date-venue-visitor-info",
+      "pays": "QA"
+    },
+    {
+      "pays": "BH",
+      "debut": "2026-11-24",
+      "fin": "2026-11-28",
+      "lieu": "Exhibition World Bahrain",
+      "titre": {
+        "fr": "Jewellery Arabia 2026",
+        "en": "Jewellery Arabia 2026",
+        "ar": "معرض الجواهر العربية ٢٠٢٦"
+      },
+      "desc": {
+        "fr": "Le grand salon de la joaillerie et des montres du Golfe, avec des créateurs du monde entier.",
+        "en": "The Gulf's major jewellery and watch show, with makers from around the world.",
+        "ar": "أكبر معرض للمجوهرات والساعات في الخليج، بمصممين من كل العالم."
+      },
+      "type": "bijoux",
+      "lien": "https://www.ice.it/it/area-clienti/eventi/dettaglio-evento/2026/@@/216"
+    },
+    {
       "debut": "2026-11-28",
       "fin": "2026-11-28",
       "lieu": "Doha",
@@ -90,6 +126,24 @@
       "type": "mode",
       "lien": "https://emirateswoman.com/fashion-trust-arabia-unveils-the-finalists-for-its-2026-awards/",
       "pays": "QA"
+    },
+    {
+      "pays": "AE",
+      "debut": "2026-12-04",
+      "fin": "2027-01-17",
+      "lieu": "Dubaï",
+      "titre": {
+        "fr": "Dubai Shopping Festival",
+        "en": "Dubai Shopping Festival",
+        "ar": "مهرجان دبي للتسوق"
+      },
+      "desc": {
+        "fr": "32e édition : grandes promotions mode et beauté dans les centres commerciaux de Dubaï.",
+        "en": "32nd edition: big fashion and beauty sales across Dubai's malls.",
+        "ar": "النسخة ٣٢: تخفيضات كبيرة على الموضة والجمال في مولات دبي."
+      },
+      "type": "shopping",
+      "lien": "https://tradearabia.com/News/487977/Dubai-Shopping-Festival-returns-for-32nd-edition-from-December-4-to-January-17"
     },
     {
       "debut": "2026-12-14",
@@ -126,79 +180,6 @@
       "type": "bijoux",
       "lien": "https://www.qatarliving.com/en/article/doha-jewellery-watches-exhibition-2026-successfully-concludes-22nd-edition-and-announces-2027-dates",
       "pays": "QA"
-    },
-    {
-      "pays": "AE",
-      "debut": "2026-11-03",
-      "fin": "2026-11-08",
-      "lieu": "d3, Dubaï",
-      "titre": {
-        "fr": "Dubai Design Week 2026",
-        "en": "Dubai Design Week 2026",
-        "ar": "أسبوع دبي للتصميم ٢٠٢٦"
-      },
-      "desc": {
-        "fr": "12e édition au Dubai Design District : design, créateurs et marché pour toute la famille les 7 et 8 novembre.",
-        "en": "12th edition at Dubai Design District: design, creatives and a family marketplace on 7–8 November.",
-        "ar": "النسخة ١٢ في حي دبي للتصميم: تصميم ومبدعين وسوق للعائلة يومي ٧ و٨ نوفمبر."
-      },
-      "type": "design",
-      "lien": "https://www.emirates247.com/uae-guide/dubai-design-week-2026-dates-tickets-highlights-and-whats-free-at-the-12th-edition/7287"
-    },
-    {
-      "pays": "AE",
-      "debut": "2026-12-04",
-      "fin": "2027-01-17",
-      "lieu": "Dubaï",
-      "titre": {
-        "fr": "Dubai Shopping Festival",
-        "en": "Dubai Shopping Festival",
-        "ar": "مهرجان دبي للتسوق"
-      },
-      "desc": {
-        "fr": "32e édition : grandes promotions mode et beauté dans les centres commerciaux de Dubaï.",
-        "en": "32nd edition: big fashion and beauty sales across Dubai's malls.",
-        "ar": "النسخة ٣٢: تخفيضات كبيرة على الموضة والجمال في مولات دبي."
-      },
-      "type": "shopping",
-      "lien": "https://tradearabia.com/News/487977/Dubai-Shopping-Festival-returns-for-32nd-edition-from-December-4-to-January-17"
-    },
-    {
-      "pays": "BH",
-      "debut": "2026-11-24",
-      "fin": "2026-11-28",
-      "lieu": "Exhibition World Bahrain",
-      "titre": {
-        "fr": "Jewellery Arabia 2026",
-        "en": "Jewellery Arabia 2026",
-        "ar": "معرض الجواهر العربية ٢٠٢٦"
-      },
-      "desc": {
-        "fr": "Le grand salon de la joaillerie et des montres du Golfe, avec des créateurs du monde entier.",
-        "en": "The Gulf's major jewellery and watch show, with makers from around the world.",
-        "ar": "أكبر معرض للمجوهرات والساعات في الخليج، بمصممين من كل العالم."
-      },
-      "type": "bijoux",
-      "lien": "https://www.ice.it/it/area-clienti/eventi/dettaglio-evento/2026/@@/216"
-    },
-    {
-      "pays": "SA",
-      "debut": "2026-10-21",
-      "fin": "2026-12-31",
-      "date_a_confirmer": true,
-      "lieu": "Riyad",
-      "titre": {
-        "fr": "Riyadh Season 2026",
-        "en": "Riyadh Season 2026",
-        "ar": "موسم الرياض ٢٠٢٦"
-      },
-      "desc": {
-        "fr": "10 semaines de sorties : Boulevard World, Via Riyadh… autant d'occasions de soigner ta tenue.",
-        "en": "10 weeks of outings: Boulevard World, Via Riyadh… plenty of occasions to dress up.",
-        "ar": "١٠ أسابيع طلعات: بوليفارد وورلد، ڤيا رياض… مناسبات واجد تتكشخين فيها."
-      },
-      "type": "sortie",
-      "lien": "https://gulfnews.com/world/gulf/saudi/riyadh-season-2026-to-begin-on-october-21-with-10-weeks-of-entertainment-1.500689955"
     }
   ]
 }
