@@ -29,7 +29,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  ok(await p.evaluate(()=>localStorage.getItem('monstyle_stbg'))==='gris','Fond choisi retenu');
  const [dl]=await Promise.all([p.waitForEvent('download',{timeout:3000}).catch(()=>null),p.click('[data-stsave]')]);
  ok(dl&&dl.suggestedFilename()==='my-style-tenue.jpg','Téléchargement de la photo');
- ok(/Pour sublimer ton look/.test(await p.$eval('body',e=>e.innerText)),'Le reste de l’Outfit check est toujours là');
+ ok(/sublimer ton look/.test(await p.$eval('body',e=>e.innerText)),'Le reste de l’Outfit check est toujours là');
  // Échec du segmenteur → message, rien de cassé
  await p.evaluate(async()=>{ST.segmenter=async()=>{throw new Error('x')};ST.cache=new Map();ST.f=null;go('home');go('o_res')});await p.waitForTimeout(800);
  ok(await p.$('.st-box.ko')&&/n’a pas marché/.test(await p.$eval('#stNote',e=>e.textContent)),'Échec : message clair');

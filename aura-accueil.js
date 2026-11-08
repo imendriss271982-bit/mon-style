@@ -1,4 +1,12 @@
-/* My Style — Accueil v176 : carte du jour selon la garde-robe (plus de « Ajoute 7 pièces » quand il y a des vêtements ; la tenue avec ses pièces, « Je la porte » et « Autre idée »).
+/* My Style — Accueil v177 (audit de design, validé par Imen le 8 novembre 2026 : « je ne veux pas une home page entassée, facile à utiliser ») :
+   5 blocs au lieu de 9, rien n'est supprimé de l'app.
+     1. Salutation + météo + Aura (la recherche quitte l'accueil ; le globe de langue est caché sur l'accueil, la langue se change dans le Profil)
+     2. UNE grande carte qui change : analyse pas finie → « Découvre ton style » (3 étapes) ; analyse finie → « Ma tenue du jour »
+     3. My Stylist « Appeler Aura » (bat comme un cœur)
+     4. 3 raccourcis ronds : Outfit check, Ma garde-robe, Créer une tenue
+     5. En descendant : Style Twin et Zifafi Wedding côte à côte (Zifafi toujours visible)
+   « Tout My Style » est retiré de l'accueil : Boutique, Beauté, Majlis restent dans la barre du bas et les pages.
+   Accueil v176 : carte du jour selon la garde-robe (plus de « Ajoute 7 pièces » quand il y a des vêtements ; la tenue avec ses pièces, « Je la porte » et « Autre idée »).
    Accueil v175 : plus de question en double (météo en haut près d'Aura, la question seulement dans la carte du jour).
    Accueil v174 (ordre voulu par Imen, 7 novembre 2026).
    « المجلس حنشيلها من فوق نخليها بس تحت » : la bande du Majlis disparaît du haut de l'accueil (l'onglet Majlis de la barre du bas reste).
@@ -91,6 +99,42 @@ function acPortes() {
   }).join("")}</div></section>`;
 }
 
+
+// v177 — 2. La grande carte : l'analyse d'abord (une seule fois), ensuite la tenue du jour.
+function acNd() { try { return [ok("visage"), ok("corps"), season()].filter(Boolean).length; } catch (e) { return 3; } }
+function acAnalyse(nd) {
+  let v = null, bd = null, c = null;
+  try { v = ok("visage"); bd = ok("corps"); c = season(); } catch (e) {}
+  return `<div class="hx-an ac-an"><span class="hr-lab">Ton analyse de style</span><b>${nd ? "Termine ton analyse de style" : "Découvre ton style"}</b><small>3 étapes, une seule fois : ensuite mes conseils sont faits pour toi.</small>
+   <ol class="hx-an-s">${[["Visage", v], ["Silhouette", bd], ["Couleurs", c]].map((x, i) => `<li class="${x[1] ? "ok" : ""}"><i aria-hidden="true">${x[1] ? "✓" : i + 1}</i><span>${x[0]}</span></li>`).join("")}</ol>
+   <button class="ac-cta" data-onb>${nd ? "Continuer mon analyse" : "Commencer mon analyse"}<span aria-hidden="true">&nbsp;›</span></button></div>`;
+}
+function acHero() { const nd = acNd(); return nd < 3 ? acAnalyse(nd) : acJour(); }
+
+// v177 — 4. Trois raccourcis ronds.
+function acRonds() {
+  let n = 0; try { n = grCount().tot; } catch (e) {}
+  const cam = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-2.5h6L17 8h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.6"/></svg>';
+  const armoire = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 3v18M9.5 11v2M14.5 11v2"/></svg>';
+  const cintre = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/></svg>';
+  const r = (go, ic, t, sub) => `<button class="ac-rd" data-go="${go}"><span class="ac-rd-i">${ic}</span><b>${t}</b><small>${sub}</small></button>`;
+  return `<nav class="ac-ronds" aria-label="Raccourcis">
+  ${r("o_photo", cam, "Outfit check", "Chaque jour")}
+  ${r("garde", armoire, "Ma garde-robe", n ? n + " article" + (n > 1 ? "s" : "") : "À remplir")}
+  ${r("tenues", cintre, "Créer une tenue", "Avec tes vêtements")}
+ </nav>`;
+}
+
+// v177 — 5. Style Twin et Zifafi Wedding côte à côte (petites cartes).
+function acDuo() {
+  let pct = 0; try { pct = typeof twinPct === "function" ? twinPct() : 0; } catch (e) {}
+  const ring = typeof twinRing === "function" ? twinRing(pct, 18) : "";
+  const twin = typeof twinCard === "function" ? `<button class="ac-duo-c" data-view="twin" aria-label="Your Style Twin"><span class="ac-duo-ring">${ring}<b>${pct}%</b></span><b data-noi18n>Your Style Twin</b><small>Ta copie de style</small></button>` : "";
+  const bague = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="15" r="6"/><path d="M9.5 9.5 8 5.5l2-2h4l2 2-1.5 4"/></svg>';
+  const zf = typeof zfHomeCards === "function" ? `<button class="ac-duo-c ac-zf" data-go="zf"><span class="ac-duo-ic">${bague}</span><b><span data-noi18n>Zifafi</span> Wedding</b><small>Ton style de mariée, guidé par Aura.</small></button>` : "";
+  return twin || zf ? `<div class="ac-duo">${twin}${zf}</div>` : "";
+}
+
 if (ACC_ON && typeof P.home === "function") {
   const acHomeAvant = P.home;
   P.home = (...a) => {
@@ -109,14 +153,12 @@ if (ACC_ON && typeof P.home === "function") {
     if (st) st.classList.add("ac-st");
     const q = top && top.querySelector(".hz-hi > p");
     if (q) { const m = acMeteoHaut(); if (m) q.outerHTML = m; else q.remove(); }
+    if (top) top.querySelectorAll(".hz-q").forEach(x => x.remove());
     const neuf = document.createElement("template");
-    neuf.innerHTML = `${acJour()}
-${typeof twinCard === "function" ? twinCard() : ""}
+    neuf.innerHTML = `${acHero()}
 <span class="ac-stp"></span>
-${acOutfit()}
-${acActs()}
-${typeof zfHomeCards === "function" ? zfHomeCards() : ""}
-${acPortes()}`;
+${acRonds()}
+${acDuo()}`;
     const place = neuf.content.querySelector(".ac-stp");
     if (st) place.replaceWith(st); else place.remove();
     hx.replaceChildren(...[top, ...avis].filter(Boolean), ...neuf.content.childNodes, ...(insp ? [insp] : []));
@@ -130,7 +172,7 @@ ${acPortes()}`;
 .hz .ac-jour b{font-size:19px}
 .hz .ac-jour small{display:block;margin-top:4px}
 .hz .ac-jour{cursor:pointer}
-.hz .ac-jour .ac-cta{display:inline-flex;align-items:center;justify-content:center;align-self:flex-start;min-height:44px;margin-top:12px;padding:9px 18px;border:0;border-radius:999px;background:var(--goldg,linear-gradient(135deg,#A8843F,#8C6D35 55%,#765A2A));color:#fff;font:inherit;font-weight:600;font-size:14px;box-shadow:0 4px 12px rgba(140,109,53,.25);cursor:pointer}
+.hz .ac-jour .ac-cta{display:inline-flex;align-items:center;justify-content:center;align-self:flex-start;min-height:44px;margin-top:12px;padding:9px 18px;border:0;border-radius:999px;background:var(--goldg,linear-gradient(135deg,#8C6D35,#7A5E2C 55%,#6E5428));color:#fff;font:inherit;font-weight:600;font-size:14px;box-shadow:0 4px 12px rgba(140,109,53,.25);cursor:pointer}
 .hz .ac-jour .ac-sec{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin-top:12px;padding:9px 16px;border-radius:999px;border:1.5px solid #C9A063;background:#fff;color:var(--accent,#8C6D35);font:inherit;font-weight:600;font-size:14px;cursor:pointer}
 .hz .ac-jour .ac-2{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .hz .ac-jour .ac-2 .ac-cta{flex:1 1 140px}
@@ -148,6 +190,28 @@ ${acPortes()}`;
 .hz .ac-acts{margin-top:14px}
 .hz .zf-uni{margin-top:14px}
 .hz .ac-tout{margin-top:22px}
+/* v177 : accueil aéré */
+body.pg-home header .lgbtn{display:none}
+body.pg-home header #voice{margin-inline-start:auto}
+.hz .hx-an.ac-an{margin:16px 0 0}
+.hz .ac-an .ac-cta{align-self:stretch}
+.hz .ac-an .ac-cta{display:inline-flex;align-items:center;justify-content:center;min-height:48px;margin-top:6px;padding:10px 18px;border:0;border-radius:999px;background:var(--goldg);color:#fff;font:inherit;font-weight:600;font-size:15px;box-shadow:0 4px 12px rgba(140,109,53,.25);cursor:pointer}
+.hz .ac-ronds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:22px}
+.hz .ac-rd{display:flex;flex-direction:column;align-items:center;gap:6px;padding:4px 2px;border:0;background:none;font:inherit;color:var(--ink);cursor:pointer;text-align:center;min-height:44px}
+.hz .ac-rd-i{display:grid;place-items:center;width:64px;height:64px;border-radius:50%;background:#FFFFFF;border:1px solid #EAE3D8;box-shadow:0 6px 16px rgba(42,36,32,.08);color:var(--accent,#8C6D35)}
+.hz .ac-rd-i svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.hz .ac-rd b{font-size:14px;font-weight:600;line-height:1.25}
+.hz .ac-rd small{font-size:12.5px;color:#6B625A;line-height:1.2}
+.hz .ac-rd:active .ac-rd-i{transform:scale(.95)}
+.hz .ac-duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
+.hz .ac-duo-c{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:16px;border-radius:20px;background:#FFFFFF;border:1px solid #EAE3D8;box-shadow:0 4px 16px rgba(42,36,32,.06);font:inherit;color:var(--ink);text-align:start;cursor:pointer;min-height:132px}
+.hz .ac-duo-c>b{font-size:15px;font-weight:600;line-height:1.25;margin-top:6px}
+.hz .ac-duo-c small{font-size:12.5px;color:#6B625A;line-height:1.35}
+.hz .ac-duo-ring{position:relative;display:grid;place-items:center;width:44px;height:44px}
+.hz .ac-duo-ring svg{position:absolute;inset:0;width:44px;height:44px}
+.hz .ac-duo-ring b{font-size:11px;color:var(--accent,#8C6D35)}
+.hz .ac-duo-ic{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:#F3E7DC;color:var(--accent,#8C6D35)}
+.hz .ac-duo-ic svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 /* « Appeler Aura » grossit et rapetisse comme un cœur, avec des ondes dorées, pour qu'on comprenne qu'il faut toucher. */
 .hz .ac-st{overflow:visible}
 .hz .ac-st .hz-call{animation:acBeat 1.6s ease-in-out infinite!important;overflow:visible}

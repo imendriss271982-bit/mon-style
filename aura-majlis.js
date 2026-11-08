@@ -329,7 +329,7 @@ function mjInvCarte() {
    <div class="mj-invite-b"><button class="btn" data-mjjoin ${MJ.busy ? "disabled" : ""}>${MJ.busy ? "Un instant…" : "Rejoindre"}</button><button class="link" data-mjinvno>Plus tard</button></div></section>`;
 }
 function mjListe() {
-  if (MJ.amis === null) return `<p class="hint mj-load">${MJ.err ? esc(MJ.err) + ` <button class="link" data-mjre>Réessayer</button>` : "Un instant…"}</p>`;
+  if (MJ.amis === null) return `<p class="hint mj-load">${MJ.err ? mjErrTxt(MJ.err) + ` <button class="link" data-mjre>Réessayer</button>` : "Un instant…"}</p>`;
   if (!MJ.amis.length) return `<div class="mj-vide"><span aria-hidden="true">🫖</span><b>Ton Majlis est encore vide</b><small>Invite ta première amie avec ton lien.</small></div>`;
   return `<ul class="mj-amis">${MJ.amis.map(a => {
     const d = a.der, apercu = d && d.de === "aura" ? `<span>✨ Aura : <bdi data-noi18n>${esc(d.txt)}</bdi></span>` : !d ? `<span>Dis-lui bonjour 👋</span>` : d.img ? `<span>${d.de === MJ.uid ? "Toi : " : ""}📷 ${d.look ? `<span data-noi18n>${esc(d.look)}</span>` : "Photo"}</span>` : `<span>${d.de === MJ.uid ? "Toi : " : ""}<bdi data-noi18n>${esc(d.txt)}</bdi></span>`;
@@ -347,7 +347,7 @@ P.majlis = () => {
     const demande = !S.nom || MJ.inv;
     return { dock: true, html: `${tete}<p class="sub">Discute avec tes amies qui ont My Style : montre ta tenue, demande leur avis.</p>${mjInvCarte()}
       ${demande && !S.nom ? `<label class="vf-lab" for="mj_nom">Ton prénom (tes amies le verront)</label><input class="field" id="mj_nom" autocomplete="given-name" maxlength="30" value="${esc(S.nom || "")}">` : ""}
-      ${MJ.err ? `<div class="note">${esc(MJ.err)} <button class="link" data-mjre>Réessayer</button></div>` : MJ.busy ? `<p class="hint">Un instant…</p>` : ""}
+      ${MJ.err ? `<div class="note">${mjErrTxt(MJ.err)} <button class="link" data-mjre>Réessayer</button></div>` : MJ.busy ? `<p class="hint">Un instant…</p>` : ""}
       <ul class="mj-why"><li>🔗 Seules les amies qui ont ton lien peuvent t’écrire.</li><li>🙈 Les visages sont cachés sur les photos envoyées.</li><li>🗓️ Les messages s’effacent au bout de 60 jours.</li></ul>`,
       say: "", foot: MJ.inv ? "" : (!S.nom ? `<button class="btn" data-mjopen>Ouvrir mon Majlis</button>` : "") };
   }
@@ -567,3 +567,10 @@ function mjWipe() {
 `;
   document.head.appendChild(st);
 })();
+
+// v177 : une erreur technique (« Failed to fetch », « Load failed », HTTP…) devient une phrase douce, traduite.
+function mjErrTxt(m) {
+  m = String(m || "");
+  return /fetch|load failed|network|réseau|timeout|http|abort|json|\b[45]\d\d\b/i.test(m) || !/[àâçéèêëîïôûù ]/i.test(m)
+    ? esc("Le Majlis ne répond pas pour l’instant. Vérifie ta connexion, puis réessaie.") : esc(m);
+}

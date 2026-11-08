@@ -2,8 +2,8 @@
    1) Garde-robe : une seule photo peut contenir plusieurs pièces. Gemini repère chaque pièce (cadre box_2d),
       le téléphone la découpe, enlève le fond uni (sans IA, sur le téléphone) et range chaque pièce à part,
       avec son type précis (« Blazer long », « Robe blazer », « Blazer court »…) que la cliente peut corriger.
-   2) Outfit check : plus de liste d'erreurs. Aura donne la note + des SOLUTIONS (changer / ajouter),
-      en cherchant d'abord dans la garde-robe (« tu l'as déjà ») ; sinon un achat facultatif → Boutique.
+   2) Outfit check (v177, Imen : « liste les défauts ») : Aura donne la note, puis pour chaque point le DÉFAUT
+      précis (« probleme », affiché ✗) et sa correction (changer / ajouter), en cherchant d'abord dans la garde-robe.
    Chargé après aura-focus.js. Testable : node tests/multi.js */
 
 // Types précis par catégorie : guident Gemini (il peut en écrire un autre s'il le faut).
@@ -128,13 +128,15 @@ function ocSols(o){if(!o||!Array.isArray(o.solutions))return [];const by=id=>GR.
   return {action:s.action==="ajouter"?"ajouter":"changer",probleme:String(s.probleme||"").slice(0,160),texte:String(s.texte).slice(0,200),pourquoi:String(s.pourquoi||"").slice(0,160),it:it||null,achat:it?"":String(s.achat||"").slice(0,80)}})}
 function ocHtml(o){const sols=ocSols(o);
  if(!sols.length)return (o.changements||[]).length?`<h2>Pour sublimer ton look</h2><ul class="tips">${o.changements.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:"";
- return `<h2>Pour sublimer ton look</h2><div class="oc-sols">${sols.map(s=>`<div class="oc-sol">
+ return `<h2>${sols.some(x=>x.probleme)?"À corriger pour sublimer ton look":"Pour sublimer ton look"}</h2><div class="oc-sols">${sols.map(s=>`<div class="oc-sol">
   ${s.it?`<button class="oc-ph" data-gitem="${s.it.id}" aria-label="${esc(s.it.nom||"Article")}">${grImg(s.it)}</button>`:`<span class="oc-ph oc-idee" aria-hidden="true">✨</span>`}
-  <div class="oc-tx"><span class="oc-tag">${s.action==="ajouter"?"Ajoute":"Change"}</span><p>${esc(s.texte)}</p>${s.pourquoi?`<p class="oc-pq">${esc(s.pourquoi)}</p>`:""}
+  <div class="oc-tx">${s.probleme?`<p class="oc-pb">${esc(s.probleme)}</p>`:""}<span class="oc-tag">${s.action==="ajouter"?"Ajoute":"Change"}</span><p>${esc(s.texte)}</p>${s.pourquoi?`<p class="oc-pq">${esc(s.pourquoi)}</p>`:""}
   ${s.it?`<small class="oc-ok">✓ Dans ta garde-robe</small>`:`<small class="oc-no">💡 L’idée d’Aura</small>`}</div></div>`).join("")}</div>`}
-function ocSay(o){const s=ocSols(o)[0];if(!s)return (o.changements||[]).length?" "+o.changements[0]:"";return " "+s.texte}
+function ocSay(o){const s=ocSols(o)[0];if(!s)return (o.changements||[]).length?" "+o.changements[0]:"";return " "+(s.probleme?s.probleme.replace(/[.!]?$/,". "):"")+s.texte}
 
 (function(){const st=document.createElement("style");st.textContent=`
+.oc-pb{margin:0 0 6px;font-weight:600;color:#7A2E1E;font-size:14.5px;line-height:1.4}
+.oc-pb::before{content:"✗ ";color:#B3261E}
 .gr-fond{font-size:13px;color:#8C6D35;background:#FBF6EE;border-radius:12px;padding:8px 10px;margin:10px 0}
 .gr-tip{font-size:13px;color:var(--mut,#6E6E6E);margin:4px 0 10px;line-height:1.45}
 .gr-it .gr-ty{display:block;font-size:11px;color:var(--accent);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

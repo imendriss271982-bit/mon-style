@@ -3,6 +3,10 @@
    Le texte affiché à l'écran et la voix d'Aura sont traduits automatiquement à partir de cette liste.
    Pour corriger une traduction : modifie simplement la 2e (anglais) ou la 3e (arabe) colonne. */
 const I18N_D=[
+["Raccourcis","Shortcuts","اختصارات"],
+["À corriger pour sublimer ton look","What to fix to elevate your look","شو لازم يتصلّح عشان لوكچ يصير أحلى"],
+["Le Majlis ne répond pas pour l’instant. Vérifie ta connexion, puis réessaie.","The Majlis isn’t responding right now. Check your connection, then try again.","المجلس ما يرد الحين. تأكدي من الإنترنت وجربي مرة ثانية."],
+["Pendant la phase de test, tout est offert. Voici les formules qui arriveront ensuite.","During the test phase, everything is free. Here are the plans coming next.","خلال فترة التجربة كل شي مجاني. هذي الباقات اللي بتجي بعدين."],
 ["💬 Envoyer à une amie","💬 Send to a friend","💬 ارسليها لصديقة"],
 ["💬 À une amie","💬 To a friend","💬 لصديقة"],
 ["✨ Écris « Aura » dans ton message : ta styliste vous donne son avis par écrit.","✨ Write “Aura” in your message: your stylist gives you her opinion in writing.","✨ اكتبي «أورا» في رسالتچ: الستايلست تعطيكم رايها كتابة."],
