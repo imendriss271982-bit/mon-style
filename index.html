@@ -688,9 +688,9 @@ a.lb{text-decoration:none}
 
 /* Accueil v90 — maquette ivoire et bordeaux */
 .hz{gap:22px}
-.hz-top{position:relative;display:flex;align-items:flex-end;gap:6px;margin:-6px -20px -34px;padding:8px 20px 0;min-height:236px;overflow:hidden}
+.hz-top{position:relative;display:flex;align-items:flex-end;gap:6px;margin:-6px -20px 0;padding:8px 20px 0;overflow:hidden}
 .hz-top:before{content:"";position:absolute;inset-inline-end:-30px;top:6px;width:250px;height:250px;border-radius:50%;background:radial-gradient(circle at 40% 40%,var(--surface),var(--soft) 70%);opacity:.9}
-.hz-hi{position:relative;z-index:2;flex:1;min-width:0;align-self:center;padding-bottom:40px}
+.hz-hi{position:relative;z-index:2;flex:1;min-width:0;align-self:center;padding-bottom:12px}
 .hz-hi .hh{margin:0;font-size:32px;line-height:1.15}
 .hz-hi .hh em{color:var(--ink)}.hz-heart{white-space:nowrap;color:var(--accent);font-size:.6em;vertical-align:.25em}
 .hz-hi p{margin:6px 0 14px;font-size:17px;color:var(--ink)}
@@ -934,7 +934,7 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=2"></script>
 <script>
-const VERSION="187";
+const VERSION="188";
 // Bonjour d’Aura : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -1605,7 +1605,6 @@ home:()=>{const v=ok("visage"),bd=ok("corps"),c=season(),oc=ok("outfit");
  <section class="hz-top">
   <div class="hz-hi"><h1 class="hh">Salut <em>${esc(cap(NOM))}</em><span class="hz-heart" aria-hidden="true">&nbsp;♥</span></h1><p>Qu’est-ce qu’on porte aujourd’hui ?</p>
    <label class="hz-q"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg><input id="hq" type="search" enterkeyhint="send" autocomplete="off" placeholder="Cherche un look…" aria-label="Cherche un look…"></label></div>
-  <div class="hz-ava"><img src="aura-bust.webp?v=3" alt="Aura, ta styliste personnelle" width="330" height="308"></div>
  </section>
  <button class="hz-st" data-view="chat" aria-label="Demander à Aura : ta styliste personnelle">
   <small>Ta styliste IA personnelle</small><b data-noi18n>My Stylist</b><em>Parle-moi, Aura</em>
