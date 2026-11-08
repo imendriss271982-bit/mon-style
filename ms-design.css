@@ -302,3 +302,10 @@ nav.dock .mj-bd,.mj-bd{background:var(--ms-wine)!important;box-shadow:0 0 0 2px 
   .two{gap:8px}
   nav.dock button{font-size:10.5px;letter-spacing:0}
 }
+
+/* ---------- v186. ÉCRAN D'OUVERTURE : pas de barre du bas, « Commencer » bien visible ---------- */
+/* La barre du bas (z-index 30) passait par-dessus l'écran d'ouverture (z-index 20) : on la cache tant que l'ouverture est là. */
+body:has(#splash) nav.dock{display:none!important}
+/* « Commencer / يلا نبدأ » = bouton doré plein, comme tous les boutons de l'app */
+#splash .spbot #start{background:var(--goldg,linear-gradient(180deg,#A8843F,#8C6D35 55%,#765A2A))!important;color:#FFFFFF!important;border:0!important;
+  font-size:19px;font-weight:600;letter-spacing:.02em;min-height:58px;box-shadow:0 12px 26px -8px rgba(118,90,42,.55),inset 0 1px 0 rgba(255,255,255,.35)!important}
