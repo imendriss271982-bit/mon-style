@@ -4,7 +4,8 @@
      2. UNE grande carte qui change : analyse pas finie → « Découvre ton style » (3 étapes) ; analyse finie → « Ma tenue du jour »
      3. My Stylist « Appeler Aura » (bat comme un cœur)
      4. 3 raccourcis ronds : Outfit check, Ma garde-robe, Créer une tenue
-     5. En descendant : Style Twin et Zifafi Wedding côte à côte (Zifafi toujours visible)
+     5. Abaya et occasions du Golfe (v179, carte large, très importante pour Imen)
+     6. En descendant : Style Twin et Zifafi Wedding côte à côte (Zifafi toujours visible)
    « Tout My Style » est retiré de l'accueil : Boutique, Beauté, Majlis restent dans la barre du bas et les pages.
    Accueil v176 : carte du jour selon la garde-robe (plus de « Ajoute 7 pièces » quand il y a des vêtements ; la tenue avec ses pièces, « Je la porte » et « Autre idée »).
    Accueil v175 : plus de question en double (météo en haut près d'Aura, la question seulement dans la carte du jour).
@@ -125,6 +126,14 @@ function acRonds() {
  </nav>`;
 }
 
+
+// v179 (Imen : « العباية والإيفنت… العيد والغبقة وحاجات الخليج انشالت، وهو كثير مهم ») : la carte Abaya & occasions du Golfe revient, bien visible, juste sous les raccourcis.
+function acGolfe() {
+  if (typeof P.golfe !== "function") return "";
+  const lune = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/><path d="M17 3.5l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z"/></svg>';
+  return `<button class="ac-golfe" data-view="golfe"><span class="ac-golfe-i">${lune}</span>
+  <span class="ac-golfe-t"><small>Golfe</small><b>Abaya et occasions</b><em>Ton abaya, ta sheila et les codes des mariages, du Ramadan et de l’Aïd.</em></span><span class="hx-chev" aria-hidden="true">›</span></button>`;
+}
 // v177 — 5. Style Twin et Zifafi Wedding côte à côte (petites cartes).
 function acDuo() {
   let pct = 0; try { pct = typeof twinPct === "function" ? twinPct() : 0; } catch (e) {}
@@ -158,6 +167,7 @@ if (ACC_ON && typeof P.home === "function") {
     neuf.innerHTML = `${acHero()}
 <span class="ac-stp"></span>
 ${acRonds()}
+${acGolfe()}
 ${acDuo()}`;
     const place = neuf.content.querySelector(".ac-stp");
     if (st) place.replaceWith(st); else place.remove();
@@ -203,6 +213,13 @@ body.pg-home header #voice{margin-inline-start:auto}
 .hz .ac-rd-i svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .hz .ac-rd b{font-size:14px;font-weight:600;line-height:1.25}
 .hz .ac-rd small{font-size:12.5px;color:#6B625A;line-height:1.2}
+.hz .ac-golfe{display:flex;align-items:center;gap:14px;width:100%;margin-top:24px;padding:16px;border-radius:20px;background:#FFFFFF;border:1px solid #EAE3D8;box-shadow:0 4px 16px rgba(42,36,32,.06);font:inherit;color:var(--ink);text-align:start;cursor:pointer;min-height:88px}
+.hz .ac-golfe-i{flex:none;display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 35% 28%,#FFFFFF 0%,#FBF8F3 45%,#EFE6D8 100%);border:1px solid #E6DACA;box-shadow:inset 0 2px 2px rgba(255,255,255,.95),inset 0 -5px 9px rgba(140,109,53,.16),0 3px 0 #E2D4BF;color:var(--accent,#8C6D35)}
+.hz .ac-golfe-i svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round}
+.hz .ac-golfe-t{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
+.hz .ac-golfe-t small{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent,#8C6D35);font-weight:600}
+.hz .ac-golfe-t b{font-size:16px;font-weight:600}
+.hz .ac-golfe-t em{font-style:normal;font-size:13px;color:#6B625A;line-height:1.4}
 .hz .ac-duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
 .hz .ac-duo-c{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:16px;border-radius:20px;background:#FFFFFF;border:1px solid #EAE3D8;box-shadow:0 4px 16px rgba(42,36,32,.06);font:inherit;color:var(--ink);text-align:start;cursor:pointer;min-height:132px}
 .hz .ac-duo-c>b{font-size:15px;font-weight:600;line-height:1.25;margin-top:6px}

@@ -9,13 +9,13 @@ const SHOTS=process.env.SHOTS||'';
  const open=async(st={},lang='fr')=>{await p.goto(URL);await p.evaluate(([st,lang])=>{localStorage.clear();localStorage.setItem('monstyle',JSON.stringify({nom:'imen',lang,later:true,res:st.res||{}}));
    if(st.gr)localStorage.setItem('monstyle_gr',JSON.stringify({items:st.gr,looks:[],saved:[]}));sessionStorage.setItem('ms_hi','1')},[st,lang]);
    await p.goto(URL);await p.waitForTimeout(1200);await p.evaluate(()=>{document.getElementById('splash')?.remove();S.hist=[];home()});await p.waitForTimeout(500)};
- const ordre=()=>p.evaluate(()=>{const hx=document.querySelector('#page .hx');const m=[['.hz-top','top'],['.ac-an','analyse'],['.ac-jour','jour'],['.hz-st','stylist'],['.ac-ronds','ronds'],['.ac-duo','duo'],['.hz-insp','insp']];
+ const ordre=()=>p.evaluate(()=>{const hx=document.querySelector('#page .hx');const m=[['.hz-top','top'],['.ac-an','analyse'],['.ac-jour','jour'],['.hz-st','stylist'],['.ac-ronds','ronds'],['.ac-golfe','golfe'],['.ac-duo','duo'],['.hz-insp','insp']];
    return [...hx.children].map(c=>{const f=m.find(([s])=>c.matches(s));return f?f[1]:c.className}).join(',')});
  const shot=async n=>{if(SHOTS)await p.screenshot({path:SHOTS+'/'+n+'.png',fullPage:true})};
 
  const RES={visage:{forme:'ovale'},corps:{forme:'Sablier',kibbe:'Soft Classic'},couleurs:{saison:'Hiver Profond'}};
  await open();
- okk(/^top,analyse,stylist,ronds,duo(,insp)?$/.test(await ordre()),'Nouvelle cliente : '+await ordre());
+ okk(/^top,analyse,stylist,ronds,golfe,duo(,insp)?$/.test(await ordre()),'Nouvelle cliente : '+await ordre());
  okk(await p.evaluate(()=>!!document.querySelector('.ac-an [data-onb]')&&document.querySelectorAll('.ac-an .hx-an-s li').length===3),'Grande carte = « Découvre ton style » en 3 étapes');
  okk(!(await p.evaluate(()=>!!document.querySelector('#page .hz-q,#page #hq'))),'Plus de recherche sur l’accueil');
  okk(await p.evaluate(()=>getComputedStyle(document.querySelector('header .lgbtn')).display==='none'),'Globe de langue caché sur l’accueil');
@@ -27,13 +27,13 @@ const SHOTS=process.env.SHOTS||'';
  okk(await p.evaluate(()=>{const g=document.querySelector('.ac-duo');return !!g.querySelector('[data-view="twin"]')&&!!g.querySelector('[data-go="zf"]')}),'Style Twin et Zifafi côte à côte (Zifafi toujours là)');
  okk(await p.evaluate(()=>[...document.querySelectorAll('#page button')].filter(b=>{const r=b.getBoundingClientRect();return r.width&&(r.height<44||r.width<44)}).length)===0,'Toutes les cibles tactiles ≥ 44 px');
  await shot('accueil-fr');
- for(const [sel,pg] of [['.hz-st','chat'],['.ac-rd[data-go="o_photo"]','o_photo'],['.ac-rd[data-go="garde"]','garde'],['.ac-rd[data-go="tenues"]','tenues'],['.ac-duo [data-view="twin"]','twin'],['.ac-duo [data-go="zf"]','zf']]){
+ for(const [sel,pg] of [['.hz-st','chat'],['.ac-rd[data-go="o_photo"]','o_photo'],['.ac-rd[data-go="garde"]','garde'],['.ac-rd[data-go="tenues"]','tenues'],['.ac-golfe','golfe'],['.ac-duo [data-view="twin"]','twin'],['.ac-duo [data-go="zf"]','zf']]){
   await p.evaluate(()=>{window.CALLED=1;S.hist=[];home()});await p.waitForTimeout(250);
   await p.evaluate(s=>document.querySelector(s).click(),sel);await p.waitForTimeout(350);
   okk(await p.evaluate(()=>S.page)===pg,sel+' → '+pg)}
  // Analyse finie : la grande carte devient « Ma tenue du jour »
  await open({res:RES});
- okk(/^top,jour,stylist,ronds,duo(,insp)?$/.test(await ordre()),'Analyse finie : '+await ordre());
+ okk(/^top,jour,stylist,ronds,golfe,duo(,insp)?$/.test(await ordre()),'Analyse finie : '+await ordre());
  await p.evaluate(()=>{S.hist=[];home()});await p.waitForTimeout(250);await p.evaluate(()=>document.querySelector('.ac-jour').click());await p.waitForTimeout(350);
  okk(await p.evaluate(()=>S.page)==='jour','.ac-jour → jour');
  await p.evaluate(()=>{S.hist=[];home()});await p.waitForTimeout(250);
