@@ -1,0 +1,5 @@
+{
+  "//": "Le Worker est un module ES (import/export). Ce fichier sert seulement aux tests Node ; Cloudflare ne l'utilise pas.",
+  "type": "module",
+  "private": true
+}

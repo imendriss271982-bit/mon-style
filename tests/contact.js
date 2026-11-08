@@ -6,7 +6,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
 const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAGUlEQVR4nGP4/58BAyQ+GoP9/z8zMDAwAAAvsAPj1vDGRwAAAABJRU5ErkJggg==','base64');
 const img=path.join(os.tmpdir(),'ms-contact.png');fs.writeFileSync(img,png);
 (async()=>{
- const W=(await import('data:text/javascript;base64,'+fs.readFileSync(path.join(__dirname,'../worker/worker.js')).toString('base64'))).default;
+ const W=(await import(require('url').pathToFileURL(path.join(__dirname,'../worker/worker.js')).href)).default;
  // Brevo simulé : on garde les emails « envoyés ».
  const sent=[];let brevoKo=false;const realFetch=globalThis.fetch;
  globalThis.fetch=async(u,o)=>{if(String(u).startsWith('https://api.brevo.com/')){if(brevoKo)return new Response('{"message":"x"}',{status:401});sent.push({key:o.headers['api-key'],mail:JSON.parse(o.body)});return new Response('{"messageId":"1"}',{status:201})}return realFetch(u,o)};

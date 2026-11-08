@@ -3,7 +3,7 @@
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 // worker.js est un module ES sans package.json : on le charge tel quel.
-const W = (await import("data:text/javascript;base64," + readFileSync(new URL("../worker/worker.js", import.meta.url)).toString("base64"))).default;
+const W = (await import(new URL("../worker/worker.js", import.meta.url))).default;
 let fails = 0; const ok = (c, m) => { console.log((c ? "✓ " : "✗ ") + m); if (!c) fails++; };
 const store = new Map();
 const KV = {

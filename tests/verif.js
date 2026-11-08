@@ -7,7 +7,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
 const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAGUlEQVR4nGP4/58BAyQ+GoP9/z8zMDAwAAAvsAPj1vDGRwAAAABJRU5ErkJggg==','base64');
 const img=path.join(os.tmpdir(),'ms-verif.png');fs.writeFileSync(img,png);
 (async()=>{
- const W=(await import('data:text/javascript;base64,'+fs.readFileSync(path.join(__dirname,'../worker/worker.js')).toString('base64'))).default;
+ const W=(await import(require('url').pathToFileURL(path.join(__dirname,'../worker/worker.js')).href)).default;
  const store=new Map(),KV={async put(k,v,o={}){store.set(k,{v,meta:o.metadata||null})},async get(k,t){const e=store.get(k);return e?(t==='json'?JSON.parse(e.v):e.v):null},async delete(k){store.delete(k)},async list({prefix}){return {keys:[...store.keys()].filter(k=>k.startsWith(prefix)).map(name=>({name,metadata:store.get(name).meta})),list_complete:true}}};
  const CODE='TEST-STYLISTE-01',env={VERIF:KV,STYLISTE_HASH:crypto.createHash('sha256').update(CODE).digest('hex')};let ip=0;
  const route=async r=>{const q=r.request();if(q.method()==='OPTIONS')return r.fulfill({status:204,headers:{'Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'Content-Type','Access-Control-Allow-Methods':'POST'}});

@@ -68,7 +68,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  // ——— Objectifs et confort ———
  await p.evaluate(()=>go('prefs'));await p.click('[data-pfk="objectifs"] [data-pfv="Gagner en confiance"]');await p.click('[data-pfk="confort"] [data-pfv="Talons bas ou plats"]');
  ok(await p.evaluate(()=>/objectifs de style : gagner en confiance/.test(PROFIL())&&/confort : talons bas/.test(pfRules().toLowerCase())),'Objectifs et confort transmis à Aura');
- ok(await p.evaluate(()=>typeof REF==='string'&&REF.startsWith('BASE DE RÉFÉRENCE')&&/VISAGISME/.test(REFP('VISAGISME'))),'Méthode chargée depuis aura-methode.js');
+ ok(await p.evaluate(()=>REF==='§REF§'&&REFP('VISAGISME','KIBBE')==='§REFP:VISAGISME|KIBBE§\n'),'Méthode : seulement des repères dans l’app (le texte est dans le Worker)');
  await p.evaluate(()=>go('tenues'));await p.click(`[data-gunsave="${sid}"]`);ok(await p.evaluate(()=>GR.saved.length===0),'Tenue retirée');
  // préférences : suppression d'un avis puis effacement total
  await p.evaluate(()=>go('prefs'));await p.click('[data-pfdel]');ok(await p.evaluate(()=>PF.avis.length===0),'Avis supprimé');

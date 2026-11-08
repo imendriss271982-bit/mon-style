@@ -1,5 +1,6 @@
 // My Style — Worker corrigé : répond toujours avec les en-têtes CORS,
 // même en cas de plantage, pour que l'app affiche la vraie erreur.
+import { expandRef } from "./methode.js";
 const ALLOWED = ["https://imendriss271982-bit.github.io"];
 // Site vitrine (mystyle.divadivina.app) : seulement la liste d'attente (/liste/…), jamais l'IA.
 const SITE = ["https://mystyle.divadivina.app"];
@@ -8,7 +9,7 @@ let GOOD_IMG = "";
 // Limite de demandes par adresse IP (par instance du Worker, au mieux) : l'en-tête Origin peut être imité
 // hors navigateur, cette limite évite qu'un robot épuise le crédit Gemini / ElevenLabs.
 const HITS = new Map();
-const LIMITS = { "/": 60, "/makeup": 6, "/tts": 60, "/verif/new": 4, "/verif/get": 60, "/verif/del": 30, "/verif/admin": 40, "/liste/add": 5, "/liste/admin": 40, "/contact/new": 5, "/majlis/msgs": 500, "/majlis/amis": 240, "/majlis/nonlus": 120, "/majlis/send": 150, "/majlis/aura": 60, "/majlis/moi": 20, "/majlis/join": 20, "/majlis/code": 40, "/majlis/quitter": 20, "/majlis/wipe": 10 }; // demandes par 10 minutes
+const LIMITS = { "/": 60, "/device": 20, "/code": 20, "/voice/session": 30, "/makeup": 6, "/tts": 60, "/verif/new": 4, "/verif/get": 60, "/verif/del": 30, "/verif/admin": 40, "/liste/add": 5, "/liste/admin": 40, "/contact/new": 5, "/majlis/msgs": 500, "/majlis/amis": 240, "/majlis/nonlus": 120, "/majlis/send": 150, "/majlis/aura": 60, "/majlis/moi": 20, "/majlis/join": 20, "/majlis/code": 40, "/majlis/quitter": 20, "/majlis/wipe": 10 }; // demandes par 10 minutes
 function tooMany(ip, path) {
   const now = Date.now(), win = 600000, key = path + "|" + ip, max = LIMITS[path] || 30;
   const list = (HITS.get(key) || []).filter(t => now - t < win);
@@ -18,12 +19,77 @@ function tooMany(ip, path) {
 }
 const MIMES = ["image/jpeg", "image/png", "image/webp"];
 
+// ——— Sécurité des coûts (v180) ———
+// 1) Chaque téléphone reçoit un « jeton d'appareil » signé (route /device). Les routes qui coûtent (IA, make-up,
+//    voix, appel d'Aura) l'exigent : sans jeton valide, rien ne part chez Google ni chez ElevenLabs.
+// 2) Quotas par JOUR comptés dans la base D1 (table ms_quota, même base que le Majlis) : par téléphone, par
+//    adresse IP et pour toute l'app (un plafond global protège la facture même si quelqu'un fabrique des jetons).
+//    Chaque limite peut être changée sans toucher au code avec une variable Cloudflare Q_<NOM> (ex. Q_AI_DEV=120).
+// 3) L'IA reçoit une consigne système : elle ne répond que pour l'app de stylisme, en JSON.
+const QUOTAS = {
+  AI_DEV: 80, AI_IP: 400, AI_ALL: 5000,      // analyses, tenues, chat photo, traductions
+  MK_DEV: 5, MK_ALL: 150,                    // essais make-up (images, les plus chers)
+  TTS_DEV: 200, TTS_ALL: 6000,               // phrases lues par la voix (seulement si pas déjà en cache)
+  VOICE_DEV: 30, VOICE_ALL: 800,             // ouvertures d'appel / de chat avec l'agent Aura
+  DEV_IP: 20, DEV_ALL: 3000,                 // nouveaux jetons d'appareil
+  CODE_IP: 20                                // essais de code testeuse
+};
+const qmax = (env, k) => { const v = parseInt(env && env["Q_" + k], 10); return v > 0 ? v : QUOTAS[k]; };
+const today = () => new Date().toISOString().slice(0, 10);
+let QUOTA_READY = false;
+async function quotaInit(DB) {
+  if (QUOTA_READY) return;
+  await DB.prepare("CREATE TABLE IF NOT EXISTS ms_quota (k TEXT PRIMARY KEY, n INTEGER NOT NULL DEFAULT 0)").run();
+  QUOTA_READY = true;
+}
+// Ajoute 1 à chaque compteur ; renvoie le nom de la première limite dépassée, ou "" si tout va bien.
+// Sans base D1 (ne devrait pas arriver), on ne bloque pas : la limite en mémoire (HITS) reste active.
+async function quota(env, list) {
+  const DB = env.MAJLIS;
+  if (!DB || !list.length) return "";
+  try {
+    await quotaInit(DB);
+    const d = today();
+    const up = k => DB.prepare("INSERT INTO ms_quota (k, n) VALUES (?1, 1) ON CONFLICT(k) DO UPDATE SET n = n + 1 RETURNING n").bind(d + "|" + k);
+    const res = await DB.batch(list.map(([k]) => up(k)));
+    if (Math.random() < 0.02) await DB.prepare("DELETE FROM ms_quota WHERE k < ?").bind(d).run();
+    for (let i = 0; i < list.length; i++) {
+      const n = (res[i] && res[i].results && res[i].results[0] && res[i].results[0].n) || 0;
+      if (n > qmax(env, list[i][1])) return list[i][1];
+    }
+    return "";
+  } catch (e) { console.error("quota", e); return ""; }
+}
+const QUOTA_MSG = "Aura a beaucoup travaillé pour toi aujourd'hui. Reviens demain, elle sera là.";
+const BUSY_MSG = "My Style est très demandée aujourd'hui. Réessaie un peu plus tard.";
+async function hmacHex(secret, txt) {
+  const k = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const s = await crypto.subtle.sign("HMAC", k, new TextEncoder().encode(txt));
+  return [...new Uint8Array(s)].map(x => x.toString(16).padStart(2, "0")).join("").slice(0, 32);
+}
+// Secret de signature : variable DEVICE_SECRET si elle existe, sinon tiré de la clé Gemini (jamais publiée).
+async function devSecret(env) {
+  if (env.DEVICE_SECRET) return String(env.DEVICE_SECRET);
+  const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("ms-device|" + String(env.GEMINI_KEY || "") + "|" + String(env.ELEVEN_KEY || "")));
+  return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join("");
+}
+async function devCheck(env, tok) {
+  const m = /^([0-9a-f]{16})\.([0-9a-f]{32})$/.exec(String(tok || ""));
+  if (!m) return "";
+  return (await hmacHex(await devSecret(env), m[1])) === m[2] ? m[1] : "";
+}
+const DEV_MSG = "Mets à jour My Style : ferme puis rouvre l'application.";
+// Consigne système envoyée à Gemini avec chaque demande de l'app.
+const GUARD = "Tu es le moteur d'analyse de l'application de stylisme My Style (styliste Aura). Tu ne traites que la mode, les vêtements, la beauté, le maquillage, la coiffure, la colorimétrie, la morphologie, les occasions et l'actualité mode et beauté, ainsi que la traduction des textes de l'application. Pour toute autre demande (code informatique, devoirs, sujets sans rapport), réponds seulement {\"erreur\":\"Je suis ta styliste : je peux t'aider pour ton style, tes tenues et ta beauté.\"}. Réponds toujours en JSON valide, sans texte autour.";
+
 // ——— « Vérifié par une vraie styliste » (v143) ———
 // Les demandes des clientes sont rangées dans le KV `VERIF` (namespace « mon-style-styliste », voir wrangler.jsonc),
 // 60 jours maximum. La cliente garde un jeton secret pour lire SA réponse ; seule son empreinte est stockée.
-// La styliste (page styliste.html) se connecte avec son code : seule l'empreinte SHA-256 du code est ici
-// (on peut la remplacer par la variable secrète Cloudflare STYLISTE_HASH sans toucher au code).
-const STYLISTE_HASH = "624ca31ccf446f30834dcf44699e41704be8a3956d30b942b89c32f68a81ef3a";
+// La styliste (page styliste.html) se connecte avec son code : seule son empreinte SHA-256 est comparée.
+// v180 : l'empreinte n'est plus dans le code (le dépôt était public). Elle se règle seulement dans Cloudflare :
+// variable secrète STYLISTE_HASH = SHA-256 du code de la styliste (en majuscules). Sans elle, l'espace styliste est fermé.
+const styHash = env => String(env.STYLISTE_HASH || "").trim().toLowerCase();
+const styOk = async (env, code) => !!styHash(env) && (await sha256(txt(code, 40).trim().toUpperCase())) === styHash(env);
 const VERIF_TTL = 60 * 24 * 3600;
 async function sha256(t) { const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(String(t))); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join(""); }
 const rndHex = n => [...crypto.getRandomValues(new Uint8Array(n))].map(x => x.toString(16).padStart(2, "0")).join("");
@@ -55,7 +121,8 @@ async function verif(path, req, env, json) {
     return json({ ok: true });
   }
   if (path === "/verif/admin") {
-    if (await sha256(txt(b.code, 40).trim().toUpperCase()) !== (env.STYLISTE_HASH || STYLISTE_HASH)) return json({ erreur: "Code incorrect.", code: "code" }, 401);
+    if (!styHash(env)) return json({ erreur: "L'espace styliste n'est pas encore configuré (variable STYLISTE_HASH).", code: "off" }, 503);
+    if (!(await styOk(env, b.code))) return json({ erreur: "Code incorrect.", code: "code" }, 401);
     const act = b.action;
     if (act === "list") {
       const out = []; let cur;
@@ -101,7 +168,8 @@ async function liste(path, req, env, json) {
     return json({ ok: true, deja: !!old });
   }
   if (path === "/liste/admin") {
-    if (await sha256(txt(b.code, 40).trim().toUpperCase()) !== (env.STYLISTE_HASH || STYLISTE_HASH)) return json({ erreur: "Code incorrect.", code: "code" }, 401);
+    if (!styHash(env)) return json({ erreur: "L'espace styliste n'est pas encore configuré (variable STYLISTE_HASH).", code: "off" }, 503);
+    if (!(await styOk(env, b.code))) return json({ erreur: "Code incorrect.", code: "code" }, 401);
     if (b.action === "list") {
       const out = []; let cur;
       do { const r = await KV.list({ prefix: "w:", cursor: cur }); r.keys.forEach(k => k.metadata && out.push(k.metadata)); cur = r.list_complete ? null : r.cursor; } while (cur && out.length < 20000);
@@ -367,12 +435,55 @@ export default {
 
       { const vp = new URL(req.url).pathname; if (vp.startsWith("/verif/")) return await verif(vp, req, env, json); if (vp.startsWith("/liste/")) return await liste(vp, req, env, json); if (vp === "/contact/new") return await contact(req, env, json); if (vp.startsWith("/majlis/")) return await majlis(vp, req, env, json); }
 
+      const P = new URL(req.url).pathname;
+      // L'adresse IP n'est jamais gardée telle quelle : seulement une empreinte courte, dans un compteur effacé après le jour.
+      const IP = (await sha256("ip|" + (req.headers.get("CF-Connecting-IP") || "?"))).slice(0, 16);
+      // Corps de la demande lu une seule fois (les routes ci-dessous en ont toutes besoin).
+      let B = {};
+      try { B = await req.json(); } catch { B = {}; }
+      if (!B || typeof B !== "object" || Array.isArray(B)) B = {};
+
+      // Nouveau jeton d'appareil (v180).
+      if (P === "/device") {
+        const over = await quota(env, [["ip|" + IP + "|dev", "DEV_IP"], ["all|dev", "DEV_ALL"]]);
+        if (over) return json({ erreur: BUSY_MSG, code: "quota" }, 429);
+        const id = rndHex(8);
+        return json({ dev: id + "." + await hmacHex(await devSecret(env), id) });
+      }
+
+      // Code testeuse (v180) : vérifié ici, jamais écrit dans l'app. Variable Cloudflare TEST_CODES = codes séparés par des virgules.
+      if (P === "/code") {
+        if (await quota(env, [["ip|" + IP + "|code", "CODE_IP"]])) return json({ erreur: "Trop d'essais. Réessaie demain.", code: "quota" }, 429);
+        const norm = v => String(v || "").replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+        const codes = String(env.TEST_CODES || "").split(",").map(norm).filter(x => x.length >= 6);
+        const c = norm(B.code);
+        return json({ ok: !!c && codes.includes(c) });
+      }
+
+      // Toutes les routes qui coûtent exigent un jeton d'appareil valide.
+      const DEV = await devCheck(env, B.dev);
+      if (!DEV) return json({ erreur: DEV_MSG, code: "device" }, 401);
+
+      // Appel / chat avec l'agent Aura (v180) : lien signé à usage unique, délivré seulement aux téléphones de l'app.
+      // Une fois l'authentification activée sur l'agent dans ElevenLabs, son identifiant seul ne suffit plus pour l'appeler.
+      if (P === "/voice/session") {
+        const EK = String(env.ELEVEN_KEY || "").replace(/[^\x21-\x7E]/g, "").replace(/^["']+|["']+$/g, "");
+        if (!EK) return json({ erreur: "La clé ElevenLabs n'est pas configurée." }, 500);
+        const over = await quota(env, [["d|" + DEV + "|voice", "VOICE_DEV"], ["all|voice", "VOICE_ALL"]]);
+        if (over) return json({ erreur: over === "VOICE_DEV" ? QUOTA_MSG : BUSY_MSG, code: "quota" }, 429);
+        const agent = String(env.AGENT_ID || "agent_3801m58kjga8fddsm7bz46gcz4wf").replace(/[^A-Za-z0-9_]/g, "");
+        const r = await fetch("https://api.elevenlabs.io/v1/convai/conversation/get-signed-url?agent_id=" + agent, { headers: { "xi-api-key": EK } });
+        let d = {}; try { d = await r.json(); } catch {}
+        if (!r.ok || !d.signed_url) { console.error("signed-url", r.status, JSON.stringify(d).slice(0, 300)); return json({ erreur: "Aura n'est pas joignable pour le moment.", code: "voice" }, 502); }
+        return json({ signedUrl: d.signed_url });
+      }
+
       // Voix d'Aura qui dit le prénom de la cliente (ElevenLabs), avec phrases fixes uniquement.
       if (new URL(req.url).pathname === "/tts") {
         const EK = String(env.ELEVEN_KEY || "").replace(/[^\x21-\x7E]/g, "").replace(/^["']+|["']+$/g, "");
         if (!EK) return json({ erreur: "La clé ElevenLabs n'est pas configurée." }, 500);
-        let b2 = {};
-        try { b2 = await req.json(); } catch {}
+        const b2 = B;
+        const ttsQuota = async () => quota(env, [["d|" + DEV + "|tts", "TTS_DEV"], ["all|tts", "TTS_ALL"]]);
         const nom = String(b2.nom || "").normalize("NFC").replace(/[^\p{L}\p{M} '\-]/gu, "").trim().slice(0, 30);
         const PH = {
           enchantee: n => `Enchantée, ${n} ! Moi, c'est Aura.`,
@@ -390,6 +501,8 @@ export default {
           const ck2 = new Request("https://cache.mon-style/" + b2.type + "/" + h);
           let hit2 = await caches.default.match(ck2);
           if (!hit2) {
+            const over = await ttsQuota();
+            if (over) return json({ erreur: over === "TTS_DEV" ? QUOTA_MSG : BUSY_MSG, code: "quota" }, 429);
             const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${en ? (env.VOICE_ID || "cgSgspJ2msm6clMCkdW9") : "w0uhBAmNIG5kUDeaFEsA"}?output_format=mp3_44100_64`, {
               method: "POST",
               headers: { "xi-api-key": EK, "Content-Type": "application/json", "Accept": "audio/mpeg" },
@@ -407,6 +520,8 @@ export default {
         const cache = caches.default;
         let hit = await cache.match(ck);
         if (!hit) {
+          const over = await ttsQuota();
+          if (over) return json({ erreur: over === "TTS_DEV" ? QUOTA_MSG : BUSY_MSG, code: "quota" }, 429);
           // Arabe : voix féminine khaleeji (Maryam Essa) ; sinon la voix habituelle d'Aura.
           const voice = kind === "hello_ar" ? "w0uhBAmNIG5kUDeaFEsA" : (env.VOICE_ID || "cgSgspJ2msm6clMCkdW9");
           const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice}?output_format=mp3_44100_128`, {
@@ -426,11 +541,12 @@ export default {
 
       // Essai make-up : Gemini (modèle d'images) maquille la photo de la cliente selon sa tenue. Réservé aux abonnées dans l'app.
       if (new URL(req.url).pathname === "/makeup") {
-        let b3 = {};
-        try { b3 = await req.json(); } catch { return json({ erreur: "Requête invalide." }, 400); }
-        const img = b3 && b3.image, mp = String((b3 && b3.prompt) || "").slice(0, 5000);
+        const b3 = B;
+        const img = b3 && b3.image, mp = expandRef(String((b3 && b3.prompt) || "").slice(0, 5000));
         if (typeof img !== "string" || !img || img.length > 6e6 || !mp) return json({ erreur: "Requête invalide." }, 400);
-        const ibody = JSON.stringify({ contents: [{ role: "user", parts: [{ text: mp }, { inline_data: { mime_type: "image/jpeg", data: img } }] }],
+        { const over = await quota(env, [["d|" + DEV + "|mk", "MK_DEV"], ["all|mk", "MK_ALL"]]);
+          if (over) return json({ erreur: over === "MK_DEV" ? "Tu as utilisé tous tes essais make-up pour aujourd'hui. Reviens demain." : BUSY_MSG, code: "quota" }, 429); }
+        const ibody = JSON.stringify({ system_instruction: { parts: [{ text: "Tu es l'outil d'essai make-up de l'application de stylisme My Style : tu maquilles la photo du visage fournie selon la demande, sans rien changer d'autre. Pour toute autre demande, ne crée pas d'image." }] }, contents: [{ role: "user", parts: [{ text: mp }, { inline_data: { mime_type: "image/jpeg", data: img } }] }],
           generationConfig: { responseModalities: ["IMAGE", "TEXT"], temperature: 0.4 } });
         const T1 = Date.now();
         const icall = async model => {
@@ -487,13 +603,13 @@ export default {
         return json({ image: d.data, mime: d.mimeType || d.mime_type || "image/png", texte: said });
       }
 
-      let body;
-      try { body = await req.json(); } catch { return json({ erreur: "Requête invalide." }, 400); }
-
-      const prompt = body && body.prompt;
+      if (P !== "/") return json({ erreur: "Requête invalide." }, 404);
+      const body = B;
       const images = Array.isArray(body && body.images) ? body.images : [];
-      if (typeof prompt !== "string" || prompt.length > 60000 || images.length > 3)
+      if (typeof body.prompt !== "string" || !body.prompt || body.prompt.length > 30000 || images.length > 3)
         return json({ erreur: "Requête invalide." }, 400);
+      // La méthode d'Imen est ajoutée ICI (repères §REF§ / §REFP:…§ envoyés par l'app) : elle n'est plus publiée.
+      const prompt = expandRef(body.prompt);
 
       let size = 0;
       for (const i of images) {
@@ -501,6 +617,8 @@ export default {
         size += i.data.length;
       }
       if (size > 8e6) return json({ erreur: "Photo trop lourde." }, 413);
+      { const over = await quota(env, [["d|" + DEV + "|ai", "AI_DEV"], ["ip|" + IP + "|ai", "AI_IP"], ["all|ai", "AI_ALL"]]);
+        if (over) return json({ erreur: over === "AI_DEV" ? QUOTA_MSG : BUSY_MSG, code: "quota" }, 429); }
 
       const parts = [
         { text: prompt },
@@ -509,8 +627,9 @@ export default {
       const models = [String(env.MODEL || "").trim(), "gemini-3.8-flash", "gemini-3.6-flash", "gemini-flash-latest", "gemini-3.5-flash-lite"].filter(Boolean);
       // Réflexion courte : l'analyse arrive beaucoup plus vite.
       const gen = { responseMimeType: "application/json", temperature: 0.4 };
-      const fast = JSON.stringify({ contents: [{ role: "user", parts }], generationConfig: { ...gen, thinkingConfig: { thinkingLevel: "low" } } });
-      const plain = JSON.stringify({ contents: [{ role: "user", parts }], generationConfig: gen });
+      const sys = { parts: [{ text: GUARD }] };
+      const fast = JSON.stringify({ system_instruction: sys, contents: [{ role: "user", parts }], generationConfig: { ...gen, thinkingConfig: { thinkingLevel: "low" } } });
+      const plain = JSON.stringify({ system_instruction: sys, contents: [{ role: "user", parts }], generationConfig: gen });
       const T0 = Date.now();
       const call = async (model, body) => {
         // Chaque essai est limité dans le temps, pour que la cliente n'attende jamais trop.

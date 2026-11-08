@@ -927,12 +927,12 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 </div>
 <script src="zifafi-i18n.js?v=3"></script>
 <script src="i18n.js?v=51"></script>
-<script src="aura-methode.js?v=1"></script>
+<script src="aura-methode.js?v=2"></script>
 <script src="aura-mesure.js?v=1"></script>
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=2"></script>
 <script>
-const VERSION="179";
+const VERSION="180";
 // Bonjour d’Aura : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -1402,7 +1402,7 @@ async function mkTry(){if(!premium()&&PLAN.mkfree)return paywall("mk");if(MKT.bu
   "Climate: Gulf (heat), so long-wearing, elegant make-up. Then write ONE short sentence in "+LN+" describing the look (lips, eyes, blush), speaking to her as her stylist Aura.";
  MKT.busy=true;MKT.err="";render(false);say(BL(BX.tryBusy));
  try{const data=await shrink(S.file.mk,1024);
-  const r=await fetch(AI_URL+"/makeup",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:pr,image:data})});
+  const r=await aiPost("/makeup",{prompt:pr,image:data});
   let j={};try{j=await r.json()}catch(e){}
   if(!r.ok||!j.image)throw new Error(j.erreur||"Je n’ai pas réussi à créer ton make-up. Réessaie.");
   if(MKT.img&&MKT.img.startsWith("blob:"))URL.revokeObjectURL(MKT.img);
@@ -1552,7 +1552,8 @@ document.addEventListener("click",e=>{const t=e.target.closest("[data-acam],[dat
 const PLANS={essai:{nom:"Essai gratuit",min:1,msg:3},base:{nom:"My Style Essentiel",min:20,msg:200},annuel:{nom:"My Style Annuel",min:20,msg:200},vip:{nom:"My Style VIP",min:60,msg:500}};
 // GRATUIT=true : tout est ouvert et illimité pendant la phase de test (pas d’abonnement, pas de limite). Mettre false pour remettre les formules.
 const GRATUIT=true;
-const TEST_CODES=["MYSTYLE2026","MYSTLE2026","MYSTYL2026"];
+// v180 : les codes testeuse ne sont plus écrits ici (lisibles par tous) ; le Worker les vérifie (variable Cloudflare TEST_CODES).
+async function testCode(v){if(!v)return false;try{const r=await aiPost("/code",{code:v});const d=await r.json();return !!(d&&d.ok)}catch(e){return false}}
 let PLAN=(()=>{try{return JSON.parse(localStorage.getItem("monstyle_plan")||"{}")||{}}catch(e){return{}}})();
 function planSave(){try{localStorage.setItem("monstyle_plan",JSON.stringify(PLAN))}catch(e){}}
 function plan(){if(GRATUIT)return "vip";return PLANS[PLAN.p]?PLAN.p:"essai"}
@@ -1958,7 +1959,7 @@ Object.defineProperty(window,"FMT",{get(){const l=typeof S!=="undefined"&&S.lang
  return "Réponds uniquement avec un objet JSON valide, sans texte autour. Écris tous les textes "+LANGTXT[l]+". Exception : les valeurs des champs « forme », « saison », « sous_ton », « kibbe », « somatotype », « categorie » et le « nom » des essences restent exactement en français (ou dans les listes données), sans traduction. "}});
 const SEAS_LIST=Object.keys(SEASONS).join(", ");
 const KIBBE_LIST="Dramatic, Soft Dramatic, Flamboyant Natural, Soft Natural, Dramatic Classic, Soft Classic, Pure Romantic, Theatrical Romantic, Soft Gamine";
-const REFL=REF.split("\n"),REFP=(...k)=>REFL[0]+"\n"+REFL.filter(l=>k.some(x=>l.startsWith(x))).join("\n")+"\n";
+// REF et REFP viennent de aura-methode.js : ce sont des repères que le Worker remplace par la méthode (v180).
 // Forme du visage MESURÉE sur le téléphone (aura-mesure.js) : Gemini écrit seulement les conseils pour cette forme.
 let MES=null;
 async function prepVisage(f){MES=null;try{MES=window.MESURE?await MESURE.mesurer(f):null}catch(e){MES=null}return MES&&MES.erreur?{erreur:MES.erreur}:PR_VISAGE()}
@@ -1972,10 +1973,23 @@ const PR_OUT=()=>REF+" Tu es styliste personnelle bienveillante. Donne une note 
 const ERRS={not_granted:"Autorise Claude à analyser tes photos, puis réessaie.",image_rejected:"Cette photo n’est pas acceptée. Essaie-en une autre.",rate_limited:"Trop de demandes. Réessaie dans un instant.",images_unavailable:"L’envoi de photos n’est pas disponible ici.",invalid_json:"La réponse n’a pas pu être lue. Réessaie."};
 let SAMPLE=null;
 const AI_URL="https://mon-style.imendriss271982.workers.dev";
+// v180 : jeton d'appareil signé par le Worker, exigé pour l'IA, la voix et le make-up (protège les crédits Gemini / ElevenLabs).
+// Demandé une fois, gardé dans monstyle_dev ; refusé (code "device") → redemandé une fois.
+let DEVP=null;
+function devTok(renew){if(renew){try{localStorage.removeItem("monstyle_dev")}catch(e){}DEVP=null}
+ if(!DEVP)DEVP=(async()=>{let t="";try{t=localStorage.getItem("monstyle_dev")||""}catch(e){}if(/^[0-9a-f]{16}\.[0-9a-f]{32}$/.test(t))return t;
+  try{const r=await fetch(AI_URL+"/device",{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});const d=await r.json();if(d&&d.dev){try{localStorage.setItem("monstyle_dev",d.dev)}catch(e){}return d.dev}}catch(e){}
+  DEVP=null;return ""})();
+ return DEVP}
+async function aiPost(path,body){const send=async renew=>fetch(AI_URL+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...(body||{}),dev:await devTok(renew)})});
+ let r=await send(false);if(r.status===401){let c="";try{c=(await r.clone().json()).code}catch(e){}if(c==="device")r=await send(true)}return r}
+// Appel / chat avec l'agent Aura : lien signé délivré par le Worker ; en secours, l'identifiant de l'agent
+// (ne marche plus une fois l'authentification activée sur l'agent dans ElevenLabs, ce qui est le but).
+async function auraSession(){try{const r=await aiPost("/voice/session",{});const d=await r.json().catch(()=>({}));if(r.ok&&d.signedUrl)return {signedUrl:d.signedUrl};if(d&&d.code==="quota")throw Object.assign(new Error(d.erreur),{code:"quota"})}catch(e){if(e&&e.code==="quota")throw e}return {agentId:AGENT_ID}}
 function shrink(file,max=1024){return new Promise((ok,ko)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL("image/jpeg",0.85).split(",")[1])};im.onerror=()=>{URL.revokeObjectURL(u);ko(Object.assign(new Error("photo"),{code:"image_rejected"}))};im.src=u})}
 const SHR=new WeakMap();function shrunk(f){if(!SHR.has(f))SHR.set(f,shrink(f,f.mx||1024));return SHR.get(f)}
 const WORKER_AI={json:async(prompt,o={})=>{const images=[];for(const f of o.images||[])images.push({mime:"image/jpeg",data:await shrunk(f)});
- const send=()=>fetch(AI_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt,images})});
+ const send=()=>aiPost("",{prompt,images});
  let r;try{r=await send()}catch(e){await new Promise(z=>setTimeout(z,1200));try{r=await send()}catch(e2){throw Object.assign(new Error("La connexion a été coupée. Vérifie ton internet et réessaie."),{code:"net"})}}
  if(r.status===503){await new Promise(z=>setTimeout(z,2500));try{r=await send()}catch(e){}}
  let d={};try{d=await r.json()}catch(e){}
@@ -2032,7 +2046,7 @@ let TCONV=null;
 async function textConv(){
  if(TCONV)return TCONV;
  const {Conversation}=await import("https://esm.sh/@elevenlabs/client");
- TCONV=await Conversation.startSession({agentId:AGENT_ID,textOnly:true,connectionType:"websocket",overrides:{conversation:{textOnly:true},...(S.lang?{agent:{language:S.lang}}:{})},
+ TCONV=await Conversation.startSession({...(await auraSession()),textOnly:true,connectionType:"websocket",overrides:{conversation:{textOnly:true},...(S.lang?{agent:{language:S.lang}}:{})},
   dynamicVariables:{user_name:S.nom||"",profil:PROFIL()||"pas encore analysé"},
   onMessage:({message,source})=>{if(source!=="ai"||!message)return;const l=S.chat[S.chat.length-1];
    if(l&&l.r==="a"&&!l.t)l.t=message;else S.chat.push({r:"a",t:message});
@@ -2044,7 +2058,7 @@ async function textConv(){
 async function send(text){
  text=(text||"").trim();if(text&&!S.busy){if(msgLeft()<=0)return paywall("chat");useMsg()}if(S.cphoto&&!S.busy)return sendPhoto(text);if(!text||S.busy)return;const sm=await getSample();
  if(typeof sm!=="function"){S.chat.push({r:"u",t:text},{r:"a",t:""});S.draft="";S.busy=true;render(false);
-  try{const c=await textConv();c.sendUserMessage(text)}catch(e){S.chat[S.chat.length-1].t="La styliste n’a pas pu répondre. Réessaie.";S.busy=false;if(S.page==="chat")render(false)}
+  try{const c=await textConv();c.sendUserMessage(text)}catch(e){S.chat[S.chat.length-1].t=e&&e.code==="quota"?e.message:"La styliste n’a pas pu répondre. Réessaie.";S.busy=false;if(S.page==="chat")render(false)}
   return}
  S.chat.push({r:"u",t:text},{r:"a",t:""});S.draft="";S.busy=true;render(false);unlock();
  const h=S.chat.slice(0,-1).map(c=>({role:c.r==="u"?"user":"assistant",content:c.t}));h[0]={role:"user",content:SYS()+"\n\n"+h[0].content};
@@ -2163,7 +2177,7 @@ function chunksAR(t){const out=[];let cur="";const push=x=>{x=x.trim();if(x)out.
   while(x.length>220){let k=x.lastIndexOf("،",220);if(k<80)k=x.lastIndexOf(" ",220);if(k<80)k=220;push(cur);cur="";push(x.slice(0,k+1));x=x.slice(k+1).trim()}
   if((cur+" "+x).length>220){push(cur);cur=x}else cur=cur?cur+" "+x:x}
  push(cur);return out}
-function ttsAR(x){return Promise.race([fetch(AI_URL+"/tts",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:"say_ar",texte:x})})
+function ttsAR(x){return Promise.race([aiPost("/tts",{type:"say_ar",texte:x})
   .then(async r=>r&&r.ok&&/audio/.test(r.headers.get("Content-Type")||"")?URL.createObjectURL(await r.blob()):null).catch(()=>null),wait(15000).then(()=>null)])}
 async function sayAR(t,onEnd){const tok=++ARTOK;try{if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}
  const end=()=>{if(onEnd)onEnd()};const parts=chunksAR(t);if(!parts.length)return end();
@@ -2198,7 +2212,7 @@ document.addEventListener("click",e=>{
  if(t.hasAttribute("data-camf")){CAM.face=CAM.face==="user"?"environment":"user";camStart();return}
  if(t.dataset.camd){CAM.delay=+t.dataset.camd;document.querySelectorAll("[data-camd]").forEach(b=>b.classList.toggle("on",b===t));return}
  if(t.dataset.buy){toast(t.dataset.buy==="seance"?"La réservation des séances arrive bientôt.":"Le paiement arrive avec la version Google Play. En attendant, utilise ton code testeuse.");return}
- if(t.hasAttribute("data-tcode")){const v=codeNorm(($("#tcode")||{}).value);if(TEST_CODES.includes(v)){PLAN.p="vip";planSave();S.pwWhy="";toast("Accès VIP activé");render(true)}else toast("Code incorrect");return}
+ if(t.hasAttribute("data-tcode")){const v=codeNorm(($("#tcode")||{}).value);testCode(v).then(okc=>{if(okc){PLAN.p="vip";planSave();S.pwWhy="";toast("Accès VIP activé");render(true)}else toast("Code incorrect")});return}
  if(t.hasAttribute("data-essai")){PLAN.p="essai";planSave();toast("Retour à l’essai gratuit");render(false);return}
  if(t.dataset.setpays){S.pays=t.dataset.setpays;save();toast(PAYS[S.pays].n);render(false);return}
  if(t.dataset.mod){const m=t.dataset.mod;if(!premium()&&(m!=="visage"||PLAN.vfree))return paywall(m==="visage"?"visage":"analyses");return startMod(m)}
@@ -2263,7 +2277,7 @@ document.addEventListener("change",e=>{if(e.target.hasAttribute("data-cphoto")){
  if(e.target.hasAttribute("data-gadd")){const fs=[...(e.target.files||[])];e.target.value="";if(fs.length)grAdd(fs);return}
  const k=e.target.dataset.f,f=e.target.files&&e.target.files[0];if(!k||!f)return;
  setPhoto(k,f)});
-document.addEventListener("input",e=>{if(e.target.id==="tcode"&&TEST_CODES.includes(codeNorm(e.target.value))&&!isVip()){PLAN.p="vip";planSave();S.pwWhy="";e.target.blur();toast("Accès VIP activé");render(true);return}if(e.target.dataset.gi){const x=GR.items.find(i=>i.id===S.grItem);if(x){x[e.target.dataset.gi]=e.target.value.slice(0,40);GR.looks={};grSave()}}if(e.target.id==="msg")S.draft=e.target.value;if(e.target.dataset.i&&S.idraft){S.idraft[e.target.dataset.i]=e.target.value;e.target.classList.remove("bad")}if(e.target.dataset.bm){S.bm=S.bm||{};S.bm[e.target.dataset.bm]=e.target.value;e.target.classList.remove("bad")}if(e.target.id==="nom"){S.nomDraft=e.target.value;const b=document.querySelector("[data-nom]");if(b)b.disabled=!e.target.value.trim()}});
+document.addEventListener("input",e=>{if(e.target.dataset.gi){const x=GR.items.find(i=>i.id===S.grItem);if(x){x[e.target.dataset.gi]=e.target.value.slice(0,40);GR.looks={};grSave()}}if(e.target.id==="msg")S.draft=e.target.value;if(e.target.dataset.i&&S.idraft){S.idraft[e.target.dataset.i]=e.target.value;e.target.classList.remove("bad")}if(e.target.dataset.bm){S.bm=S.bm||{};S.bm[e.target.dataset.bm]=e.target.value;e.target.classList.remove("bad")}if(e.target.id==="nom"){S.nomDraft=e.target.value;const b=document.querySelector("[data-nom]");if(b)b.disabled=!e.target.value.trim()}});
 document.addEventListener("keydown",e=>{if(e.target.id==="hq"&&e.key==="Enter"){e.preventDefault();const q=e.target.value.trim();if(!q)return;S.flow=null;go("chat");setTimeout(()=>send(q),60);return}if(e.target.id==="msg"&&e.key==="Enter"){e.preventDefault();send(e.target.value)}if(e.target.id==="nom"&&e.key==="Enter"){e.preventDefault();const b=document.querySelector("[data-nom]");if(b&&!b.disabled)b.click()}});
 
 const AFF=[n=>n+", tu es belle, toujours.",()=>"Tu es rayonnante aujourd’hui.",n=>"N’oublie pas de sourire, "+n+".",()=>"Ton sourire est ta plus belle parure.",n=>n+", tu mérites de te sentir bien.",()=>"Ta beauté est unique.",n=>"Souris, "+n+", tu illumines la journée.",()=>"Tu es élégante, comme tu es.",n=>n+", aime-toi un peu plus aujourd’hui.",()=>"Ta confiance te rend magnifique.",n=>"Tu es une lumière, "+n+".",()=>"Prends soin de toi, tu le vaux bien."];
@@ -2286,7 +2300,7 @@ const SUITE=[["Mon rôle, c’est de comprendre ce qui te met vraiment en valeur
 const ASKNOM=["Mais d’abord, dis-moi… comment tu t’appelles ?","aura-nom"];
 const FIN=[["Commençons notre belle aventure de la beauté : chaque jour, on choisira ensemble ton outfit.","aura-aventure",1]];
 // Aura dit le prénom avec sa propre voix (ElevenLabs via le Worker) ; sinon, voix enregistrée.
-async function ttsNom(n,type){try{const r=await Promise.race([fetch(AI_URL+"/tts",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({nom:n,type})}),wait(7000).then(()=>null)]);
+async function ttsNom(n,type){try{const r=await Promise.race([aiPost("/tts",{nom:n,type}),wait(7000).then(()=>null)]);
  if(r&&r.ok&&(r.headers.get("Content-Type")||"").includes("audio")){const b=await r.blob();if(b.size>2000)CLIPS[type==="retour"?"aura-retour":"aura-enchantee"]=URL.createObjectURL(b)}}catch(e){}}
 const OUTRO=n=>[["Enchantée, "+n+" ! Moi, c’est Aura.","aura-enchantee",1],...SUITE,...FIN];
 const RETOUR=n=>[["Salut "+n+" ! C’est Aura, ta personal stylist. Je suis là pour révéler ta beauté.","aura-retour",1]];
@@ -2401,7 +2415,7 @@ async function greetLang(){const lg=S.lang,gen=GEN;if(!LGV[lg]||!S.voice)return;
  const on=()=>{SPOKE=true;window.GREETED=true;talk(true);if(window.auraTalking)auraTalking(true);gesture()},off=()=>{talk(false);if(window.auraTalking)auraTalking(false)};
  const phone=()=>{if(gen!==GEN)return;const ss=window.speechSynthesis;if(!ss)return;try{ss.cancel();if(!VOICES.length)loadVoices();const u=new SpeechSynthesisUtterance(t);u.lang=LGV[lg];
   const v=VOICES.find(x=>x.lang.replace("_","-").toLowerCase()===LGV[lg].toLowerCase())||VOICES.find(x=>x.lang.toLowerCase().startsWith(lg));if(v)u.voice=v;KEEP=[u];u.onstart=on;u.onend=u.onerror=off;ss.resume();ss.speak(u)}catch(e){}};
- let url=null;try{const r=await Promise.race([fetch(AI_URL+"/tts",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({nom:S.nom||"",type:"hello_"+lg})}),wait(6000).then(()=>null)]);
+ let url=null;try{const r=await Promise.race([aiPost("/tts",{nom:S.nom||"",type:"hello_"+lg}),wait(6000).then(()=>null)]);
   if(r&&r.ok&&/audio/.test(r.headers.get("Content-Type")||""))url=URL.createObjectURL(await r.blob())}catch(e){}
  if(gen!==GEN)return;if(!url&&lg==="ar")url="sons/aura-ar.mp3?v=1"; // voix khaleeji enregistrée, jamais la voix (masculine) du téléphone
  if(!url)return phone();
@@ -2441,7 +2455,7 @@ const SCR={
   FIN:[["Let’s begin our beautiful beauty journey: every day, I’ll help you choose your clothes and we’ll pick your outfit together.","say",1]]}};
 const SAYC={};
 function sayUrl(t){const lg=S.lang;if(lg!=="ar"&&lg!=="en")return Promise.resolve(null);const k=lg+"|"+t;if(SAYC[k])return SAYC[k];
- return SAYC[k]=Promise.race([fetch(AI_URL+"/tts",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:"say_"+lg,texte:t})})
+ return SAYC[k]=Promise.race([aiPost("/tts",{type:"say_"+lg,texte:t})
   .then(async r=>r&&r.ok&&/audio/.test(r.headers.get("Content-Type")||"")?URL.createObjectURL(await r.blob()):null).catch(()=>null),wait(9000).then(()=>null)])
   .then(u=>{if(!u)delete SAYC[k];return u})}
 function sayLine(t){return new Promise(async r=>{let done=false,iv=0;const fin=v=>{if(done)return;done=true;clearInterval(iv);if(window.auraTalking)auraTalking(false);talk(false);r(v)};
@@ -2542,7 +2556,7 @@ async function startCall(){
   {const ms=await navigator.mediaDevices.getUserMedia({audio:true});ms.getTracks().forEach(t=>t.stop())}
   const {Conversation}=await import("https://esm.sh/@elevenlabs/client");
   window.CALLED=true;
-  conv=await Conversation.startSession({agentId:AGENT_ID,connectionType:"websocket",...(typeof S!=="undefined"&&S.lang?{overrides:{agent:{language:S.lang}}}:{}),dynamicVariables:{user_name:(typeof S!=="undefined"&&S.nom)||"",profil:(typeof PROFIL==="function"&&PROFIL())||"pas encore analysé"},
+  conv=await Conversation.startSession({...(await auraSession()),connectionType:"websocket",...(typeof S!=="undefined"&&S.lang?{overrides:{agent:{language:S.lang}}}:{}),dynamicVariables:{user_name:(typeof S!=="undefined"&&S.nom)||"",profil:(typeof PROFIL==="function"&&PROFIL())||"pas encore analysé"},
    onModeChange:({mode})=>{st(mode==="speaking"?"Elle te parle…":"Je t’écoute, parle-moi");if(window.auraTalking)auraTalking(mode==="speaking")},
    onDisconnect:()=>{conv=null;live(false);if(window.auraTalking)auraTalking(false);st("Appel terminé. Appuie pour reparler.")},
    onError:m=>st("Petit souci : "+m),
@@ -2553,7 +2567,7 @@ async function startCall(){
   live(true);st("Elle arrive…");cancelAnimationFrame(raf);anim();
   clearInterval(window.MINT);window.MINT=setInterval(()=>{if(!conv){clearInterval(window.MINT);return}useSec(1);if(secLeft()<=0){clearInterval(window.MINT);try{conv.endSession()}catch(_){}conv=null;live(false);paywall("aura")}},1000);
   window.callStatus=st;if(typeof S!=="undefined"&&S.cphoto&&typeof voicePhoto==="function")setTimeout(()=>voicePhoto((S.draft||"").trim()),2500);
- }catch(err){conv=null;live(false);st(err&&err.name==="NotAllowedError"?"Autorise le micro : Réglages, Safari, Micro.":"Impossible de lancer l’appel : "+(err&&err.message||err))}
+ }catch(err){conv=null;live(false);st(err&&err.name==="NotAllowedError"?"Autorise le micro : Réglages, Safari, Micro.":err&&err.code==="quota"?err.message:"Impossible de lancer l’appel : "+(err&&err.message||err))}
  busy=false}
 window.startCall=()=>{stFn=()=>{};return startCall()};
 window.endCall=()=>{if(conv){try{conv.endSession()}catch(_){}conv=null;live(false)}};

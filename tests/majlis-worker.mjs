@@ -2,7 +2,7 @@
 // Lancer : node tests/majlis-worker.mjs
 import { readFileSync } from "node:fs";
 import { DatabaseSync } from "node:sqlite";
-const W = (await import("data:text/javascript;base64," + readFileSync(new URL("../worker/worker.js", import.meta.url)).toString("base64"))).default;
+const W = (await import(new URL("../worker/worker.js", import.meta.url))).default;
 let fails = 0; const ok = (c, m) => { console.log((c ? "✓ " : "✗ ") + m); if (!c) fails++; };
 const db = new DatabaseSync(":memory:");
 db.exec(`CREATE TABLE mj_users (id TEXT PRIMARY KEY, th TEXT NOT NULL, nom TEXT, code TEXT UNIQUE, cree INTEGER, vu INTEGER);

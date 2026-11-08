@@ -8,7 +8,7 @@ const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAGUlEQVR4n
 const img=path.join(os.tmpdir(),'ms-majlis.png');fs.writeFileSync(img,png);
 const piece='data:image/png;base64,'+png.toString('base64');
 (async()=>{
- const W=(await import('data:text/javascript;base64,'+fs.readFileSync(path.join(__dirname,'../worker/worker.js')).toString('base64'))).default;
+ const W=(await import(require('url').pathToFileURL(path.join(__dirname,'../worker/worker.js')).href)).default;
  const db=new DatabaseSync(':memory:');
  db.exec(`CREATE TABLE mj_users (id TEXT PRIMARY KEY, th TEXT NOT NULL, nom TEXT, code TEXT UNIQUE, cree INTEGER, vu INTEGER);
  CREATE TABLE mj_amis (a TEXT NOT NULL, b TEXT NOT NULL, cree INTEGER, PRIMARY KEY (a, b));
