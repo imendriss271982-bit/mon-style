@@ -163,6 +163,8 @@ if (ACC_ON && typeof P.home === "function") {
     const q = top && top.querySelector(".hz-hi > p");
     if (q) { const m = acMeteoHaut(); if (m) q.outerHTML = m; else q.remove(); }
     if (top) top.querySelectorAll(".hz-q").forEach(x => x.remove());
+    // v187 (Imen, 8 novembre 2026 : « Enlève mon visage de home ») : plus de photo d'Aura en haut de l'accueil.
+    if (top) top.querySelectorAll(".hz-ava").forEach(x => x.remove());
     const neuf = document.createElement("template");
     neuf.innerHTML = `${acHero()}
 <span class="ac-stp"></span>
@@ -192,6 +194,9 @@ ${acDuo()}`;
 .hz .ac-jour .ac-ph>span{aspect-ratio:1;border-radius:14px;background:#F5F1EB;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .hz .ac-jour .ac-ph img{width:100%;height:100%;object-fit:contain}
 .hz .ac-jour .ac-ph svg{max-width:70%;max-height:70%}
+.hz .hz-top{min-height:0;margin-bottom:0;align-items:flex-start}
+.hz .hz-hi{padding-bottom:0}
+.hz .hz-top:before{display:none}
 .hz .ac-met{display:inline-flex;align-items:center;gap:6px;margin:8px 0 14px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.75);border:1px solid #E6D6B8;color:var(--accent,#8C6D35);font-weight:600;font-size:15px}
 .hz .ac-met svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
 .hz .tw-card{margin-top:14px}
