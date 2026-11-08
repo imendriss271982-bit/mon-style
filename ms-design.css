@@ -1,0 +1,304 @@
+/* ==========================================================================
+   My Style — Système de design « Maison » (v185)
+   Chargé EN DERNIER (après tous les styles des modules) : il unifie l'app
+   sans toucher au HTML ni aux fonctions. Pour revenir en arrière : retirer
+   la ligne <link … ms-design.css> en bas de index.html.
+   Identité : ivoire · champagne · bordeaux (accent fin) · soie.
+   ========================================================================== */
+
+/* ---------- 1. JETONS ---------- */
+:root{
+  /* Couleurs de marque */
+  --ms-ivory:#FBF8F2;          /* surfaces */
+  --ms-ivory-2:#F6F0E5;        /* surfaces en creux */
+  --ms-pearl:#FFFDF9;          /* haut des cartes (lumière) */
+  --ms-champ-1:#E9D6AE;        /* champagne clair */
+  --ms-champ-2:#C9A464;        /* champagne */
+  --ms-champ-3:#9A7638;        /* champagne profond */
+  --ms-gold-ink:#7A5B26;       /* texte doré lisible (AA sur ivoire) */
+  --ms-wine:#6B1E2E;           /* bordeaux — accent fin seulement */
+  --ms-wine-soft:rgba(107,30,46,.08);
+  --ms-ink:#231C17;            /* texte principal */
+  --ms-ink-2:#5D534B;          /* texte secondaire (AA) */
+  --ms-ink-3:#8A7F75;          /* texte tertiaire */
+  --ms-line:rgba(154,118,56,.20);        /* filet champagne */
+  --ms-line-2:rgba(35,28,23,.08);        /* filet neutre */
+
+  /* Rayons */
+  --ms-r-xs:10px;--ms-r-sm:14px;--ms-r-md:18px;--ms-r-lg:24px;--ms-r-xl:30px;--ms-r-pill:999px;
+
+  /* Espacements (grille 4/8) */
+  --ms-s1:4px;--ms-s2:8px;--ms-s3:12px;--ms-s4:16px;--ms-s5:20px;--ms-s6:24px;--ms-s8:32px;--ms-s10:40px;
+
+  /* Ombres chaudes et réalistes (lumière venant du haut) */
+  --ms-e1:0 1px 2px rgba(60,42,18,.06),0 1px 1px rgba(60,42,18,.04);
+  --ms-e2:0 1px 0 rgba(255,255,255,.9) inset,0 2px 4px rgba(60,42,18,.05),0 8px 20px -6px rgba(60,42,18,.12);
+  --ms-e3:0 1px 0 rgba(255,255,255,.95) inset,0 4px 10px rgba(60,42,18,.06),0 18px 40px -12px rgba(60,42,18,.20);
+  --ms-e4:0 1px 0 rgba(255,255,255,.95) inset,0 8px 18px rgba(60,42,18,.08),0 30px 60px -18px rgba(60,42,18,.28);
+  --ms-glow:0 0 0 4px rgba(201,164,100,.22);
+
+  /* Surfaces */
+  --ms-card:linear-gradient(180deg,var(--ms-pearl) 0%,#FFFFFF 38%,var(--ms-ivory) 100%);
+  --ms-glass:rgba(255,252,246,.72);
+  --ms-glass-strong:rgba(255,252,246,.86);
+
+  /* Bouton principal doré bombé (choix d'Imen, affiné) */
+  --ms-btn:linear-gradient(180deg,#D2B072 0%,#B08A4A 34%,#94713A 66%,#7C5D2D 100%);
+  --ms-btn-edge:#6A4F24;
+
+  /* Typographie */
+  --ms-ff:Jost,"IBM Plex Sans Arabic",system-ui,-apple-system,sans-serif;
+  --ms-fh:"Cormorant Garamond","Noto Naskh Arabic","IBM Plex Sans Arabic",Georgia,serif;
+  --ms-t-display:clamp(31px,8.6vw,38px);
+  --ms-t-h2:clamp(22px,6vw,25px);
+  --ms-t-h3:17px;
+  --ms-t-body:16px;
+  --ms-t-small:14px;
+  --ms-t-micro:11px;
+
+  /* Mouvement */
+  --ms-ease:cubic-bezier(.22,1,.36,1);      /* sortie douce (quint) */
+  --ms-ease-io:cubic-bezier(.65,0,.35,1);
+  --ms-d1:140ms;--ms-d2:240ms;--ms-d3:380ms;--ms-d4:620ms;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ms-ivory:#211C17;--ms-ivory-2:#2A241E;--ms-pearl:#2A241D;--ms-ink:#F4ECE2;--ms-ink-2:#C9BDB0;--ms-ink-3:#9D9185;
+  --ms-line:rgba(201,164,100,.22);--ms-line-2:rgba(255,255,255,.07);--ms-gold-ink:#DDBE84;--ms-wine:#E3A3B0;
+  --ms-card:linear-gradient(180deg,#2A241D 0%,#231E19 100%);--ms-glass:rgba(33,28,23,.72);--ms-glass-strong:rgba(33,28,23,.88);
+  --ms-e2:0 1px 0 rgba(255,255,255,.04) inset,0 8px 20px -6px rgba(0,0,0,.5);--ms-e3:0 1px 0 rgba(255,255,255,.05) inset,0 18px 40px -12px rgba(0,0,0,.6);}}
+:root[data-theme="dark"]{
+  --ms-ivory:#211C17;--ms-ivory-2:#2A241E;--ms-pearl:#2A241D;--ms-ink:#F4ECE2;--ms-ink-2:#C9BDB0;--ms-ink-3:#9D9185;
+  --ms-line:rgba(201,164,100,.22);--ms-line-2:rgba(255,255,255,.07);--ms-gold-ink:#DDBE84;--ms-wine:#E3A3B0;
+  --ms-card:linear-gradient(180deg,#2A241D 0%,#231E19 100%);--ms-glass:rgba(33,28,23,.72);--ms-glass-strong:rgba(33,28,23,.88);
+  --ms-e2:0 1px 0 rgba(255,255,255,.04) inset,0 8px 20px -6px rgba(0,0,0,.5);--ms-e3:0 1px 0 rgba(255,255,255,.05) inset,0 18px 40px -12px rgba(0,0,0,.6)}
+
+/* ---------- 2. TYPOGRAPHIE ÉDITORIALE ---------- */
+body{font-family:var(--ms-ff);color:var(--ms-ink);font-size:var(--ms-t-body);line-height:1.55;text-rendering:optimizeLegibility;font-feature-settings:"kern","liga","calt"}
+#page h1{font-family:var(--ms-fh);font-weight:500;font-size:var(--ms-t-display);line-height:1.12;letter-spacing:-.012em;color:var(--ms-ink);margin:4px 0 10px;text-wrap:balance}
+#page h2{font-family:var(--ms-fh);font-weight:500;font-size:var(--ms-t-h2);line-height:1.22;letter-spacing:-.005em;color:var(--ms-ink);margin:30px 0 10px;text-wrap:balance}
+#page h3{font-weight:500;font-size:var(--ms-t-h3);letter-spacing:.005em}
+#page p,#page .sub{text-wrap:pretty}
+#page .sub,#page h1+p{color:var(--ms-ink-2)}
+/* Sur-titres : petites capitales espacées, accent bordeaux */
+#page .step,#page .hr-lab,#page .zf-k,#page .ac-lab{font-family:var(--ms-ff);font-size:var(--ms-t-micro);font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--ms-wine);margin-bottom:6px}
+[dir=rtl] #page .step,[dir=rtl] #page .hr-lab,[dir=rtl] #page .ac-lab{letter-spacing:0;font-size:13px;text-transform:none}
+#page .lbl{font-size:13px;font-weight:500;letter-spacing:.04em;color:var(--ms-gold-ink);margin:20px 0 8px}
+#page b,#page strong{font-weight:500}
+#page small{line-height:1.45}
+/* Chiffres alignés (notes, prix, pourcentages) */
+.big,.ev-d b,.tw-pc,[class*="-score"],[class*="-note"]{font-variant-numeric:lining-nums tabular-nums}
+
+/* ---------- 3. EN-TÊTE : verre ivoire au défilement ---------- */
+header{transition:background var(--ms-d2) var(--ms-ease),box-shadow var(--ms-d2) var(--ms-ease),backdrop-filter var(--ms-d2)}
+header{position:sticky!important;top:max(env(safe-area-inset-top,0px),var(--satfb,0px));z-index:15}
+html.ms-scrolled header{background:var(--ms-glass);-webkit-backdrop-filter:blur(18px) saturate(160%);backdrop-filter:blur(18px) saturate(160%);box-shadow:0 1px 0 var(--ms-line),0 10px 24px -18px rgba(60,42,18,.35)}
+header .ib,header .lgbtn{width:44px;height:44px;border:1px solid rgba(255,255,255,.9)!important;background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(251,246,238,.82))!important;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 0 0 1px var(--ms-line),0 6px 16px -6px rgba(60,42,18,.22)!important;color:var(--ms-ink)!important;transition:transform var(--ms-d1) var(--ms-ease),box-shadow var(--ms-d2) var(--ms-ease)}
+header .ib:active,header .lgbtn:active{transform:scale(.92)}
+header #voice{color:var(--ms-gold-ink)!important}
+header .ib svg,header .lgbtn svg{width:20px;height:20px;stroke-width:1.5}
+
+/* ---------- 4. CARTES : nacre ivoire + filet champagne ---------- */
+.card,.hz-st,.hx-oc2,.hx-ms,.hx-an,.hr-card,.hz-cats button,.hz-insp,.hz-acts button,.zf-u,
+.tile:not(.main),.tw-row,.ev,.ac-duo-c,.ac-golfe,.ac-entree,.art,.zf-card{
+  background:var(--ms-card)!important;border:0!important;border-radius:var(--ms-r-lg)!important;
+  box-shadow:0 0 0 1px var(--ms-line),var(--ms-e2)!important;
+  transition:transform var(--ms-d2) var(--ms-ease),box-shadow var(--ms-d3) var(--ms-ease)}
+/* Le bord ambre (v123) devient un filet champagne lumineux, plus fin */
+.hz-st::after,.hx-oc2::after,.hx-ms::after,.hx-an::after,.hr-card::after,.hz-cats button::after,.hz-insp::after,.hz-acts button::after,.zf-u::after,.card::after{
+  padding:1px!important;inset:0!important;
+  background:linear-gradient(160deg,rgba(255,255,255,.95) 0%,rgba(233,214,174,.9) 22%,rgba(201,164,100,.55) 50%,rgba(233,214,174,.75) 78%,rgba(255,255,255,.9) 100%)!important}
+/* Carte héros (My Stylist, tenue du jour) : un cran plus haute */
+.hz-st,.ac-st,.ac-hero,.hx-an{box-shadow:0 0 0 1px rgba(201,164,100,.32),var(--ms-e3)!important}
+.hz-st{background:radial-gradient(120% 90% at 100% 0%,rgba(233,214,174,.45) 0%,rgba(233,214,174,0) 55%),var(--ms-card)!important}
+.hz-st b{letter-spacing:-.015em}
+/* Appui sur une carte cliquable */
+button.card:active,.hr-card:active,.hz-acts button:active,.tw-row:active,.ac-duo-c:active,.ac-golfe:active,.art:active,.tile:not(.main):active,.ac-entree:active{transform:scale(.985);box-shadow:0 0 0 1px var(--ms-line),var(--ms-e1)!important}
+.card{padding:18px 20px}
+/* Cartes grises plates (Formules, Profil) → même famille */
+.tile:not(.main){padding:20px 22px}
+.tile{position:relative;overflow:hidden}
+.tile b{font-family:var(--ms-fh);font-weight:500;font-size:22px;letter-spacing:-.01em;color:var(--ms-ink)}
+.tile span{color:var(--ms-ink-2)}
+
+/* Grandes tuiles dorées (Profil, Formules) : une seule priorité par écran.
+   Elles deviennent des cartes champagne lumineuses, texte foncé. */
+.tile.main{
+  background:radial-gradient(130% 120% at 100% 0%,rgba(255,255,255,.75) 0%,rgba(255,255,255,0) 50%),linear-gradient(160deg,#F6EAD2 0%,#EAD5AC 55%,#DDC08A 100%)!important;
+  color:var(--ms-ink)!important;text-shadow:none!important;border:0!important;border-radius:var(--ms-r-lg)!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;padding:20px 22px!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 0 0 1px rgba(154,118,56,.30),var(--ms-e2)!important}
+.tile.main::before{display:none!important}
+.tile.main b{color:var(--ms-ink)!important;font-family:var(--ms-fh);font-size:22px}
+.tile.main span,.tile.main small{color:#4E4033!important;opacity:1!important;font-weight:400}
+.tile.main:active{transform:scale(.985)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 0 0 1px rgba(154,118,56,.30),var(--ms-e1)!important}
+
+/* ---------- 5. BOUTONS ---------- */
+/* Principal : doré bombé affiné — reflet net, rebord 2 px, ombre plus diffuse */
+.btn,#splash .btn,#splash .spbot .btn,.hz-call,.zf-u-b,.zf-u.zw .zf-u-b,.gr-man,.an-r,.zf-big.alt,.hx-oc2-c,.gr-add,.lb.pri,.callbtn,.mic,.sty button,.mys,.hp-b,.hx-mic,.zf-big,.zf-aura,.ac-cta{
+  background:var(--ms-btn)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+  border:1px solid rgba(255,240,205,.55)!important;color:#FFFFFF!important;
+  font-family:var(--ms-ff);font-weight:500!important;letter-spacing:.025em;
+  text-shadow:0 1px 1px rgba(60,40,10,.45)!important;
+  box-shadow:inset 0 1px 0 rgba(255,250,235,.85),inset 0 -2px 6px rgba(70,48,14,.30),0 2px 0 var(--ms-btn-edge),0 10px 22px -8px rgba(94,69,32,.55),0 2px 5px rgba(94,69,32,.18)!important;
+  transition:transform var(--ms-d1) var(--ms-ease),box-shadow var(--ms-d2) var(--ms-ease),filter var(--ms-d2)!important}
+.btn{min-height:54px;padding:15px 22px;border-radius:var(--ms-r-pill);font-size:16.5px}
+.btn::before,#splash .btn::before,.hz-call::before,.zf-u-b::before,.gr-man::before,.an-r::before,.zf-big::before,.hx-oc2-c::before,.gr-add::before,.lb.pri::before,.callbtn::before,.mic::before,.sty button::before,.mys::before,.hp-b::before,.hx-mic::before,.zf-aura::before{
+  left:10%!important;right:10%!important;top:1px!important;height:min(46%,22px)!important;filter:none!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,.10) 80%,rgba(255,255,255,0) 100%)!important}
+@media (hover:hover){
+ .btn:not(:disabled):hover,.hz-call:hover,.gr-add:hover,.lb.pri:hover,.zf-u-b:hover,.ac-cta:hover{filter:brightness(1.06) saturate(1.05)}}
+.btn:not(:disabled):active,#splash .btn:active,.hz-call:active,.zf-u-b:active,.gr-man:active,.an-r:active,.zf-big:active,.hx-oc2-c:active,.gr-add:active,.lb.pri:active,.callbtn:active,.mic:active,.sty button:active,.mys:active,.hp-b:active,.hx-mic:active,.zf-aura:active,.ac-cta:active{
+  transform:translateY(2px) scale(.99)!important;
+  box-shadow:inset 0 1px 0 rgba(255,250,235,.7),inset 0 -1px 4px rgba(70,48,14,.35),0 0 0 var(--ms-btn-edge),0 4px 10px -4px rgba(94,69,32,.5)!important}
+.btn:disabled{opacity:.45!important;filter:saturate(.6);box-shadow:inset 0 1px 0 rgba(255,250,235,.6),0 2px 0 var(--ms-btn-edge)!important}
+
+/* Secondaire : verre ivoire, filet champagne, texte doré */
+.btn.ghost,#splash .btn.ghost,#splash .spbot .btn.ghost,.lb:not(.pri){
+  background:linear-gradient(180deg,rgba(255,255,255,.96) 0%,rgba(250,245,236,.9) 100%)!important;
+  -webkit-backdrop-filter:blur(12px)!important;backdrop-filter:blur(12px)!important;
+  color:var(--ms-gold-ink)!important;text-shadow:none!important;border:0!important;font-weight:500!important;
+  box-shadow:0 0 0 1px rgba(154,118,56,.35),inset 0 1px 0 #FFFFFF,0 6px 16px -8px rgba(60,42,18,.25)!important}
+.btn.ghost::before,#splash .btn.ghost::before,.lb:not(.pri)::before{display:none!important}
+.btn.ghost:active,.lb:not(.pri):active{transform:scale(.98)!important;box-shadow:0 0 0 1px rgba(154,118,56,.45),inset 0 1px 3px rgba(60,42,18,.10)!important}
+/* Paire « Prendre la photo / Galerie » : même hauteur, même rayon */
+.two{gap:12px}
+.two>.lb,.two>label.lb,.two>button.lb{display:flex;align-items:center;justify-content:center;min-height:54px;border-radius:var(--ms-r-pill);padding:12px 10px;line-height:1.2;font-size:15px;white-space:nowrap}
+@media (max-width:380px){.two>.lb,.two>label.lb,.two>button.lb{font-size:14px;padding:12px 6px}}
+/* Liens texte */
+#page .link{color:var(--ms-gold-ink);text-decoration-color:rgba(154,118,56,.45);text-decoration-thickness:1px;text-underline-offset:4px;font-size:15px}
+
+/* ---------- 6. PUCES, ONGLETS, CHOIX ---------- */
+.pk button,.fchips button,.vf-chips button,.av-chips button,.ch-sug button,.occ-b,.zf-nav-in button,.zf-ctx button,.jr-occ button,.ac-occ button,.gr-f button{
+  min-height:40px;padding:8px 16px;border-radius:var(--ms-r-pill)!important;border:0!important;
+  background:linear-gradient(180deg,#FFFFFF 0%,var(--ms-ivory) 100%)!important;color:var(--ms-ink)!important;
+  font-family:var(--ms-ff);font-size:14.5px;font-weight:400;letter-spacing:.005em;
+  box-shadow:0 0 0 1px var(--ms-line),0 2px 6px -2px rgba(60,42,18,.12)!important;
+  transition:transform var(--ms-d1) var(--ms-ease),box-shadow var(--ms-d2) var(--ms-ease),background var(--ms-d2),color var(--ms-d2)}
+.pk button:active,.fchips button:active,.vf-chips button:active,.av-chips button:active,.ch-sug button:active,.occ-b:active,.zf-nav-in button:active,.zf-ctx button:active{transform:scale(.95)}
+.pk button[aria-pressed="true"],.fchips button[aria-pressed="true"],.vf-chips button[aria-pressed="true"],.av-chips button[aria-pressed="true"],.occ-b[aria-pressed="true"],.zf-ctx button[aria-pressed="true"],.zf-nav-in button[aria-current],.zf-nav-in button[aria-pressed="true"],.zf-nav-in button.on{
+  background:linear-gradient(180deg,#C9A464 0%,#9A7638 100%)!important;color:#FFFFFF!important;font-weight:500;
+  box-shadow:inset 0 1px 0 rgba(255,245,220,.75),0 0 0 1px rgba(122,91,38,.6),0 6px 14px -6px rgba(94,69,32,.55)!important;text-shadow:0 1px 1px rgba(60,40,10,.3)}
+/* Onglets segmentés (Contact, Aura quotidien / mariée) */
+.ct-tabs{padding:4px;background:rgba(255,255,255,.7)!important;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 0 0 1px var(--ms-line),var(--ms-e1)!important;border-radius:var(--ms-r-pill)}
+.ct-tabs button{transition:background var(--ms-d2) var(--ms-ease),color var(--ms-d2)}
+.ct-tabs button[aria-selected="true"]{background:linear-gradient(180deg,#C9A464 0%,#9A7638 100%)!important;box-shadow:inset 0 1px 0 rgba(255,245,220,.7),0 4px 10px -4px rgba(94,69,32,.5)}
+/* Grandes options (questionnaires) */
+.opt{border:0!important;border-radius:var(--ms-r-md)!important;background:var(--ms-card)!important;box-shadow:0 0 0 1px var(--ms-line),var(--ms-e1)!important;transition:box-shadow var(--ms-d2) var(--ms-ease),transform var(--ms-d1) var(--ms-ease)}
+.opt[aria-pressed="true"]{box-shadow:0 0 0 1.5px var(--ms-champ-3),0 0 0 5px rgba(201,164,100,.16),var(--ms-e2)!important;background:linear-gradient(180deg,#FFFDF8,#FBF3E4)!important}
+.opt[aria-pressed="true"] .dot{border-color:var(--ms-champ-3)}
+.opt[aria-pressed="true"] .dot::after{background:var(--ms-champ-3)}
+/* Occasions de la garde-robe */
+.gr-occ button{background:var(--ms-card)!important;border:0!important;box-shadow:0 0 0 1px var(--ms-line),var(--ms-e1)!important;border-radius:var(--ms-r-md)!important}
+.gr-occ button[aria-selected="true"]{box-shadow:0 0 0 1.5px var(--ms-champ-3),0 0 0 5px rgba(201,164,100,.16),var(--ms-e2)!important}
+.gr-occ small{color:var(--ms-wine);letter-spacing:.12em}
+
+/* ---------- 7. CHAMPS DE SAISIE ---------- */
+.field,#page input[type="text"],#page input[type="email"],#page input[type="number"],#page input[type="tel"],#page input[type="search"],#page textarea,#page select{
+  min-height:52px;border-radius:var(--ms-r-sm)!important;border:0!important;
+  background:linear-gradient(180deg,#FFFFFF,var(--ms-pearl))!important;color:var(--ms-ink);
+  font-family:var(--ms-ff);font-size:16px;
+  box-shadow:0 0 0 1px var(--ms-line),inset 0 1px 2px rgba(60,42,18,.06)!important;
+  transition:box-shadow var(--ms-d2) var(--ms-ease)}
+#page textarea{min-height:110px;line-height:1.5;padding-top:14px}
+.field:focus,#page input:focus,#page textarea:focus,#page select:focus{outline:none;box-shadow:0 0 0 1.5px var(--ms-champ-3),var(--ms-glow),inset 0 1px 2px rgba(60,42,18,.04)!important}
+.field::placeholder,#page input::placeholder,#page textarea::placeholder{color:var(--ms-ink-3);opacity:1}
+.field.bad{box-shadow:0 0 0 1.5px #B3261E,0 0 0 4px rgba(179,38,30,.12)!important}
+
+/* ---------- 8. ZONE PHOTO (visage, tenue, make-up) ---------- */
+.photo{border-radius:var(--ms-r-xl)!important;
+  background:radial-gradient(80% 60% at 50% 40%,rgba(255,255,255,.95) 0%,rgba(250,244,234,.85) 100%)!important;
+  box-shadow:inset 0 0 0 1.5px rgba(201,164,100,.38),inset 0 2px 12px rgba(60,42,18,.05)!important;color:var(--ms-ink-2)}
+.photo:not(:has(img))::before{content:"";position:absolute;inset:14px;border-radius:calc(var(--ms-r-xl) - 10px);border:1px dashed rgba(154,118,56,.35);pointer-events:none}
+.photo svg{width:72px;height:72px;padding:18px;border-radius:50%;stroke:var(--ms-champ-3)!important;stroke-width:1.3!important;background:radial-gradient(circle at 35% 30%,#FFFFFF,#F3E7D0);box-shadow:0 0 0 1px var(--ms-line),0 8px 20px -8px rgba(94,69,32,.35);box-sizing:content-box}
+.photo.scan::after{background:linear-gradient(90deg,transparent,var(--ms-champ-2),transparent)!important;box-shadow:0 0 22px 4px rgba(201,164,100,.55)!important}
+
+/* ---------- 9. BARRE DU BAS : verre flottant ---------- */
+nav.dock{
+  background:var(--ms-glass-strong)!important;-webkit-backdrop-filter:blur(22px) saturate(170%);backdrop-filter:blur(22px) saturate(170%);
+  border-top:0!important;box-shadow:0 -1px 0 var(--ms-line),0 -12px 30px -18px rgba(60,42,18,.30);
+  padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px))!important;z-index:30}
+nav.dock button{position:relative;color:var(--ms-ink-3);font-size:11.5px;font-weight:400;letter-spacing:.03em;transition:color var(--ms-d2) var(--ms-ease)}
+nav.dock button svg{transition:transform var(--ms-d3) var(--ms-ease),stroke-width var(--ms-d2)}
+nav.dock button:active svg{transform:scale(.86)}
+nav.dock button[aria-current="page"]{color:var(--ms-gold-ink)!important;font-weight:500}
+nav.dock button[aria-current="page"] svg{transform:translateY(-1px)}
+/* Indicateur : petite pastille bordeaux sous l'onglet actif */
+nav.dock button[aria-current="page"]::after{width:5px!important;height:5px!important;border-radius:50%!important;background:var(--ms-wine)!important;margin-top:2px!important;animation:msDot var(--ms-d3) var(--ms-ease)}
+nav.dock button:not([aria-current="page"])::after{height:5px!important;margin-top:2px!important}
+@keyframes msDot{from{transform:scale(0);opacity:0}}
+/* Halo champagne derrière l'icône active */
+nav.dock button[aria-current="page"]::before{content:"";position:absolute;top:4px;left:50%;width:46px;height:30px;transform:translateX(-50%);border-radius:999px;background:radial-gradient(closest-side,rgba(233,214,174,.75),rgba(233,214,174,0));z-index:-1;pointer-events:none}
+nav.dock .mj-bd,.mj-bd{background:var(--ms-wine)!important;box-shadow:0 0 0 2px #FFFFFF}
+
+/* ---------- 10. NOTIFICATIONS, CHARGEMENTS, ÉTATS VIDES ---------- */
+#toast{background:rgba(35,28,23,.86)!important;color:#FBF6EE!important;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  border-radius:var(--ms-r-pill);padding:11px 18px;font-size:14.5px;letter-spacing:.01em;
+  box-shadow:0 0 0 1px rgba(233,214,174,.25),0 14px 34px -10px rgba(20,14,8,.55);
+  transition:opacity var(--ms-d2) var(--ms-ease),transform var(--ms-d3) var(--ms-ease)!important}
+/* Barre de progression : champagne lumineuse */
+.bar{height:3px;background:rgba(154,118,56,.14)}
+.bar i{background:linear-gradient(90deg,#E9D6AE,#C9A464 60%,#9A7638)!important;box-shadow:0 0 10px rgba(201,164,100,.6)}
+/* Chargement « shimmer » réutilisable : ajouter la classe .ms-skel */
+.ms-skel{position:relative;overflow:hidden;background:var(--ms-ivory-2)!important;border-radius:var(--ms-r-sm);color:transparent!important}
+.ms-skel::after{content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);animation:msShimmer 1.4s var(--ms-ease-io) infinite}
+@keyframes msShimmer{to{transform:translateX(100%)}}
+/* Messages d'attente / états vides : carte douce centrée */
+.gr-empty,.mj-vide,.mj-err{border-radius:var(--ms-r-lg)!important;background:var(--ms-card)!important;box-shadow:0 0 0 1px var(--ms-line),var(--ms-e1)!important;border:0!important}
+/* Pastilles d'information (Doha, météo…) */
+.ac-met,.jr-met{background:var(--ms-glass)!important;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 0 0 1px var(--ms-line),var(--ms-e1)!important;border:0!important}
+
+/* ---------- 11. ÉCRANS PRÉCIS ---------- */
+/* Nouveautés : badge de date lisible (« En ce moment » n'est plus écrasé) */
+.ev-d{width:60px!important;height:auto!important;min-height:62px;padding:8px 4px;border-radius:var(--ms-r-sm)!important;
+  background:linear-gradient(170deg,#7E2638 0%,var(--ms-wine) 100%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,220,225,.35),0 6px 14px -6px rgba(107,30,46,.6)}
+.ev-d small{font-size:10px!important;letter-spacing:.02em;line-height:1.15;word-break:normal;hyphens:auto}
+.ev-t small{color:var(--ms-gold-ink)!important}
+.ev-go{color:var(--ms-gold-ink)!important}
+/* Accueil : raccourcis ronds en perle */
+.ac-rd-i{transition:transform var(--ms-d2) var(--ms-ease),box-shadow var(--ms-d2) var(--ms-ease)}
+.ac-rd b{letter-spacing:.005em}
+/* Avatar d'Aura sur l'accueil : ombre de sol douce */
+.hz-hi img,.ac-aura img{filter:drop-shadow(0 18px 22px rgba(60,42,18,.18))}
+/* Profil : carte de compte */
+.cp-card,.cp-box{border-radius:var(--ms-r-lg)!important}
+/* Palettes de couleurs : pastilles nettes */
+.pal div{border-radius:var(--ms-r-md);box-shadow:inset 0 0 0 1px rgba(0,0,0,.06),0 6px 14px -8px rgba(60,42,18,.35)}
+
+/* ---------- 12. MOUVEMENT ---------- */
+/* Transition de page plus fluide (même animation, courbe plus raffinée) */
+.in-f{animation:msInF var(--ms-d3) var(--ms-ease) both}
+.in-b{animation:msInB var(--ms-d3) var(--ms-ease) both}
+@keyframes msInF{from{opacity:0;transform:translate3d(18px,0,0)}}
+@keyframes msInB{from{opacity:0;transform:translate3d(-18px,0,0)}}
+[dir=rtl] .in-f{animation-name:msInB}[dir=rtl] .in-b{animation-name:msInF}
+/* Apparition échelonnée des blocs (classe posée par ms-design.js) */
+.ms-rv{opacity:0;transform:translate3d(0,10px,0)}
+.ms-rv.ms-in{opacity:1;transform:none;transition:opacity var(--ms-d4) var(--ms-ease),transform var(--ms-d4) var(--ms-ease);transition-delay:var(--ms-dl,0ms)}
+/* Onde au toucher (posée par ms-design.js) */
+.ms-ripple{position:absolute;border-radius:50%;pointer-events:none;transform:scale(0);opacity:.35;background:radial-gradient(circle,rgba(255,255,255,.9) 0%,rgba(255,255,255,0) 70%);animation:msRipple 560ms var(--ms-ease) forwards;z-index:3}
+@keyframes msRipple{to{transform:scale(1);opacity:0}}
+@media (prefers-reduced-motion:reduce){
+  .in-f,.in-b,nav.dock button[aria-current="page"]::after{animation:none!important}
+  .ms-rv{opacity:1!important;transform:none!important;transition:none!important}
+  .ms-skel::after,.ms-ripple{animation:none!important;display:none}
+}
+
+/* ---------- 13. GRANDS ÉCRANS (tablette, ordinateur) ---------- */
+@media (min-width:700px){
+  #app{max-width:460px}
+  html:not(.fv-on) body{background:radial-gradient(1200px 700px at 50% -10%,#FFFFFF 0%,#F5EEE2 60%,#EADFCB 100%) fixed}
+  #app{box-shadow:0 0 0 1px var(--ms-line),0 40px 90px -30px rgba(60,42,18,.35);border-radius:0 0 var(--ms-r-xl) var(--ms-r-xl);min-height:100vh}
+  nav.dock{border-radius:var(--ms-r-lg) var(--ms-r-lg) 0 0}
+}
+@media (min-width:1100px){
+  #app{max-width:480px}
+}
+/* Très petits écrans (320 px) */
+@media (max-width:340px){
+  #page{padding-left:20px!important;padding-right:20px!important}
+  .btn{font-size:15.5px;padding:14px 16px}
+  .pk button,.fchips button,.ch-sug button,.occ-b{padding:7px 13px;font-size:14px}
+  .two{gap:8px}
+  nav.dock button{font-size:10.5px;letter-spacing:0}
+}
