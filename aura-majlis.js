@@ -226,7 +226,7 @@ async function mjAuraConseil(ami, photo, question, kind) {
   const moi = S.nom || "elle";
   const cv = MJC[ami], fil = cv ? cv.msgs.filter(m => !m.aura && m.txt).slice(-6).map(m => (m.moi ? moi : amie) + " : " + m.txt).join(" | ") : "";
   const aMoi = photo && photo.moi;
-  const pr = REF + " Tu es Aura, la styliste de My Style. Tu interviens dans le Majlis : une discussion privée entre deux amies, " + moi + " et " + amie + ". " +
+  const pr = REFP("HARMONIE", "COLORIMÉTRIE 12", "MORPHOLOGIE DU CORPS") + " Tu es Aura, la styliste de My Style. Tu interviens dans le Majlis : une discussion privée entre deux amies, " + moi + " et " + amie + ". " +
     (photo ? "Photo envoyée par " + (aMoi ? moi : amie) + (photo.look ? " (« " + photo.look + " »)" : "") + ". " +
       (aMoi ? "Son profil : " + ((typeof PROFIL === "function" && PROFIL()) || "inconnu") + ". " + (typeof pfRules === "function" ? pfRules() : "") + " "
             : "Tu ne connais pas le profil de " + amie + " : donne un conseil valable pour elle sans parler de sa morphologie ni de ses couleurs personnelles. ") +

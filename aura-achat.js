@@ -124,7 +124,7 @@ async function acVerifier() {
   const prixEl = document.getElementById("ac_prix"); if (prixEl) AC.prix = prixEl.value;
   S.acBusy = 1; S.acErr = ""; render(false); say("Je regarde la pièce et ta garde-robe, une seconde.");
   const gardeOk = acGardeOk(), it = GR.items.filter(x => !x.wait && !x.todo);
-  const pr = REF + " Tu es styliste personnelle. La cliente envisage d’acheter la pièce sur la photo (en magasin ou en ligne). Identifie la pièce principale. Si ce n’est pas un vêtement, des chaussures, un sac ou un accessoire, réponds {\"erreur\":\"Je ne vois pas de vêtement sur cette photo.\"}. " +
+  const pr = REF_TENUE + " Tu es styliste personnelle. La cliente envisage d’acheter la pièce sur la photo (en magasin ou en ligne). Identifie la pièce principale. Si ce n’est pas un vêtement, des chaussures, un sac ou un accessoire, réponds {\"erreur\":\"Je ne vois pas de vêtement sur cette photo.\"}. " +
     "Dis honnêtement si elle lui va selon son profil : " + (PROFIL() || "profil inconnu (dis-le, sans inventer)") + ". " + (typeof pfRules === "function" ? pfRules() : "") +
     (gardeOk ? " Puis, UNIQUEMENT avec les identifiants de sa garde-robe ci-dessous : « similaires » = les pièces qu’elle a déjà et qui font presque doublon (même type, couleur proche), sinon liste vide ; « avec » = jusqu’à 4 pièces qui vont avec pour faire des tenues. N’invente aucune pièce.\nGarde-robe :\n" + it.map(x => x.id + " : " + grCat(x.cat).toLowerCase() + ", " + (x.nom || "") + (x.couleur ? ", " + x.couleur : "")).join("\n") + "\n" : " Elle n’a pas encore de garde-robe enregistrée : laisse « similaires » et « avec » vides. ") +
     "Le pourquoi et le conseil tiennent chacun en UNE phrase courte. Pas de marque ni de prix inventés. " + FMT +

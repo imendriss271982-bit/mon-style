@@ -115,7 +115,10 @@ function mesurer(file,delai){
   const m=mesurer468(lm,cv.width,cv.height);
   if(m.tourne>SEUILS.de_face)return {erreur:"Ton visage est un peu tourné. Regarde bien l’objectif, de face, et reprends la photo."};
   const c=classer(m);if(!c)return null;
-  return {...c,pourquoi:pourquoi(c),mesures:{A:r2(m.A),B:r2(m.B),C:r2(m.C),D:r2(m.D),ang:r2(m.ang)}};
+  // v182 : points du teint (joues, front) et cadre du visage, en coordonnées 0–1, pour la colorimétrie (aura-couleur.js).
+  const pt=i=>[r2(lm[i].x*1000)/1000,r2(lm[i].y*1000)/1000],xs=lm.map(p=>p.x),ys=lm.map(p=>p.y);
+  const teint={joues:[pt(50),pt(280)],front:pt(151),cadre:[Math.min(...xs),Math.min(...ys),Math.max(...xs),Math.max(...ys)]};
+  return {...c,pourquoi:pourquoi(c),mesures:{A:r2(m.A),B:r2(m.B),C:r2(m.C),D:r2(m.D),ang:r2(m.ang)},teint};
  })().catch(()=>null);
  if(CACHE)CACHE.set(file,travail);
  return attente(travail);

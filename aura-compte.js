@@ -11,7 +11,7 @@
    - Mesure d'usage anonyme : ouverture de l'app et écrans visités (`/ev`), sans donnée personnelle.
    Données du téléphone : `monstyle_compte` = { tok, email, h:{clé: empreinte}, t:{clé: date serveur}, ph:{photo: empreinte}, last }. */
 
-const CP_KEYS = ["monstyle", "monstyle_gr", "monstyle_pref", "monstyle_zf", "monstyle_avatar", "monstyle_mk", "monstyle_verif", "monstyle_majlis"];
+const CP_KEYS = ["monstyle", "monstyle_gr", "monstyle_pref", "monstyle_zf", "monstyle_avatar", "monstyle_mk", "monstyle_verif", "monstyle_majlis", "monstyle_gouts"];
 let CP = (() => { try { const o = JSON.parse(localStorage.getItem("monstyle_compte") || "{}"); return o && typeof o === "object" ? o : {}; } catch (e) { return {}; } })();
 CP.h = CP.h || {}; CP.t = CP.t || {}; CP.ph = CP.ph || {};
 const cpSave = () => { try { localStorage.setItem("monstyle_compte", JSON.stringify(CP)); } catch (e) {} };

@@ -6,3 +6,6 @@
 const REF="§REF§";
 // REFP("VISAGISME","KIBBE") = seulement ces rubriques de la méthode (titres en majuscules de worker/methode.js).
 const REFP=(...k)=>"§REFP:"+k.join("|")+"§\n";
+// v182 (vitesse) : chaque demande n'emporte que les rubriques utiles de la méthode, pas toute la méthode.
+const REF_LOOK=REFP("COLORIMÉTRIE 12","MORPHOLOGIE DU CORPS","KIBBE (","HARMONIE","ARBITRAGE");                       // juger une tenue, conseiller
+const REF_TENUE=REFP("COLORIMÉTRIE 12","MORPHOLOGIE DU CORPS","KIBBE (","HARMONIE","GARDE-ROBE CAPSULE","ARBITRAGE"); // composer des tenues avec sa garde-robe

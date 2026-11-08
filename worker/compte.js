@@ -8,7 +8,7 @@
 //   ms_ev (d, e, n) · ms_act (d, dev) · ms_dev (dev, d)      — mesure d'usage anonyme (par jour)
 // Connexion sans mot de passe : la cliente reçoit un code par email (API Brevo, comme la page Contact).
 
-export const SYNC_KEYS = ["monstyle", "monstyle_gr", "monstyle_pref", "monstyle_zf", "monstyle_avatar", "monstyle_mk", "monstyle_verif", "monstyle_majlis"];
+export const SYNC_KEYS = ["monstyle", "monstyle_gr", "monstyle_pref", "monstyle_zf", "monstyle_avatar", "monstyle_mk", "monstyle_verif", "monstyle_majlis", "monstyle_gouts"];
 const SESS_TTL = 365 * 24 * 3600 * 1000, OTP_TTL = 15 * 60 * 1000;
 const MAX_VAL = 1800000, MAX_IMG = 400000, MAX_PHOTOS = 800;
 const EMAIL_RE = /^[^\s@<>"']{1,64}@[^\s@<>"']{1,190}\.[a-z]{2,24}$/i;

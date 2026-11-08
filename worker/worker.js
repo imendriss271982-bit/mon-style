@@ -668,7 +668,30 @@ export default {
         return false;
       };
       if (GOOD_MODEL) models.unshift(GOOD_MODEL);
-      if (!(await tryModels([...new Set(models)]))) {
+      // v182 (vitesse) : demande « couverte ». On interroge le 1er modèle ; s'il n'a pas répondu après HEDGE_MS
+      // (8 s par défaut, variable Cloudflare HEDGE_MS) ou s'il échoue, on lance aussitôt le 2e modèle en parallèle
+      // et on garde la 1re bonne réponse (l'autre est annulée). Avant, un modèle lent faisait attendre 28 s de plus.
+      const uniq = [...new Set(models)];
+      const hedge = async (m1, m2) => {
+        const HEDGE = Math.max(1500, parseInt(env.HEDGE_MS, 10) || 8000), ctl = [new AbortController(), new AbortController()];
+        const one = (m, i) => fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`,
+          { method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": KEY }, body: fast, signal: AbortSignal.any([ctl[i].signal, AbortSignal.timeout(28000)]) })
+          .then(res => res.ok ? { m, r: res } : Promise.reject(res.status));
+        let timer = null, lance = false;
+        const a = one(m1, 0);
+        const b = m2 ? new Promise((res, rej) => {
+          const go = () => { if (lance) return; lance = true; clearTimeout(timer); one(m2, 1).then(res, rej); };
+          timer = setTimeout(go, HEDGE); a.catch(go);
+        }) : Promise.reject(0);
+        try {
+          const w = await Promise.any([a, b]);
+          clearTimeout(timer); ctl[w.m === m1 ? 1 : 0].abort();
+          return w;
+        } catch { clearTimeout(timer); ctl.forEach(c => c.abort()); return null; }
+      };
+      const hw = await hedge(uniq[0], uniq[1]);
+      if (hw) { r = hw.r; GOOD_MODEL = hw.m; }
+      else if (!(await tryModels(uniq))) {
         // Les noms de modèles Gemini changent : on demande à Google la liste actuelle et on prend un modèle « flash » qui accepte les images.
         try {
           const lr = await fetch("https://generativelanguage.googleapis.com/v1beta/models?pageSize=200", { headers: { "x-goog-api-key": KEY } });

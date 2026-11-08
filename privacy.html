@@ -82,7 +82,7 @@ section[hidden]{display:none}
 <p>Pour fonctionner, My Style utilise des prestataires. Ils reçoivent seulement ce qui est nécessaire :</p>
 <ul>
 <li><b>Google (Gemini)</b> : analyse de tes photos et réponses écrites d'Aura. La photo est envoyée pour l'analyse ; My Style ne la conserve pas. Google la traite selon ses propres conditions.</li>
-<li><b>Google (MediaPipe)</b> : la mesure de ton visage et le fond studio de ta photo de tenue se font <b>sur ton téléphone</b> ; seul le modèle est téléchargé.</li>
+<li><b>Google (MediaPipe)</b> : la mesure de ton visage, la correction de la lumière avec ta feuille blanche, la mesure de ton teint et le fond studio de ta photo de tenue se font <b>sur ton téléphone</b> ; seul le modèle est téléchargé. Pour ta colorimétrie, c'est la photo corrigée qui est envoyée à Gemini.</li>
 <li><b>ElevenLabs</b> : la voix d'Aura et les appels vocaux. Pendant un appel, ta voix et un résumé de ton profil de style (sans email, sans téléphone, sans poids) sont transmis.</li>
 <li><b>Cloudflare</b> : serveur qui relie l'application aux services d'IA et garde les demandes à la styliste.</li>
 <li><b>Brevo</b> : envoie par email tes messages de contact et demandes de séance.</li>
@@ -169,7 +169,7 @@ section[hidden]{display:none}
 <p>My Style relies on service providers. Each one receives only what it needs:</p>
 <ul>
 <li><b>Google (Gemini)</b>: analyses your photos and writes Aura's answers. The photo is sent for analysis; My Style does not keep it. Google processes it under its own terms.</li>
-<li><b>Google (MediaPipe)</b>: face measurement and the studio background of your outfit photo run <b>on your phone</b>; only the model is downloaded.</li>
+<li><b>Google (MediaPipe)</b>: face measurement, light correction with your white sheet, skin tone measurement and the studio background of your outfit photo run <b>on your phone</b>; only the model is downloaded. For your colour analysis, the corrected photo is the one sent to Gemini.</li>
 <li><b>ElevenLabs</b>: Aura's voice and voice calls. During a call, your voice and a summary of your style profile (no email, no phone number, no weight) are transmitted.</li>
 <li><b>Cloudflare</b>: server connecting the app to the AI services and storing stylist requests.</li>
 <li><b>Brevo</b>: sends your contact messages and session requests by email.</li>
@@ -256,7 +256,7 @@ section[hidden]{display:none}
 <p>يعتمد My Style على مزوّدي خدمات، وكل مزوّد يستلم فقط ما يحتاجه:</p>
 <ul>
 <li><b>Google (Gemini)</b>: يحلّل صوركِ ويكتب ردود Aura. تُرسل الصورة للتحليل ولا يحتفظ بها My Style، وتعالجها Google وفق شروطها الخاصة.</li>
-<li><b>Google (MediaPipe)</b>: قياس الوجه وخلفية الاستوديو لصورة إطلالتكِ يتمّان <b>على هاتفكِ</b>، ويُحمَّل النموذج فقط.</li>
+<li><b>Google (MediaPipe)</b>: قياس الوجه، وتصحيح الإضاءة بالورقة البيضاء، وقياس لون البشرة، وخلفية الاستوديو لصورة إطلالتكِ تتمّ كلها <b>على هاتفكِ</b>، ويُحمَّل النموذج فقط. لتحليل الألوان، تُرسَل الصورة المصحّحة إلى Gemini.</li>
 <li><b>ElevenLabs</b>: صوت Aura والمكالمات الصوتية. أثناء المكالمة يُنقل صوتكِ وملخّص لملف الستايل الخاص بكِ (بدون بريد إلكتروني أو رقم هاتف أو وزن).</li>
 <li><b>Cloudflare</b>: خادم يربط التطبيق بخدمات الذكاء الاصطناعي ويحفظ طلبات الستايلست.</li>
 <li><b>Brevo</b>: يرسل رسائل التواصل وطلبات الجلسة بالبريد الإلكتروني.</li>
