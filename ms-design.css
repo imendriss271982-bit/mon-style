@@ -266,6 +266,7 @@ nav.dock .mj-bd,.mj-bd{background:var(--ms-wine)!important;box-shadow:0 0 0 2px 
 .pal div{border-radius:var(--ms-r-md);box-shadow:inset 0 0 0 1px rgba(0,0,0,.06),0 6px 14px -8px rgba(60,42,18,.35)}
 
 /* ---------- 12. MOUVEMENT ---------- */
+#app{overflow-x:clip} /* l'animation de page ne crée jamais de défilement horizontal */
 /* Transition de page plus fluide (même animation, courbe plus raffinée) */
 .in-f{animation:msInF var(--ms-d3) var(--ms-ease) both}
 .in-b{animation:msInB var(--ms-d3) var(--ms-ease) both}
