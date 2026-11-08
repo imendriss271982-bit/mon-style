@@ -198,11 +198,11 @@ body.pg-home header #voice{margin-inline-start:auto}
 .hz .ac-an .ac-cta{display:inline-flex;align-items:center;justify-content:center;min-height:48px;margin-top:6px;padding:10px 18px;border:0;border-radius:999px;background:var(--goldg);color:#fff;font:inherit;font-weight:600;font-size:15px;box-shadow:0 4px 12px rgba(140,109,53,.25);cursor:pointer}
 .hz .ac-ronds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:22px}
 .hz .ac-rd{display:flex;flex-direction:column;align-items:center;gap:6px;padding:4px 2px;border:0;background:none;font:inherit;color:var(--ink);cursor:pointer;text-align:center;min-height:44px}
-.hz .ac-rd-i{display:grid;place-items:center;width:64px;height:64px;border-radius:50%;background:#FFFFFF;border:1px solid #EAE3D8;box-shadow:0 6px 16px rgba(42,36,32,.08);color:var(--accent,#8C6D35)}
+.hz .ac-rd-i{display:grid;place-items:center;width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 35% 28%,#FFFFFF 0%,#FBF8F3 45%,#EFE6D8 100%);border:1px solid #E6DACA;box-shadow:inset 0 2px 2px rgba(255,255,255,.95),inset 0 -5px 9px rgba(140,109,53,.16),0 3px 0 #E2D4BF,0 10px 18px rgba(42,36,32,.12);color:var(--accent,#8C6D35);transition:transform .12s,box-shadow .12s}
+.hz .ac-rd:active .ac-rd-i{transform:translateY(2px);box-shadow:inset 0 2px 2px rgba(255,255,255,.9),inset 0 -3px 6px rgba(140,109,53,.16),0 1px 0 #E2D4BF,0 4px 8px rgba(42,36,32,.1)}
 .hz .ac-rd-i svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .hz .ac-rd b{font-size:14px;font-weight:600;line-height:1.25}
 .hz .ac-rd small{font-size:12.5px;color:#6B625A;line-height:1.2}
-.hz .ac-rd:active .ac-rd-i{transform:scale(.95)}
 .hz .ac-duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
 .hz .ac-duo-c{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:16px;border-radius:20px;background:#FFFFFF;border:1px solid #EAE3D8;box-shadow:0 4px 16px rgba(42,36,32,.06);font:inherit;color:var(--ink);text-align:start;cursor:pointer;min-height:132px}
 .hz .ac-duo-c>b{font-size:15px;font-weight:600;line-height:1.25;margin-top:6px}
@@ -212,6 +212,10 @@ body.pg-home header #voice{margin-inline-start:auto}
 .hz .ac-duo-ring b{font-size:11px;color:var(--accent,#8C6D35)}
 .hz .ac-duo-ic{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:#F3E7DC;color:var(--accent,#8C6D35)}
 .hz .ac-duo-ic svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+/* v178 : boutons dorés de l'accueil bombés, comme « Appeler Aura » */
+.hz .ac-cta{position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(180deg,#C4A05C 0%,#96753A 40%,#846630 62%,#624922 100%)!important;box-shadow:inset 0 2px 1px rgba(255,255,255,.75),inset 0 -6px 10px rgba(70,48,14,.45),0 3px 0 #5E4520,0 10px 20px rgba(94,69,32,.35)!important;text-shadow:0 1px 2px rgba(70,46,12,.55);transition:transform .12s}
+.hz .ac-cta::before{content:"";position:absolute;left:8%;right:8%;top:2px;height:52%;border-radius:999px;z-index:-1;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.7),rgba(255,255,255,.2) 70%,rgba(255,255,255,0))}
+.hz .ac-cta:active{transform:translateY(2px);box-shadow:inset 0 2px 1px rgba(255,255,255,.6),inset 0 -3px 8px rgba(70,48,14,.45),0 1px 0 #5E4520,0 4px 10px rgba(94,69,32,.3)!important}
 /* « Appeler Aura » grossit et rapetisse comme un cœur, avec des ondes dorées, pour qu'on comprenne qu'il faut toucher. */
 .hz .ac-st{overflow:visible}
 .hz .ac-st .hz-call{animation:acBeat 1.6s ease-in-out infinite!important;overflow:visible}

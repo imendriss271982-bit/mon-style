@@ -822,6 +822,12 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 .btn:disabled,.btn.ghost:disabled,#splash .btn:disabled,#splash .btn.ghost:disabled,#splash .spbot .btn:disabled,#splash .spbot .btn.ghost:disabled,.hz-call:disabled,.zf-u-b:disabled,.zf-u.zw .zf-u-b:disabled,.gr-man:disabled,.an-r:disabled,.zf-big.alt:disabled,.hx-oc2-c:disabled,.gr-add:disabled,.lb.pri:disabled,.callbtn:disabled,.mic:disabled,.sty button:disabled,.mys:disabled,.hp-b:disabled,.hx-mic:disabled,.tile.main:disabled,.zf-big:disabled,.zf-aura:disabled{opacity:.55}
 @media (prefers-reduced-transparency:reduce){.btn,.btn.ghost,#splash .btn,#splash .btn.ghost,#splash .spbot .btn,#splash .spbot .btn.ghost,.hz-call,.zf-u-b,.zf-u.zw .zf-u-b,.gr-man,.an-r,.zf-big.alt,.hx-oc2-c,.gr-add,.lb.pri,.callbtn,.mic,.sty button,.mys,.hp-b,.hx-mic,.tile.main,.zf-big,.zf-aura{-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--goldg)!important}}
 .gr-add *,.zf-big *,.mys *,.hp-b *{color:inherit}
+/* v178 (Imen : « boutons bombés, avec de la profondeur ») : le verre doré devient bombé — reflet large en haut, ombre interne en bas, rebord sombre dessous et ombre portée. Texte blanc toujours lisible (milieu #8C6D35). */
+.btn,.btn.ghost,#splash .btn,#splash .btn.ghost,#splash .spbot .btn,#splash .spbot .btn.ghost,.hz-call,.zf-u-b,.zf-u.zw .zf-u-b,.gr-man,.an-r,.zf-big.alt,.hx-oc2-c,.gr-add,.lb.pri,.callbtn,.mic,.sty button,.mys,.hp-b,.hx-mic,.tile.main,.zf-big,.zf-aura{background:linear-gradient(180deg,rgba(196,160,92,.94) 0%,rgba(150,117,58,.96) 40%,rgba(132,102,48,.97) 62%,rgba(98,73,34,.99) 100%)!important;
+ box-shadow:inset 0 2px 1px rgba(255,255,255,.75),inset 0 0 0 1px rgba(255,236,190,.30),inset 0 -6px 10px rgba(70,48,14,.45),0 3px 0 #5E4520,0 10px 20px rgba(94,69,32,.35),0 2px 6px rgba(94,69,32,.25)!important}
+.btn::before,.btn.ghost::before,#splash .btn::before,#splash .btn.ghost::before,#splash .spbot .btn::before,#splash .spbot .btn.ghost::before,.hz-call::before,.zf-u-b::before,.zf-u.zw .zf-u-b::before,.gr-man::before,.an-r::before,.zf-big.alt::before,.hx-oc2-c::before,.gr-add::before,.lb.pri::before,.callbtn::before,.mic::before,.sty button::before,.mys::before,.hp-b::before,.hx-mic::before,.tile.main::before,.zf-big::before,.zf-aura::before{top:2px;height:min(52%,28px);background:linear-gradient(180deg,rgba(255,255,255,.72) 0%,rgba(255,255,255,.22) 70%,rgba(255,255,255,0) 100%)}
+.btn:active,.btn.ghost:active,#splash .btn:active,#splash .btn.ghost:active,#splash .spbot .btn:active,#splash .spbot .btn.ghost:active,.hz-call:active,.zf-u-b:active,.zf-u.zw .zf-u-b:active,.gr-man:active,.an-r:active,.zf-big.alt:active,.hx-oc2-c:active,.gr-add:active,.lb.pri:active,.callbtn:active,.mic:active,.sty button:active,.mys:active,.hp-b:active,.hx-mic:active,.tile.main:active,.zf-big:active,.zf-aura:active{transform:translateY(2px);box-shadow:inset 0 2px 1px rgba(255,255,255,.6),inset 0 -3px 8px rgba(70,48,14,.45),0 1px 0 #5E4520,0 4px 10px rgba(94,69,32,.3)!important}
+
 /* v135 : écran d'ouverture en grille précise (choix d'Imen) : 3 zones qui ne se chevauchent jamais.
    Zone haute = logo + phrase (hauteur mesurée en JS → --top) ; zone basse = bouton (--ab) ; Aura occupe exactement l'espace entre les deux. */
 #splash .sptop{padding:calc(max(env(safe-area-inset-top,0px),var(--satfb,0px)) + clamp(28px,5svh,48px)) 22px 0}
@@ -926,7 +932,7 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 <script src="aura-corps.js?v=1"></script>
 <script src="zifafi-methode.js?v=2"></script>
 <script>
-const VERSION="177";
+const VERSION="178";
 // Bonjour d’Aura : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -2512,7 +2518,7 @@ $("#start").addEventListener("click",()=>{if(window.endCall)window.endCall();SKI
 <script src="aura-majlis.js?v=8"></script>
 <script src="aura-piece.js?v=1"></script>
 <script src="aura-chatlook.js?v=2"></script>
-<script src="aura-accueil.js?v=4"></script>
+<script src="aura-accueil.js?v=6"></script>
 <script type="module">
 let conv=null,busy=false,raf=0;
 window.liveConv=()=>conv;

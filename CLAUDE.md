@@ -86,3 +86,4 @@ Push sur `main` → workflow `.github/workflows/pages.yml` publie le dossier sur
 - Formules v177 : Essentiel 49 QAR/SAR/AED par mois (choix d'Imen), Annuel 490 (= 10 mois, « 2 mois offerts » vrai), VIP 79 inchangé (prix VIP/annuel encore à confirmer par Imen). Pendant `GRATUIT`, la page `abo` ne montre plus « VIP · 999 min » mais « Pendant la phase de test, tout est offert ».
 - Majlis v177 : `mjErrTxt()` remplace un message technique (« Failed to fetch »…) par une phrase douce traduite.
 - Contraste v177 : `--goldg` = #8C6D35 → #7A5E2C → #6E5428 et boutons cristal plus profonds (texte blanc ≥ 4,5:1).
+- Boutons bombés v178 (Imen : « boutons bombés, avec une certaine profondeur ») : bloc CSS « v178 » après les boutons cristal dans `index.html` (reflet large en haut, ombre interne en bas, rebord #5E4520 dessous, ombre portée ; appui = le bouton descend de 2 px) ; `.ac-cta` de l'accueil pareil ; raccourcis ronds `.ac-rd-i` en perle blanche bombée.
