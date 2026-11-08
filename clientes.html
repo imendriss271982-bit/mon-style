@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#FFFFFF">
+<title>My Style — Mes clientes</title>
+<link rel="icon" href="favicon.png?v=3">
+<!-- Page privée « Mes clientes » (v181) : la liste unique des clientes qui ont un compte, et la mesure d'usage
+     (téléphones actifs par jour, retour à J+1 / J+7, écrans les plus ouverts). Protégée par le code de la styliste
+     (le même que styliste.html, vérifié par le Worker). -->
+<style>
+:root{--accent:#8C6D35;--goldg:linear-gradient(180deg,#A8843F,#8C6D35 55%,#765A2A);--ink:#292421;--muted:#6E6E6E;--line:#E6E6E6;--soft:#F5F5F5;--surface:#FFFFFF}
+*{box-sizing:border-box}
+html{background:#FBF7F0}
+body{margin:0;font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;color:var(--ink);background:url(fond-soie.webp) center/cover fixed #FBF7F0;min-height:100vh}
+main{max-width:860px;margin:0 auto;padding:max(18px,env(safe-area-inset-top)) 16px 80px}
+h1{font:400 1.9rem/1.15 Georgia,"Times New Roman",serif;margin:8px 0 4px}
+h2{font:400 1.25rem Georgia,serif;margin:22px 0 10px}
+.logo{display:block;text-align:center;font:700 1.6rem Georgia,serif;letter-spacing:.2em}
+.logo i{font-style:italic;letter-spacing:0;color:var(--accent);margin-inline-end:6px}
+.sub{color:var(--muted);margin:0 0 14px}
+.card{background:var(--surface);border-radius:16px;padding:16px;box-shadow:0 2px 10px rgba(140,109,53,.12);margin:12px 0;overflow-x:auto}
+.btn{display:inline-block;padding:12px 18px;border:0;border-radius:999px;background:var(--goldg);color:#fff;font-weight:600;font-size:.95rem;font-family:inherit;cursor:pointer}
+.btn.light{background:var(--soft);color:var(--accent);border:1px solid var(--line)}
+input{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:12px;font:inherit;background:#fff;color:var(--ink);margin:8px 0}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.kpi{background:var(--surface);border-radius:14px;padding:14px;box-shadow:0 2px 10px rgba(140,109,53,.10)}
+.kpi b{display:block;font:400 1.9rem Georgia,serif}.kpi span{color:var(--muted);font-size:.85rem}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th,td{text-align:start;padding:8px 6px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--muted);font-weight:600;font-size:.8rem}
+td.x{white-space:normal}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 4px}
+.tabs button{padding:7px 13px;border:1px solid var(--line);border-radius:999px;background:#fff;font:inherit;font-size:.88rem;cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.err{padding:12px 14px;border-radius:12px;background:#F7E6E2;color:#9A3B2B;margin:10px 0}
+.del{border:0;background:none;color:#9A3B2B;cursor:pointer;font:inherit;font-size:.82rem}
+svg text{font-family:inherit}
+.vide{color:var(--muted);text-align:center;padding:20px 0}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+const API = "https://mon-style.imendriss271982.workers.dev/admin/clientes";
+const PAYS = { QA: "Qatar", SA: "Arabie saoudite", AE: "Émirats", KW: "Koweït", BH: "Bahreïn", OM: "Oman" };
+const LANG = { fr: "Français", en: "Anglais", ar: "Arabe" };
+// Noms lisibles des écrans de l'app (le reste s'affiche tel quel).
+const ECR = { "open": "Ouverture de l'app", "compte": "Compte créé ou connecté", "p:home": "Accueil", "p:profil": "Profil", "p:garde": "Garde-robe", "p:tenues": "Créer une tenue",
+  "p:chat": "Aura (chat)", "p:boutique": "Boutique", "p:majlis": "Majlis", "p:jour": "Tenue du jour", "p:o_photo": "Outfit check — photo", "p:o_res": "Outfit check — résultat",
+  "p:a_face": "Analyse visage — photo", "p:r_visage": "Analyse visage — résultat", "p:a_body": "Analyse silhouette — photo", "p:b_mes": "Silhouette par mesures", "p:r_corps": "Analyse silhouette — résultat",
+  "p:r_couleurs": "Colorimétrie — résultat", "p:zf": "Zifafi Wedding", "p:golfe": "Abaya et occasions", "p:twin": "Style Twin", "p:beaute": "Beauté", "p:news": "Nouveautés", "p:abo": "Formules", "p:contact": "Contact", "p:verif": "Vérifié par une styliste" };
+const st = { code: "", d: null, err: "", busy: false, jours: 30 };
+try { st.code = localStorage.getItem("ms_styliste") || ""; } catch (e) {}
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const dt = t => t ? new Date(t).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" }) : "—";
+const pc = (a, b) => b ? Math.round(a / b * 100) + " %" : "—";
+async function charger(extra) {
+  st.busy = true; st.err = ""; draw();
+  try {
+    const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code: st.code, jours: st.jours, ...(extra || {}) }) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) { if (j.code === "code") { st.code = ""; try { localStorage.removeItem("ms_styliste"); } catch (e) {} } throw new Error(j.erreur || "Le serveur ne répond pas."); }
+    try { localStorage.setItem("ms_styliste", st.code); } catch (e) {}
+    if (!extra) st.d = j; else await charger();
+  } catch (e) { st.err = e.message; }
+  st.busy = false; draw();
+}
+// Téléphones actifs par jour (barres) : jours sans activité comptés à 0.
+function graphe(rows, jours) {
+  const m = Object.fromEntries(rows.map(r => [r.d, r.n])), ds = [];
+  for (let i = jours - 1; i >= 0; i--) ds.push(new Date(Date.now() - i * 864e5).toISOString().slice(0, 10));
+  const max = Math.max(1, ...ds.map(d => m[d] || 0)), W = 760, H = 220, x0 = 30, y0 = 20, bw = (W - x0 - 10) / ds.length;
+  const y = v => H - 30 - (v / max) * (H - 30 - y0);
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Téléphones actifs par jour" style="width:100%;height:auto">
+  <line x1="${x0}" x2="${W - 10}" y1="${H - 30}" y2="${H - 30}" stroke="#E6E6E6"/>
+  <text x="${x0 - 6}" y="${y(max) + 4}" text-anchor="end" font-size="11" fill="#6E6E6E">${max}</text>
+  ${ds.map((d, i) => { const v = m[d] || 0; return `<rect x="${x0 + i * bw + 1}" y="${y(v)}" width="${Math.max(1, bw - 2)}" height="${H - 30 - y(v)}" rx="2" fill="#8C6D35"><title>${d} : ${v}</title></rect>`; }).join("")}
+  <text x="${x0}" y="${H - 10}" font-size="11" fill="#6E6E6E">${dt(ds[0])}</text><text x="${W - 10}" y="${H - 10}" text-anchor="end" font-size="11" fill="#6E6E6E">Aujourd'hui</text></svg>`;
+}
+function csv() {
+  const rows = [["Email", "Prénom", "Pays", "Langue", "Inscrite le", "Vue le", "Photos sauvegardées"]].concat(st.d.users.map(u => [u.email, u.nom || "", PAYS[u.pays] || u.pays || "", LANG[u.lang] || u.lang || "", dt(u.cree), dt(u.vu), u.photos]));
+  const t = "﻿" + rows.map(r => r.map(v => '"' + String(v).replace(/"/g, '""') + '"').join(";")).join("\n");
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([t], { type: "text/csv" })); a.download = "my-style-clientes.csv"; a.click();
+}
+function draw() {
+  const el = document.getElementById("app"), d = st.d;
+  let h = `<span class="logo"><i>My</i>STYLE</span><h1>Mes clientes</h1><p class="sub">Les comptes créés dans l'app et l'usage de My Style.</p>`;
+  if (st.err) h += `<div class="err" role="alert">${esc(st.err)}</div>`;
+  if (!st.code || (!d && !st.busy)) {
+    h += `<div class="card"><label for="code"><b>Code de la styliste</b></label><input id="code" type="password" autocomplete="current-password"><button class="btn" id="go">Ouvrir</button></div>`;
+  } else if (!d) h += `<p class="vide">Chargement…</p>`;
+  else {
+    const auj = new Date().toISOString().slice(0, 10), actAuj = (d.actifs.find(r => r.d === auj) || {}).n || 0;
+    const actTot = d.actifs.reduce((s, r) => s + r.n, 0), nouv = d.nouveaux.reduce((s, r) => s + r.n, 0);
+    h += `<div class="tabs">${[7, 30, 90].map(j => `<button data-j="${j}" aria-pressed="${st.jours === j}">${j} jours</button>`).join("")}</div>
+    <div class="kpis">
+      <div class="kpi"><b>${d.users.length}</b><span>clientes avec un compte</span></div>
+      <div class="kpi"><b>${actAuj}</b><span>téléphones actifs aujourd'hui</span></div>
+      <div class="kpi"><b>${nouv}</b><span>nouveaux téléphones (${d.jours} j)</span></div>
+      <div class="kpi"><b>${pc(d.j1.rev, d.j1.base)}</b><span>reviennent le lendemain (${d.j1.base} tél.)</span></div>
+      <div class="kpi"><b>${pc(d.j7.rev, d.j7.base)}</b><span>reviennent 7 jours après (${d.j7.base} tél.)</span></div>
+    </div>
+    <h2>Téléphones actifs par jour</h2><div class="card">${actTot ? graphe(d.actifs, d.jours) : `<p class="vide">Pas encore de données.</p>`}</div>
+    <h2>Où vont les clientes</h2><div class="card">${d.ecrans.length ? `<table><thead><tr><th>Écran</th><th>Ouvertures</th></tr></thead><tbody>${d.ecrans.map(r => `<tr><td class="x">${esc(ECR[r.e] || r.e)}</td><td>${r.n}</td></tr>`).join("")}</tbody></table>` : `<p class="vide">Pas encore de données.</p>`}</div>
+    <h2>Clientes avec un compte</h2><div class="card">${d.users.length ? `<button class="btn light" id="csv" style="margin-bottom:10px">Télécharger en CSV</button>
+      <table><thead><tr><th>Email</th><th>Prénom</th><th>Pays</th><th>Langue</th><th>Inscrite</th><th>Vue</th><th>Photos</th><th></th></tr></thead><tbody>
+      ${d.users.map(u => `<tr><td>${esc(u.email)}</td><td>${esc(u.nom || "")}</td><td>${esc(PAYS[u.pays] || u.pays || "")}</td><td>${esc(LANG[u.lang] || u.lang || "")}</td><td>${dt(u.cree)}</td><td>${dt(u.vu)}</td><td>${u.photos}</td><td><button class="del" data-del="${esc(u.email)}">Supprimer</button></td></tr>`).join("")}</tbody></table>` : `<p class="vide">Aucun compte pour l'instant.</p>`}</div>
+    <button class="btn light" id="sortir" style="margin-top:20px">Fermer la session</button>`;
+  }
+  el.innerHTML = h;
+}
+document.addEventListener("click", e => {
+  const t = e.target;
+  if (t.id === "go") { st.code = (document.getElementById("code").value || "").trim(); if (st.code) charger(); }
+  if (t.dataset.j) { st.jours = +t.dataset.j; charger(); }
+  if (t.id === "csv") csv();
+  if (t.dataset.del && confirm("Supprimer le compte de " + t.dataset.del + " et tout ce qui est sauvegardé ? Ses données restent sur son téléphone.")) charger({ action: "delete", email: t.dataset.del });
+  if (t.id === "sortir") { st.code = ""; st.d = null; try { localStorage.removeItem("ms_styliste"); } catch (x) {} draw(); }
+});
+document.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.id === "code") document.getElementById("go").click(); });
+draw(); if (st.code) charger();
+</script>
+</body>
+</html>

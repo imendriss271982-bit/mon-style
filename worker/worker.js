@@ -1,6 +1,7 @@
 // My Style — Worker corrigé : répond toujours avec les en-têtes CORS,
 // même en cas de plantage, pour que l'app affiche la vraie erreur.
 import { expandRef } from "./methode.js";
+import { compte, evenements, adminClientes } from "./compte.js";
 const ALLOWED = ["https://imendriss271982-bit.github.io"];
 // Site vitrine (mystyle.divadivina.app) : seulement la liste d'attente (/liste/…), jamais l'IA.
 const SITE = ["https://mystyle.divadivina.app"];
@@ -9,7 +10,7 @@ let GOOD_IMG = "";
 // Limite de demandes par adresse IP (par instance du Worker, au mieux) : l'en-tête Origin peut être imité
 // hors navigateur, cette limite évite qu'un robot épuise le crédit Gemini / ElevenLabs.
 const HITS = new Map();
-const LIMITS = { "/": 60, "/device": 20, "/code": 20, "/voice/session": 30, "/makeup": 6, "/tts": 60, "/verif/new": 4, "/verif/get": 60, "/verif/del": 30, "/verif/admin": 40, "/liste/add": 5, "/liste/admin": 40, "/contact/new": 5, "/majlis/msgs": 500, "/majlis/amis": 240, "/majlis/nonlus": 120, "/majlis/send": 150, "/majlis/aura": 60, "/majlis/moi": 20, "/majlis/join": 20, "/majlis/code": 40, "/majlis/quitter": 20, "/majlis/wipe": 10 }; // demandes par 10 minutes
+const LIMITS = { "/": 60, "/device": 20, "/auth/start": 10, "/auth/verify": 20, "/sync/meta": 120, "/sync/get": 200, "/sync/put": 300, "/ev": 120, "/admin/clientes": 40, "/compte/del": 10, "/auth/out": 20, "/code": 20, "/voice/session": 30, "/makeup": 6, "/tts": 60, "/verif/new": 4, "/verif/get": 60, "/verif/del": 30, "/verif/admin": 40, "/liste/add": 5, "/liste/admin": 40, "/contact/new": 5, "/majlis/msgs": 500, "/majlis/amis": 240, "/majlis/nonlus": 120, "/majlis/send": 150, "/majlis/aura": 60, "/majlis/moi": 20, "/majlis/join": 20, "/majlis/code": 40, "/majlis/quitter": 20, "/majlis/wipe": 10 }; // demandes par 10 minutes
 function tooMany(ip, path) {
   const now = Date.now(), win = 600000, key = path + "|" + ip, max = LIMITS[path] || 30;
   const list = (HITS.get(key) || []).filter(t => now - t < win);
@@ -32,7 +33,10 @@ const QUOTAS = {
   TTS_DEV: 200, TTS_ALL: 6000,               // phrases lues par la voix (seulement si pas déjà en cache)
   VOICE_DEV: 30, VOICE_ALL: 800,             // ouvertures d'appel / de chat avec l'agent Aura
   DEV_IP: 20, DEV_ALL: 3000,                 // nouveaux jetons d'appareil
-  CODE_IP: 20                                // essais de code testeuse
+  CODE_IP: 20,                               // essais de code testeuse
+  AUTH_DEV: 6, AUTH_IP: 15, AUTH_MAIL: 5, AUTH_ALL: 1000, // codes de connexion envoyés par email (v181)
+  SYNC_USER: 600,                            // sauvegardes dans le cloud par compte et par jour
+  EV_DEV: 300                                // envois de mesure d'usage par téléphone et par jour
 };
 const qmax = (env, k) => { const v = parseInt(env && env["Q_" + k], 10); return v > 0 ? v : QUOTAS[k]; };
 const today = () => new Date().toISOString().slice(0, 10);
@@ -460,9 +464,20 @@ export default {
         return json({ ok: !!c && codes.includes(c) });
       }
 
+      // Page privée « Mes clientes » (clientes.html, v181) : code de la styliste.
+      if (P === "/admin/clientes") {
+        if (!styHash(env)) return json({ erreur: "L'espace styliste n'est pas encore configuré (variable STYLISTE_HASH).", code: "off" }, 503);
+        if (!(await styOk(env, B.code))) return json({ erreur: "Code incorrect.", code: "code" }, 401);
+        return await adminClientes(B, env, json);
+      }
+
       // Toutes les routes qui coûtent exigent un jeton d'appareil valide.
       const DEV = await devCheck(env, B.dev);
       if (!DEV) return json({ erreur: DEV_MSG, code: "device" }, 401);
+
+      // Comptes clientes, sauvegarde dans le cloud, mesure d'usage (v181) : worker/compte.js.
+      if (P.startsWith("/auth/") || P.startsWith("/sync/") || P === "/compte/del") return await compte(P, B, env, json, { DEV, IP, quota, QUOTA_MSG });
+      if (P === "/ev") return await evenements(B, env, json, { DEV, quota });
 
       // Appel / chat avec l'agent Aura (v180) : lien signé à usage unique, délivré seulement aux téléphones de l'app.
       // Une fois l'authentification activée sur l'agent dans ElevenLabs, son identifiant seul ne suffit plus pour l'appeler.

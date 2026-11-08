@@ -60,10 +60,12 @@ section[hidden]{display:none}
 
 <h2>2. Où sont gardées tes informations</h2>
 <ul>
-<li><b>Sur ton téléphone</b> : profil, résultats d'analyse, garde-robe, préférences, espace mariée. Ces données restent dans ton navigateur ; My Style n'a pas de copie sur un serveur.</li>
+<li><b>Sur ton téléphone</b> : profil, résultats d'analyse, garde-robe, préférences, espace mariée. Ces données restent dans ton navigateur ; My Style n'en a pas de copie, sauf si tu crées un compte (ci-dessous).</li>
 <li><b>Liste des inscrites</b> : quand tu crées ton profil, nous recevons seulement la date, ton prénom, ton email, ton numéro WhatsApp (si donné), ton pays, ta langue et ta formule. Jamais tes mesures, ton poids ni tes photos.</li>
 <li><b>Demandes à la styliste</b> : gardées au maximum <b>60 jours</b>, puis effacées automatiquement.</li>
 <li><b>Sécurité de l'app</b> : ton téléphone reçoit un identifiant de sécurité au hasard (sans nom, sans email). Le serveur compte chaque jour combien d'analyses, de voix et de make-up il demande, et le nombre de demandes venant d'une même connexion (seulement une empreinte de l'adresse IP, jamais l'adresse elle-même). Ces compteurs sont effacés après la journée ; ils servent à empêcher les abus.</li>
+<li><b>Ton compte</b> (seulement si tu le crées, dans ton Profil) : ton email, ton prénom, ton pays, ta langue, et une copie de ton profil, de tes analyses, de ta garde-robe (avec ses photos), de tes préférences, de ton espace mariée, de ton avatar, de tes demandes à la styliste et de ton accès au Majlis, gardée sur notre serveur (Cloudflare) pour que tu retrouves ton style sur un autre téléphone. Ton poids et tes mesures font partie de ton profil sauvegardé. Le code de connexion envoyé par email n'est jamais gardé en clair et expire après 15 minutes. « Effacer toutes mes données » supprime aussi ton compte et cette copie.</li>
+<li><b>Mesure d'usage</b> : chaque jour, le serveur compte, sans nom ni email, quels écrans de l'app sont ouverts et combien de téléphones l'utilisent (avec l'identifiant de sécurité au hasard du téléphone), pour savoir ce qui est utile et améliorer l'app.</li>
 <li><b>Le Majlis</b> (discussions entre amies) : ton prénom, la liste de tes amies et vos messages (textes et photos) sont gardés sur notre serveur (Cloudflare) pour que ton amie les reçoive. Aucun email ni numéro. Seules les amies qui ont ouvert ton lien d’invitation peuvent t’écrire. Sur les photos envoyées, <b>le visage est caché sur ton téléphone avant l’envoi</b>. Les messages sont effacés au bout de <b>60 jours</b>. Quand une photo est envoyée ou qu’on écrit « Aura », la photo (visage déjà caché) et les derniers messages sont envoyés à l’IA (Google Gemini) pour préparer le conseil écrit d’Aura, visible par vous deux.</li>
 </ul>
 
@@ -85,6 +87,7 @@ section[hidden]{display:none}
 <li><b>Cloudflare</b> : serveur qui relie l'application aux services d'IA et garde les demandes à la styliste.</li>
 <li><b>Brevo</b> : envoie par email tes messages de contact et demandes de séance.</li>
 <li><b>n8n</b> : enregistre la liste des inscrites.</li>
+<li><b>Brevo</b> (aussi) : envoie le code de connexion à ton compte.</li>
 <li><b>GitHub</b> : héberge l'application.</li>
 <li><b>Open-Meteo</b> : météo du jour, à partir de la ville estimée selon le fuseau horaire de ton téléphone (aucune donnée personnelle).</li>
 <li><b>Google Fonts et Unsplash</b> : polices et photos d'illustration.</li>
@@ -144,10 +147,12 @@ section[hidden]{display:none}
 
 <h2>2. Where your information is kept</h2>
 <ul>
-<li><b>On your phone</b>: profile, analysis results, wardrobe, preferences, bridal space. This data stays in your browser; My Style has no copy on a server.</li>
+<li><b>On your phone</b>: profile, analysis results, wardrobe, preferences, bridal space. This data stays in your browser; My Style has no copy of it unless you create an account (below).</li>
 <li><b>Sign-up list</b>: when you create your profile, we receive only the date, your first name, email, WhatsApp number (if given), country, language and plan. Never your measurements, weight or photos.</li>
 <li><b>Requests to the stylist</b>: kept for <b>60 days</b> at most, then deleted automatically.</li>
 <li><b>App security</b>: your phone receives a random security identifier (no name, no email). Each day the server counts how many analyses, voice lines and make-up tries it asks for, and the number of requests from the same connection (only a fingerprint of the IP address, never the address itself). These counters are deleted after the day; they are used to prevent abuse.</li>
+<li><b>Your account</b> (only if you create one, in your Profile): your email, first name, country, language, and a copy of your profile, analyses, wardrobe (with its photos), preferences, bridal space, avatar, stylist requests and Majlis access, kept on our server (Cloudflare) so that you can get your style back on another phone. Your weight and measurements are part of your saved profile. The sign-in code sent by email is never stored in plain text and expires after 15 minutes. “Delete all my data” also deletes your account and this copy.</li>
+<li><b>Usage measurement</b>: each day, without your name or email, the server counts which screens of the app are opened and how many phones use it (with the phone's random security identifier), to know what is useful and improve the app.</li>
 <li><b>The Majlis</b> (chatting with friends): your first name, your list of friends and your messages (texts and photos) are kept on our server (Cloudflare) so your friend receives them. No email or phone number. Only friends who opened your invitation link can message you. On photos you send, <b>the face is hidden on your phone before sending</b>. Messages are deleted after <b>60 days</b>. When a photo is sent or someone writes “Aura”, the photo (face already hidden) and the latest messages are sent to the AI (Google Gemini) to prepare Aura’s written tip, visible to both of you.</li>
 </ul>
 
@@ -169,6 +174,7 @@ section[hidden]{display:none}
 <li><b>Cloudflare</b>: server connecting the app to the AI services and storing stylist requests.</li>
 <li><b>Brevo</b>: sends your contact messages and session requests by email.</li>
 <li><b>n8n</b>: stores the sign-up list.</li>
+<li><b>Brevo</b> (also): sends the sign-in code for your account.</li>
 <li><b>GitHub</b>: hosts the app.</li>
 <li><b>Open-Meteo</b>: today's weather, using the city estimated from your phone's time zone (no personal data).</li>
 <li><b>Google Fonts and Unsplash</b>: fonts and illustration photos.</li>
@@ -228,10 +234,12 @@ section[hidden]{display:none}
 
 <h2>2. أين تُحفظ معلوماتكِ</h2>
 <ul>
-<li><b>على هاتفكِ</b>: الملف الشخصي، نتائج التحليل، الخزانة، التفضيلات، مساحة العروس. تبقى هذه البيانات في متصفحكِ، ولا يملك My Style نسخة منها على أي خادم.</li>
+<li><b>على هاتفكِ</b>: الملف الشخصي، نتائج التحليل، الخزانة، التفضيلات، مساحة العروس. تبقى هذه البيانات في متصفحكِ، ولا يملك My Style نسخة منها على أي خادم. لا يحتفظ My Style بنسخة منها إلا إذا أنشأتِ حسابًا (أدناه).</li>
 <li><b>قائمة المسجّلات</b>: عند إنشاء ملفكِ نستلم فقط التاريخ، اسمكِ الأول، بريدكِ الإلكتروني، رقم الواتساب (إن وُجد)، بلدكِ، لغتكِ وباقتكِ. لا نستلم أبدًا قياساتكِ أو وزنكِ أو صوركِ.</li>
 <li><b>طلبات الستايلست</b>: تُحفظ <b>60 يومًا</b> كحد أقصى، ثم تُحذف تلقائيًا.</li>
 <li><b>أمان التطبيق</b>: يحصل جوالكِ على رقم أمان عشوائي (بدون اسم ولا إيميل). يعدّ الخادم كل يوم كم تحليلًا وصوتًا وتجربة مكياج يطلب، وعدد الطلبات من نفس الاتصال (بصمة فقط من عنوان IP، وليس العنوان نفسه). تُمسح هذه العدّادات بعد انتهاء اليوم، وهدفها منع إساءة الاستخدام.</li>
+<li><b>حسابكِ</b> (فقط إذا أنشأتِه من ملفكِ الشخصي): بريدكِ الإلكتروني، اسمكِ الأول، بلدكِ، لغتكِ، ونسخة من ملفكِ ونتائج تحاليلكِ وخزانتكِ (مع صورها) وتفضيلاتكِ ومساحة العروس والأفاتار وطلباتكِ للستايلست ودخولكِ للمجلس، تُحفظ على خادمنا (Cloudflare) حتى ترجعين ستايلكِ على جوال ثاني. وزنكِ ومقاساتكِ جزء من الملف المحفوظ. كود الدخول المرسل على الإيميل لا يُحفظ أبدًا كما هو وينتهي بعد 15 دقيقة. «مسح كل بياناتي» يحذف أيضًا حسابكِ وهذه النسخة.</li>
+<li><b>قياس الاستخدام</b>: كل يوم، بدون اسم ولا إيميل، يعدّ الخادم أي شاشات في التطبيق تُفتح وكم جوال يستخدمه (برقم الأمان العشوائي للجوال)، عشان نعرف شو المفيد ونطوّر التطبيق.</li>
 <li><b>المجلس</b> (السوالف مع الصديقات): اسمكِ الأول، قائمة صديقاتكِ ورسائلكم (نصوص وصور) تُحفظ على خادمنا (Cloudflare) حتى تستلمها صديقتكِ. بدون بريد إلكتروني أو رقم هاتف. فقط الصديقات اللواتي فتحن رابط دعوتكِ يقدرن يراسلنكِ. في الصور المرسلة <b>يُخفى الوجه على هاتفكِ قبل الإرسال</b>. تُحذف الرسائل بعد <b>60 يومًا</b>.</li>
 </ul>
 
@@ -253,6 +261,7 @@ section[hidden]{display:none}
 <li><b>Cloudflare</b>: خادم يربط التطبيق بخدمات الذكاء الاصطناعي ويحفظ طلبات الستايلست.</li>
 <li><b>Brevo</b>: يرسل رسائل التواصل وطلبات الجلسة بالبريد الإلكتروني.</li>
 <li><b>n8n</b>: يحفظ قائمة المسجّلات.</li>
+<li><b>Brevo</b> (أيضًا): يرسل كود الدخول لحسابكِ.</li>
 <li><b>GitHub</b>: يستضيف التطبيق.</li>
 <li><b>Open-Meteo</b>: طقس اليوم، حسب المدينة المقدّرة من المنطقة الزمنية لهاتفكِ (بدون بيانات شخصية).</li>
 <li><b>Google Fonts وUnsplash</b>: الخطوط وصور التوضيح.</li>
