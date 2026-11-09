@@ -15,7 +15,7 @@ const SHOTS=process.env.SHOTS||'';
 
  const RES={visage:{forme:'ovale'},corps:{forme:'Sablier',kibbe:'Soft Classic'},couleurs:{saison:'Hiver Profond'}};
  await open();
- okk(/^top,analyse,stylist,ronds,golfe,duo(,insp)?$/.test(await ordre()),'Nouvelle cliente : '+await ordre());
+ okk(/^top,stylist,analyse,ronds,golfe,duo(,insp)?$/.test(await ordre()),'Nouvelle cliente : '+await ordre());
  okk(await p.evaluate(()=>!!document.querySelector('.ac-an [data-onb]')&&document.querySelectorAll('.ac-an .hx-an-s li').length===3),'Grande carte = « Découvre ton style » en 3 étapes');
  okk(!(await p.evaluate(()=>!!document.querySelector('#page .hz-q,#page #hq'))),'Plus de recherche sur l’accueil');
  okk(await p.evaluate(()=>getComputedStyle(document.querySelector('header .lgbtn')).display==='none'),'Globe de langue caché sur l’accueil');

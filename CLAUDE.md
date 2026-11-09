@@ -6,6 +6,8 @@ Application de personal styling (PWA statique) avec Aura, styliste IA vocale. La
 
 > v192 (9 novembre 2026) : le monogramme « DD » ajouté en v191 a été retiré à la demande d'Imen (icônes et écran d'ouverture revenus à la v190).
 
+> v204 (9 novembre 2026, Imen : « مكان اللوجو غلط، العربي مش في مكانه ») : finition UX/UI. 1) En-tête : un seul logo, le nom « Diva / DIVINA » plus petit (34/14 px) et centré ; le monogramme DD est caché dans l'en-tête (il passait à droite du nom en arabe et décentrait tout), il reste sur l'écran d'ouverture et les icônes. 2) Chevrons arabes : « › » est un caractère miroir, le navigateur le retourne tout seul en RTL ; les traductions arabes utilisent donc « › », JAMAIS « ‹ » (qui s'affichait à l'envers). 3) Accueil d'une cliente dont l'analyse n'est pas finie : la carte Diva passe AVANT la carte d'analyse (`aura-accueil.js`, test `tests/accueil.js` mis à jour) ; analyse finie : ordre inchangé. 4) Salutation plus petite (`#page .hz-hi .hh`, 24–28 px), prénom dans la même police, cœur en trait doré (♥ + U+FE0E, pas l'emoji rouge).
+
 > v197 (9 novembre 2026, choix d'Imen) : NOUVEAU monogramme « DD » or + diamant (le « graphique 4 » qu'elle a choisi, redessiné en vectoriel : `logo-dd.svg`, version 1024 px `logo-dd-1024.png`). Affiché à gauche du nom dans l'en-tête (`header .brand .ddmark`, 36 px de haut, 28 px sous 340 px) et au-dessus du nom sur l'écran d'ouverture (`#splash .sptop .ddmark`) ; le nom « Diva / DIVINA » reste. Icônes de l'app (`icon-192/512`, `apple-touch-icon`, `favicon`, `?v=5`) = le monogramme sur fond blanc pur (zone de sécurité respectée pour l'icône « maskable »). Charte graphique (couleurs, polices, règles du logo) faite le même jour dans un artefact « Charte graphique Diva Divina ».
 
 ## Structure

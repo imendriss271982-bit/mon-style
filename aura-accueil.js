@@ -173,8 +173,13 @@ if (ACC_ON && typeof P.home === "function") {
     // v187 (Imen, 8 novembre 2026 : « Enlève mon visage de home ») : plus de photo de Diva en haut de l'accueil.
     if (top) top.querySelectorAll(".hz-ava").forEach(x => x.remove());
     const neuf = document.createElement("template");
-    neuf.innerHTML = `${acHero()}
-<span class="ac-stp"></span>
+    // v204 (Imen, 9 novembre 2026) : tant que l'analyse n'est pas finie, Diva (le plus important) passe AVANT la carte d'analyse,
+    // pour être visible sans descendre. Une fois l'analyse finie, « Que porter aujourd'hui ? » reste en premier.
+    const diva1 = acNd() < 3;
+    neuf.innerHTML = diva1 ? `<span class="ac-stp"></span>
+${acHero()}` : `${acHero()}
+<span class="ac-stp"></span>`;
+    neuf.innerHTML += `
 ${acRonds()}
 ${acGolfe()}
 ${acDuo()}`;
