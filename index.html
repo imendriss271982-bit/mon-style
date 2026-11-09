@@ -965,7 +965,7 @@ header .logo .st{font-size:14px;letter-spacing:.38em;margin:0 -.38em 0 0}
 <script src="aura-silhouette.js?v=1"></script>
 <script src="zifafi-methode.js?v=3"></script>
 <script>
-const VERSION="204";
+const VERSION="205";
 // Bonjour de Diva : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -2459,7 +2459,7 @@ function voiceDrive(audio,env){const tk=++DRV;if(!env){window.AURA_DRIVE=false;w
   if(v>.16)last=now;if(window.auraTalking)auraTalking(now-last<window.AURA_HOLD);if(window.auraRate)auraRate(v);if(v>.16)mouthKick(Math.min(1,.2+v*.8));requestAnimationFrame(step)};
  requestAnimationFrame(step)}
 function voiceDriveStop(){DRV++;window.AURA_DRIVE=false;window.AURA_OFF_MS=0}
-let AUDTOK=0;const AUD=new Audio();AUD.preload="auto";const CLIPS={};["aura-1","aura-2","aura-3","aura-nom","aura-enchantee","aura-aventure","aura-go","aura-retour"].forEach(n=>{fetch("sons/"+n+".mp3?v=c1").then(r=>r.ok?r.blob():null).then(b=>{if(b&&!CLIPS[n]){CLIPS[n]=URL.createObjectURL(b);envOf(CLIPS[n])}}).catch(()=>{})});
+let AUDTOK=0;const AUD=new Audio();AUD.preload="auto";const CLIPS={};["aura-1","aura-2","aura-3","aura-nom","aura-enchantee","aura-aventure","aura-go","aura-retour"].forEach(n=>{fetch("sons/"+n+".mp3?v=c2").then(r=>r.ok?r.blob():null).then(b=>{if(b&&!CLIPS[n]){CLIPS[n]=URL.createObjectURL(b);envOf(CLIPS[n])}}).catch(()=>{})});
 function clipLine(name,t){return new Promise(r=>{let done=false,iv=0;const fin=v=>{if(done)return;done=true;clearInterval(iv);if(window.VIDOFF)VIDOFF();talk(false);r(v)};
  if(!S.voice||!name){(S.voice?voiceLine(t):wait(Math.max(2200,t.length*60))).then(()=>fin());return}
  try{affStop();if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}
