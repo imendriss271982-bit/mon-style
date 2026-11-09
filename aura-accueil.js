@@ -68,8 +68,15 @@ addEventListener("click", e => {
 const AC_SOLEIL = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>';
 function acMeteoHaut() {
   let met = "";
+  // v200 (Imen, 9 novembre 2026 : « tu as enlevé la température ») : la météo est chargée sur l'accueil pour TOUTES les clientes,
+  // pas seulement quand l'analyse est finie (avant, seule la ville s'affichait sans les °C).
+  try { if (typeof jrMeteo === "function") jrMeteo(); } catch (e) {}
   try { met = typeof jrMeteoTxt === "function" ? jrMeteoTxt() : ""; } catch (e) {}
-  return met ? `<p class="ac-met">${AC_SOLEIL}<span data-noi18n>${esc(met)}</span></p>` : "";
+  // v200 : le choix de la langue revient sur l'accueil, en pastille à côté de la météo (dans l'en-tête, le globe chevauchait le logo DD).
+  let lc = "FR";
+  try { lc = (typeof LGC !== "undefined" && LGC[S.lang || "fr"]) || lc; } catch (e) {}
+  const lg = `<button type="button" class="ac-lg" data-lgmenu aria-label="Langue" aria-haspopup="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></svg><b class="lgc" data-noi18n>${esc(lc)}</b></button>`;
+  return `<div class="ac-pills">${met ? `<p class="ac-met">${AC_SOLEIL}<span data-noi18n>${esc(met)}</span></p>` : ""}${lg}</div>`;
 }
 
 // 4. Outfit check
@@ -197,6 +204,12 @@ ${acDuo()}`;
 .hz .hz-top{min-height:0;margin-bottom:0;align-items:flex-start}
 .hz .hz-hi{padding-bottom:0}
 .hz .hz-top:before{display:none}
+body.pg-home header .lgbtn{display:none}
+body.pg-home header #voice{margin-inline-start:auto}
+.hz .ac-pills{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0 14px}
+.hz .ac-pills .ac-met{margin:0;min-height:44px;padding:6px 14px}
+.hz .ac-lg{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:6px 14px;border-radius:999px;background:rgba(255,255,255,.75);border:1px solid #E6D6B8;color:var(--accent,#8C6D35);font:inherit;font-weight:700;font-size:15px;cursor:pointer;touch-action:pan-y}
+.hz .ac-lg svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6}
 .hz .ac-met{display:inline-flex;align-items:center;gap:6px;margin:8px 0 14px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.75);border:1px solid #E6D6B8;color:var(--accent,#8C6D35);font-weight:600;font-size:15px}
 .hz .ac-met svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
 .hz .tw-card{margin-top:14px}
@@ -206,8 +219,8 @@ ${acDuo()}`;
 .hz .zf-uni{margin-top:14px}
 .hz .ac-tout{margin-top:22px}
 /* v177 : accueil aéré */
-body.pg-home header .lgbtn{display:none}
-body.pg-home header #voice{margin-inline-start:auto}
+
+
 .hz .hx-an.ac-an{margin:16px 0 0}
 .hz .ac-an .ac-cta{align-self:stretch}
 .hz .ac-an .ac-cta{display:inline-flex;align-items:center;justify-content:center;min-height:48px;margin-top:6px;padding:10px 18px;border:0;border-radius:999px;background:var(--goldg);color:#fff;font:inherit;font-weight:600;font-size:15px;box-shadow:0 4px 12px rgba(140,109,53,.25);cursor:pointer}
