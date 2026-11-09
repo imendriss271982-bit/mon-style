@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" role="img" aria-label="Diva Divina">
+  <defs>
+    <linearGradient id="gold" gradientUnits="userSpaceOnUse" x1="0" y1="20" x2="60" y2="220">
+      <stop offset="0" stop-color="#F7E6AE"/>
+      <stop offset="0.38" stop-color="#E0BC5E"/>
+      <stop offset="0.72" stop-color="#C6993A"/>
+      <stop offset="1" stop-color="#9A7023"/>
+    </linearGradient>
+    <radialGradient id="ice" gradientUnits="userSpaceOnUse" cx="194" cy="113" r="26">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="0.6" stop-color="#EDF0F4"/>
+      <stop offset="1" stop-color="#C5CDD6"/>
+    </radialGradient>
+    <g id="D">
+      <rect x="70" y="36" width="26" height="168"/>
+      <path d="M56 26 H140 V40 H56 Z M56 200 H140 V214 H56 Z"/>
+      <path d="M140 26 A112 94 0 0 1 140 214 V200 A86 80 0 0 0 140 40 Z"/>
+    </g>
+  </defs>
+  <g fill="url(#gold)">
+    <use href="#D"/>
+    <use href="#D" transform="translate(400 0) scale(-1 1)"/>
+  </g>
+  <g fill="none" stroke="#FBF0CC" stroke-width="1.1" opacity="0.75">
+    <path d="M140 31 A106 89 0 0 1 140 209"/>
+    <path d="M260 31 A106 89 0 0 0 260 209"/>
+    <path d="M78 42 V198 M322 42 V198"/>
+  </g>
+  <circle cx="200" cy="120" r="25" fill="url(#gold)"/>
+  <g fill="url(#gold)"><circle cx="182.5" cy="102.5" r="3.2"/><circle cx="217.5" cy="102.5" r="3.2"/><circle cx="182.5" cy="137.5" r="3.2"/><circle cx="217.5" cy="137.5" r="3.2"/></g>
+  <circle cx="200" cy="120" r="21" fill="url(#ice)" stroke="#B3BCC6" stroke-width="0.7"/>
+  <g fill="none" stroke="#A7B1BC" stroke-width="0.6" stroke-linejoin="round">
+    <polygon points="209.2,123.8 203.8,129.2 196.2,129.2 190.8,123.8 190.8,116.2 196.2,110.8 203.8,110.8 209.2,116.2"/>
+    <path d="M209.2 123.8 L219.4 128.0 M203.8 129.2 L208.0 139.4 M196.2 129.2 L192.0 139.4 M190.8 123.8 L180.6 128.0 M190.8 116.2 L180.6 112.0 M196.2 110.8 L192.0 100.6 M203.8 110.8 L208.0 100.6 M209.2 116.2 L219.4 112.0"/>
+    <path d="M209.2 123.8 L214.8 134.8 L203.8 129.2 M203.8 129.2 L200.0 141.0 L196.2 129.2 M196.2 129.2 L185.2 134.8 L190.8 123.8 M190.8 123.8 L179.0 120.0 L190.8 116.2 M190.8 116.2 L185.2 105.2 L196.2 110.8 M196.2 110.8 L200.0 99.0 L203.8 110.8 M203.8 110.8 L214.8 105.2 L209.2 116.2 M209.2 116.2 L221.0 120.0 L209.2 123.8"/>
+  </g>
+  <path d="M190 110 L197 106 L195 115 Z" fill="#FFFFFF" opacity="0.95"/>
+  <path d="M213 105 l1.5 4 l4 1.5 l-4 1.5 l-1.5 4 l-1.5 -4 l-4 -1.5 l4 -1.5 Z" fill="#FFFFFF"/>
+</svg>
