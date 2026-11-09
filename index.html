@@ -980,7 +980,7 @@ header .logo .st{font-size:9.5px!important;font-weight:500;letter-spacing:.62em;
 <script src="aura-silhouette.js?v=1"></script>
 <script src="zifafi-methode.js?v=3"></script>
 <script>
-const VERSION="206";
+const VERSION="207";
 // Bonjour de Diva : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -2430,7 +2430,7 @@ function vidOn(name){if(RM||!VIDS[name])return;const a=document.querySelector("#
  window.VIDOFF=()=>{on=false;a.classList.remove("vplay");try{v.pause()}catch(e){}};v.onended=()=>window.VIDOFF();
  const q=v.play();if(q&&q.then)q.then(draw).catch(()=>window.VIDOFF());else draw()}
 // Diva au repos : vidéo en boucle (respire, cligne, sourit), fond vert retiré, sur toutes ses apparitions.
-const IDLE=document.createElement("video");IDLE.muted=true;IDLE.loop=true;IDLE.playsInline=true;IDLE.setAttribute("playsinline","");IDLE.setAttribute("muted","");IDLE.preload="auto";IDLE.src="videos/aura-idle.mp4?v=c5";
+const IDLE=document.createElement("video");IDLE.muted=true;IDLE.loop=true;IDLE.playsInline=true;IDLE.setAttribute("playsinline","");IDLE.setAttribute("muted","");IDLE.preload="auto";IDLE.src="videos/aura-idle.mp4?v=c7";
 // Diva qui parle avec les mains (boucle) : utilisée pendant l'appel quand elle répond.
 const TALK=document.createElement("video");TALK.muted=true;TALK.loop=true;TALK.playsInline=true;TALK.setAttribute("playsinline","");TALK.setAttribute("muted","");TALK.preload="auto";TALK.src="videos/aura-talk.mp4?v=c5";
 // iPhone : les vidéos doivent être dans la page (invisibles) pour être lues de façon fiable.
