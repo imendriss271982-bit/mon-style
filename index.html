@@ -848,11 +848,18 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 .hz-q{max-width:240px}.hz-q input{text-overflow:ellipsis}
 .zf-u{height:100%}.zf-uni{align-items:stretch}
 .zf-u .zf-u-b{margin-top:auto;width:100%;min-height:50px;padding:12px 8px;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-/* v151 : Diva cadrée à la taille (la main dans la poche ne se voit plus) en attendant la nouvelle image et les nouvelles vidéos */
-#splash .avatar.aura,.avatar.aura.inchat{aspect-ratio:480/419}
-#splash .avatar.aura{height:min(calc(var(--ah)*.9),calc((100vw - 24px)*.873));bottom:calc(var(--ab) + 11svh)}
-.avatar.aura.inchat{height:min(34svh,calc((100vw - 40px)*.873))}
-#splash .avatar.aura .fig,.avatar.aura.inchat .fig{inset:0 0 auto 0;height:151.5%;-webkit-mask-image:linear-gradient(to bottom,#000 54%,transparent 65.5%);mask-image:linear-gradient(to bottom,#000 54%,transparent 65.5%)}
+/* v195 (Imen, 9 nov. 2026 : « coupée, on ne voit pas les mains, pas bien placée ») : cadrage de la nouvelle Diva (blazer noir).
+   On montre tout le buste jusqu'aux mains jointes ; seul le bord coupé de la vidéo (bas + coudes) s'efface en douceur.
+   Repères : image vidéo 900×1600 posée dans .fig (left 5 %, top −20,913 %, h 120,945 %) → Diva occupe .fig de 3 % à 87,3 %. */
+#splash .avatar.aura,.avatar.aura.inchat{aspect-ratio:480/546}
+#splash .avatar.aura{height:min(calc(var(--avail) + 10px),calc(100vw*1.22));bottom:calc(var(--ab) - 10px)}
+#splash .tapaura{bottom:calc(var(--ab) - 10px + min(calc(var(--avail) + 10px),calc(100vw*1.22))*.80)}
+.avatar.aura.inchat{height:min(38svh,calc((100vw - 40px)*1.1375))}
+#splash .avatar.aura .fig,.avatar.aura.inchat .fig{inset:0 0 auto 0;height:116.3%;
+ -webkit-mask-image:linear-gradient(to bottom,#000 84%,transparent 87.6%),linear-gradient(to right,transparent 5.5%,#000 13%,#000 87%,transparent 94.5%);
+ -webkit-mask-composite:source-in;
+ mask-image:linear-gradient(to bottom,#000 84%,transparent 87.6%),linear-gradient(to right,transparent 5.5%,#000 13%,#000 87%,transparent 94.5%);
+ mask-composite:intersect}
 .col-ok{margin:10px 0 0;color:#2F6B2A;font-weight:600;font-size:.92rem}.col-feuille b{color:var(--accent)}
 </style>
 <link rel="stylesheet" href="zifafi.css?v=5">
@@ -2345,7 +2352,7 @@ function voiceLine(t){return new Promise(r=>{const ss=window.speechSynthesis;let
 // Voix enregistrée de Diva (ElevenLabs) ; si le fichier manque, voix du téléphone.
 // Vidéos de Diva (fond vert retiré en direct) : remplacent l'image pendant la phrase correspondante.
 // v182 : Diva réaliste (vidéo d'Imen, fond vert refait). Seul le geste d'accueil existe en réaliste ; pour les autres phrases, la boucle de repos réaliste reste affichée. Les anciennes vidéos 3D restent dans videos/ (non utilisées).
-const VIDS={"aura-1":"videos/aura-1.mp4?v=c5"};
+const VIDS={"aura-1":"videos/aura-1.mp4?v=c6"};
 Object.keys(VIDS).filter(n=>n!=="aura-1").forEach(n=>{fetch(VIDS[n]).then(r=>r.ok?r.blob():null).then(b=>{if(b)VIDS[n]=URL.createObjectURL(b)}).catch(()=>{})});
 const AVID=document.createElement("video");AVID.muted=true;AVID.playsInline=true;AVID.setAttribute("playsinline","");AVID.setAttribute("muted","");AVID.preload="auto";{AVID.src=VIDS["aura-1"];AVID.dataset.n="aura-1"}
 // Détourage du fond vert sur la carte graphique (WebGL) ; v118 : bord resserré d’environ 2 px (plus de liseré sombre sur fond blanc) : fluide même pendant l'appel. Deux vidéos peuvent se fondre l'une dans l'autre.
