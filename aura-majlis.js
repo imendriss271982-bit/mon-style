@@ -1,4 +1,4 @@
-/* My Style — « Le Majlis » (v159, demandé par Imen) : discuter avec ses amies qui ont aussi My Style.
+/* Diva Divina — « Le Majlis » (v159, demandé par Imen) : discuter avec ses amies qui ont aussi Diva Divina.
    - Entrée : bouton rond dans l'en-tête de l'accueil (bulle + pastille des messages non lus) → page `P.majlis`.
    - Une amie s'ajoute SEULEMENT par lien d'invitation (…/mon-style/?majlis=CODE) envoyé sur WhatsApp,
      partagé ou copié. À l'ouverture du lien, la carte « X t'invite dans son Majlis » apparaît sur l'accueil.
@@ -158,7 +158,7 @@ async function mjCollage(t) {
     g.fillStyle = "#fff"; g.fillRect(x0, y0, cw, ch);
     try { const im = await mjImage(it[i].img), s = Math.min(cw / im.width, ch / im.height) * 0.94; g.drawImage(im, x0 + (cw - im.width * s) / 2, y0 + (ch - im.height * s) / 2, im.width * s, im.height * s); } catch (e) {}
   }
-  g.fillStyle = "rgba(140,109,53,.85)"; g.font = "600 26px Georgia,serif"; g.textAlign = "center"; g.fillText("My Style", W / 2, H - 26);
+  g.fillStyle = "rgba(140,109,53,.85)"; g.font = "600 26px Georgia,serif"; g.textAlign = "center"; g.fillText("Diva Divina", W / 2, H - 26);
   return mjJpeg(c);
 }
 
@@ -186,19 +186,19 @@ async function mjPartagerA(ami, nom) {
   catch (e) { MJ.busy = 0; toast(e.message); mjRedraw(); }
 }
 
-// ——— Aura dans le Majlis (v160, choix d'Imen) ———
-// Aura donne UN point de styliste, PAR ÉCRIT (pas de voix : moins cher), seulement :
+// ——— Diva dans le Majlis (v160, choix d'Imen) ———
+// Diva donne UN point de styliste, PAR ÉCRIT (pas de voix : moins cher), seulement :
 //  1) quand une amie envoie une photo / une tenue (une seule fois par photo),
-//  2) quand quelqu'une écrit son nom (« Aura », « أورا »…) dans un message.
-// v161 (Imen : « les clientes ne sauront pas qu'il faut écrire Aura ») : Aura intervient aussi TOUTE SEULE
+//  2) quand quelqu'une écrit son nom (« Diva », « ديفا »…) dans un message.
+// v161 (Imen : « les clientes ne sauront pas qu'il faut écrire Diva ») : Diva intervient aussi TOUTE SEULE
 //  3) quand elles parlent de style sans photo (`mjAuraBesoin`) : l'IA peut répondre vide si rien d'utile à dire,
 //  4) à la fin d'une vraie discussion (6 messages des deux amies) : un petit mot chaleureux (`mjAuraFin`),
 //     quand on quitte la conversation ou après 3 minutes sans message.
 // Le téléphone qui déclenche prépare le conseil avec l'IA (route « / ») puis le range sur le serveur (/majlis/aura),
 // pour que les deux amies le voient. Au plus MJ_AURA_MAX conseils par jour et par téléphone.
-const MJ_APPEL = /(^|[^\p{L}])(aura|أورا|اورا|آورا|ئورا)(?![\p{L}])/iu;
+const MJ_APPEL = /(^|[^\p{L}])(diva|ديفا|ديڤا|aura|أورا|اورا|آورا|ئورا)(?![\p{L}])/iu;
 const MJ_AURA_MAX = 25;
-// v164 (choix d'Imen) : Aura ne vient dans le Majlis QUE quand on l'appelle par son nom (écrit, jamais de voix).
+// v164 (choix d'Imen) : Diva ne vient dans le Majlis QUE quand on l'appelle par son nom (écrit, jamais de voix).
 // auto = true remet les interventions d'elle-même (photo, question de style, mot de fin).
 const MJ_AURA_OPT = { auto: false };
 const MJ_STYLE = /(لبس|ألبس|البس|فستان|عباي|شنط|حذا|جزم|كعب|لون|ألوان|الوان|يليق|يناسب|ينفع|ستايل|تنسيق|اكسسوار|إكسسوار|outfit|wear|dress|shoe|heel|bag|colou?r|style|look|porter|mettre|robe|tenue|chaussure|talon|sac|couleur|abaya)/iu;
@@ -218,7 +218,7 @@ function mjAuraEcrit(ami, on) {
   cv.aura = on ? 1 : 0;
   if (S.page === "mj_chat" && S.mjAmi === ami) mjListeMaj();
 }
-// Prépare le conseil. photo = { img (data URL), look, moi } ou null ; question = message qui appelle Aura.
+// Prépare le conseil. photo = { img (data URL), look, moi } ou null ; question = message qui appelle Diva.
 async function mjAuraConseil(ami, photo, question, kind) {
   const sm = await getSample();
   if (!sm || !sm.json) return "";
@@ -226,7 +226,7 @@ async function mjAuraConseil(ami, photo, question, kind) {
   const moi = S.nom || "elle";
   const cv = MJC[ami], fil = cv ? cv.msgs.filter(m => !m.aura && m.txt).slice(-6).map(m => (m.moi ? moi : amie) + " : " + m.txt).join(" | ") : "";
   const aMoi = photo && photo.moi;
-  const pr = REFP("HARMONIE", "COLORIMÉTRIE 12", "MORPHOLOGIE DU CORPS") + " Tu es Aura, la styliste de My Style. Tu interviens dans le Majlis : une discussion privée entre deux amies, " + moi + " et " + amie + ". " +
+  const pr = REFP("HARMONIE", "COLORIMÉTRIE 12", "MORPHOLOGIE DU CORPS") + " Tu es Diva, la styliste de Diva Divina. Tu interviens dans le Majlis : une discussion privée entre deux amies, " + moi + " et " + amie + ". " +
     (photo ? "Photo envoyée par " + (aMoi ? moi : amie) + (photo.look ? " (« " + photo.look + " »)" : "") + ". " +
       (aMoi ? "Son profil : " + ((typeof PROFIL === "function" && PROFIL()) || "inconnu") + ". " + (typeof pfRules === "function" ? pfRules() : "") + " "
             : "Tu ne connais pas le profil de " + amie + " : donne un conseil valable pour elle sans parler de sa morphologie ni de ses couleurs personnelles. ") +
@@ -253,23 +253,23 @@ async function mjAuraRanger(ami, txt, ref, kind) {
 async function mjAura(ami, photo, ref, question, kind) {
   const appel = question && !kind, cv0 = MJC[ami];
   if (cv0 && cv0.aura) return;
-  // Fin / conseil : on demande d'abord au serveur si Aura peut parler (pas d'IA payée pour rien).
+  // Fin / conseil : on demande d'abord au serveur si Diva peut parler (pas d'IA payée pour rien).
   if (kind === "fin" || kind === "conseil") { try { const ok = await mjApi("aura", { ...mjAuth(), ami, kind, check: 1 }); if (!ok.ok) return; } catch (e) { return; } }
-  if (!mjAuraQuota()) { if (appel) toast("Aura a déjà beaucoup conseillé aujourd’hui. À demain 💛"); return; }
+  if (!mjAuraQuota()) { if (appel) toast("Diva a déjà beaucoup conseillé aujourd’hui. À demain 💛"); return; }
   mjAuraEcrit(ami, 1);
   try { const t = await mjAuraConseil(ami, photo, question, kind); if (t) await mjAuraRanger(ami, t, ref, kind); }
   catch (e) { if (appel) toast(errMsg(e)); }
   mjAuraEcrit(ami, 0);
 }
 const mjDernierePhoto = ami => { const cv = MJC[ami], ph = cv ? [...cv.msgs.slice(-12)].reverse().find(m => m.img) : null; return ph ? { img: ph.img, look: ph.look || "", moi: !!ph.moi } : null; };
-// 3) Elles parlent de style : Aura glisse un conseil si c'est utile (pas si elle vient de parler).
+// 3) Elles parlent de style : Diva glisse un conseil si c'est utile (pas si elle vient de parler).
 function mjAuraSiBesoin(ami, t) {
   if (!MJ_AURA_OPT.auto) return;
   const cv = MJC[ami];
   if (!mjAuraBesoin(t) || (cv && cv.msgs.slice(-4).some(m => m.aura))) return;
   mjAura(ami, mjDernierePhoto(ami), 0, t, "conseil");
 }
-// 4) Fin de la discussion : petit mot d'Aura (au moins 6 messages des deux amies depuis son dernier mot).
+// 4) Fin de la discussion : petit mot de Diva (au moins 6 messages des deux amies depuis son dernier mot).
 function mjAuraFinPossible(ami) {
   const cv = MJC[ami]; if (!cv || !cv.ok) return false;
   let k = cv.msgs.length; while (k > 0 && !cv.msgs[k - 1].aura) k--;
@@ -284,11 +284,11 @@ function mjFinMinuteur(ami) {
   const h = cv.msgs.filter(m => !m.aura), der = h[h.length - 1];
   if (der && der.moi) cv.finT = setTimeout(() => { if (S.page === "mj_chat" && S.mjAmi === ami) mjAuraFin(ami); }, MJ_FIN_DELAI);
 }
-// 1) Photo ou tenue envoyée : Aura la commente une fois.
+// 1) Photo ou tenue envoyée : Diva la commente une fois.
 function mjAuraPhoto(ami, id, m) { if (MJ_AURA_OPT.auto && id && m && m.img) mjAura(ami, { img: m.img, look: m.look || "", moi: true }, id, ""); }
 // 2) On écrit son nom : elle répond, en regardant la dernière photo de la conversation (si elle est récente).
 function mjAuraAppel(ami, question) { mjAura(ami, mjDernierePhoto(ami), 0, question); }
-// 5) v165 (Imen) : j'envoie une tenue et mon amie répond « ما عجبني » → Aura répond (une seule fois par tenue).
+// 5) v165 (Imen) : j'envoie une tenue et mon amie répond « ما عجبني » → Diva répond (une seule fois par tenue).
 //    C'est MON téléphone (celui de la tenue) qui prépare la réponse : il a mon profil et ma garde-robe.
 //    Marche même si MJ_AURA_OPT.auto est coupé (choix d'Imen).
 const MJ_PASAIME = /(ما\s*(عجب|حبيت|حبيته|حبيتها|أحب|احب|يعجب|يناسب|يليق|لاق)|ماعجب|ماحبيت|مايليق|مو\s*(حلو|حلوة|زين|عاجب)|مش\s*(حلو|حلوة|عاجب)|موب\s*(حلو|زين)|مب\s*(حلو|زين)|بشع|مو\s*لايق|مش\s*لايق|غيّري|غيري|j[’']?aime pas|je n[’']?aime pas|pas terrible|pas top|bof|moche|ça (ne )?va pas|i don[’']?t like|not (nice|great|good)|don[’']?t like|not a fan|👎)/iu;
@@ -318,7 +318,7 @@ function mjHeure(t) {
 const MJ_SVG = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h8A2.5 2.5 0 0 1 17 5.5v5a2.5 2.5 0 0 1-2.5 2.5H9l-3.5 3v-3H6.5A2.5 2.5 0 0 1 4 10.5z"/><path d="M19.5 8.5h.0A2 2 0 0 1 21 10.5v4.5a2 2 0 0 1-2 2h-.5v2.5L15.5 17H12a2 2 0 0 1-2-1.7"/></svg>`;
 function mjInviter() {
   if (!MJ.code) return "";
-  const msg = tr("Rejoins mon Majlis sur My Style 💛 On se montre nos tenues et on se donne nos avis :") + " " + mjLien();
+  const msg = tr("Rejoins mon Majlis sur Diva Divina 💛 On se montre nos tenues et on se donne nos avis :") + " " + mjLien();
   return `<section class="mj-inv"><h2>Invite une amie</h2><p class="sub">Elle ouvre ton lien, et vous êtes amies dans le Majlis.</p>
    <div class="mj-inv-b"><a class="btn mj-wa" href="https://wa.me/?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">WhatsApp</a>${navigator.share ? `<button class="btn" data-mjshare>Partager</button>` : ""}<button class="btn" data-mjcopy>Copier le lien</button></div>
    <p class="mj-lien" dir="ltr" data-noi18n>${esc(mjLien())}</p></section>`;
@@ -332,7 +332,7 @@ function mjListe() {
   if (MJ.amis === null) return `<p class="hint mj-load">${MJ.err ? mjErrTxt(MJ.err) + ` <button class="link" data-mjre>Réessayer</button>` : "Un instant…"}</p>`;
   if (!MJ.amis.length) return `<div class="mj-vide"><span aria-hidden="true">🫖</span><b>Ton Majlis est encore vide</b><small>Invite ta première amie avec ton lien.</small></div>`;
   return `<ul class="mj-amis">${MJ.amis.map(a => {
-    const d = a.der, apercu = d && d.de === "aura" ? `<span>✨ Aura : <bdi data-noi18n>${esc(d.txt)}</bdi></span>` : !d ? `<span>Dis-lui bonjour 👋</span>` : d.img ? `<span>${d.de === MJ.uid ? "Toi : " : ""}📷 ${d.look ? `<span data-noi18n>${esc(d.look)}</span>` : "Photo"}</span>` : `<span>${d.de === MJ.uid ? "Toi : " : ""}<bdi data-noi18n>${esc(d.txt)}</bdi></span>`;
+    const d = a.der, apercu = d && d.de === "aura" ? `<span>✨ Diva : <bdi data-noi18n>${esc(d.txt)}</bdi></span>` : !d ? `<span>Dis-lui bonjour 👋</span>` : d.img ? `<span>${d.de === MJ.uid ? "Toi : " : ""}📷 ${d.look ? `<span data-noi18n>${esc(d.look)}</span>` : "Photo"}</span>` : `<span>${d.de === MJ.uid ? "Toi : " : ""}<bdi data-noi18n>${esc(d.txt)}</bdi></span>`;
     return `<li><button class="mj-ami${a.nl ? " nl" : ""}" data-mjami="${esc(a.id)}" data-mjnom="${esc(a.nom)}"><span class="mj-av" aria-hidden="true">${mjInit(a.nom)}</span><span class="mj-t"><b data-noi18n>${esc(a.nom)}</b>${apercu}</span><span class="mj-m">${d ? `<small>${esc(mjHeure(d.t))}</small>` : ""}${a.nl ? `<i class="mj-nl">${a.nl}</i>` : ""}</span></button></li>`;
   }).join("")}</ul>`;
 }
@@ -345,7 +345,7 @@ P.majlis = () => {
   if (!MJ.uid) {
     if (S.nom && !MJ.busy && !MJ.err && !MJ.inv) { MJ.busy = 1; mjCompte(S.nom).then(() => { MJ.busy = 0; return mjAmis(); }, e => { MJ.busy = 0; MJ.err = e.message; }).then(() => { if (S.page === "majlis") mjRedraw(); }); }
     const demande = !S.nom || MJ.inv;
-    return { dock: true, html: `${tete}<p class="sub">Discute avec tes amies qui ont My Style : montre ta tenue, demande leur avis.</p>${mjInvCarte()}
+    return { dock: true, html: `${tete}<p class="sub">Discute avec tes amies qui ont Diva Divina : montre ta tenue, demande leur avis.</p>${mjInvCarte()}
       ${demande && !S.nom ? `<label class="vf-lab" for="mj_nom">Ton prénom (tes amies le verront)</label><input class="field" id="mj_nom" autocomplete="given-name" maxlength="30" value="${esc(S.nom || "")}">` : ""}
       ${MJ.err ? `<div class="note">${mjErrTxt(MJ.err)} <button class="link" data-mjre>Réessayer</button></div>` : MJ.busy ? `<p class="hint">Un instant…</p>` : ""}
       <ul class="mj-why"><li>🔗 Seules les amies qui ont ton lien peuvent t’écrire.</li><li>🙈 Les visages sont cachés sur les photos envoyées.</li><li>🗓️ Les messages s’effacent au bout de 60 jours.</li></ul>`,
@@ -353,7 +353,7 @@ P.majlis = () => {
   }
   const part = S.mjPart ? `<div class="mj-part"><b>${S.mjPart.kind !== "outfit" ? "Envoie ta tenue à une amie" : "Envoie ton outfit check à une amie"}</b><small>Choisis à qui l’envoyer. Le visage est caché automatiquement.</small><button class="link" data-mjpartno>Annuler</button></div>` : "";
   return { dock: true, html: `${tete}${part}${mjInvCarte()}${MJ.busy && S.mjPart ? `<p class="hint">J’envoie…</p>` : ""}${mjListe()}${S.mjPart ? "" : mjInviter()}
-    <ul class="mj-why"><li>✨ Écris « Aura » dans ton message : ta styliste vous donne son avis par écrit.</li><li>🙈 Les visages sont cachés sur les photos envoyées.</li><li>🗓️ Les messages s’effacent au bout de 60 jours.</li></ul>`, say: "" };
+    <ul class="mj-why"><li>✨ Écris « Diva » dans ton message : ta styliste vous donne son avis par écrit.</li><li>🙈 Les visages sont cachés sur les photos envoyées.</li><li>🗓️ Les messages s’effacent au bout de 60 jours.</li></ul>`, say: "" };
 };
 
 function mjBulles(ami) {
@@ -361,7 +361,7 @@ function mjBulles(ami) {
   if (!cv || !cv.ok) return `<p class="hint mj-load">${cv && cv.err ? esc(cv.err) : "Un instant…"}</p>`;
   if (!cv.msgs.length) return `<div class="mj-vide"><span aria-hidden="true">💬</span><b>Commencez à discuter</b><small>Envoie un message, une photo ou une de tes tenues.</small></div>`;
   const dernierMoi = [...cv.msgs].reverse().find(m => m.moi);
-  return cv.msgs.map(m => m.aura ? `<div class="mj-b mj-aura"><b class="mj-aura-n"><span aria-hidden="true">✨</span> Aura</b><p dir="auto" data-noi18n>${esc(m.txt)}</p><small>${esc(mjHeure(m.t))}</small></div>` : `<div class="mj-b ${m.moi ? "moi" : "elle"}">${m.img ? `<img src="${m.img}" alt="${esc(m.look || "Photo")}" loading="lazy" data-mjzoom>` : ""}${m.look ? `<em dir="auto" data-noi18n>${esc(m.look)}</em>` : ""}${m.txt ? `<p dir="auto" data-noi18n>${esc(m.txt)}</p>` : ""}<small>${esc(mjHeure(m.t))}${m.moi && dernierMoi && m.id === dernierMoi.id && cv.vu >= m.id ? ` · <span>Vu</span>` : ""}</small></div>`).join("") + (cv.aura ? `<div class="mj-b mj-aura mj-ecrit"><b class="mj-aura-n"><span aria-hidden="true">✨</span> Aura</b><p><span>Aura écrit</span><i aria-hidden="true"> …</i></p></div>` : "");
+  return cv.msgs.map(m => m.aura ? `<div class="mj-b mj-aura"><b class="mj-aura-n"><span aria-hidden="true">✨</span> Diva</b><p dir="auto" data-noi18n>${esc(m.txt)}</p><small>${esc(mjHeure(m.t))}</small></div>` : `<div class="mj-b ${m.moi ? "moi" : "elle"}">${m.img ? `<img src="${m.img}" alt="${esc(m.look || "Photo")}" loading="lazy" data-mjzoom>` : ""}${m.look ? `<em dir="auto" data-noi18n>${esc(m.look)}</em>` : ""}${m.txt ? `<p dir="auto" data-noi18n>${esc(m.txt)}</p>` : ""}<small>${esc(mjHeure(m.t))}${m.moi && dernierMoi && m.id === dernierMoi.id && cv.vu >= m.id ? ` · <span>Vu</span>` : ""}</small></div>`).join("") + (cv.aura ? `<div class="mj-b mj-aura mj-ecrit"><b class="mj-aura-n"><span aria-hidden="true">✨</span> Diva</b><p><span>Diva écrit</span><i aria-hidden="true"> …</i></p></div>` : "");
 }
 async function mjCharger(ami, tout) {
   const cv = MJC[ami] || (MJC[ami] = { msgs: [], vu: 0, last: 0, ok: 0 });
@@ -460,7 +460,7 @@ if (typeof grSavedHTML === "function") {
   const grSavedAvantMj = grSavedHTML;
   grSavedHTML = function () { return grSavedAvantMj().replace(/<button type="button" data-gunsave="([^"]+)">/g, `<button type="button" data-mjlook="$1">💬 Au Majlis</button>$&`); };
 }
-// v165 : tenues créées par Aura (garde-robe) et tenue du jour → « Envoyer à une amie »
+// v165 : tenues créées par Diva (garde-robe) et tenue du jour → « Envoyer à une amie »
 if (typeof grActs === "function") {
   const grActsAvantMj = grActs;
   grActs = function (l, occ, i) { return grActsAvantMj(l, occ, i).replace('<div class="gr-acts" data-pfrate>', `<div class="gr-acts" data-pfrate><button type="button" data-mjgl="${occ}:${i}">💬 À une amie</button>`); };
@@ -487,7 +487,7 @@ addEventListener("click", e => {
   if (d.mjami !== undefined) { e.preventDefault(); if (S.mjPart) return mjPartagerA(d.mjami, d.mjnom || ""); S.mjAmi = d.mjami; S.mjAmiNom = d.mjnom || ""; S.mjDraft = ""; go("mj_chat"); return; }
   if (t.hasAttribute("data-mjjoin")) return mjRejoindre();
   if (t.hasAttribute("data-mjinvno")) { mjInvFin(); mjRedraw(); return; }
-  if (t.hasAttribute("data-mjshare")) { navigator.share && navigator.share({ title: "My Style", text: tr("Rejoins mon Majlis sur My Style 💛 On se montre nos tenues et on se donne nos avis :"), url: mjLien() }).catch(() => {}); return; }
+  if (t.hasAttribute("data-mjshare")) { navigator.share && navigator.share({ title: "Diva Divina", text: tr("Rejoins mon Majlis sur Diva Divina 💛 On se montre nos tenues et on se donne nos avis :"), url: mjLien() }).catch(() => {}); return; }
   if (t.hasAttribute("data-mjcopy")) { const l = mjLien(); (navigator.clipboard ? navigator.clipboard.writeText(l) : Promise.reject()).then(() => toast("Lien copié"), () => { prompt("", l); }); return; }
   if (t.hasAttribute("data-mjopen")) {
     const n = (document.getElementById("mj_nom") || {}).value || ""; if (!n.trim()) { toast("Dis-moi ton prénom."); return; }

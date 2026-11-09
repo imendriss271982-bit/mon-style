@@ -1,4 +1,4 @@
-/* My Style — Mesure précise du visage (méthode « Quelle est la forme de mon visage ? » : A, B, C, D).
+/* Diva Divina — Mesure précise du visage (méthode « Quelle est la forme de mon visage ? » : A, B, C, D).
    Le téléphone place 478 points sur le visage (MediaPipe Face Landmarker de Google, gratuit, sur l'appareil),
    mesure A (longueur), B (front), C (pommettes), D (mâchoire), puis applique les règles ci-dessous.
    Gemini ne décide plus la forme : il écrit seulement les conseils pour la forme mesurée.

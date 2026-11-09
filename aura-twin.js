@@ -1,8 +1,8 @@
-/* My Style — « Your Style Twin » (v139, niveau 1 : la fiche de données).
+/* Diva Divina — « Your Style Twin » (v139, niveau 1 : la fiche de données).
    Le jumeau de style = la copie de style de la cliente dans l'app. Il ne crée AUCUNE nouvelle donnée :
    il rassemble ce qui existe déjà (analyses S.res, infos S.info, préférences PF, garde-robe GR)
    et montre ce qui manque, avec un bouton pour le compléter. Rien n'est deviné, tout reste sur le téléphone.
-   Aura le connaît déjà : PROFIL() envoie ces mêmes données à l'agent.
+   Diva le connaît déjà : PROFIL() envoie ces mêmes données à l'agent.
    Niveaux suivants (plus tard) : 2) avatar cartoon, 3) avatar réaliste + essayage virtuel.
    Chargé APRÈS aura-profile.js et zifafi*.js (utilise S, P, ok, season, SEASONS, PF, GR, grCount, esc, cap…). */
 
@@ -60,13 +60,13 @@ P.twin = () => {
   return {
     back: true,
     html: `<p class="step">Ta copie de style</p><h1 data-noi18n>Your Style Twin</h1>
-  <p class="sub">Ton jumeau de style garde ta silhouette, ton teint, tes goûts et chaque pièce de ta garde-robe. Plus il est complet, plus Aura te conseille juste.</p>
+  <p class="sub">Ton jumeau de style garde ta silhouette, ton teint, tes goûts et chaque pièce de ta garde-robe. Plus il est complet, plus Diva te conseille juste.</p>
   <div class="tw-hero"><span class="tw-ring big">${twinRing(pct, 34)}<b>${pct}%</b></span>
    <span><b>${pct === 100 ? "Ton jumeau est complet" : `Complet à ${pct} %`}</b><small>${n} sur ${p.length}</small></span></div>
   <div class="tw-list">${rows}</div>
   <p class="hint">Tout reste sur ton téléphone. Tu peux tout modifier ou effacer dans ton profil.</p>`,
     say: pct === 100 ? "Voici ton Style Twin. Il est complet : je te connais bien maintenant." : "Voici ton Style Twin. Il est complet à " + pct + " %. Complète-le pour que je te conseille encore plus juste.",
-    foot: miss ? `<button class="btn" ${miss.go}>Compléter : ${miss.t.toLowerCase()}</button>` : `<button class="btn" data-view="chat">Parler à Aura</button>`
+    foot: miss ? `<button class="btn" ${miss.go}>Compléter : ${miss.t.toLowerCase()}</button>` : `<button class="btn" data-view="chat">Parler à Diva</button>`
   };
 };
 if (typeof DOCK_OF !== "undefined") DOCK_OF.twin = "home";

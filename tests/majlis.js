@@ -54,9 +54,9 @@ const piece='data:image/png;base64,'+png.toString('base64');
  ok(await sara.evaluate(()=>S.page==='mj_chat'&&document.querySelectorAll('.mj-b.elle').length===2&&/Montre-moi/.test(document.getElementById('mjList').textContent)),'Sara lit les messages de Noura');
  ok(await sara.evaluate(()=>MJ.nl===0&&document.querySelector('#dkmj .mj-bd').hidden),'Pastille remise à zéro');
  await sara.fill('#mj_txt','Oui ! Je t’envoie mon look');await sara.click('[data-mjsend]');await sara.waitForTimeout(400);
- // ——— v164 : par défaut Aura ne vient QUE si on l'appelle ———
+ // ——— v164 : par défaut Diva ne vient QUE si on l'appelle ———
  {const n0=AI.length;await sara.evaluate(()=>{mjAuraPhoto(S.mjAmi,999,{img:'data:image/jpeg;base64,AAAA',look:'x'});mjAuraSiBesoin(S.mjAmi,'Quelle couleur de sac avec ma robe ?');mjAuraFin(S.mjAmi)});await sara.waitForTimeout(800);
-  ok(AI.length===n0&&await sara.evaluate(()=>!document.querySelector('.mj-b.mj-aura')),'Par défaut : photo, question de style ou fin de discussion → Aura ne dit rien (seulement si on l’appelle)');
+  ok(AI.length===n0&&await sara.evaluate(()=>!document.querySelector('.mj-b.mj-aura')),'Par défaut : photo, question de style ou fin de discussion → Diva ne dit rien (seulement si on l’appelle)');
   await sara.evaluate(()=>{MJ_AURA_OPT.auto=true});await noura.evaluate(()=>{MJ_AURA_OPT.auto=true});}
  // tenue enregistrée depuis le sélecteur
  await sara.click('.mj-plus');await sara.waitForTimeout(200);
@@ -64,23 +64,23 @@ const piece='data:image/png;base64,'+png.toString('base64');
  await sara.click('[data-mjsendlook="L1"]');await sara.waitForTimeout(1200);
  ok(await sara.evaluate(()=>{const l=[...document.querySelectorAll('.mj-b.moi')].pop();return l&&l.querySelector('img')&&/^data:image\/jpeg/.test(l.querySelector('img').src)&&/Look bureau chic/.test(l.textContent)}),'Tenue envoyée : collage des vraies pièces + titre');
  await sara.waitForTimeout(800);
- ok(AI.length===1&&AI[0].images.length===1&&/Majlis/.test(AI[0].prompt)&&/visage/i.test(AI[0].prompt),'Aura : l’IA reçoit la tenue (une seule demande)');
- ok(await sara.evaluate(()=>{const a=[...document.querySelectorAll('.mj-b.mj-aura')];return a.length===1&&/ceinture dorée/.test(a[0].textContent)&&/Aura/.test(a[0].textContent)}),'Aura commente la tenue par écrit dans la conversation');
- ok(db.prepare("SELECT COUNT(*) n FROM mj_msgs WHERE de='aura' AND lu=1 AND look LIKE '@%'").get().n===1,'Conseil d’Aura rangé sur le serveur (lié à la photo, déjà lu)');
+ ok(AI.length===1&&AI[0].images.length===1&&/Majlis/.test(AI[0].prompt)&&/visage/i.test(AI[0].prompt),'Diva : l’IA reçoit la tenue (une seule demande)');
+ ok(await sara.evaluate(()=>{const a=[...document.querySelectorAll('.mj-b.mj-aura')];return a.length===1&&/ceinture dorée/.test(a[0].textContent)&&/Diva/.test(a[0].textContent)}),'Diva commente la tenue par écrit dans la conversation');
+ ok(db.prepare("SELECT COUNT(*) n FROM mj_msgs WHERE de='aura' AND lu=1 AND look LIKE '@%'").get().n===1,'Conseil de Diva rangé sur le serveur (lié à la photo, déjà lu)');
  // Noura voit tout arriver (boucle de 3 s)
  await noura.waitForTimeout(3600);
  ok(await noura.evaluate(()=>document.querySelectorAll('.mj-b.elle').length===2&&!!document.querySelector('.mj-b.elle img')),'Noura reçoit le message et la tenue sans recharger');
- ok(await noura.evaluate(()=>{const a=document.querySelector('.mj-b.mj-aura');return a&&/ceinture dorée/.test(a.textContent)}),'Noura voit aussi le conseil d’Aura');
+ ok(await noura.evaluate(()=>{const a=document.querySelector('.mj-b.mj-aura');return a&&/ceinture dorée/.test(a.textContent)}),'Noura voit aussi le conseil de Diva');
  ok(await noura.evaluate(()=>/Vu/.test([...document.querySelectorAll('.mj-b.moi')].pop().textContent)),'Noura voit « Vu » sous son dernier message');
- // Noura appelle Aura par son nom (sans photo à elle : conseil général)
+ // Noura appelle Diva par son nom (sans photo à elle : conseil général)
  AI_REP='Noura, une sandale nude allongera la silhouette de Sara.';
- await noura.fill('#mj_txt','أورا شو رأيك بالحذاء؟');await noura.click('[data-mjsend]');await noura.waitForTimeout(900);
- ok(AI.length===2&&AI[1].images.length===1&&/On t’appelle/.test(AI[1].prompt)&&/ne connais pas le profil/.test(AI[1].prompt),'« أورا » dans un message → Aura répond en regardant la dernière photo');
- ok(await noura.evaluate(()=>document.querySelectorAll('.mj-b.mj-aura').length===2),'Réponse d’Aura affichée');
+ await noura.fill('#mj_txt','ديفا شو رأيك بالحذاء؟');await noura.click('[data-mjsend]');await noura.waitForTimeout(900);
+ ok(AI.length===2&&AI[1].images.length===1&&/On t’appelle/.test(AI[1].prompt)&&/ne connais pas le profil/.test(AI[1].prompt),'« ديفا » dans un message → Diva répond en regardant la dernière photo');
+ ok(await noura.evaluate(()=>document.querySelectorAll('.mj-b.mj-aura').length===2),'Réponse de Diva affichée');
  await noura.fill('#mj_txt','Laura vient aussi');await noura.click('[data-mjsend]');await noura.waitForTimeout(700);
- ok(AI.length===2,'« Laura » n’appelle pas Aura');
+ ok(AI.length===2,'« Laura » n’appelle pas Diva');
  const rAura=await noura.evaluate(async()=>{const cv=MJC[S.mjAmi],ph=cv.msgs.find(m=>m.img);try{const r=await mjApi('aura',{...mjAuth(),ami:S.mjAmi,txt:'encore',ref:ph.id});return r.deja}catch(e){return 'err'}});
- ok(rAura===true,'Un seul conseil d’Aura par photo (serveur)');
+ ok(rAura===true,'Un seul conseil de Diva par photo (serveur)');
  // ——— Photo : visage caché sur le téléphone ———
  const zone=await sara.evaluate(async()=>{
   const c=document.createElement('canvas');c.width=200;c.height=200;const g=c.getContext('2d'),d=g.createImageData(200,200);for(let i=0;i<d.data.length;i+=4){const v=(i/4)%2?255:0;d.data[i]=d.data[i+1]=d.data[i+2]=v;d.data[i+3]=255}g.putImageData(d,0,0);
@@ -105,7 +105,7 @@ const piece='data:image/png;base64,'+png.toString('base64');
  await sara.click('[data-mjami]');await sara.waitForTimeout(1200);
  await sara.waitForTimeout(800);
  ok(await sara.evaluate(a=>S.page==='mj_chat'&&MJC[S.mjAmi].msgs.length===a+2&&MJC[S.mjAmi].msgs.slice(-1)[0].aura&&!S.mjPart,avant),'Tenue envoyée, conversation ouverte');
- // ——— Aura toute seule (v161) : mot de fin, puis conseil quand on parle de style ———
+ // ——— Diva toute seule (v161) : mot de fin, puis conseil quand on parle de style ———
  const nAI=AI.length;
  await noura.evaluate(()=>{go('majlis')});await noura.waitForTimeout(300);
  const sId=await noura.evaluate(()=>MJ.amis[0].id);
@@ -113,39 +113,39 @@ const piece='data:image/png;base64,'+png.toString('base64');
  await sara.evaluate(()=>mjCharger(S.mjAmi,true));await sara.waitForTimeout(500);
  AI_REP='يا بنات، ما أحلى جمعتكم 💛';
  await sara.evaluate(()=>home());await sara.waitForTimeout(1200);
- ok(AI.length===nAI+1&&/La discussion se termine/.test(AI[nAI].prompt),'Sara quitte la conversation → Aura prépare un mot de fin');
- ok(db.prepare("SELECT COUNT(*) n FROM mj_msgs WHERE de='aura' AND txt LIKE '%جمعتكم%'").get().n===1,'Mot de fin d’Aura rangé (vu par les deux)');
+ ok(AI.length===nAI+1&&/La discussion se termine/.test(AI[nAI].prompt),'Sara quitte la conversation → Diva prépare un mot de fin');
+ ok(db.prepare("SELECT COUNT(*) n FROM mj_msgs WHERE de='aura' AND txt LIKE '%جمعتكم%'").get().n===1,'Mot de fin de Diva rangé (vu par les deux)');
  await sara.evaluate(()=>{go('mj_chat')});await sara.waitForTimeout(900);await sara.evaluate(()=>home());await sara.waitForTimeout(800);
  ok(AI.length===nAI+1,'Pas de deuxième mot de fin sans nouvelle discussion');
  // conseil quand on parle de style
  await noura.evaluate(a=>{S.mjAmi=a;S.mjAmiNom='Sara';go('mj_chat')},sId);await noura.waitForTimeout(900);
  await noura.fill('#mj_txt','On se voit à 20h');await noura.click('[data-mjsend]');await noura.waitForTimeout(600);
- ok(AI.length===nAI+1,'Message ordinaire → Aura ne dit rien');
+ ok(AI.length===nAI+1,'Message ordinaire → Diva ne dit rien');
  for(let i=0;i<3;i++)await noura.evaluate(([a,i])=>mjEnvoyer(a,{txt:'ok '+i}),[sId,i]);
  AI_REP='';const DBA=db.prepare("SELECT COUNT(*) n FROM mj_msgs WHERE de='aura'").get().n;
  await noura.fill('#mj_txt','شو لون الشنطة اللي يليق مع الفستان؟');await noura.click('[data-mjsend]');await noura.waitForTimeout(900);
- ok(AI.length===nAI+2&&/renvoie une réponse vide/.test(AI[nAI+1].prompt),'Question de style → Aura est consultée');
- ok(db.prepare("SELECT COUNT(*) n FROM mj_msgs WHERE de='aura'").get().n===DBA,'Réponse vide de l’IA → Aura ne publie rien');
+ ok(AI.length===nAI+2&&/renvoie une réponse vide/.test(AI[nAI+1].prompt),'Question de style → Diva est consultée');
+ ok(db.prepare("SELECT COUNT(*) n FROM mj_msgs WHERE de='aura'").get().n===DBA,'Réponse vide de l’IA → Diva ne publie rien');
  AI_REP='Avec un fstan noir, une pochette dorée, Noura 💛';
  await noura.fill('#mj_txt','Et quelles chaussures je mets ?');await noura.click('[data-mjsend]');await noura.waitForTimeout(900);
- ok(await noura.evaluate(()=>/pochette dorée/.test([...document.querySelectorAll('.mj-b.mj-aura')].pop().textContent)),'Aura glisse son conseil dans la discussion');
+ ok(await noura.evaluate(()=>/pochette dorée/.test([...document.querySelectorAll('.mj-b.mj-aura')].pop().textContent)),'Diva glisse son conseil dans la discussion');
  AI_REP='Le blanc et le noir, c’est très chic, Sara ! Ajoute une ceinture dorée.';
- // ——— v165 : tenue créée par Aura → à une amie ; l'amie dit « ما عجبني » → Aura répond ———
+ // ——— v165 : tenue créée par Diva → à une amie ; l'amie dit « ما عجبني » → Diva répond ———
  await sara.evaluate(()=>{MJ_AURA_OPT.auto=false;GR.looks={quotidien:[{titre:'Look plage chic',pieces:['a1','a2'],conseil:'x'}]}});
- ok(await sara.evaluate(()=>/data-mjgl="quotidien:0"/.test(grActs(GR.looks.quotidien[0],'quotidien',0))),'Tenue créée par Aura : bouton « À une amie »');
+ ok(await sara.evaluate(()=>/data-mjgl="quotidien:0"/.test(grActs(GR.looks.quotidien[0],'quotidien',0))),'Tenue créée par Diva : bouton « À une amie »');
  await sara.evaluate(()=>{const b=document.createElement('button');b.dataset.mjgl='quotidien:0';document.body.appendChild(b);b.click();b.remove()});await sara.waitForTimeout(600);
  ok(await sara.evaluate(()=>S.page==='majlis'&&S.mjPart&&S.mjPart.kind==='gl'),'… puis choisir l’amie');
  await sara.click('[data-mjami]');await sara.waitForTimeout(1500);
  const glId=await sara.evaluate(()=>{const m=[...MJC[S.mjAmi].msgs].reverse().find(x=>x.img&&x.moi);return m&&m.look==='Look plage chic'?m.id:0});
- ok(glId>0&&await sara.evaluate(()=>S.page==='mj_chat'),'Tenue d’Aura envoyée direct dans le chat');
+ ok(glId>0&&await sara.evaluate(()=>S.page==='mj_chat'),'Tenue de Diva envoyée direct dans le chat');
  const nA=AI.length;AI_REP='Noura, le blanc illumine Sara 💛 Avec ton pantalon noir et une touche dorée, ça vous plaira à toutes les deux.';
  await noura.evaluate(()=>mjEnvoyer(S.mjAmi,{txt:'Hmm ما عجبني اللون'}));await sara.waitForTimeout(5000);
- ok(AI.length===nA+1&&/vient de répondre/.test(AI[nA].prompt)&&AI[nA].images.length===1&&/Chemise blanche/.test(AI[nA].prompt),'Noura dit « ما عجبني » → Aura répond sur le téléphone de Sara (tenue + sa garde-robe)');
- ok(db.prepare("SELECT COUNT(*) n FROM mj_msgs WHERE de='aura' AND look=?").get('@'+glId).n===1&&await sara.evaluate(()=>/touche dorée/.test([...document.querySelectorAll('.mj-b.mj-aura')].pop().textContent)),'Réponse d’Aura affichée et rangée (vue par les deux)');
+ ok(AI.length===nA+1&&/vient de répondre/.test(AI[nA].prompt)&&AI[nA].images.length===1&&/Chemise blanche/.test(AI[nA].prompt),'Noura dit « ما عجبني » → Diva répond sur le téléphone de Sara (tenue + sa garde-robe)');
+ ok(db.prepare("SELECT COUNT(*) n FROM mj_msgs WHERE de='aura' AND look=?").get('@'+glId).n===1&&await sara.evaluate(()=>/touche dorée/.test([...document.querySelectorAll('.mj-b.mj-aura')].pop().textContent)),'Réponse de Diva affichée et rangée (vue par les deux)');
  await noura.evaluate(()=>mjEnvoyer(S.mjAmi,{txt:'vraiment ما عجبني'}));await sara.waitForTimeout(4500);
- ok(AI.length===nA+1,'Une seule réponse d’Aura par tenue');
+ ok(AI.length===nA+1,'Une seule réponse de Diva par tenue');
  await noura.evaluate(()=>mjEnvoyer(S.mjAmi,{txt:'Trop belle !'}));await sara.waitForTimeout(4000);
- ok(AI.length===nA+1,'Avis positif → Aura ne dit rien');
+ ok(AI.length===nA+1,'Avis positif → Diva ne dit rien');
  // ——— Arabe + petit écran ———
  await noura.evaluate(()=>{S.lang='ar';save();i18nApply();home()});await noura.setViewportSize({width:320,height:640});await noura.waitForTimeout(400);
  ok(await noura.evaluate(()=>{const d=document.getElementById('dkmj');return document.documentElement.dir==='rtl'&&/المجلس/.test(d.textContent)&&d.getBoundingClientRect().right<=321&&document.documentElement.scrollWidth<=320}),'320 px en arabe : onglet « المجلس » dans la barre du bas, pas de défilement horizontal');

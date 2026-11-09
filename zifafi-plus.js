@@ -1,5 +1,5 @@
 /* Zifafi Wedding (v112) — compléments de l'espace mariée, chargés APRÈS zifafi.js.
-   Réutilise : le profil My Style (S.res : visage, silhouette, Kibbe, saison — via ok() et season()), Aura (zfAsk, send,
+   Réutilise : le profil Diva Divina (S.res : visage, silhouette, Kibbe, saison — via ok() et season()), Diva (zfAsk, send,
    S.cphoto + sendPhoto pour les photos, PROFIL() + zfCtx()), les formules existantes (GRATUIT, premium(), paywall()),
    l'inspiration privée (ZIDB) et les données « monstyle_zf » (ZD). Aucun nouveau profil, aucun nouvel assistant.
    Pages : zf_dress (3 façons de trouver sa robe), zf_expl (explorer les styles), zf_cat (accessoires, bouquet,
@@ -13,7 +13,7 @@ function zfPrem() { return (typeof GRATUIT !== "undefined" && GRATUIT) || (typeo
 function zfCan(f) { if (zfPrem()) return true; if (f === "look+") return ZD.looks.length < ZF_FREE.looks; return true; }
 const zfPremTag = () => typeof GRATUIT !== "undefined" && GRATUIT ? `<span class="zf-prem test">Premium · offert pendant le test</span>` : zfPrem() ? `<span class="zf-prem">Premium</span>` : `<span class="zf-prem">👑 Premium</span>`;
 
-// ——— Profil My Style déjà fait (jamais recopié ni modifié par Zifafi) ———
+// ——— Profil Diva Divina déjà fait (jamais recopié ni modifié par Zifafi) ———
 function zfMS() {
   const g = k => typeof ok === "function" ? ok(k) : null, v = g("visage"), b = g("corps"), s = typeof season === "function" ? season() : null;
   return { visage: v && v.forme || "", corps: b && b.forme || "", kibbe: b && b.kibbe || "", saison: s || "", src: b && b.src || "" };
@@ -28,19 +28,19 @@ function zfProfileCard() {
   const m = zfMS(), p = ZD.prof, row = (l, v, todo) => `<div class="zf-rv-r"><span>${l}</span>${v ? `<em>${esc(v)}</em>` : `<i>${todo || "Pas encore"}</i>`}</div>`;
   const miss = ["visage", "corps", "saison"].filter(k => !m[k]);
   return `<section class="zf-card zf-ms"><div class="zf-card-h"><h2>Ton profil</h2></div>
-   <div class="zf-ms-g"><div><p class="zf-kick2">My Style · déjà fait</p>
+   <div class="zf-ms-g"><div><p class="zf-kick2">Diva Divina · déjà fait</p>
     ${row("Visage", m.visage)}${row("Silhouette", m.corps)}${m.kibbe ? row("Kibbe", m.kibbe) : ""}${row("Saison", m.saison)}
-    ${miss.length ? `<p class="zf-hint"><span>${miss.includes("saison") ? "Fais ton analyse des couleurs pour des conseils de couleurs de mariée plus personnels." : "Complète tes analyses pour des conseils plus personnels."}</span> <span>Tu ne refais que ce qui manque.</span></p><button class="zf-lnk" data-zfms>Compléter mes analyses ›</button>` : `<p class="zf-hint">Aura s’en sert déjà : tu n’as rien à refaire.</p>`}</div>
+    ${miss.length ? `<p class="zf-hint"><span>${miss.includes("saison") ? "Fais ton analyse des couleurs pour des conseils de couleurs de mariée plus personnels." : "Complète tes analyses pour des conseils plus personnels."}</span> <span>Tu ne refais que ce qui manque.</span></p><button class="zf-lnk" data-zfms>Compléter mes analyses ›</button>` : `<p class="zf-hint">Diva s’en sert déjà : tu n’as rien à refaire.</p>`}</div>
    <div><p class="zf-kick2">Mon mariage</p>
     ${p ? row("Date", p.date) + row("Cérémonie", p.ceremony ? zfLabel("ceremony", p.ceremony) : "") + row("Lieu", p.setting ? zfLabel("setting", p.setting) : "") + row("Tenues", p.tenues ? zfLabel("tenues", p.tenues) : "") : `<p class="zf-hint">Pas encore rempli.</p>`}
     <button class="zf-lnk" data-zfprof="0">${p ? "Modifier mon mariage ›" : "Remplir ›"}</button></div></div>
-   <p class="zf-priv">Tes préférences de mariée sont gardées à part : elles ne changent pas ton profil My Style.</p></section>`;
+   <p class="zf-priv">Tes préférences de mariée sont gardées à part : elles ne changent pas ton profil Diva Divina.</p></section>`;
 }
-// Étape « silhouette » du profil mariée : proposer (sans l'imposer) la silhouette déjà trouvée par My Style.
+// Étape « silhouette » du profil mariée : proposer (sans l'imposer) la silhouette déjà trouvée par Diva Divina.
 function zfMSShape(d) {
   const m = zfMS(), sh = zfShapeFromMS(m.corps);
   if (!sh) return "";
-  return `<div class="zf-card zf-mss"><p>Ta silhouette dans My Style : <b>${esc(m.corps)}</b>.</p><button type="button" class="zf-lnk" data-zfmsshape="${sh}" aria-pressed="${d.shape === sh}">${d.shape === sh ? "✓ Utilisée comme repère" : "L’utiliser comme repère"}</button></div>`;
+  return `<div class="zf-card zf-mss"><p>Ta silhouette dans Diva Divina : <b>${esc(m.corps)}</b>.</p><button type="button" class="zf-lnk" data-zfmsshape="${sh}" aria-pressed="${d.shape === sh}">${d.shape === sh ? "✓ Utilisée comme repère" : "L’utiliser comme repère"}</button></div>`;
 }
 
 // ——— Parcours, look en cours, checklist ———
@@ -84,17 +84,17 @@ P.zf_dress = () => {
   const m = zfMS(), hint = zfSeasonHint(m.saison);
   return { back: true, html: `<div class="zf"><p class="step">Zifafi Wedding</p><h1>Trouver la robe de mes rêves</h1>${zfNav("zf_dress")}
    <p class="sub">Choisis comment commencer. Tu peux passer de l’une à l’autre à tout moment.</p>
-   <section class="zf-mode"><span class="zf-num">A</span><div><h2>Aura, recommande-moi ma robe</h2><p>${m.corps || m.saison ? "À partir de ton profil de mariée, de ton profil My Style et des robes que tu as aimées. Chaque proposition est expliquée." : "À partir de ton profil de mariée et des robes que tu as aimées. Chaque proposition est expliquée."}</p>
+   <section class="zf-mode"><span class="zf-num">A</span><div><h2>Diva, recommande-moi ma robe</h2><p>${m.corps || m.saison ? "À partir de ton profil de mariée, de ton profil Diva Divina et des robes que tu as aimées. Chaque proposition est expliquée." : "À partir de ton profil de mariée et des robes que tu as aimées. Chaque proposition est expliquée."}</p>
     <button class="btn" data-zfreco>Recommander ma robe de rêve</button></div></section>
-   <section class="zf-mode"><span class="zf-num">B</span><div><h2>Je sais ce que j’aime</h2><p>Explore les silhouettes, encolures, manches, tissus et couleurs. Tes choix guident ensuite les propositions d’Aura.</p>
+   <section class="zf-mode"><span class="zf-num">B</span><div><h2>Je sais ce que j’aime</h2><p>Explore les silhouettes, encolures, manches, tissus et couleurs. Tes choix guident ensuite les propositions de Diva.</p>
     <button class="btn ghost" data-go="zf_expl">Explorer les styles de mariée</button></div></section>
-   <section class="zf-mode"><span class="zf-num">C</span><div><h2>Une robe en photo</h2><p>Envoie la photo d’une robe : Aura décrit ce qu’elle voit et te dit comment elle peut aller avec ton style. Elle ne peut pas reconnaître la marque ni le prix.</p>
-    ${zfPhotoBtn("robes", "Demander à Aura à propos d’une robe")}${zfKeepBox()}</div></section>
-   ${hint ? `<p class="zf-hint">Repère de ta saison My Style (${esc(m.saison)}) : ${hint.whites.map(w => zfLabel("whites", w).toLowerCase()).join(", ")}, bijoux ${zfLabel("metal", hint.metal).toLowerCase()}. Tu restes libre de choisir autre chose.</p>` : ""}
+   <section class="zf-mode"><span class="zf-num">C</span><div><h2>Une robe en photo</h2><p>Envoie la photo d’une robe : Diva décrit ce qu’elle voit et te dit comment elle peut aller avec ton style. Elle ne peut pas reconnaître la marque ni le prix.</p>
+    ${zfPhotoBtn("robes", "Demander à Diva à propos d’une robe")}${zfKeepBox()}</div></section>
+   ${hint ? `<p class="zf-hint">Repère de ta saison Diva Divina (${esc(m.saison)}) : ${hint.whites.map(w => zfLabel("whites", w).toLowerCase()).join(", ")}, bijoux ${zfLabel("metal", hint.metal).toLowerCase()}. Tu restes libre de choisir autre chose.</p>` : ""}
    ${ZD.like.length ? `<p class="zf-hint">Tu as aimé : ${ZD.like.map(k => esc(ZF_SIL[k].nom)).join(", ")}. J’en tiens compte dans les propositions.</p>` : ""}
    ${ZD.saved.length ? `<button class="zf-lnk" data-go="zf_robe">Mes robes enregistrées (${ZD.saved.length}) ›</button>` : ""}</div>` };
 };
-// Explorer : les choix sont enregistrés directement dans les préférences de mariée (pas dans My Style).
+// Explorer : les choix sont enregistrés directement dans les préférences de mariée (pas dans Diva Divina).
 const ZF_EXPL = [["silhouette", "Silhouette"], ["neckline", "Encolure"], ["sleeves", "Manches"], ["fabric", "Tissu"], ["whites", "Couleur"], ["aesthetic", "Style"]];
 P.zf_expl = () => {
   const p = ZD.prof || zfCleanProf({}), n = ZF_EXPL.reduce((a, [k]) => a + (p[k] || []).filter(v => v !== "nsp").length, 0);
@@ -110,8 +110,8 @@ P.zf_expl = () => {
 // ——— Accessoires, bouquet, coiffure et make-up ———
 const ZF_CATS = {
   acc: { t: "Mes accessoires", slots: ["voile", "bijoux", "chaussures"], ins: "voiles", ph: "accessoires", intro: "Voile, bijoux, chaussures : les conseils s’adaptent à la robe de ton look. Pense aussi aux bracelets, tiares, sacs, ceintures et gants dans ton inspiration." },
-  bouquet: { t: "Mon bouquet", slots: ["bouquet"], ins: "bouquets", ph: "bouquets", intro: "Choisis tes fleurs, tes couleurs et la forme du bouquet. Aura les accorde à ta robe et à ta palette." },
-  beaute: { t: "Coiffure et make-up", slots: ["coiffure", "makeup"], ins: "coiffures", ph: "coiffures", intro: "Des idées, pas des règles : Aura tient compte de ta forme de visage, de tes couleurs et de ton voile." }
+  bouquet: { t: "Mon bouquet", slots: ["bouquet"], ins: "bouquets", ph: "bouquets", intro: "Choisis tes fleurs, tes couleurs et la forme du bouquet. Diva les accorde à ta robe et à ta palette." },
+  beaute: { t: "Coiffure et make-up", slots: ["coiffure", "makeup"], ins: "coiffures", ph: "coiffures", intro: "Des idées, pas des règles : Diva tient compte de ta forme de visage, de tes couleurs et de ton voile." }
 };
 P.zf_cat = () => {
   const c = ZF_CATS[S.zfCat] || ZF_CATS.acc, key = ZF_CATS[S.zfCat] ? S.zfCat : "acc", L = zfCurLook(), o = zfLookOpts(ZD.prof, L && L.dress), m = zfMS(), p = ZD.prof || zfCleanProf({});
@@ -119,8 +119,8 @@ P.zf_cat = () => {
   const slot = k => { const n = (ZF_LOOK_CATS.find(x => x[0] === k) || [])[1], cur = L ? L.sel[k] : "";
     return `<fieldset class="zf-q"><legend>${n}</legend><div class="zf-opts">${o[k].map(x => `<button type="button" class="zf-opt" data-zfpick="${k}" data-zfv="${x.id}" aria-pressed="${cur === x.id}"><b>${esc(x.t)}</b><small>${esc(x.w)}</small></button>`).join("")}</div></fieldset>`; };
   const prefs = key === "bouquet" ? ["fleurs", "bqstyle", "bouquet"].map(k => `<fieldset class="zf-q"><legend>${{ fleurs: "Mes fleurs préférées", bqstyle: "Style de bouquet", bouquet: "Couleurs du bouquet" }[k]}</legend><div class="pk zf-pk" data-zfpk="${k}" role="group">${ZF[k].map(([id, l]) => `<button type="button" data-zfpv="${id}" aria-pressed="${(p[k] || []).includes(id)}">${esc(l)}</button>`).join("")}</div></fieldset>`).join("") : "";
-  const ctx = key === "beaute" ? `<div class="note">${m.visage ? `<p><span>Ta forme de visage (My Style) :</span> <b>${esc(m.visage)}</b></p>` : `<p>Ta forme de visage n’est pas encore analysée. <button class="zf-lnk" data-zfms>Faire l’analyse</button></p>`}${m.saison ? `<p><span>Ta saison :</span> <b>${esc(m.saison)}</b></p>` : ""}<button class="zf-lnk" data-go="beaute">Essai make-up My Style ›</button></div>` : "";
-  const own = key === "acc" ? `<label class="lbl" for="zf_own">Ce que j’ai déjà <small>· facultatif</small></label><textarea class="field" id="zf_own" data-noi18n maxlength="300" rows="2" placeholder="Par exemple : boucles de ma mère, escarpins ivoire">${esc(ZD.own)}</textarea><p class="zf-hint">Aura s’en sert pour éviter les achats inutiles.</p>` : "";
+  const ctx = key === "beaute" ? `<div class="note">${m.visage ? `<p><span>Ta forme de visage (Diva Divina) :</span> <b>${esc(m.visage)}</b></p>` : `<p>Ta forme de visage n’est pas encore analysée. <button class="zf-lnk" data-zfms>Faire l’analyse</button></p>`}${m.saison ? `<p><span>Ta saison :</span> <b>${esc(m.saison)}</b></p>` : ""}<button class="zf-lnk" data-go="beaute">Essai make-up Diva Divina ›</button></div>` : "";
+  const own = key === "acc" ? `<label class="lbl" for="zf_own">Ce que j’ai déjà <small>· facultatif</small></label><textarea class="field" id="zf_own" data-noi18n maxlength="300" rows="2" placeholder="Par exemple : boucles de ma mère, escarpins ivoire">${esc(ZD.own)}</textarea><p class="zf-hint">Diva s’en sert pour éviter les achats inutiles.</p>` : "";
   const ask = key === "acc" ? "Complète mon look de mariée : " : key === "bouquet" ? "Aide-moi à choisir mon bouquet de mariée pour ce look : " : "Aide-moi à choisir ma coiffure et mon maquillage de mariée pour ce look : ";
   return { back: true, html: `<div class="zf zf-form"><p class="step">Zifafi Wedding</p><h1>${c.t}</h1>${zfNav("zf_cat:" + key)}
    <p class="sub">${c.intro}</p>${ctx}
@@ -128,8 +128,8 @@ P.zf_cat = () => {
    ${!L || !L.dress ? `<p class="zf-hint">Choisis une robe pour des conseils plus précis.</p><button class="zf-lnk" data-go="zf_dress">Trouver ma robe ›</button>` : ""}
    ${prefs}${c.slots.map(slot).join("")}${own}
    <h2 class="zf-h">Inspiration et photos</h2>
-   <div class="zf-acts2">${zfPhotoBtn(c.ph, "Demander à Aura à propos d’une photo")}<button class="btn ghost" data-zfinsgo="${c.ins}">Mon inspiration</button></div>${zfKeepBox()}</div>`,
-    foot: `<div class="zf-foot"><button class="btn" data-zfasklook="${esc(ask)}">${key === "acc" ? "Compléter mon look avec Aura" : "Demander à Aura"}</button></div>` };
+   <div class="zf-acts2">${zfPhotoBtn(c.ph, "Demander à Diva à propos d’une photo")}<button class="btn ghost" data-zfinsgo="${c.ins}">Mon inspiration</button></div>${zfKeepBox()}</div>`,
+    foot: `<div class="zf-foot"><button class="btn" data-zfasklook="${esc(ask)}">${key === "acc" ? "Compléter mon look avec Diva" : "Demander à Diva"}</button></div>` };
 };
 
 // ——— Mon look complet ———
@@ -138,7 +138,7 @@ P.zf_full = () => {
   if (ZINS === null) zfLoadIns();
   const L = zfCurLook();
   if (!L) return { back: true, html: `<div class="zf"><p class="step">Zifafi Wedding</p><h1>Mon look complet</h1>${zfNav("zf_full")}
-   <div class="zf-start"><h2>Ton look tient sur une seule page</h2><p>Robe, voile, bijoux, chaussures, coiffure, maquillage, bouquet et couleurs : choisis chaque élément, ajoute tes photos et demande à Aura de vérifier l’ensemble.</p><button class="btn" data-zffullnew>Créer mon look complet</button></div></div>` };
+   <div class="zf-start"><h2>Ton look tient sur une seule page</h2><p>Robe, voile, bijoux, chaussures, coiffure, maquillage, bouquet et couleurs : choisis chaque élément, ajoute tes photos et demande à Diva de vérifier l’ensemble.</p><button class="btn" data-zffullnew>Créer mon look complet</button></div></div>` };
   const o = zfLookOpts(ZD.prof, L.dress), pal = ZF_PALS.find(p => p.id === L.pal), co = zfCoherence(L), img = id => (ZINS || []).find(x => x.id === id);
   const row = ([k, n, g]) => { const val = k === "robe" ? (L.dress ? L.dress.nom + " · " + L.dress.dirNom : "") : ((o[k] || []).find(x => x.id === L.sel[k]) || {}).t || "", r = img((L.ref || {})[k]);
     return `<div class="zf-fr"><div class="zf-fr-t"><span>${n}</span>${val ? `<b>${esc(val)}</b>` : `<i>À décider</i>`}</div>
@@ -154,7 +154,7 @@ P.zf_full = () => {
    ${co.length ? `<h2 class="zf-h">Petits repères</h2><ul class="zf-ul">${co.map(x => `<li>${esc(x)}</li>`).join("")}</ul><p class="zf-hint">Ce sont des pistes : c’est toi qui décides.</p>` : ""}
    <div class="zf-acts"><button type="button" data-zflkedit="${L.id}">Modifier le nom et les détails</button><button type="button" data-zflkdup="${L.id}">Garder une alternative</button>${ZD.looks.length > 1 ? `<button type="button" data-go="zf_looks">Comparer mes looks</button>` : ""}</div>
    ${more ? `<p class="zf-hint">La version gratuite garde ${ZF_FREE.looks} look. Plusieurs looks font partie de Premium.</p>` : ""}</div>`,
-    foot: `<div class="zf-foot"><button class="btn" data-zfreview>Demander à Aura de vérifier l’ensemble</button></div>` };
+    foot: `<div class="zf-foot"><button class="btn" data-zfreview>Demander à Diva de vérifier l’ensemble</button></div>` };
 };
 
 // ——— Ma checklist ———
@@ -200,7 +200,7 @@ P.zf_tips = () => {
    <p class="zf-hint">Version gratuite : les conseils essentiels. Des guides plus détaillés et des conseils personnalisés pourront venir avec Premium.</p></div>` };
 };
 
-// ——— Aura : questions sur une photo en mode mariée ———
+// ——— Diva : questions sur une photo en mode mariée ———
 { const prev = zfChatSug; zfChatSug = function () {
   if (S.zfCtx === "mariee" && S.cphoto) { const q = ZF_PHQ[S.zfPhCat] || ZF_PHQ.robes;
     return `<div class="ch-sug" role="group" aria-label="Questions sur ta photo">${q.map(x => `<button type="button" data-chsay="${esc(x)}">${esc(x)}</button>`).join("")}</div>`; }
@@ -273,7 +273,7 @@ document.addEventListener("change", async e => {
   if (el.id === "zf_own") { ZD.own = el.value.slice(0, 300).trim(); zfSave(); return; }
   if (el.matches("[data-zfphoto]")) {
     const f = el.files && el.files[0], cat = el.dataset.zfphoto; el.value = ""; if (!zfPhotoOK(f)) return;
-    if (S.zfKeepPh !== false) { try { await zfKeepPhoto(f, cat, "Photo montrée à Aura"); } catch (er) { toast("La photo n’a pas pu être gardée dans ton inspiration."); } }
+    if (S.zfKeepPh !== false) { try { await zfKeepPhoto(f, cat, "Photo montrée à Diva"); } catch (er) { toast("La photo n’a pas pu être gardée dans ton inspiration."); } }
     S.zfPhCat = cat; S.cphoto = { file: f, url: URL.createObjectURL(f) }; zfSetCtx("mariee"); S.draft = tr((ZF_PHQ[cat] || ZF_PHQ.robes)[0]); go("chat");
     toast("Choisis une question ou écris la tienne, puis touche Envoyer."); return;
   }

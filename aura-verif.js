@@ -1,4 +1,4 @@
-/* My Style — « Vérifié par une vraie styliste » (v143, étape « 9/10 » face à ChatGPT/Gemini).
+/* Diva Divina — « Vérifié par une vraie styliste » (v143, étape « 9/10 » face à ChatGPT/Gemini).
    Ce qu'aucune IA ne peut offrir : une vraie styliste (Imen, sans montrer son visage ni son nom) relit l'analyse
    ou la tenue de la cliente et répond personnellement, par écrit et/ou par message vocal.
    - Page `P.verif` : demandes envoyées (statut), formulaire (quoi vérifier, question, photo facultative).
@@ -90,7 +90,7 @@ P.verif = () => {
    ${S.vfErr ? `<div class="note">${esc(S.vfErr)}</div>` : ""}` : "";
   return { back: true,
     html: `<p class="step">Ta styliste</p><h1>Vérifié par une vraie styliste</h1>
-   <p class="sub">Une styliste professionnelle de My Style relit ton analyse ou ta tenue, et te répond personnellement, par écrit ou par message vocal.</p>
+   <p class="sub">Une styliste professionnelle de Diva Divina relit ton analyse ou ta tenue, et te répond personnellement, par écrit ou par message vocal.</p>
    <div class="vf-promesse"><span>✓ Une vraie personne, pas une IA</span><span>✓ Réponse sous 48 heures</span><span>✓ En français, en anglais ou en arabe</span></div>
    ${liste}${form}`,
     say: VF.length ? "" : "Une vraie styliste peut vérifier ton analyse. Dis-moi ce que tu veux lui demander.",

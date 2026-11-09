@@ -1,4 +1,4 @@
-/* My Style — « Abaya & occasions du Golfe » (v142, étape « 8,5/10 » face à ChatGPT/Gemini).
+/* Diva Divina — « Abaya & occasions du Golfe » (v142, étape « 8,5/10 » face à ChatGPT/Gemini).
    Ce que les grandes IA connaissent mal : l'abaya selon la silhouette, la sheila selon la forme du visage,
    et les codes des occasions du Golfe (mariage, henné, Ramadan, Garangao, Aïd, bureau, majlis et condoléances,
    fête nationale de SON pays). Tout est calculé sur le téléphone à partir de ses résultats (aucune IA, aucun coût).
@@ -85,7 +85,7 @@ const golfeVisage = () => { const v = typeof ok === "function" ? ok("visage") : 
 // Mois chauds au Golfe : mai à octobre.
 const golfeEte = () => { const m = new Date().getMonth(); return m >= 4 && m <= 9; };
 
-// Règle courte d'une occasion pour les prompts d'Aura (Créer une tenue, Que porter aujourd'hui).
+// Règle courte d'une occasion pour les prompts de Diva (Créer une tenue, Que porter aujourd'hui).
 function golfeRegle(occ) {
   const o = GOLFE_OCC.find(x => x.occ === occ || x.k === occ); if (!o) return "";
   const g = golfeOcc(o.k);

@@ -65,7 +65,7 @@ const g = SENT.find(x => x.url.includes(":generateContent")), gb = g && JSON.par
 ok(r.s === 200 && r.j.note === 7, "Analyse acceptée avec le jeton");
 ok(gb && /VISAGISME/.test(gb.contents[0].parts[0].text) && !/§REF/.test(gb.contents[0].parts[0].text), "La méthode (VISAGISME) est ajoutée côté serveur, plus aucun repère §");
 ok(gb && !/COLORIMÉTRIE 12 SAISONS/.test(gb.contents[0].parts[0].text), "Seules les rubriques demandées sont ajoutées");
-ok(gb && gb.system_instruction && /My Style/.test(gb.system_instruction.parts[0].text), "Consigne système envoyée à Gemini");
+ok(gb && gb.system_instruction && /Diva Divina/.test(gb.system_instruction.parts[0].text), "Consigne système envoyée à Gemini");
 r = await call("/", { prompt: "x".repeat(30001), dev: DEV });
 ok(r.s === 400, "Demande trop longue refusée (30 000 caractères max)");
 
@@ -105,7 +105,7 @@ ok(r.s === 429 && r.j.code === "quota", "Nouvelle phrase au-delà du quota refus
 // 8. Agent vocal : lien signé
 r = await call("/voice/session", { dev: DEV });
 const su = SENT.find(x => x.url.includes("get-signed-url"));
-ok(r.s === 200 && /^wss:\/\//.test(r.j.signedUrl) && su && su.url.includes("agent_3801m58kjga8fddsm7bz46gcz4wf"), "Lien signé de l'agent Aura délivré");
+ok(r.s === 200 && /^wss:\/\//.test(r.j.signedUrl) && su && su.url.includes("agent_3801m58kjga8fddsm7bz46gcz4wf"), "Lien signé de l'agent Diva délivré");
 
 // 9. Codes testeuse vérifiés par le Worker
 ok((await call("/code", { code: "diva 2026" })).j.ok === true, "Code testeuse valide (espaces, minuscules acceptés)");

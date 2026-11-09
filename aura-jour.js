@@ -1,10 +1,10 @@
 /* v176 : jrPret() — tenue du jour possible avant GR_MIN pièces (un haut + un bas, ou une robe).
-   My Style — « Que porter aujourd'hui ? » (v140).
-   Le geste quotidien : un bouton, et Aura choisit UNE tenue pour aujourd'hui avec les vraies pièces
+   Diva Divina — « Que porter aujourd'hui ? » (v140).
+   Le geste quotidien : un bouton, et Diva choisit UNE tenue pour aujourd'hui avec les vraies pièces
    de la garde-robe, selon l'occasion du jour et la météo de la ville de la cliente.
    - Météo : Open-Meteo (gratuit, sans clé). La ville vient du fuseau horaire du téléphone (Golfe), sans demander la position.
      Si la météo ne charge pas, la tenue est quand même proposée.
-   - « Je la porte aujourd'hui » note la date sur chaque pièce (x.w = dates ISO). Aura évite alors les pièces
+   - « Je la porte aujourd'hui » note la date sur chaque pièce (x.w = dates ISO). Diva évite alors les pièces
      portées ces 3 derniers jours. Ces dates serviront plus tard au coût par port.
    - Tout reste sur le téléphone : clé `monstyle_jour` (tenue du jour) et `monstyle_meteo` (cache du jour).
    Chargé APRÈS aura-twin.js (utilise S, P, GR, grReady, grOccs, GR_OCC, grItemsTxt, grImg, grSave, getSample,
@@ -48,7 +48,7 @@ function jrOccDefaut() {
 }
 const jrOcc = () => GR_OCC.some(o => o[0] === S.jrOcc) ? S.jrOcc : (JR.d === jrAuj() && JR.occ) || jrOccDefaut();
 
-// Météo du jour (cache d'une journée). Ne bloque jamais : sans météo, Aura choisit quand même.
+// Météo du jour (cache d'une journée). Ne bloque jamais : sans météo, Diva choisit quand même.
 let JR_METEO = null;
 try { const m = JSON.parse(localStorage.getItem("monstyle_meteo") || "null"); if (m && m.d === jrAuj() && typeof m.t === "number") JR_METEO = m; } catch (e) {}
 let jrMeteoEnCours = false;
@@ -71,7 +71,7 @@ async function jrMeteo() {
 }
 const jrMeteoTxt = () => { const v = jrVille(); return JR_METEO ? `${jrNomVille(v)} · \u2066${JR_METEO.t} °C\u2069` : jrNomVille(v); };
 
-// Pièces portées ces 3 derniers jours (sauf aujourd'hui) : Aura les évite si elle peut.
+// Pièces portées ces 3 derniers jours (sauf aujourd'hui) : Diva les évite si elle peut.
 function jrRecentes() {
   const lim = jrIlYa(3), auj = jrAuj();
   return GR.items.filter(x => Array.isArray(x.w) && x.w.some(d => d >= lim && d < auj));

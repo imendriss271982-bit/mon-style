@@ -14,13 +14,13 @@
 </script>
 <script>/* Mise à jour automatique : si une nouvelle version est publiée, l'app se recharge toute seule */
 (function(){var B="__BUILD__";if(B.indexOf("__")!==0)window.MS_BUILD=B})();</script>
-<title>My Style</title>
+<title>Diva Divina</title>
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="apple-touch-icon.png?v=3">
-<link rel="icon" type="image/png" href="favicon.png?v=3">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=4">
+<link rel="icon" type="image/png" href="favicon.png?v=4">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="My Style">
+<meta name="apple-mobile-web-app-title" content="Diva Divina">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#FFFFFF"><meta name="color-scheme" content="light">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -134,7 +134,7 @@ footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg)
 #splash .btn[hidden]{display:none}
 #splash #talkbtn.live{background:#4A3E36}
 #splash .skip{position:absolute;top:calc(14px + max(env(safe-area-inset-top,0px),var(--satfb,0px)));right:16px;background:none;border:0;color:var(--accent);font:inherit;font-size:15px;padding:10px 12px;cursor:pointer}#splash .skip[hidden]{display:none}#spnom{width:100%;max-width:320px;margin-bottom:8px}#spnom[hidden]{display:none}
-/* Accueil plein écran : Aura dans son atelier */
+/* Accueil plein écran : Diva dans son atelier */
 #splash{justify-content:flex-start;padding:0;overflow:hidden;background:#702B3A}
 #splash .atelier{position:absolute;inset:0;width:100%;height:100%;z-index:0}
 #splash .atelier .gar{transform-box:fill-box;transform-origin:50% 0;animation:garSway 5.5s ease-in-out infinite}
@@ -582,7 +582,7 @@ a.lb{text-decoration:none}
 .cap-l small{display:block;color:var(--muted);font-size:12.5px;margin-bottom:6px}
 .cap-l p{margin:0;font-size:14px;line-height:1.45}
 
-/* ===== Outfit check : Aura demande l'occasion ===== */
+/* ===== Outfit check : Diva demande l'occasion ===== */
 .occ{display:flex;align-items:center;gap:12px;margin:2px 0 12px}
 .occ img{width:44px;height:44px;border-radius:50%;object-fit:cover;flex:none;box-shadow:0 0 0 2px #fff,0 0 0 3px rgba(43,36,32,.25)}
 .occ p{margin:0;padding:10px 14px;border-radius:18px 18px 18px 4px;background:var(--soft);font-weight:500;font-size:15px}
@@ -609,7 +609,7 @@ a.lb{text-decoration:none}
 [dir=rtl] .ess b,[dir=rtl] .yy b{text-align:left}
 [dir=rtl] .gr-bars small{direction:ltr;text-align:right}
 
-/* Pas d’appel depuis l’écran d’ouverture : on appelle Aura une fois entrée (My Stylist) */
+/* Pas d’appel depuis l’écran d’ouverture : on appelle Diva une fois entrée (My Stylist) */
 #splash #talkbtn{display:none!important}
 /* v118 : écran d’ouverture sur le même fond pétales blanc et blanc cassé que l’app */
 #splash .spbot .btn{background:var(--accent);color:#FFFFFF;border:1px solid var(--accent);box-shadow:0 10px 24px rgba(140,109,53,.25)}
@@ -628,7 +628,7 @@ a.lb{text-decoration:none}
 /* Accueil : la garde-robe se découvre en descendant */
 .hx-more{margin-top:64px}
 .hx>.hx-ms{margin-top:0}
-/* Micro collé à Aura (comme une pastille) */
+/* Micro collé à Diva (comme une pastille) */
 .micbadge{position:absolute;z-index:6;left:calc(50% + var(--ah)*.756*.24);bottom:calc(var(--ab) + var(--ah)*.80);width:62px;height:62px;padding:0;border-radius:50%;border:4px solid #fff;background:var(--accent);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 22px rgba(43,36,32,.45);opacity:0;transform:scale(.6);transition:opacity .5s,transform .5s,background .3s;pointer-events:none}
 .micbadge.show{opacity:1;transform:none;pointer-events:auto;animation:micP 2s ease-in-out infinite}
 .micbadge svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
@@ -829,7 +829,7 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 .btn:active,.btn.ghost:active,#splash .btn:active,#splash .btn.ghost:active,#splash .spbot .btn:active,#splash .spbot .btn.ghost:active,.hz-call:active,.zf-u-b:active,.zf-u.zw .zf-u-b:active,.gr-man:active,.an-r:active,.zf-big.alt:active,.hx-oc2-c:active,.gr-add:active,.lb.pri:active,.callbtn:active,.mic:active,.sty button:active,.mys:active,.hp-b:active,.hx-mic:active,.tile.main:active,.zf-big:active,.zf-aura:active{transform:translateY(2px);box-shadow:inset 0 2px 1px rgba(255,255,255,.6),inset 0 -3px 8px rgba(70,48,14,.45),0 1px 0 #5E4520,0 4px 10px rgba(94,69,32,.3)!important}
 
 /* v135 : écran d'ouverture en grille précise (choix d'Imen) : 3 zones qui ne se chevauchent jamais.
-   Zone haute = logo + phrase (hauteur mesurée en JS → --top) ; zone basse = bouton (--ab) ; Aura occupe exactement l'espace entre les deux. */
+   Zone haute = logo + phrase (hauteur mesurée en JS → --top) ; zone basse = bouton (--ab) ; Diva occupe exactement l'espace entre les deux. */
 #splash .sptop{padding:calc(max(env(safe-area-inset-top,0px),var(--satfb,0px)) + clamp(28px,5svh,48px)) 22px 0}
 #splash .sptop .logo{margin:0 auto;gap:0}
 #splash .sptop .logo .my{font-size:clamp(50px,7.4svh,68px);line-height:1.05;padding:.1em .3em .14em;margin:-.1em -.3em -.3em}
@@ -838,7 +838,7 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 #splash .sptop .sp-tag::before,#splash .sptop .sp-tag::after{content:"";display:inline-block;vertical-align:middle;width:22px;height:1px;margin:0 10px;background:linear-gradient(90deg,transparent,#B8924A,transparent)}
 #splash{--top:34svh;--gap:clamp(14px,2.4svh,24px);--ab:calc(env(safe-area-inset-bottom,0px) + 78px + clamp(18px,3.2svh,32px));
  --avail:calc(100svh - var(--top) - var(--gap) - var(--ab));--ah:min(var(--avail),calc((100vw - 24px)*1.3229));--abase:var(--ab)}
-/* Aura centrée verticalement dans sa zone quand la largeur la limite */
+/* Diva centrée verticalement dans sa zone quand la largeur la limite */
 #splash .avatar.aura{bottom:calc(var(--abase) + (var(--avail) - var(--ah))/2)}
 #splash .tapaura{bottom:calc(var(--abase) + (var(--avail) - var(--ah))/2 + var(--ah)*.80)}
 /* v136 : ajustements de finition (choix d'Imen) */
@@ -848,14 +848,14 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 .hz-q{max-width:240px}.hz-q input{text-overflow:ellipsis}
 .zf-u{height:100%}.zf-uni{align-items:stretch}
 .zf-u .zf-u-b{margin-top:auto;width:100%;min-height:50px;padding:12px 8px;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-/* v151 : Aura cadrée à la taille (la main dans la poche ne se voit plus) en attendant la nouvelle image et les nouvelles vidéos */
+/* v151 : Diva cadrée à la taille (la main dans la poche ne se voit plus) en attendant la nouvelle image et les nouvelles vidéos */
 #splash .avatar.aura,.avatar.aura.inchat{aspect-ratio:480/419}
 #splash .avatar.aura{height:min(calc(var(--ah)*.9),calc((100vw - 24px)*.873));bottom:calc(var(--ab) + 11svh)}
 .avatar.aura.inchat{height:min(34svh,calc((100vw - 40px)*.873))}
 #splash .avatar.aura .fig,.avatar.aura.inchat .fig{inset:0 0 auto 0;height:151.5%;-webkit-mask-image:linear-gradient(to bottom,#000 54%,transparent 65.5%);mask-image:linear-gradient(to bottom,#000 54%,transparent 65.5%)}
 .col-ok{margin:10px 0 0;color:#2F6B2A;font-weight:600;font-size:.92rem}.col-feuille b{color:var(--accent)}
 </style>
-<link rel="stylesheet" href="zifafi.css?v=4">
+<link rel="stylesheet" href="zifafi.css?v=5">
 </head>
 <body>
 <div id="splash"><svg class="atelier" viewBox="0 0 400 860" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
@@ -909,33 +909,33 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 <path class="s3" d="M148 70l1.4 4 4 1.4-4 1.4-1.4 4-1.4-4-4-1.4 4-1.4Z"/><path class="s2" d="M262 40l1.4 4 4 1.4-4 1.4-1.4 4-1.4-4-4-1.4 4-1.4Z"/>
 <path class="s3" d="M24 380l1.4 4 4 1.4-4 1.4-1.4 4-1.4-4-4-1.4 4-1.4Z"/><path d="M384 560l1.6 5 5 1.6-5 1.6-1.6 5-1.6-5-5-1.6 5-1.6Z"/></g>
 <ellipse cx="200" cy="830" rx="230" ry="40" fill="#E3DACA" opacity=".55"/>
-</svg><div class="sptop"><span class="logo" role="img" aria-label="My Style" data-noi18n><span class="my" aria-hidden="true">My</span><span class="st" aria-hidden="true">STYLE</span></span><p class="sp-tag">Ta styliste personnelle</p><h1 id="hi"></h1><p id="hi2"></p></div><div class="avatar aura" id="ava"><div class="fig"><img class="pose" src="aura-pose.webp?v=5" alt="Aura, ta styliste personnelle"><img class="body" src="aura-full.webp?v=3" alt="Aura, ta styliste personnelle"><img class="bras" src="aura-bras2.webp?v=3" alt=""><img class="mf" src="aura-m1.jpg?v=3" alt=""><img class="mf" src="aura-m2.jpg?v=3" alt=""><img class="mf" src="aura-m3.jpg?v=3" alt=""><img class="blink" src="aura-blink.webp?v=3" alt=""></div></div><button class="tapaura" type="button" aria-label="Entends-moi"><svg class="son" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><svg class="coupe" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg></button><div class="spbot"><button class="btn" id="install" hidden>Télécharger l’application</button><div id="spnom" hidden><input class="field" id="spnomI" autocomplete="given-name" placeholder="Ton prénom" style="font-size:20px;padding:16px;margin-bottom:12px;text-align:center"><button class="btn show" id="spnomB" disabled>Continuer</button></div><p id="spst" class="spst"></p><button class="btn ghost" id="start">Commencer</button></div><button id="skip" class="skip" type="button">Passer ›</button><button class="micbadge" id="talkbtn" type="button" aria-label="Parler avec elle"><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg><svg class="hg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15.5c5.3-4.7 12.7-4.7 18 0l-2.6 2.6-3.2-1.6v-2.7c-2.7-.9-4.7-.9-6.4 0v2.7l-3.2 1.6z"/></svg></button><div class="splg"><button type="button" class="lgbtn" data-lgmenu aria-label="Langue" aria-haspopup="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></svg><b class="lgc">FR</b></button></div></div>
+</svg><div class="sptop"><span class="logo" role="img" aria-label="Diva Divina" data-noi18n><span class="my" aria-hidden="true">Diva</span><span class="st" aria-hidden="true">DIVINA</span></span><p class="sp-tag">Ta styliste personnelle</p><h1 id="hi"></h1><p id="hi2"></p></div><div class="avatar aura" id="ava"><div class="fig"><img class="pose" src="aura-pose.webp?v=5" alt="Diva, ta styliste personnelle"><img class="body" src="aura-full.webp?v=3" alt="Diva, ta styliste personnelle"><img class="bras" src="aura-bras2.webp?v=3" alt=""><img class="mf" src="aura-m1.jpg?v=3" alt=""><img class="mf" src="aura-m2.jpg?v=3" alt=""><img class="mf" src="aura-m3.jpg?v=3" alt=""><img class="blink" src="aura-blink.webp?v=3" alt=""></div></div><button class="tapaura" type="button" aria-label="Entends-moi"><svg class="son" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><svg class="coupe" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg></button><div class="spbot"><button class="btn" id="install" hidden>Télécharger l’application</button><div id="spnom" hidden><input class="field" id="spnomI" autocomplete="given-name" placeholder="Ton prénom" style="font-size:20px;padding:16px;margin-bottom:12px;text-align:center"><button class="btn show" id="spnomB" disabled>Continuer</button></div><p id="spst" class="spst"></p><button class="btn ghost" id="start">Commencer</button></div><button id="skip" class="skip" type="button">Passer ›</button><button class="micbadge" id="talkbtn" type="button" aria-label="Parler avec elle"><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg><svg class="hg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15.5c5.3-4.7 12.7-4.7 18 0l-2.6 2.6-3.2-1.6v-2.7c-2.7-.9-4.7-.9-6.4 0v2.7l-3.2 1.6z"/></svg></button><div class="splg"><button type="button" class="lgbtn" data-lgmenu aria-label="Langue" aria-haspopup="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></svg><b class="lgc">FR</b></button></div></div>
 <div id="lgmenu" role="menu" hidden><button type="button" role="menuitem" data-pick="fr" data-noi18n>Français</button><button type="button" role="menuitem" data-pick="en" data-noi18n>English</button><button type="button" role="menuitem" data-pick="ar" data-noi18n>عربي</button></div>
-<div id="inst" role="dialog" aria-modal="true" aria-labelledby="instT"><div class="sh"><h2 id="instT">Installer My Style</h2><p class="sub" id="instS">Quelques gestes dans Safari, et My Style s’ouvre comme une vraie application depuis ton écran d’accueil.</p>
-<ol id="instL"><li><span>Ouvert depuis <b>WhatsApp</b> ? Touche d’abord la <b>boussole Safari</b> <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg> en bas à droite</span></li><li><span>Touche <b>Partager</b> <svg viewBox="0 0 24 24"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M6 11H5v10h14V11h-1"/></svg> en bas de Safari</span></li><li><span>Fais défiler et choisis <b>Sur l’écran d’accueil</b> <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg></span></li><li><span>Touche <b>Ajouter</b>, puis ouvre l’icône My Style</span></li></ol>
+<div id="inst" role="dialog" aria-modal="true" aria-labelledby="instT"><div class="sh"><h2 id="instT">Installer Diva Divina</h2><p class="sub" id="instS">Quelques gestes dans Safari, et Diva Divina s’ouvre comme une vraie application depuis ton écran d’accueil.</p>
+<ol id="instL"><li><span>Ouvert depuis <b>WhatsApp</b> ? Touche d’abord la <b>boussole Safari</b> <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg> en bas à droite</span></li><li><span>Touche <b>Partager</b> <svg viewBox="0 0 24 24"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M6 11H5v10h14V11h-1"/></svg> en bas de Safari</span></li><li><span>Fais défiler et choisis <b>Sur l’écran d’accueil</b> <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg></span></li><li><span>Touche <b>Ajouter</b>, puis ouvre l’icône Diva Divina</span></li></ol>
 <button class="btn" id="instOk">J’ai compris</button></div></div>
 <div id="app">
-<header><button class="ib" id="back" aria-label="Retour"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div id="mid" class="brand"><span class="logo" role="img" aria-label="My Style" data-noi18n><span class="my" aria-hidden="true">My</span><span class="st" aria-hidden="true">STYLE</span></span></div><button type="button" class="lgbtn" data-lgmenu aria-label="Langue" aria-haspopup="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></svg><b class="lgc">FR</b></button><button class="ib" id="hprof" data-go="profil" aria-label="Mon profil" hidden><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.4-4 4.4-6 8-6s6.6 2 8 6"/></svg></button><button class="ib" id="voice" aria-label="Couper la voix" aria-pressed="true"></button></header>
+<header><button class="ib" id="back" aria-label="Retour"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div id="mid" class="brand"><span class="logo" role="img" aria-label="Diva Divina" data-noi18n><span class="my" aria-hidden="true">Diva</span><span class="st" aria-hidden="true">DIVINA</span></span></div><button type="button" class="lgbtn" data-lgmenu aria-label="Langue" aria-haspopup="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></svg><b class="lgc">FR</b></button><button class="ib" id="hprof" data-go="profil" aria-label="Mon profil" hidden><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.4-4 4.4-6 8-6s6.6 2 8 6"/></svg></button><button class="ib" id="voice" aria-label="Couper la voix" aria-pressed="true"></button></header>
 <main id="page"></main>
 <footer id="foot"></footer>
 <nav class="dock" id="dock" aria-label="Navigation principale">
 <button data-go="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Accueil</button>
 <button data-go="garde"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/></svg>Garde-robe</button>
-<button data-go="chat" class="dk-aura"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>Aura</button>
+<button data-go="chat" class="dk-aura"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>Diva</button>
 <button data-go="boutique"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1.2 12.1a1 1 0 0 1-1 .9H7.2a1 1 0 0 1-1-.9z"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></svg>Boutique</button>
 <button data-go="majlis" id="dkmj"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h8A2.5 2.5 0 0 1 17 5.5v5a2.5 2.5 0 0 1-2.5 2.5H9l-3.5 3v-3H6.5A2.5 2.5 0 0 1 4 10.5z"/><path d="M19.5 8.5A2 2 0 0 1 21 10.5v4.5a2 2 0 0 1-2 2h-.5v2.5L15.5 17H12a2 2 0 0 1-2-1.7"/></svg>Majlis<i class="mj-bd" hidden data-noi18n></i></button>
 </nav>
 </div>
-<script src="zifafi-i18n.js?v=3"></script>
-<script src="i18n.js?v=53"></script>
-<script src="aura-methode.js?v=3"></script>
-<script src="aura-mesure.js?v=2"></script>
-<script src="aura-couleur.js?v=1"></script>
-<script src="aura-corps.js?v=1"></script>
-<script src="zifafi-methode.js?v=2"></script>
+<script src="zifafi-i18n.js?v=4"></script>
+<script src="i18n.js?v=54"></script>
+<script src="aura-methode.js?v=4"></script>
+<script src="aura-mesure.js?v=3"></script>
+<script src="aura-couleur.js?v=2"></script>
+<script src="aura-corps.js?v=2"></script>
+<script src="zifafi-methode.js?v=3"></script>
 <script>
-const VERSION="189";
-// Bonjour d’Aura : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
+const VERSION="190";
+// Bonjour de Diva : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
 if(location.protocol==="http:"&&!/^(localhost|127\.)/.test(location.hostname))location.replace("https:"+location.href.slice(5));
@@ -1013,7 +1013,7 @@ const SHOPS_ALL=[
  {n:"Amazon",lab:"Petits prix",site:"amazon.ae",url:q=>"https://www.amazon.ae/s?k="+encodeURIComponent(q),tag:"",pays:["QA","AE","KW","BH","OM"]},
  {n:"Amazon",lab:"Petits prix",site:"amazon.sa",url:q=>"https://www.amazon.sa/s?k="+encodeURIComponent(q),tag:"",pays:["SA"]}];
 // Namshi n'est pas montré au Qatar tant que leur programme ne paie pas les commandes du Qatar.
-// v137 (choix d'Imen) : aucun nom de boutique n'est affiché ni dit par Aura ; la cliente voit seulement « lab ».
+// v137 (choix d'Imen) : aucun nom de boutique n'est affiché ni dit par Diva ; la cliente voit seulement « lab ».
 function shops(){return SHOPS_ALL.filter(x=>x.pays.includes(pays()))}
 function shopUrl(s,q){const direct=s.url?s.url(q)+(s.tag?"&tag="+encodeURIComponent(s.tag):""):null;
  if(s.deep)return s.deep+encodeURIComponent(direct||"https://www."+s.site+"/");
@@ -1067,7 +1067,7 @@ const hideCodes=s=>String(s??"").replace(/\s*\[MS\d{2}\]/g,"");
 const norm=s=>String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
 function findArts(txt){const n=norm(txt),out=[];CATALOGUE.forEach(a=>{if((n.includes(a.id.toLowerCase())||n.includes(norm(a.nom)))&&out.length<3)out.push(a)});return out}
 const miniHTML=a=>`<button class="mini" data-art="${a.id}"><span class="ill">${garSVG(a)}</span><span><b>${esc(a.nom)}</b><small>Voir chez nos boutiques</small></span></button>`;
-function CATCTX(voice){return "PAYS DE LA CLIENTE : "+PAYS[pays()].n+" (prix en "+PAYS[pays()].cur+"). Les achats se font uniquement via les boutiques partenaires de l’onglet Boutique de My Style. Ne cite JAMAIS le nom d’une boutique, d’une enseigne ou d’un site de vente (ni Ounass, ni Namshi, ni Amazon, ni noon, ni aucun autre) : dis seulement « dans l’onglet Boutique ». VITRINE MY STYLE (pièces types disponibles chez ces boutiques, dans l’onglet Boutique) : "+CATALOGUE.map(a=>a.id+" "+a.nom+" (coupes idéales : "+a.formes.join(", ")+" ; "+a.occ.toLowerCase()+")").join(" ; ")+". Quand elle cherche une tenue ou te demande quoi acheter, choisis en priorité dans cette vitrine les pièces qui vont à sa morphologie et à sa saison de couleurs, explique pourquoi en une phrase, et cite chaque pièce avec son nom exact"+(voice?" (à l’oral, sans le code)":" suivi de son code entre crochets, par exemple « Robe portefeuille terracotta [MS01] »")+". Dis-lui qu’elle la retrouve dans l’onglet Boutique. N’invente ni prix ni stock."}
+function CATCTX(voice){return "PAYS DE LA CLIENTE : "+PAYS[pays()].n+" (prix en "+PAYS[pays()].cur+"). Les achats se font uniquement via les boutiques partenaires de l’onglet Boutique de Diva Divina. Ne cite JAMAIS le nom d’une boutique, d’une enseigne ou d’un site de vente (ni Ounass, ni Namshi, ni Amazon, ni noon, ni aucun autre) : dis seulement « dans l’onglet Boutique ». VITRINE DIVA DIVINA (pièces types disponibles chez ces boutiques, dans l’onglet Boutique) : "+CATALOGUE.map(a=>a.id+" "+a.nom+" (coupes idéales : "+a.formes.join(", ")+" ; "+a.occ.toLowerCase()+")").join(" ; ")+". Quand elle cherche une tenue ou te demande quoi acheter, choisis en priorité dans cette vitrine les pièces qui vont à sa morphologie et à sa saison de couleurs, explique pourquoi en une phrase, et cite chaque pièce avec son nom exact"+(voice?" (à l’oral, sans le code)":" suivi de son code entre crochets, par exemple « Robe portefeuille terracotta [MS01] »")+". Dis-lui qu’elle la retrouve dans l’onglet Boutique. N’invente ni prix ni stock."}
 window.addAuraBubble=txt=>{if(!txt||!findArts(txt).length)return;S.chat.push({r:"a",t:txt});try{save()}catch(_){}
  const c=S.page==="chat"&&document.querySelector(".chat");if(c){c.insertAdjacentHTML("beforeend",`<div class="bub a">${esc(hideCodes(txt))}${findArts(txt).map(miniHTML).join("")}</div>`);c.lastElementChild.scrollIntoView({behavior:"smooth",block:"nearest"})}};
 
@@ -1076,7 +1076,7 @@ try{if(localStorage.getItem("monstyle_voix")==="0")S.voice=false}catch(e){}
 S.info={};
 try{const j=JSON.parse(localStorage.getItem("monstyle")||"null");if(j){S.res=j.res||{};S.ans=j.ans||{};S.info=j.info||{};if(j.nom){S.nom=capNom(j.nom);NOM=S.nom}if(j.later)S.later=true;if(j.lang)S.lang=j.lang;if(j.pays)S.pays=j.pays}}catch(e){}
 function save(){try{localStorage.setItem("monstyle",JSON.stringify({res:{visage:S.res.visage,corps:S.res.corps,couleurs:S.res.couleurs,outfit:S.res.outfit},ans:S.ans,nom:S.nom,info:S.info,later:S.later,lang:S.lang,pays:S.pays}))}catch(e){}}
-// Lien de test « nouvelle cliente » : ?nouvelle → Aura redemande le prénom, en français.
+// Lien de test « nouvelle cliente » : ?nouvelle → Diva redemande le prénom, en français.
 try{if(/[?&]nouvelle\b/.test(location.search)){delete S.nom;NOM="ma belle";S.lang="fr";save();history.replaceState(null,"",location.pathname)}}catch(e){}
 if(window.i18nApply)i18nApply();
 const AGES=["18–24 ans","25–34 ans","35–44 ans","45–54 ans","55 ans et +"];
@@ -1110,7 +1110,7 @@ function startOnb(){const m=todoMods().filter(k=>premium()||(k==="visage"&&!PLAN
 const DOCK=["home","boutique","o_photo","news","profil","chat","beaute","garde","tenues","majlis"];
 // Onglet de la barre du bas qui reste allumé quand on est sur une page secondaire.
 document.addEventListener("click",e=>{const t=e.target.closest("[data-gocc2]");if(t)S.grOcc=t.dataset.gocc2},true);
-// Idées de la page Aura : la phrase part dans la vraie conversation (traduite dans la langue de la cliente).
+// Idées de la page Diva : la phrase part dans la vraie conversation (traduite dans la langue de la cliente).
 document.addEventListener("click",e=>{const t=e.target.closest("[data-chsay]");if(!t||S.busy)return;send(typeof tr==="function"?tr(t.dataset.chsay):t.dataset.chsay)});
 const DOCK_OF={beaute:"home",news:"home",art:"boutique",o_photo:"home",o_res:"home",tenues:"garde",prefs:"profil",infos:"profil",abo:"profil",g_item:"garde",fiche:"home"};
 
@@ -1159,7 +1159,7 @@ function capsuleHTML(){const c=season(),pal=c?SEASONS[c].c.slice(0,6):null;
  <h2>Les tenues avec ta capsule</h2><p class="sub">${LOOKS.length} looks avec seulement ces pièces.</p>
  <div class="cap-looks">${LOOKS.map(l=>`<div class="cap-l"><b>${l[0]}</b><div class="cap-li">${l[1].map(k=>`<span title="${CAP[k][0]}">${capIco(k)}</span>`).join("")}</div><small>${l[1].map(k=>CAP[k][0]).join(" · ")}</small><p>${l[2]}</p></div>`).join("")}</div>
  </section>`}
-// Ma garde-robe : la cliente ajoute ses vêtements en photo, Aura les reconnaît puis crée des tenues avec.
+// Ma garde-robe : la cliente ajoute ses vêtements en photo, Diva les reconnaît puis crée des tenues avec.
 // « bas » reste pour les anciens articles ; les nouveaux sont rangés en pantalon ou jupe.
 const GR_CATS=[["haut","Haut"],["pantalon","Pantalon"],["jupe","Jupe"],["robe","Robe"],["veste","Veste"],["abaya","Abaya"],["chaussures","Chaussures"],["sac","Sac"],["accessoire","Accessoire"],["bas","Bas"]];
 const GR_TOP=["haut"],GR_BOT=["bas","pantalon","jupe"],GR_FULL=["robe","abaya"];
@@ -1203,7 +1203,7 @@ async function grAdd(files){const sm=await getSample();
   if(!sm||!sm.json){fin(null);continue}
   sm.json(PR_ITEM(),{images:[f]}).then(fin,()=>fin(null))}
 }
-// Résumé court de la VRAIE garde-robe, envoyé à Aura (voix et chat) pour qu'elle propose des tenues avec ce que la cliente possède.
+// Résumé court de la VRAIE garde-robe, envoyé à Diva (voix et chat) pour qu'elle propose des tenues avec ce que la cliente possède.
 function grBrief(){const it=GR.items.filter(x=>!x.wait&&!x.todo);if(!it.length)return "";
  return "sa garde-robe enregistrée ("+it.length+" pièces) : "+it.slice(0,120).map(x=>(x.nom||grCat(x.cat)).toLowerCase()+(x.couleur&&!norm(x.nom).includes(norm(x.couleur))?" "+x.couleur.toLowerCase():"")).join(", ")+(it.length>120?"…":"")+(GR.saved.length?" ; tenues qu’elle a enregistrées : "+GR.saved.slice(0,5).map(t=>t.titre).join(", "):"")}
 function grItemsTxt(){return GR.items.filter(x=>!x.wait).map(x=>x.id+" : "+grCat(x.cat).toLowerCase()+", "+(x.nom||"")+(x.couleur?", "+x.couleur:"")+(x.style?", style "+x.style:"")).join("\n")}
@@ -1221,7 +1221,7 @@ async function grLooks(occ){if(!isVip())return paywall("garde");const o=GR_OCC.f
 const GR_SIL={haut:"top",pantalon:"pantalon",bas:"pantalon",jupe:"jupe",robe:"robe",veste:"veste",abaya:"abaya"};
 const GR_ICO={chaussures:'<path d="M14 70h54c8 0 12-5 12-9 0-3-3-5-7-6l-18-6-10-14H32l-4 12-10 3c-4 1-6 4-6 8v12z"/>',sac:'<path d="M28 40v-8a12 12 0 0 1 24 0v8" fill="none" stroke-width="5"/><path d="M16 40h48l-5 40H21z"/>',accessoire:'<circle cx="40" cy="50" r="18" fill="none" stroke-width="7"/><circle cx="40" cy="28" r="6"/>'};
 function grPh(x){const h=x.hex||"#D9C3A5",sil=GR_SIL[x.cat];return `<span class="gr-ph" role="img" aria-label="${esc(x.nom||grCat(x.cat))}">${sil?garSVG({cat:sil,hex:h}):`<svg viewBox="0 0 80 100" aria-hidden="true"><g fill="${h}" stroke="rgba(0,0,0,.25)" stroke-width="1.5">${GR_ICO[x.cat]||GR_ICO.accessoire}</g></svg>`}</span>`}
-// « Autre version » : Aura remplace la tenue par une variante, toujours avec les vraies pièces de la garde-robe.
+// « Autre version » : Diva remplace la tenue par une variante, toujours avec les vraies pièces de la garde-robe.
 // Ajustements demandés par la cliente sur une tenue : ponctuels, jamais enregistrés comme préférence permanente.
 const GR_DIR={chic:["Plus habillé","plus habillée et plus élégante (matières plus nobles, chaussures et accessoires plus formels)"],casual:["Plus décontracté","plus décontractée et plus simple à porter au quotidien"],confort:["Plus confortable","plus confortable (pièces souples, chaussures plates ou talons bas, rien qui serre)"]};
 async function grAlt(occ,i,dir){i=+i;dir=GR_DIR[dir]?dir:"";const o=GR_OCC.find(x=>x[0]===occ),l=(GR.looks[occ]||[])[i];if(!o||!l||S.grAlt)return;const sm=await getSample();
@@ -1265,23 +1265,23 @@ const BX={
  coul:{fr:"Tes couleurs make-up",en:"Your make-up colours",ar:"ألوان مكياجچ"},noSeas:{fr:"Fais ta colorimétrie pour connaître tes couleurs de rouge à lèvres, de blush et de fards.",en:"Do your colour analysis to discover your lipstick, blush and eyeshadow colours.",ar:"سوّي تحليل الألوان عشان تعرفين ألوان الروج والبلاشر والظلال اللي تناسبچ."},doSeas:{fr:"Faire ma colorimétrie",en:"Do my colour analysis",ar:"سوّي تحليل ألواني"},
  levres:{fr:"Lèvres",en:"Lips",ar:"الشفايف"},yeux:{fr:"Yeux",en:"Eyes",ar:"العيون"},teint:{fr:"Teint",en:"Complexion",ar:"البشرة"},
  analyse:{fr:"Le conseil de ton analyse",en:"Advice from your analysis",ar:"نصيحة تحليلچ"},
- routine:{fr:"Ma routine pas à pas",en:"My step-by-step routine",ar:"روتيني خطوة بخطوة"},routineS:{fr:"Aura crée ta routine make-up, geste par geste, pour ton visage et ta saison.",en:"Aura creates your make-up routine, step by step, for your face and your season.",ar:"أورا تسوي لچ روتين مكياج خطوة بخطوة، على شكل وجهچ وألوانچ."},
+ routine:{fr:"Ma routine pas à pas",en:"My step-by-step routine",ar:"روتيني خطوة بخطوة"},routineS:{fr:"Diva crée ta routine make-up, geste par geste, pour ton visage et ta saison.",en:"Diva creates your make-up routine, step by step, for your face and your season.",ar:"ديفا تسوي لچ روتين مكياج خطوة بخطوة، على شكل وجهچ وألوانچ."},
  jour:{fr:"Make-up de jour",en:"Day make-up",ar:"مكياج النهار"},soir:{fr:"Make-up de soirée",en:"Evening make-up",ar:"مكياج السهرة"},
- busy:{fr:"Aura prépare ta routine…",en:"Aura is preparing your routine…",ar:"أورا تجهّز روتينچ…"},
- ask:{fr:"Poser une question make-up à Aura",en:"Ask Aura a make-up question",ar:"اسألي أورا عن المكياج"},
+ busy:{fr:"Diva prépare ta routine…",en:"Diva is preparing your routine…",ar:"ديفا تجهّز روتينچ…"},
+ ask:{fr:"Poser une question make-up à Diva",en:"Ask Diva a make-up question",ar:"اسألي ديفا عن المكياج"},
  etS:{fr:"Les gestes qui donnent de l’allure, partout : au travail, en soirée, dans un majlis.",en:"The gestures that give you poise everywhere: at work, at a party, in a majlis.",ar:"الحركات اللي تعطيچ هيبة وأناقة في كل مكان: الدوام، السهرة، المجلس."},
- bien:{fr:"Les bons gestes",en:"Do",ar:"الصح"},eviter:{fr:"À éviter",en:"Avoid",ar:"تجنّبي"},ecoute:{fr:"Aura m’explique",en:"Aura explains",ar:"أورا تشرح لي"},
+ bien:{fr:"Les bons gestes",en:"Do",ar:"الصح"},eviter:{fr:"À éviter",en:"Avoid",ar:"تجنّبي"},ecoute:{fr:"Diva m’explique",en:"Diva explains",ar:"ديفا تشرح لي"},
  pour:{fr:"Pour",en:"For",ar:"لـ"},
  achat:{fr:"Trouver le produit",en:"Find the product",ar:"لقي المنتج"},
  tryT:{fr:"Essaie ton make-up",en:"Try on your make-up",ar:"جرّبي مكياجچ"},
- tryS:{fr:"Une photo de ton visage + ta tenue : Aura te maquille sur ta propre photo.",en:"A photo of your face + your outfit: Aura does your make-up on your own photo.",ar:"صورة لوجهچ + لبسچ: أورا تحط لچ المكياج على صورتچ أنتي."},
+ tryS:{fr:"Une photo de ton visage + ta tenue : Diva te maquille sur ta propre photo.",en:"A photo of your face + your outfit: Diva does your make-up on your own photo.",ar:"صورة لوجهچ + لبسچ: ديفا تحط لچ المكياج على صورتچ أنتي."},
  tryPh:{fr:"Ta photo de visage, de face, en lumière claire",en:"Your face photo, straight on, in good light",ar:"صورة وجهچ من قدّام، في إضاءة حلوة"},
  tryTake:{fr:"Prendre la photo",en:"Take the photo",ar:"صوّري"},tryGal:{fr:"Galerie",en:"Gallery",ar:"الصور"},
  tryQ:{fr:"Ta tenue ou ton occasion",en:"Your outfit or occasion",ar:"لبسچ أو مناسبتچ"},
  tryEx:{fr:"ex. robe de soirée rouge",en:"e.g. red evening dress",ar:"مثلاً: فستان سهرة أحمر"},
  tryChips:{fr:["Robe de soirée rouge","Robe noire","Mariage","Abaya noire","Travail","Naturel de jour"],en:["Red evening dress","Black dress","Wedding","Black abaya","Work","Natural day look"],ar:["فستان سهرة أحمر","فستان أسود","عرس","عباية سوداء","دوام","لوك طبيعي للنهار"]},
  tryGo:{fr:"Créer mon make-up",en:"Create my make-up",ar:"سوّي لي مكياجي"},
- tryBusy:{fr:"Aura te maquille… (15 à 30 secondes)",en:"Aura is doing your make-up… (15 to 30 seconds)",ar:"أورا قاعدة تحط لچ المكياج… (١٥ لـ٣٠ ثانية)"},
+ tryBusy:{fr:"Diva te maquille… (15 à 30 secondes)",en:"Diva is doing your make-up… (15 to 30 seconds)",ar:"ديفا قاعدة تحط لچ المكياج… (١٥ لـ٣٠ ثانية)"},
  tryAv:{fr:"Avant",en:"Before",ar:"قبل"},tryAp:{fr:"Après",en:"After",ar:"بعد"},
  trySave:{fr:"Enregistrer la photo",en:"Save the photo",ar:"احفظي الصورة"},tryAgain:{fr:"Un autre look",en:"Another look",ar:"لوك ثاني"},
  tryLeft:{fr:"essais restants ce mois-ci",en:"tries left this month",ar:"محاولات باقية هالشهر"},
@@ -1373,7 +1373,7 @@ function mkStepLay(t){t=String(t||"").toLowerCase();
  if(/sourcil|brow|حواجب/.test(t))return["brow"];if(/l[eè]vre|rouge|gloss|lip|روج|شفا/.test(t))return["lips"];
  if(/yeux|fard|paupi|mascara|liner|eye|ombre|عيون|ظلال|ماسكرا/.test(t))return["eyes"];
  if(/teint|fond|base|primer|anti.?cern|correct|poudre|foundation|concealer|powder|أساس|بودرة|كونسيلر/.test(t))return["teint"];return null}
-// ===== Essai make-up : Aura maquille la photo de la cliente selon sa tenue (modèle d'images Gemini via le Worker) =====
+// ===== Essai make-up : Diva maquille la photo de la cliente selon sa tenue (modèle d'images Gemini via le Worker) =====
 let MKT={img:null,busy:false,err:"",q:"",txt:""};
 function mkTryBox(){const v=ok("visage"),s=season(),u=S.url.mk,left=mkLeft();
  const ch=BL(BX.tryChips).map(c=>`<button type="button" data-mkq="${esc(c)}" aria-pressed="${MKT.q===c}">${esc(c)}</button>`).join("");
@@ -1401,7 +1401,7 @@ async function mkTry(){if(!premium()&&PLAN.mkfree)return paywall("mk");if(MKT.bu
   "CRITICAL: keep her identity exactly the same. Do not change her face shape, features, eyes, nose, lip shape, skin texture, age, weight, expression, hair, hijab or headscarf, glasses, clothes, jewellery, background, lighting, pose or framing. Only add make-up, realistic and photographic, like a real make-up artist did it. No beauty filter, no face slimming, no retouching. "+
   (fk?"Her face shape is "+v.forme+" : contour "+MK_FACE[fk].en[0]+" Blush "+MK_FACE[fk].en[1]+" Highlighter "+MK_FACE[fk].en[2]+" Brows: "+MK_FACE[fk].en[3]+" ":"")+
   (C?"Her colour season is "+s+": lips "+C.en[0]+" Blush "+C.en[1]+" Eyes "+C.en[2]+" Complexion "+C.en[3]+" Choose the shades from her season that go best with the outfit. ":"")+
-  "Climate: Gulf (heat), so long-wearing, elegant make-up. Then write ONE short sentence in "+LN+" describing the look (lips, eyes, blush), speaking to her as her stylist Aura.";
+  "Climate: Gulf (heat), so long-wearing, elegant make-up. Then write ONE short sentence in "+LN+" describing the look (lips, eyes, blush), speaking to her as her stylist Diva.";
  MKT.busy=true;MKT.err="";render(false);say(BL(BX.tryBusy));
  try{const data=await shrink(S.file.mk,1024);
   const r=await aiPost("/makeup",{prompt:pr,image:data});
@@ -1467,7 +1467,7 @@ function beauteEt(){return `<p class="sub">${BL(BX.etS)}</p>`+ETQ.map(e=>`<div c
  <b>✅ ${BL(BX.bien)}</b><ul class="tips">${BL(e.ok).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
  <b>❌ ${BL(BX.eviter)}</b><ul class="tips">${BL(e.no).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
  <button class="btn" data-etq="${e.k}"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px;vertical-align:-4px;margin-inline-end:8px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg>${BL(BX.ecoute)}</button></div>`).join("")}
-// ===== Photo avec minuteur (3 ou 10 secondes) : poser le téléphone, se mettre en place, Aura reçoit la photo =====
+// ===== Photo avec minuteur (3 ou 10 secondes) : poser le téléphone, se mettre en place, Diva reçoit la photo =====
 let CAM={st:null,face:"user",delay:3,busy:false};
 function camBeep(f,d){try{const C=window.AudioContext||window.webkitAudioContext;const ac=CAM.ac||(CAM.ac=new C());const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;g.gain.value=.15;o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+(d||.12))}catch(e){}}
 async function camStart(){const v=$("#camv");if(!v)return;try{if(CAM.st)CAM.st.getTracks().forEach(t=>t.stop());
@@ -1520,7 +1520,7 @@ async function acamStart(){const v=$("#camv");if(!v||!ACAM)return;try{if(CAM.st)
   v.srcObject=CAM.st;v.classList.toggle("mir",ACAM.face==="user");v.onloadedmetadata=v.onresize=acamFit;await v.play().catch(()=>{});acamFit();
   clearInterval(ACAM.tm);ACAM.tm=setInterval(acamLight,700)}
  catch(e){const k=ACAM&&ACAM.k;acamClose();const n=k&&$("#nat_"+k);if(n)n.click();else toast("Autorise la caméra pour prendre la photo.")}}
-// Lumière en direct : trop sombre, le bandeau devient rose et Aura le dit (une fois toutes les 10 secondes au plus).
+// Lumière en direct : trop sombre, le bandeau devient rose et Diva le dit (une fois toutes les 10 secondes au plus).
 function acamLight(){const v=$("#camv"),tip=$("#camtip"),gd=$("#camgd");if(!v||!ACAM||!v.videoWidth)return;
  const dark=lumaOf(v,v.videoWidth,v.videoHeight)<DARK_LIM;if(dark===ACAM.dark&&tip.textContent)return;ACAM.dark=dark;
  tip.classList.toggle("dark",dark);gd.classList.toggle("ok",!dark);
@@ -1547,11 +1547,11 @@ document.addEventListener("click",e=>{const t=e.target.closest("[data-acam],[dat
  if(t.dataset.acamd){ACAM.delay=+t.dataset.acamd;document.querySelectorAll("#cam [data-acamd]").forEach(b=>b.classList.toggle("on",b===t));return}
  if(t.hasAttribute("data-acamgo")){acamGo();return}
  if(t.hasAttribute("data-acamf")){ACAM.face=ACAM.face==="user"?"environment":"user";acamStart()}});
-// ===== Formules My Style (modèle du rapport) =====
-// Essai gratuit : 1 analyse du visage complète + 1 minute avec Aura par mois + 3 messages écrits.
+// ===== Formules Diva Divina (modèle du rapport) =====
+// Essai gratuit : 1 analyse du visage complète + 1 minute avec Diva par mois + 3 messages écrits.
 // Base 29 QAR / mois, VIP 79 QAR / mois, Annuel 249 QAR / an. Le paiement arrive avec la version Google Play ;
 // en attendant, un code testeuse débloque le VIP pour la famille et les testeuses.
-const PLANS={essai:{nom:"Essai gratuit",min:1,msg:3},base:{nom:"My Style Essentiel",min:20,msg:200},annuel:{nom:"My Style Annuel",min:20,msg:200},vip:{nom:"My Style VIP",min:60,msg:500}};
+const PLANS={essai:{nom:"Essai gratuit",min:1,msg:3},base:{nom:"Diva Divina Essentiel",min:20,msg:200},annuel:{nom:"Diva Divina Annuel",min:20,msg:200},vip:{nom:"Diva Divina VIP",min:60,msg:500}};
 // GRATUIT=true : tout est ouvert et illimité pendant la phase de test (pas d’abonnement, pas de limite). Mettre false pour remettre les formules.
 const GRATUIT=true;
 // v180 : les codes testeuse ne sont plus écrits ici (lisibles par tous) ; le Worker les vérifie (variable Cloudflare TEST_CODES).
@@ -1569,11 +1569,11 @@ function secLeft(){if(GRATUIT)return 999*60;quota();return PLANS[plan()].min*60-
 function useSec(n){quota();PLAN.sec=(PLAN.sec||0)+n;planSave()}
 function msgLeft(){if(GRATUIT)return 999;quota();return PLANS[plan()].msg-(PLAN.msg||0)}
 function useMsg(){quota();PLAN.msg=(PLAN.msg||0)+1;planSave()}
-const PW_WHY={analyses:"Ton analyse du visage gratuite est faite. Les autres analyses sont réservées aux abonnées.",visage:"Tu as déjà utilisé ton analyse gratuite du visage.",outfit:"L’Outfit check est réservé aux abonnées.",aura:"Tu as utilisé tes minutes avec Aura ce mois-ci.",chat:"Tu as utilisé tes messages gratuits ce mois-ci.",garde:"La garde-robe complète est réservée au VIP.",beaute:"La routine beauté est réservée aux abonnées.",mk:"Tu as utilisé ton essai make-up offert. Abonne-toi pour créer tous tes looks."};
+const PW_WHY={analyses:"Ton analyse du visage gratuite est faite. Les autres analyses sont réservées aux abonnées.",visage:"Tu as déjà utilisé ton analyse gratuite du visage.",outfit:"L’Outfit check est réservé aux abonnées.",aura:"Tu as utilisé tes minutes avec Diva ce mois-ci.",chat:"Tu as utilisé tes messages gratuits ce mois-ci.",garde:"La garde-robe complète est réservée au VIP.",beaute:"La routine beauté est réservée aux abonnées.",mk:"Tu as utilisé ton essai make-up offert. Abonne-toi pour créer tous tes looks."};
 // Le code est accepté avec espaces, tirets, minuscules ou chiffres arabes (٢٠٢٦).
 function codeNorm(x){return String(x||"").replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[۰-۹]/g,d=>"۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/[^A-Za-z0-9]/g,"").toUpperCase()}
 function paywall(why){if(GRATUIT)return;S.pwWhy=why||"";try{stopVoice()}catch(e){}if(window.endCall)window.endCall();go("abo")}
-// Boutons sous chaque tenue proposée : enregistrer, j'aime / j'aime pas (mémorisé par Aura), autre version.
+// Boutons sous chaque tenue proposée : enregistrer, j'aime / j'aime pas (mémorisé par Diva), autre version.
 function grActs(l,occ,i){const nm=l.titre+" ("+l.pieces.map(id=>{const x=GR.items.find(y=>y.id===id);return x?(x.nom||grCat(x.cat)).toLowerCase():""}).filter(Boolean).join(", ")+")",sv=GR.saved.some(t=>t.titre===l.titre&&t.pieces.join()===l.pieces.join());
  return `<div class="gr-acts" data-pfrate><button type="button" data-gsave="${occ}:${i}" aria-pressed="${sv}">${sv?"♥ Enregistrée":"♡ Enregistrer"}</button><button type="button" data-pfgood="${esc(nm)}" data-pfids="${esc(l.pieces.join(","))}" aria-label="J’aime ce look">👍</button><button type="button" data-pfbad="${esc(nm)}" data-pfids="${esc(l.pieces.join(","))}" aria-label="Je n’aime pas ce look">👎</button><button type="button" data-galt="${occ}:${i}"${S.grAlt===occ+":"+i?" disabled":""}>${S.grAlt===occ+":"+i?"Je cherche…":"Autre version"}</button></div>
  <div class="gr-adj" role="group" aria-label="Ajuster cette tenue">${Object.entries(GR_DIR).map(([k,v])=>`<button type="button" data-galt="${occ}:${i}:${k}"${S.grAlt?" disabled":""}>${v[0]}</button>`).join("")}</div>`}
@@ -1606,10 +1606,10 @@ home:()=>{const v=ok("visage"),bd=ok("corps"),c=season(),oc=ok("outfit");
   <div class="hz-hi"><h1 class="hh">Salut <em>${esc(cap(NOM))}</em><span class="hz-heart" aria-hidden="true">&nbsp;♥</span></h1><p>Qu’est-ce qu’on porte aujourd’hui ?</p>
    <label class="hz-q"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg><input id="hq" type="search" enterkeyhint="send" autocomplete="off" placeholder="Cherche un look…" aria-label="Cherche un look…"></label></div>
  </section>
- <button class="hz-st" data-view="chat" aria-label="Demander à Aura : ta styliste personnelle">
-  <small>Ta styliste IA personnelle</small><b data-noi18n>My Stylist</b><em>Parle-moi, Aura</em>
+ <button class="hz-st" data-view="chat" aria-label="Demander à Diva : ta styliste personnelle">
+  <small>Ta styliste IA personnelle</small><b data-noi18n>My Stylist</b><em>Parle-moi, Diva</em>
   <span class="hz-chip">${mins}</span>
-  <span class="hz-call"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg>Appeler Aura</span>
+  <span class="hz-call"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg>Appeler Diva</span>
  </button>
  <section class="hz-more"><h2 class="hz-h">Mon style</h2>
 
@@ -1653,7 +1653,7 @@ garde:(asT)=>{const c=grCount(),rd=grReady(),occ=GR_OCC.some(o=>o[0]===S.grOcc)?
  const filt=cats.length>1?`<div class="fchips gr-f">${[["","Tout"],...cats].map(k=>`<button data-gf="${k[0]}" aria-pressed="${fl===k[0]}">${k[1]}${k[0]?` <small>${GR.items.filter(x=>x.cat===k[0]).length}</small>`:""}</button>`).join("")}</div>`:"";
  const list=GR.items.length?`<h2>Mes articles <small class="gr-n">${GR.items.length}</small></h2>${filt}<div class="gr-grid">${shown.map(x=>`<button class="gr-it${x.wait?" wait":""}${x.todo?" todo":""}" ${x.wait?"disabled":`data-gitem="${x.id}"`} aria-label="${esc(x.nom||"Article")}">${grImg(x)}<span>${x.wait?"Je regarde…":esc(x.nom||grCat(x.cat))}</span></button>`).join("")}</div>`:"";
  if(asT){const oc=S.res&&S.res.outfit;
-  return {dock:1,html:`<h1>Créer une tenue</h1><p class="sub">Choisis une occasion : Aura assemble des tenues avec tes vrais vêtements.</p>
+  return {dock:1,html:`<h1>Créer une tenue</h1><p class="sub">Choisis une occasion : Diva assemble des tenues avec tes vrais vêtements.</p>
   ${occs}${rd||(looks&&looks.length)||S.grBusy===occ?body:`<div class="gr-empty"><p>${GR.items.length?"Ajoute encore "+(GR_MIN-c.tot)+" article"+(GR_MIN-c.tot>1?"s":"")+" à ta garde-robe, et je les coordonne en tenues.":"Ajoute d’abord quelques vêtements à ta garde-robe : je les coordonne ensuite en tenues pour toi."}</p><button class="btn" data-go="garde">Ajouter des vêtements</button></div>`}
   ${grSavedHTML()}
   <h2 class="tn-oc">Tu es déjà habillée ?</h2>
@@ -1732,8 +1732,8 @@ profil:()=>{const i=S.info||{},has=!!i.email,pick=(k,l)=>`<div class="row"><span
  ${(()=>{const v=ok("visage"),bd=ok("corps"),c=season(),nd=[v,bd,c].filter(Boolean).length;return nd<3?`<div class="hx-an"><span class="hr-lab">Ton analyse de style</span><b>${nd?"Termine ton analyse de style":"Découvre ton style"}</b><small>3 étapes, une seule fois : ensuite mes conseils sont faits pour toi.</small>
    <ol class="hx-an-s">${[["Visage",v],["Silhouette",bd],["Couleurs",c]].map((x,i)=>`<li class="${x[1]?"ok":""}"><i aria-hidden="true">${x[1]?"✓":i+1}</i><span>${x[0]}</span></li>`).join("")}</ol>
    <button class="btn" data-onb>${nd?"Continuer mon analyse":"Commencer mon analyse"}</button></div>`:""})()}
- <button class="tile main" data-view="prefs"><b>Mes préférences de style</b><span>${typeof pfEmpty==="function"&&!pfEmpty()?"Couleurs, pièces, occasions, mode pudique : touche pour modifier":"Dis à Aura les couleurs, pièces et occasions que tu aimes"}</span></button>
- ${GRATUIT?"":`<button class="tile" data-go="abo"><b>${PLANS[plan()].nom}</b><span>${Math.max(0,Math.floor(secLeft()/60))} min avec Aura restantes ce mois-ci · voir les formules</span></button>`}
+ <button class="tile main" data-view="prefs"><b>Mes préférences de style</b><span>${typeof pfEmpty==="function"&&!pfEmpty()?"Couleurs, pièces, occasions, mode pudique : touche pour modifier":"Dis à Diva les couleurs, pièces et occasions que tu aimes"}</span></button>
+ ${GRATUIT?"":`<button class="tile" data-go="abo"><b>${PLANS[plan()].nom}</b><span>${Math.max(0,Math.floor(secLeft()/60))} min avec Diva restantes ce mois-ci · voir les formules</span></button>`}
  <h2>Mon pays</h2><div class="pk">${Object.keys(PAYS).map(k=>`<button type="button" data-setpays="${k}" aria-pressed="${pays()===k}">${PAYS[k].n}</button>`).join("")}</div>
  <h2>Langue de l’application</h2><div class="pk">${[["fr","Français"],["en","English"],["ar","عربي"]].map(x=>`<button type="button" data-setlang="${x[0]}" aria-pressed="${(S.lang||"fr")===x[0]}">${x[1]}</button>`).join("")}</div>
  <h2>Mes analyses</h2><p class="hint" style="margin-top:-6px">Touche un résultat pour le revoir, ou refais l’analyse avec une nouvelle photo.</p>
@@ -1744,9 +1744,9 @@ profil:()=>{const i=S.info||{},has=!!i.email,pick=(k,l)=>`<div class="row"><span
  say:""}},
 abo:()=>{const c=plan(),why=PW_WHY[S.pwWhy]||"",card=(k,prix,txt)=>`<button class="tile${k==="vip"?" main":""}" data-buy="${k}" aria-pressed="${!GRATUIT&&c===k}"><b>${PLANS[k].nom}${!GRATUIT&&c===k?" ✓":""}</b><span>${prix} · ${txt}</span></button>`,m=Math.max(0,Math.floor(secLeft()/60));
  return {dock:1,html:`<h1>Mes formules</h1>
- ${why?`<p class="sub">${why}</p>`:GRATUIT?`<p class="sub">Pendant la phase de test, tout est offert. Voici les formules qui arriveront ensuite.</p>`:`<p class="sub">Formule actuelle : <b>${PLANS[c].nom}</b> · ${m} min avec Aura restantes ce mois-ci.</p>`}
- ${card("base",prix("base")+" / mois","toutes les analyses, Outfit check, beauté, 20 min avec Aura")}
- ${card("vip",prix("vip")+" / mois","tout l’Essentiel + 60 min avec Aura + garde-robe complète")}
+ ${why?`<p class="sub">${why}</p>`:GRATUIT?`<p class="sub">Pendant la phase de test, tout est offert. Voici les formules qui arriveront ensuite.</p>`:`<p class="sub">Formule actuelle : <b>${PLANS[c].nom}</b> · ${m} min avec Diva restantes ce mois-ci.</p>`}
+ ${card("base",prix("base")+" / mois","toutes les analyses, Outfit check, beauté, 20 min avec Diva")}
+ ${card("vip",prix("vip")+" / mois","tout l’Essentiel + 60 min avec Diva + garde-robe complète")}
  ${card("annuel",prix("annuel")+" / an","l’Essentiel pour toute l’année, 2 mois offerts")}
  <h2>À l’unité</h2>
  <button class="tile" data-buy="pdf"><b>Rapport couleurs PDF</b><span>${prix("pdf")} · ta palette complète à garder</span></button>
@@ -1756,7 +1756,7 @@ abo:()=>{const c=plan(),why=PW_WHY[S.pwWhy]||"",card=(k,prix,txt)=>`<button clas
  <input class="field" id="tcode" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" inputmode="latin" dir="ltr" placeholder="Ton code" style="margin-bottom:10px" onkeydown="if(event.key==='Enter'){event.preventDefault();document.querySelector('[data-tcode]').click()}">
  <button class="btn" data-tcode style="margin-bottom:120px">Activer</button>
  ${premium()?`<button class="link" data-essai>Revenir à l’essai gratuit</button>`:""}`,
- say:why?"Choisis la formule qui te va, "+NOM+".":"Voici les formules My Style, "+NOM+"."}},
+ say:why?"Choisis la formule qui te va, "+NOM+".":"Voici les formules Diva Divina, "+NOM+"."}},
 infos:()=>{const d=S.idraft||(S.idraft={...S.info,nom:S.nom||"",styles:[...(S.info.styles||[])]});
  const chips=(k,list,multi)=>`<div class="pk" data-k="${k}"${multi?' data-multi':''}>${list.map(v=>`<button type="button" data-pk="${esc(v)}" aria-pressed="${multi?(d[k]||[]).includes(v):d[k]===v}">${esc(v)}</button>`).join("")}</div>`;
  return {back:true,html:`<p class="step">Mon profil</p><h1>Mes informations</h1><p class="sub">Seul ton email est obligatoire. Le reste m’aide à te conseiller plus juste.</p>
@@ -1776,7 +1776,7 @@ v_run:()=>runPage("face","Je regarde ton visage…","a_face"),
 c_run:()=>runPage("body","Je regarde ta silhouette…","a_body"),
 k_run:()=>runPage("face","Je regarde tes couleurs…","a_face"),
 o_photo:()=>{const p=photoPage("outfit",{step:"Outfit check",t:"Ta tenue",c:"En pied, de face, la tenue complète avec les chaussures, en lumière claire.",ph:"Ta photo de tenue",ic:"outfit",cam:"environment",b:"Noter ma tenue",say:S.occ?"Montre-moi ta tenue, "+NOM+". Prends une photo en pied, avec les chaussures. Mets-toi face à une fenêtre ou une belle lumière.":"C’est pour quelle occasion aujourd’hui, "+NOM+" ? Choisis, puis montre-moi ta tenue."});
- p.html=`<p class="step">Outfit check</p><div class="occ"><img src="aura-face.jpg?v=3" alt="Aura" width="44" height="44"><p>C’est pour quelle occasion aujourd’hui ?</p></div><div class="occ-c" role="group" aria-label="Occasion">${OCCS.map(o=>`<button class="occ-b" data-occ="${o[0]}" aria-pressed="${S.occ===o[0]}">${o[1]} ${o[0]}</button>`).join("")}</div>`+p.html.replace('<p class="step">Outfit check</p>','');return p},
+ p.html=`<p class="step">Outfit check</p><div class="occ"><img src="aura-face.jpg?v=3" alt="Diva" width="44" height="44"><p>C’est pour quelle occasion aujourd’hui ?</p></div><div class="occ-c" role="group" aria-label="Occasion">${OCCS.map(o=>`<button class="occ-b" data-occ="${o[0]}" aria-pressed="${S.occ===o[0]}">${o[1]} ${o[0]}</button>`).join("")}</div>`+p.html.replace('<p class="step">Outfit check</p>','');return p},
 o_run:()=>({html:`<p class="step">Outfit check</p><h1>${S.err?"Un souci":"Je regarde ta tenue…"}</h1><div class="photo scan">${S.url.outfit?`<img src="${S.url.outfit}" alt="">`:""}</div>${S.err?`<p class="sub">${esc(S.err)}</p>`:WAITBOX}`,
  foot:S.err?`<button class="btn" data-retry>Réessayer</button><button class="link" data-go="o_photo">Changer ma photo</button>`:"",back:!!S.err}),
 o_res:()=>{const o=ok("outfit");if(!o)return missing("outfit",S.res.outfit);
@@ -1789,19 +1789,19 @@ boutique:()=>{const s=season(),cols=s?SEASONS[s].c.filter(x=>!/Noir|Blanc/.test(
  const list=fits.filter(x=>!S.vcat||x.a.cat===S.vcat).sort((x,y)=>y.f.sc-x.f.sc);
  const card=x=>`<button class="art" data-art="${x.a.id}"><span class="ill">${garSVG(x.a)}</span><b>${esc(x.a.nom)}</b><small>${esc(x.a.occ)}</small>${x.f.sc>=4?`<span class="tag">Parfait pour toi</span>`:x.f.sc>=2?`<span class="tag soft">Te va bien</span>`:""}</button>`;
  return {dock:1,html:`<h1>Ma boutique</h1><p class="sub">${known?"Des pièces choisies pour ta morphologie et ta saison.":"Fais ton analyse pour que je choisisse les pièces faites pour toi."}</p>
- <div class="card"><b>Nos boutiques partenaires</b><p class="sub" style="font-size:14px;margin:6px 0 0">Boutiques en ligne sélectionnées par My Style. Livraison : ${PAYS[pays()].n}.</p><div class="pk" style="margin-top:10px">${Object.keys(PAYS).map(k=>`<button type="button" data-setpays="${k}" aria-pressed="${pays()===k}">${PAYS[k].n}</button>`).join("")}</div></div>
- ${top.length?`<h2>La sélection d’Aura</h2><div class="vit">${top.map(card).join("")}</div>`:""}
- <button class="btn" data-askaura style="margin:14px 0 6px">Demander à Aura de choisir pour moi</button>
+ <div class="card"><b>Nos boutiques partenaires</b><p class="sub" style="font-size:14px;margin:6px 0 0">Boutiques en ligne sélectionnées par Diva Divina. Livraison : ${PAYS[pays()].n}.</p><div class="pk" style="margin-top:10px">${Object.keys(PAYS).map(k=>`<button type="button" data-setpays="${k}" aria-pressed="${pays()===k}">${PAYS[k].n}</button>`).join("")}</div></div>
+ ${top.length?`<h2>La sélection de Diva</h2><div class="vit">${top.map(card).join("")}</div>`:""}
+ <button class="btn" data-askaura style="margin:14px 0 6px">Demander à Diva de choisir pour moi</button>
  <h2>La vitrine</h2><div class="fchips">${VCATS.map(c=>`<button data-vcat="${c[0]}" aria-pressed="${(S.vcat||"")===c[0]}">${c[1]}</button>`).join("")}</div>
  <div class="vit">${list.map(card).join("")}</div>
  <div class="card" style="margin-top:14px"><b>Je cherche autre chose</b><input class="field" id="shopq" placeholder="Par exemple : robe de soirée" value="${esc(S.shopQ)}"><button class="btn ghost" data-shop>Chercher</button>${S.shopQ?`<div style="margin-top:12px">${links(S.shopQ+(cols[0]?" "+cols[0]:""))}</div>`:""}</div>
- <p class="sub" style="font-size:14px">Chaque bouton t’emmène chez la boutique partenaire. My Style peut recevoir une commission sur tes achats, sans aucun coût en plus pour toi.</p>`,
+ <p class="sub" style="font-size:14px">Chaque bouton t’emmène chez la boutique partenaire. Diva Divina peut recevoir une commission sur tes achats, sans aucun coût en plus pour toi.</p>`,
  say:""}},
 art:()=>{const a=ART(S.art)||CATALOGUE[0],f=artFit(a);
  return {dock:1,html:`<div class="artbig">${garSVG(a)}</div><h1>${esc(a.nom)}</h1><p class="sub">${esc(a.coul)} · ${esc(a.occ)}</p>
- <div class="card"><b>L’avis d’Aura</b><p style="margin:6px 0 0">${f.why.length?cap(f.why.join(" et "))+".":f.known?"Ce n’est pas la pièce la plus flatteuse pour toi : demande-moi une alternative.":"Fais ton analyse et je te dirai si elle te va."}</p></div>
+ <div class="card"><b>L’avis de Diva</b><p style="margin:6px 0 0">${f.why.length?cap(f.why.join(" et "))+".":f.known?"Ce n’est pas la pièce la plus flatteuse pour toi : demande-moi une alternative.":"Fais ton analyse et je te dirai si elle te va."}</p></div>
  <div class="card"><b>La trouver chez nos partenaires</b><div style="margin-top:10px">${links(a.nom)}</div></div>
- <button class="btn" data-askart="${a.id}">Demander à Aura avec quoi la porter</button>`,
+ <button class="btn" data-askart="${a.id}">Demander à Diva avec quoi la porter</button>`,
  say:f.why.length?cap(f.why.join(" et "))+".":"Voici la pièce. Demande-moi si elle te va."}},
 news:()=>{const n=S.news,prof=PROFIL();
  const body=S.newsBusy?`<div class="note">Je cherche les tendances du moment pour toi…</div>`
@@ -1820,7 +1820,7 @@ beaute:()=>{const tab=S.btab||"mk",v=ok("visage");
  <div class="fchips" role="tablist"><button role="tab" data-btab="mk" aria-pressed="${tab==="mk"}">💄 ${BL(BX.tMk)}</button><button role="tab" data-btab="et" aria-pressed="${tab==="et"}">👑 ${BL(BX.tEt)}</button></div>
  ${tab==="et"?beauteEt():beauteMk()}</div>`,
  say:tab==="et"?BL(BX.etS):(v?{fr:"Voici ton make-up sur mesure, ",en:"Here is your made-to-measure make-up, ",ar:"هذا مكياجچ على مقاسچ يا "}[S.lang||"fr"]+NOM+".":BL(BX.noFace))}},
-chat:()=>({dock:1,html:`<div class="avatar aura inchat" id="ava2"><div class="fig"><img class="pose" src="aura-pose.webp?v=5" alt="Aura, ta styliste personnelle"><img class="body" src="aura-full.webp?v=3" alt="Aura, ta styliste"><img class="bras" src="aura-bras2.webp?v=3" alt=""><img class="mf" src="aura-m1.jpg?v=3" alt=""><img class="mf" src="aura-m2.jpg?v=3" alt=""><img class="mf" src="aura-m3.jpg?v=3" alt=""><img class="blink" src="aura-blink.webp?v=3" alt=""></div><button class="micbadge show${window.liveConv&&window.liveConv()?" live":""}" id="callbtn" type="button" aria-label="Parler à ma styliste"><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg><svg class="hg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15.5c5.3-4.7 12.7-4.7 18 0l-2.6 2.6-3.2-1.6v-2.7c-2.7-.9-4.7-.9-6.4 0v2.7l-3.2 1.6z"/></svg></button></div><h1>Ta styliste</h1>${typeof zfChatCtx==="function"?zfChatCtx():""}<p id="callst" class="sub" style="text-align:center">Appuie pour parler avec ta styliste</p><h2>Ou écris-lui</h2>
+chat:()=>({dock:1,html:`<div class="avatar aura inchat" id="ava2"><div class="fig"><img class="pose" src="aura-pose.webp?v=5" alt="Diva, ta styliste personnelle"><img class="body" src="aura-full.webp?v=3" alt="Diva, ta styliste"><img class="bras" src="aura-bras2.webp?v=3" alt=""><img class="mf" src="aura-m1.jpg?v=3" alt=""><img class="mf" src="aura-m2.jpg?v=3" alt=""><img class="mf" src="aura-m3.jpg?v=3" alt=""><img class="blink" src="aura-blink.webp?v=3" alt=""></div><button class="micbadge show${window.liveConv&&window.liveConv()?" live":""}" id="callbtn" type="button" aria-label="Parler à ma styliste"><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg><svg class="hg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15.5c5.3-4.7 12.7-4.7 18 0l-2.6 2.6-3.2-1.6v-2.7c-2.7-.9-4.7-.9-6.4 0v2.7l-3.2 1.6z"/></svg></button></div><h1>Ta styliste</h1>${typeof zfChatCtx==="function"?zfChatCtx():""}<p id="callst" class="sub" style="text-align:center">Appuie pour parler avec ta styliste</p><h2>Ou écris-lui</h2>
  <div class="chat">${S.chat.map((c,i)=>`<div class="bub ${c.r}" id="b${i}">${c.img?`<img src="${c.img}" alt="Photo envoyée">`:""}${esc(hideCodes(c.t))||(c.img?"":"…")}${c.r==="a"&&c.t?findArts(c.t).map(miniHTML).join(""):""}</div>`).join("")}</div>
  ${S.cphoto?`<div class="prev"><img src="${S.cphoto.url}" alt="Photo à envoyer"><button data-unphoto aria-label="Retirer la photo">×</button></div>`:""}
 
@@ -1923,17 +1923,17 @@ function render(sayIt){
  $("#dock").style.display=p.dock?"":"none";
  {const cur=DOCK_OF[S.page]||S.page;document.querySelectorAll("#dock button").forEach(b=>{if(b.dataset.go===cur)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")})}
  const fl=S.flow,ix=fl?fl.indexOf(S.page):-1;
- $("#mid").className=ix>=0?"bar":"brand";$("#mid").innerHTML=ix>=0?`<i style="width:${(ix+1)/fl.length*100}%"></i>`:`<span class="logo" role="img" aria-label="My Style" data-noi18n><span class="my" aria-hidden="true">My</span><span class="st" aria-hidden="true">STYLE</span></span>`;
+ $("#mid").className=ix>=0?"bar":"brand";$("#mid").innerHTML=ix>=0?`<i style="width:${(ix+1)/fl.length*100}%"></i>`:`<span class="logo" role="img" aria-label="Diva Divina" data-noi18n><span class="my" aria-hidden="true">Diva</span><span class="st" aria-hidden="true">DIVINA</span></span>`;
  $("#back").hidden=p.dock||p.back===false;$("#hprof").hidden=S.page!=="home";document.body.classList.toggle("pg-home",S.page==="home");if(!p.dock)affStop();
  if(p.count)countUp(p.count);
  if(window.onPage)window.onPage(S.page);
- // Accueil : Aura dit bonjour une seule fois par ouverture de l’app, pas à chaque retour.
+ // Accueil : Diva dit bonjour une seule fois par ouverture de l’app, pas à chaque retour.
  if(sayIt&&p.say&&!(S.page==="home"&&HOME_HI)){if(S.page==="home")markHi();say(p.say)}
  waitTick();
  setTimeout(resLang,50);
  window.scrollTo(0,0);
 }
-// ===== n8n : chaque nouvelle inscrite est envoyée au workflow « My Style – Nouvelles inscrites » =====
+// ===== n8n : chaque nouvelle inscrite est envoyée au workflow « Diva Divina – Nouvelles inscrites » =====
 // Colle ici l'adresse « Production URL » du nœud Webhook de n8n. Vide = rien n'est envoyé.
 // Seuls la date, le prénom, l'email, le WhatsApp, le pays, la langue et la formule partent ; jamais la taille, le poids ou les photos.
 const N8N_URL="https://imendriss.app.n8n.cloud/webhook/523be6d4-37b2-4c9e-949b-5d1d06a9d7a5";
@@ -1990,7 +1990,7 @@ function devTok(renew){if(renew){try{localStorage.removeItem("monstyle_dev")}cat
  return DEVP}
 async function aiPost(path,body){const send=async renew=>fetch(AI_URL+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...(body||{}),dev:await devTok(renew)})});
  let r=await send(false);if(r.status===401){let c="";try{c=(await r.clone().json()).code}catch(e){}if(c==="device")r=await send(true)}return r}
-// Appel / chat avec l'agent Aura : lien signé délivré par le Worker ; en secours, l'identifiant de l'agent
+// Appel / chat avec l'agent Diva : lien signé délivré par le Worker ; en secours, l'identifiant de l'agent
 // (ne marche plus une fois l'authentification activée sur l'agent dans ElevenLabs, ce qui est le but).
 async function auraSession(){try{const r=await aiPost("/voice/session",{});const d=await r.json().catch(()=>({}));if(r.ok&&d.signedUrl)return {signedUrl:d.signedUrl};if(d&&d.code==="quota")throw Object.assign(new Error(d.erreur),{code:"quota"})}catch(e){if(e&&e.code==="quota")throw e}return {agentId:AGENT_ID}}
 function shrink(file,max=1024){return new Promise((ok,ko)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL("image/jpeg",0.85).split(",")[1])};im.onerror=()=>{URL.revokeObjectURL(u);ko(Object.assign(new Error("photo"),{code:"image_rejected"}))};im.src=u})}
@@ -2049,7 +2049,7 @@ async function run(k){if(RUNS[k])return runMod(k);
 }
 
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;S.micMsg="";
-function SYS(){return REF_LOOK+" Tu es la styliste personnelle de l’application Mon style. Parle comme une amie styliste chaleureuse, à l’oral. RÈGLE N°1 : l’essentiel seulement, 1 à 2 phrases courtes (30 mots maximum), la réponse tout de suite, sans introduction, sans résumé, sans compliments en trop, sans liste, sans emoji ; les détails seulement si elle les demande. Elle s’appelle "+(S.nom||"(prénom inconnu)")+" : ne dis jamais « ma belle », utilise seulement son prénom, de temps en temps. "+({en:"Elle a choisi l’anglais : réponds en anglais par défaut. ",ar:"Elle a choisi l’arabe : réponds par défaut en dialecte qatari du Golfe (jamais en arabe classique), en t’adressant à elle au féminin avec « چ ». "}[S.lang]||"")+" Son profil : "+(PROFIL()||"pas encore analysé : invite-la à faire son analyse")+". Pour les achats, donne le type de pièce, la couleur et les mots-clés à chercher chez les boutiques partenaires de son pays, dans l’onglet Boutique, sans inventer de lien ni de prix. "+CATCTX()}
+function SYS(){return REF_LOOK+" Tu es la styliste personnelle de l’application Diva Divina. Parle comme une amie styliste chaleureuse, à l’oral. RÈGLE N°1 : l’essentiel seulement, 1 à 2 phrases courtes (30 mots maximum), la réponse tout de suite, sans introduction, sans résumé, sans compliments en trop, sans liste, sans emoji ; les détails seulement si elle les demande. Elle s’appelle "+(S.nom||"(prénom inconnu)")+" : ne dis jamais « ma belle », utilise seulement son prénom, de temps en temps. "+({en:"Elle a choisi l’anglais : réponds en anglais par défaut. ",ar:"Elle a choisi l’arabe : réponds par défaut en dialecte qatari du Golfe (jamais en arabe classique), en t’adressant à elle au féminin avec « چ ». "}[S.lang]||"")+" Son profil : "+(PROFIL()||"pas encore analysé : invite-la à faire son analyse")+". Pour les achats, donne le type de pièce, la couleur et les mots-clés à chercher chez les boutiques partenaires de son pays, dans l’onglet Boutique, sans inventer de lien ni de prix. "+CATCTX()}
 let TCONV=null;
 async function textConv(){
  if(TCONV)return TCONV;
@@ -2079,7 +2079,7 @@ const PR_CHATPH=q=>SYS()+" Elle t’envoie une photo dans la discussion. "+(S.ch
 const PR_VPH=q=>SYS()+" Elle t’envoie une photo pendant votre appel vocal. Sa question : "+(q||"Qu’en penses-tu ?")+". Décris très précisément ce que tu vois (vêtements, coupe, couleurs, matières, coiffure, maquillage, accessoires, silhouette, lumière) puis donne ton avis de styliste en t’appuyant sur son profil. "+FMT+"Format : {\"vu\":\"description précise de la photo\",\"avis\":\"ton avis et un seul conseil, 1 à 2 phrases courtes\"}";
 async function voicePhoto(text){
  const c=window.liveConv&&window.liveConv();if(!c||!S.cphoto)return false;
- const ph=S.cphoto;S.cphoto=null;S.chat.push({r:"u",t:text||"(photo)",img:ph.url},{r:"a",t:"Aura regarde ta photo…"});S.draft="";S.busy=true;render(false);
+ const ph=S.cphoto;S.cphoto=null;S.chat.push({r:"u",t:text||"(photo)",img:ph.url},{r:"a",t:"Diva regarde ta photo…"});S.draft="";S.busy=true;render(false);
  const last=S.chat[S.chat.length-1];if(window.callStatus)window.callStatus("Elle regarde ta photo…");
  try{const sm=await getSample();if(!sm||!sm.json)throw new Error("off");
   const r=await sm.json(PR_VPH(text),{images:[ph.file]});
@@ -2115,7 +2115,7 @@ function listen(){
 
 /*VOICE*/
 function talk(on){document.body.classList.toggle("talk",on);document.querySelectorAll(".avatar.aura").forEach(a=>a.classList.toggle("speak",!!on))}
-// Bouche d'Aura : 4 positions, pilotées par la voix
+// Bouche de Diva : 4 positions, pilotées par la voix
 let MP=0,MLAST=0,MF=-1;
 function mouthKick(v){MP=Math.max(MP,v||.4)}
 function mouthTick(now){const dt=Math.min(80,now-(MLAST||now));MLAST=now;MP*=Math.pow(.86,dt/16);
@@ -2123,7 +2123,7 @@ function mouthTick(now){const dt=Math.min(80,now-(MLAST||now));MLAST=now;MP*=Mat
  requestAnimationFrame(mouthTick)}
 requestAnimationFrame(mouthTick);
 window.auraMouth=v=>{if(v>.02)mouthKick(Math.min(1,.25+v*2.4))};
-// Aura cligne des yeux de temps en temps
+// Diva cligne des yeux de temps en temps
 (function blinkLoop(){const go=()=>{document.querySelectorAll(".avatar.aura").forEach(a=>{a.classList.add("blk");setTimeout(()=>a.classList.remove("blk"),130);if(Math.random()<.25)setTimeout(()=>{a.classList.add("blk");setTimeout(()=>a.classList.remove("blk"),120)},300)});setTimeout(go,2600+Math.random()*3200)};setTimeout(go,1800)})();
 function gesture(){document.querySelectorAll(".avatar.aura").forEach(a=>{a.classList.remove("wave");void a.offsetWidth;a.classList.add("wave");clearTimeout(a._g);a._g=setTimeout(()=>a.classList.remove("wave"),2600)})}
 let VOICES=[],KEEP=[];
@@ -2142,7 +2142,7 @@ function speak(t){const ss=window.speechSynthesis;if(!ss||!t)return;affStop();co
  const go=()=>{if(tk!==SPTOK)return;ss.resume();KEEP.forEach(u=>ss.speak(u))};
  if(busy)setTimeout(go,Math.max(120,300-(Date.now()-LASTCANCEL)));else go()}
 function unlock(){const ss=window.speechSynthesis;if(!S.voice||!ss)return;try{ss.resume();const u=new SpeechSynthesisUtterance(".");u.volume=0.01;u.lang="fr-FR";ss.speak(u)}catch(e){}}
-// Coupe tout ce qu’Aura est en train de dire (voix du téléphone, voix arabe, phrases enregistrées).
+// Coupe tout ce que Diva est en train de dire (voix du téléphone, voix arabe, phrases enregistrées).
 // Tout s'arrête : phrases en attente, présentation d'accueil, voix enregistrée qui se charge encore, vidéo qui parle.
 function stopVoice(){SPTOK++;try{GEN++}catch(e){}try{AUDTOK++}catch(e){}try{if(window.speechSynthesis){speechSynthesis.cancel();LASTCANCEL=Date.now()}}catch(e){}ARTOK++;
  try{const f=AUD.onended;AUD.onplay=AUD.onended=AUD.onerror=null;if(!AUD.paused)AUD.pause();if(f)f()}catch(e){}
@@ -2173,10 +2173,10 @@ function affPlay(){const ss=window.speechSynthesis;if(!ss){toast("Voix non dispo
   const u=new SpeechSynthesisUtterance(t);u.lang=AL==="en"?"en-US":"fr-FR";if(v)u.voice=v;u.rate=.82;u.pitch=1.05;u.volume=1;KEEP=[u];
   u.onend=()=>{i++;AFFT=setTimeout(one,2400)};u.onerror=()=>{i++;AFFT=setTimeout(one,300)};ss.resume();ss.speak(u)};
  AFFT=setTimeout(one,2500)}
-// v138 (choix d’Imen) : à voix haute, Aura ne dit que l’essentiel (2 phrases courtes max) ; le texte complet reste affiché.
+// v138 (choix d’Imen) : à voix haute, Diva ne dit que l’essentiel (2 phrases courtes max) ; le texte complet reste affiché.
 function essentiel(t){const all=String(t||"").replace(/\s+/g," ").trim();const ss=all.match(/[^.!?؟…]+[.!?؟…]*/g)||[all];let o="",k=0;for(const x of ss){const y=x.trim();if(!y)continue;if(o&&(o+" "+y).length>200)break;o=o?o+" "+y:y;if(++k>=2)break}if(o.length>240){let c=o.lastIndexOf(" ",220);o=o.slice(0,c>80?c:220).replace(/[,،;:\s]+$/,"")+"."}return o||all}
 function say(t){if(!S.voice||!t)return;if(window.liveConv&&window.liveConv())return;stopVoice();t=essentiel(tr(t));if(S.lang==="ar")return sayAR(t);speak(t)}
-// Arabe : voix féminine khaleeji d'Aura (ElevenLabs via le Worker), jamais la voix masculine du téléphone.
+// Arabe : voix féminine khaleeji de Diva (ElevenLabs via le Worker), jamais la voix masculine du téléphone.
 let ARTOK=0;
 // Le texte est découpé en phrases courtes : chaque morceau est prêt vite et rien n'est coupé à la fin.
 function chunksAR(t){const out=[];let cur="";const push=x=>{x=x.trim();if(x)out.push(x)};
@@ -2267,13 +2267,13 @@ document.addEventListener("click",e=>{
  if(t.dataset.vcat!==undefined){S.vcat=t.dataset.vcat;render(false);return}
  if(t.dataset.art){S.art=t.dataset.art;go("art");return}
  if(t.dataset.askart){const a=ART(t.dataset.askart);go("chat");setTimeout(()=>send("Est-ce que la pièce « "+a.nom+" » ["+a.id+"] me va ? Avec quoi je peux la porter ?"),350);return}
- if(t.hasAttribute("data-askaura")){go("chat");setTimeout(()=>send("Choisis-moi 3 pièces de la vitrine My Style qui me vont le mieux, et dis-moi pourquoi."),350);return}
+ if(t.hasAttribute("data-askaura")){go("chat");setTimeout(()=>send("Choisis-moi 3 pièces de la vitrine Diva Divina qui me vont le mieux, et dis-moi pourquoi."),350);return}
  if(t.hasAttribute("data-shop")){S.shopQ=($("#shopq")||{}).value?.trim()||"";if(!S.shopQ){toast("Écris ce que tu cherches");$("#shopq")?.focus();return}render(false);return}
  if(t.hasAttribute("data-news"))return loadNews();
  if(t.dataset.btab){S.btab=t.dataset.btab;stopVoice();render(true);return}
  if(t.dataset.mkr)return mkRoutine(t.dataset.mkr);
  if(t.dataset.etq){const e=ETQ.find(x=>x.k===t.dataset.etq);if(!e)return;stopVoice();if(window.endCall)window.endCall();
-  window.CALLTOPIC={ctx:"La cliente veut que tu lui expliques à l’oral, comme une coach, l’étiquette « "+e.t.fr+" ». Les bons gestes selon la méthode de My Style : "+e.ok.fr.join(" ")+" À éviter : "+e.no.fr.join(" ")+" Explique-les simplement, un geste à la fois, demande-lui d’essayer avec toi, et réponds à ses questions.",msg:{fr:"Explique-moi l’étiquette : ",en:"Explain this etiquette to me: ",ar:"اشرحي لي "}[S.lang||"fr"]+BL(e.t)};
+  window.CALLTOPIC={ctx:"La cliente veut que tu lui expliques à l’oral, comme une coach, l’étiquette « "+e.t.fr+" ». Les bons gestes selon la méthode de Diva Divina : "+e.ok.fr.join(" ")+" À éviter : "+e.no.fr.join(" ")+" Explique-les simplement, un geste à la fois, demande-lui d’essayer avec toi, et réponds à ses questions.",msg:{fr:"Explique-moi l’étiquette : ",en:"Explain this etiquette to me: ",ar:"اشرحي لي "}[S.lang||"fr"]+BL(e.t)};
   go("chat");if(window.startCall)window.startCall();return}
  if(t.hasAttribute("data-askmk")){go("chat");setTimeout(()=>send("J’ai une question make-up : quel maquillage me va selon la forme de mon visage et ma saison ?"),350);return}
  if(t.hasAttribute("data-mic"))return listen();
@@ -2302,16 +2302,16 @@ function checkUpdate(){(window.MS_BUILD?fetch("version.txt?t="+Date.now(),{cache
  if(document.getElementById("splash")&&(window.GREETED||window.CALLED)){try{sessionStorage.removeItem("maj")}catch(e){}return}
  if(!S.busy&&!/_run$/.test(S.page))location.replace(location.pathname+"?v="+m[1])}).catch(()=>{})}
 checkUpdate();document.addEventListener("visibilitychange",()=>{if(!document.hidden)checkUpdate()});
-// Accueil d'Aura : présentation, prénom, puis le style.
+// Accueil de Diva : présentation, prénom, puis le style.
 const INTRO=[["Salut, je suis ta personal stylist.","aura-1",1]];
 const SUITE=[["Mon rôle, c’est de comprendre ce qui te met vraiment en valeur : tes couleurs, la forme de ton visage et ta silhouette.","aura-2"],["Ensemble, on va construire un style qui te ressemble, pour que tu te sentes belle et sûre de toi chaque jour.","aura-3",1]];
 const ASKNOM=["Mais d’abord, dis-moi… comment tu t’appelles ?","aura-nom"];
 const FIN=[["Commençons notre belle aventure de la beauté : chaque jour, on choisira ensemble ton outfit.","aura-aventure",1]];
-// Aura dit le prénom avec sa propre voix (ElevenLabs via le Worker) ; sinon, voix enregistrée.
+// Diva dit le prénom avec sa propre voix (ElevenLabs via le Worker) ; sinon, voix enregistrée.
 async function ttsNom(n,type){try{const r=await Promise.race([aiPost("/tts",{nom:n,type}),wait(7000).then(()=>null)]);
  if(r&&r.ok&&(r.headers.get("Content-Type")||"").includes("audio")){const b=await r.blob();if(b.size>2000)CLIPS[type==="retour"?"aura-retour":"aura-enchantee"]=URL.createObjectURL(b)}}catch(e){}}
-const OUTRO=n=>[["Enchantée, "+n+" ! Moi, c’est Aura.","aura-enchantee",1],...SUITE,...FIN];
-const RETOUR=n=>[["Salut "+n+" ! C’est Aura, ta personal stylist. Je suis là pour révéler ta beauté.","aura-retour",1]];
+const OUTRO=n=>[["Enchantée, "+n+" ! Moi, c’est Diva.","aura-enchantee",1],...SUITE,...FIN];
+const RETOUR=n=>[["Salut "+n+" ! C’est Diva, ta personal stylist. Je suis là pour révéler ta beauté.","aura-retour",1]];
 let SKIP=false,CUR="",SPOKE=false;window.GREETED=false;
 const RM=matchMedia("(prefers-reduced-motion:reduce)").matches;
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
@@ -2322,9 +2322,9 @@ function voiceLine(t){return new Promise(r=>{const ss=window.speechSynthesis;let
   const v=vs.find(x=>/amélie|audrey|marie|julie|hortense|denise|female|femme|google/i.test(x.name))||vs[0];
   const u=new SpeechSynthesisUtterance(t);u.lang="fr-FR";if(v)u.voice=v;u.rate=1;KEEP=[u];
   let iv=0;u.onstart=()=>{SPOKE=true;window.GREETED=true;talk(true);iv=setInterval(()=>mouthKick(.3+Math.random()*.6),130)};u.onend=()=>{clearInterval(iv);fin()};u.onerror=()=>{clearInterval(iv);talk(false)};ss.resume();ss.speak(u)}catch(e){}})}
-// Voix enregistrée d'Aura (ElevenLabs) ; si le fichier manque, voix du téléphone.
-// Vidéos d'Aura (fond vert retiré en direct) : remplacent l'image pendant la phrase correspondante.
-// v182 : Aura réaliste (vidéo d'Imen, fond vert refait). Seul le geste d'accueil existe en réaliste ; pour les autres phrases, la boucle de repos réaliste reste affichée. Les anciennes vidéos 3D restent dans videos/ (non utilisées).
+// Voix enregistrée de Diva (ElevenLabs) ; si le fichier manque, voix du téléphone.
+// Vidéos de Diva (fond vert retiré en direct) : remplacent l'image pendant la phrase correspondante.
+// v182 : Diva réaliste (vidéo d'Imen, fond vert refait). Seul le geste d'accueil existe en réaliste ; pour les autres phrases, la boucle de repos réaliste reste affichée. Les anciennes vidéos 3D restent dans videos/ (non utilisées).
 const VIDS={"aura-1":"videos/aura-1.mp4?v=c4"};
 Object.keys(VIDS).filter(n=>n!=="aura-1").forEach(n=>{fetch(VIDS[n]).then(r=>r.ok?r.blob():null).then(b=>{if(b)VIDS[n]=URL.createObjectURL(b)}).catch(()=>{})});
 const AVID=document.createElement("video");AVID.muted=true;AVID.playsInline=true;AVID.setAttribute("playsinline","");AVID.setAttribute("muted","");AVID.preload="auto";{AVID.src=VIDS["aura-1"];AVID.dataset.n="aura-1"}
@@ -2357,9 +2357,9 @@ function vidOn(name){if(RM||!VIDS[name])return;const a=document.querySelector("#
  const draw=()=>{if(!on)return;if(k(v,null,0))a.classList.add("vplay");if(!v.ended)requestAnimationFrame(draw)};
  window.VIDOFF=()=>{on=false;a.classList.remove("vplay");try{v.pause()}catch(e){}};v.onended=()=>window.VIDOFF();
  const q=v.play();if(q&&q.then)q.then(draw).catch(()=>window.VIDOFF());else draw()}
-// Aura au repos : vidéo en boucle (respire, cligne, sourit), fond vert retiré, sur toutes ses apparitions.
+// Diva au repos : vidéo en boucle (respire, cligne, sourit), fond vert retiré, sur toutes ses apparitions.
 const IDLE=document.createElement("video");IDLE.muted=true;IDLE.loop=true;IDLE.playsInline=true;IDLE.setAttribute("playsinline","");IDLE.setAttribute("muted","");IDLE.preload="auto";IDLE.src="videos/aura-idle.mp4?v=c4";
-// Aura qui parle avec les mains (boucle) : utilisée pendant l'appel quand elle répond.
+// Diva qui parle avec les mains (boucle) : utilisée pendant l'appel quand elle répond.
 const TALK=document.createElement("video");TALK.muted=true;TALK.loop=true;TALK.playsInline=true;TALK.setAttribute("playsinline","");TALK.setAttribute("muted","");TALK.preload="auto";TALK.src="videos/aura-talk.mp4?v=c4";
 // iPhone : les vidéos doivent être dans la page (invisibles) pour être lues de façon fiable.
 (()=>{const h=document.createElement("div");h.style.cssText="position:fixed;left:0;top:0;width:2px;height:2px;opacity:0;pointer-events:none;overflow:hidden;z-index:-1";[IDLE,TALK,AVID].forEach(v=>{v.style.cssText="width:2px;height:2px";h.appendChild(v)});(document.body||document.documentElement).appendChild(h)})();
@@ -2387,7 +2387,7 @@ function clipLine(name,t){return new Promise(r=>{let done=false,iv=0;const fin=v
  AUD.onplay=()=>{SPOKE=true;window.GREETED=true;talk(true);vidOn(name);clearInterval(iv);iv=setInterval(()=>mouthKick(.3+Math.random()*.65),120)};
  AUDTOK++;AUD.src=CLIPS[name]||("sons/"+name+".mp3?v=c1");
  try{const p=AUD.play();if(p&&p.catch)p.catch(e=>{if(e&&e.name==="NotAllowedError"){clearInterval(iv);done=true;r("blocked")}else dev()})}catch(e){dev()}})}
-// Si le téléphone bloque le son avant le premier toucher, Aura continue quand même :
+// Si le téléphone bloque le son avant le premier toucher, Diva continue quand même :
 // elle bouge, sa bouche parle, et au premier toucher la voix démarre.
 let TAPR;const TAPPED=new Promise(r=>TAPR=r);
 (()=>{const go=()=>{document.removeEventListener("click",go,true);document.removeEventListener("touchend",go,true);if(window.SNDBLOCK)window.TAPJUST=Date.now();window.SNDBLOCK=false;try{if(AUD.paused){const t=AUDTOK;AUD.onplay=AUD.onended=AUD.onerror=null;const q=AUD.play();if(q&&q.then)q.then(()=>{if(AUDTOK===t)AUD.pause()}).catch(()=>{})}}catch(e){}unlock();window.TAPDONE=true;TAPR(true)};
@@ -2399,7 +2399,7 @@ async function line(t,clip,g,again){if(SKIP)return;const gen=GEN;CUR=t;const p=$
  const [,res]=await Promise.all([typeSkip(p,t,RM?1:28),clip==="say"?sayLine(t):clipLine(clip,t)]);if(gen!==GEN)return;
  if(res==="blocked"&&!SKIP){if(!again&&window.TAPDONE)return line(t,clip,g,true);
   window.SNDBLOCK=true;
-  // Son bloqué : Aura mime la phrase puis attend le premier toucher pour la redire à voix haute (on ne saute plus sa présentation).
+  // Son bloqué : Diva mime la phrase puis attend le premier toucher pour la redire à voix haute (on ne saute plus sa présentation).
   const m=mime(t);vidOn(clip);const tapped=again?await m:await TAPPED;
   if(gen!==GEN){m.stop();return}if(tapped&&!SKIP){m.stop();return line(t,clip,g,true)}}
  if(!SKIP)await wait(350)}
@@ -2409,16 +2409,16 @@ function askNom(){return new Promise(r=>{if(SKIP)return r(null);const box=$("#sp
  i.oninput=()=>{b.disabled=!i.value.trim()};
  const ok=()=>{const v=i.value.trim();if(!v)return;box.hidden=true;r(v)};b.onclick=ok;i.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();ok()}};
  window.SKIPNOM=()=>r(null)})}
-const LG={fr:{hi:"Salut",t:"Je suis Aura, ta personal stylist. Je suis là pour révéler ta beauté.",talk:"Parler avec elle",hang:"Raccrocher",start:"Commencer",cont:"Continuer dans le navigateur"},
- en:{hi:"Hi",t:"I’m Aura, your personal stylist. I’m here to bring out your beauty.",talk:"Talk to her",hang:"Hang up",start:"Start",cont:"Continue in the browser"},
- ar:{hi:"هلا والله",t:"أنا أورا، الستايلست الخاصة فيچ. موجودة عشان أطلّع جمالچ، وأخليچ تحسين بثقة كل يوم.",talk:"كلّميها",hang:"سكّري",start:"يلا نبدأ",cont:"كمّلي من المتصفح"}};
+const LG={fr:{hi:"Salut",t:"Je suis Diva, ta personal stylist. Je suis là pour révéler ta beauté.",talk:"Parler avec elle",hang:"Raccrocher",start:"Commencer",cont:"Continuer dans le navigateur"},
+ en:{hi:"Hi",t:"I’m Diva, your personal stylist. I’m here to bring out your beauty.",talk:"Talk to her",hang:"Hang up",start:"Start",cont:"Continue in the browser"},
+ ar:{hi:"هلا والله",t:"أنا ديفا، الستايلست الخاصة فيچ. موجودة عشان أطلّع جمالچ، وأخليچ تحسين بثقة كل يوم.",talk:"كلّميها",hang:"سكّري",start:"يلا نبدأ",cont:"كمّلي من المتصفح"}};
 const L=k=>(LG[S.lang]||LG.fr)[k];
 function applyLang(){const ar=S.lang==="ar";["hi","hi2"].forEach(i=>{const e=$("#"+i);if(e)e.dir=ar?"rtl":"auto"});
  const tb=$("#talkbtn");if(tb&&!tb.classList.contains("live"))tb.setAttribute("aria-label",L("talk"));if(window.lgSync)lgSync();const st=$("#start");if(st)st.textContent=L($("#install").hidden?"start":"cont");
  if(S.lang&&S.lang!=="fr"){$("#hi").textContent=L("hi")+(S.nom?" "+S.nom:"")+" !";$("#hi2").textContent=L("t")}}
-// Aura se tait net (changement de langue).
+// Diva se tait net (changement de langue).
 function hush(){GEN++;try{stopVoice()}catch(e){}try{AUD.onplay=AUD.onended=AUD.onerror=null;AUD.pause()}catch(e){}if(window.VIDOFF)VIDOFF();if(window.auraTalking)auraTalking(false);talk(false)}
-// Anglais / arabe : Aura dit sa présentation avec sa vraie voix (ElevenLabs), sinon avec la voix du téléphone.
+// Anglais / arabe : Diva dit sa présentation avec sa vraie voix (ElevenLabs), sinon avec la voix du téléphone.
 const LGV={en:"en-US",ar:"ar-SA"};
 async function greetLang(){const lg=S.lang,gen=GEN;if(!LGV[lg]||!S.voice)return;const t=L("hi")+(S.nom?" "+S.nom:"")+" ! "+L("t");
  const on=()=>{SPOKE=true;window.GREETED=true;talk(true);if(window.auraTalking)auraTalking(true);gesture()},off=()=>{talk(false);if(window.auraTalking)auraTalking(false)};
@@ -2450,17 +2450,17 @@ document.addEventListener("touchend",e=>{if(LGX==null)return;const dx=e.changedT
  const i=LGS.indexOf(S.lang||"fr"),n=LGS[(i+(dx<0?1:LGS.length-1))%LGS.length];e.preventDefault();pickLang(n)});
 lgSync();
 // Le même script d'accueil dans les 3 langues : présentation, rôle, prénom, « enchantée », puis on choisit ensemble ses vêtements.
-// Arabe (dialecte qatari) et anglais : Aura lit chaque phrase avec sa voix (ElevenLabs via le Worker).
+// Arabe (dialecte qatari) et anglais : Diva lit chaque phrase avec sa voix (ElevenLabs via le Worker).
 const SCR={
  ar:{INTRO:[["هلا والله! أنا الستايلست الخاصة فيچ.","say",1]],
   SUITE:[["شغلي إني أفهم شنو اللي يطلّع جمالچ صدق: ألوانچ، شكل وجهچ، وقوامچ.","say"],["ومع بعض بنبني ستايل يشبهچ، عشان تحسين إنچ حلوة وواثقة من نفسچ كل يوم.","say",1]],
   ASKNOM:["بس قبل كل شي، قوليلي… شنو اسمچ؟","say"],
-  OUTRO:n=>[["تشرفنا يا "+n+"! أنا أورا.","say",1]],
+  OUTRO:n=>[["تشرفنا يا "+n+"! أنا ديفا.","say",1]],
   FIN:[["يلا نبدأ رحلتنا الحلوة مع الجمال: كل يوم بساعدچ تختارين ملابسچ، ونختار مع بعض اللوك.","say",1]]},
  en:{INTRO:[["Hi, I’m your personal stylist.","say",1]],
   SUITE:[["My role is to understand what truly brings out your beauty: your colours, your face shape and your silhouette.","say"],["Together, we’ll build a style that feels like you, so you feel beautiful and confident every day.","say",1]],
   ASKNOM:["But first, tell me… what’s your name?","say"],
-  OUTRO:n=>[["Lovely to meet you, "+n+"! I’m Aura.","say",1]],
+  OUTRO:n=>[["Lovely to meet you, "+n+"! I’m Diva.","say",1]],
   FIN:[["Let’s begin our beautiful beauty journey: every day, I’ll help you choose your clothes and we’ll pick your outfit together.","say",1]]}};
 const SAYC={};
 function sayUrl(t){const lg=S.lang;if(lg!=="ar"&&lg!=="en")return Promise.resolve(null);const k=lg+"|"+t;if(SAYC[k])return SAYC[k];
@@ -2470,7 +2470,7 @@ function sayUrl(t){const lg=S.lang;if(lg!=="ar"&&lg!=="en")return Promise.resolv
 function sayLine(t){return new Promise(async r=>{let done=false,iv=0;const fin=v=>{if(done)return;done=true;clearInterval(iv);if(window.auraTalking)auraTalking(false);talk(false);r(v)};
  if(!S.voice){wait(Math.max(2200,t.length*60)).then(()=>fin());return}
  const tok=++AUDTOK;const url=await sayUrl(t);if(tok!==AUDTOK)return fin();
- // Sans voix enregistrée : anglais avec la voix du téléphone ; arabe, Aura mime (jamais la voix masculine du téléphone).
+ // Sans voix enregistrée : anglais avec la voix du téléphone ; arabe, Diva mime (jamais la voix masculine du téléphone).
  const phone=()=>{clearInterval(iv);if(done)return;const ss=window.speechSynthesis;
   if(S.lang!=="en"||!ss){mime(t).then(()=>fin());return}
   try{ss.cancel();if(!VOICES.length)loadVoices();const u=new SpeechSynthesisUtterance(t);u.lang="en-US";const v=VOICES.find(x=>/^en/i.test(x.lang)&&/female|samantha|karen|victoria|google/i.test(x.name))||VOICES.find(x=>/^en/i.test(x.lang));if(v)u.voice=v;KEEP=[u];
@@ -2499,7 +2499,7 @@ if(HOME_HI){SKIP=true;showBtns();applyLang();$("#hi").textContent=L("hi")+(S.nom
 function HELLO(){return "Salut"+(S.nom?" "+S.nom:"")+" ! Je suis ta personal stylist. Je suis là pour révéler ta beauté."}
 function skipIntro(){SKIP=true;stopVoice();try{AUD.pause()}catch(e){}$("#hi2").textContent=L("t");if(window.SKIPNOM)window.SKIPNOM();showBtns()}
 $("#skip").addEventListener("click",skipIntro);
-// Haut-parleur : si Aura parle, elle se tait ; sinon elle redit sa présentation. Pendant un appel, il raccroche d'abord (jamais les deux en même temps).
+// Haut-parleur : si Diva parle, elle se tait ; sinon elle redit sa présentation. Pendant un appel, il raccroche d'abord (jamais les deux en même temps).
 document.addEventListener("click",e=>{if(!e.target.closest("#splash .tapaura"))return;
  if(window.TAPJUST&&Date.now()-window.TAPJUST<600)return; // premier toucher : la voix bloquée démarre toute seule
  const call=window.liveConv&&window.liveConv();
@@ -2522,31 +2522,31 @@ $("#inst").addEventListener("click",e=>{if(e.target.id==="inst")$("#inst").class
 $("#start").addEventListener("click",()=>{if(window.endCall)window.endCall();SKIP=true;stopVoice();unlock();$("#splash").classList.add("out");setTimeout(()=>$("#splash").remove(),800);
  SKIP=true;if(window.SKIPNOM)window.SKIPNOM();if(/formules|abo/i.test(location.hash)){go("abo");return}if(!window.CALLED){if(todoMods().length===3&&!S.later&&S.page==="home")startOnb();else if(!window.GREETED&&!HOME_HI)say(P.home().say)}markHi()});
 </script>
-<script src="aura-profile.js?v=3"></script>
-<script src="aura-gouts.js?v=1"></script>
+<script src="aura-profile.js?v=4"></script>
+<script src="aura-gouts.js?v=2"></script>
 <script src="fond-vivant.js?v=3"></script>
-<script src="zifafi.js?v=5"></script>
-<script src="zifafi-plus.js?v=1"></script>
-<script src="aura-twin.js?v=1"></script>
-<script src="aura-jour.js?v=4"></script>
-<script src="aura-achat.js?v=2"></script>
-<script src="aura-golfe.js?v=1"></script>
-<script src="aura-verif.js?v=1"></script>
-<script src="aura-focus.js?v=1"></script>
-<script src="aura-multi.js?v=8"></script>
-<script src="aura-studio.js?v=1"></script>
-<script src="aura-portes.js?v=3"></script>
-<script src="aura-contact.js?v=1"></script>
-<script src="aura-avatar.js?v=1"></script>
-<script src="aura-photo.js?v=2"></script>
-<script src="aura-majlis.js?v=9"></script>
-<script src="aura-piece.js?v=2"></script>
-<script src="aura-chatlook.js?v=3"></script>
-<script src="aura-compte.js?v=2"></script>
-<script src="aura-accueil.js?v=8"></script>
+<script src="zifafi.js?v=6"></script>
+<script src="zifafi-plus.js?v=2"></script>
+<script src="aura-twin.js?v=2"></script>
+<script src="aura-jour.js?v=5"></script>
+<script src="aura-achat.js?v=3"></script>
+<script src="aura-golfe.js?v=2"></script>
+<script src="aura-verif.js?v=2"></script>
+<script src="aura-focus.js?v=2"></script>
+<script src="aura-multi.js?v=9"></script>
+<script src="aura-studio.js?v=2"></script>
+<script src="aura-portes.js?v=4"></script>
+<script src="aura-contact.js?v=2"></script>
+<script src="aura-avatar.js?v=2"></script>
+<script src="aura-photo.js?v=3"></script>
+<script src="aura-majlis.js?v=10"></script>
+<script src="aura-piece.js?v=3"></script>
+<script src="aura-chatlook.js?v=4"></script>
+<script src="aura-compte.js?v=3"></script>
+<script src="aura-accueil.js?v=9"></script>
 <!-- v185 : système de design « Maison » (en dernier pour unifier tous les modules) -->
-<link rel="stylesheet" href="ms-design.css?v=2">
-<script src="ms-design.js?v=1"></script>
+<link rel="stylesheet" href="ms-design.css?v=3">
+<script src="ms-design.js?v=2"></script>
 <script type="module">
 let conv=null,busy=false,raf=0;
 window.liveConv=()=>conv;

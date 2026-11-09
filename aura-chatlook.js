@@ -1,6 +1,6 @@
-/* v171 — Tenues demandées à Aura = tenues de SA garde-robe, montrées sur la page « Créer une tenue » (choix d'Imen).
-   Page Aura (écrit) : « fais-moi une tenue », « سوّي لي لبسة »… → rien dans la discussion : la page `tenues`
-   s'ouvre sur l'occasion demandée et Aura y ajoute UNE tenue faite avec les vraies pièces (ids vérifiés), en tête de
+/* v171 — Tenues demandées à Diva = tenues de SA garde-robe, montrées sur la page « Créer une tenue » (choix d'Imen).
+   Page Diva (écrit) : « fais-moi une tenue », « سوّي لي لبسة »… → rien dans la discussion : la page `tenues`
+   s'ouvre sur l'occasion demandée et Diva y ajoute UNE tenue faite avec les vraies pièces (ids vérifiés), en tête de
    GR.looks[occ]. Elle y a les boutons habituels (Enregistrer, 👍/👎, Autre version, 💬 À une amie) : le partage
    au Majlis seulement si elle le choisit. Garde-robe trop petite → la même page l'invite à ajouter ses vêtements.
    Appel vocal et chat ElevenLabs : règle ajoutée au contexte (CATCTX) : une tenue = seulement ses pièces.

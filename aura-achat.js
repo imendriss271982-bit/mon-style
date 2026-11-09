@@ -1,5 +1,5 @@
-/* My Style — « Avant d'acheter » : le shopping vérifié (v141, étape « 8/10 » face à ChatGPT/Gemini).
-   Avant un achat, Aura répond à 3 questions avec le profil ET la vraie garde-robe de la cliente :
+/* Diva Divina — « Avant d'acheter » : le shopping vérifié (v141, étape « 8/10 » face à ChatGPT/Gemini).
+   Avant un achat, Diva répond à 3 questions avec le profil ET la vraie garde-robe de la cliente :
      1) Elle te va ?  2) Tu as déjà pareil ?  3) Avec quoi la porter (et combien de tenues) ?
    puis donne un verdict : Bon achat / À réfléchir / Pas pour l'instant, et le coût par port si elle donne le prix.
    Deux entrées :

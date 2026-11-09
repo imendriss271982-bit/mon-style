@@ -1,9 +1,9 @@
-/* My Style — Contact et séance privée (v156, demandé par Imen).
+/* Diva Divina — Contact et séance privée (v156, demandé par Imen).
    Page `P.contact`, deux onglets (`S.ctTab`) :
    - « Besoin d’aide » : type (problème technique, question, suggestion), message, capture d’écran facultative.
      L’adresse email de contact (`CT_EMAIL`) est aussi affichée, avec un lien qui ouvre l’app Mail.
    - « Séance privée » : 1 heure avec la styliste au prix `prix("seance")` (300 QAR au Qatar), en ligne ou à Doha,
-     date, créneau, objectif, petit mot. Les résultats My Style (PROFIL()) sont joints à la demande.
+     date, créneau, objectif, petit mot. Les résultats Diva Divina (PROFIL()) sont joints à la demande.
      Le paiement n’est pas fait dans l’app : la styliste confirme la date et envoie le moyen de paiement par email.
    Envoi : Worker `/contact/new` → email (API Brevo) vers l’adresse d’Imen ; « Répondre » répond à la cliente.
    Rien n’est gardé sur le serveur ni sur le téléphone (sauf l’email/WhatsApp déjà dans le profil, pré-remplis).
@@ -30,10 +30,10 @@ function ctPhoto(file) { // même réduction que « Vérifié par une vraie styl
 }
 // Lien email pré-rempli (secours si l'envoi échoue, ou si la cliente préfère son app Mail).
 function ctMailto(type) {
-  const nom = S.nom || "", sujet = type === "seance" ? "My Style — Séance privée" : "My Style — " + ((CT_QUOI.find(x => x[0] === CT.quoi) || ["", "Message"])[1]);
+  const nom = S.nom || "", sujet = type === "seance" ? "Diva Divina — Séance privée" : "Diva Divina — " + ((CT_QUOI.find(x => x[0] === CT.quoi) || ["", "Message"])[1]);
   let corps = type === "seance"
     ? `Bonjour,\n\nJe souhaite réserver une séance privée d’1 heure (${prix("seance")}).\nFormat : ${(CT_MODE.find(x => x[0] === CT.mode) || ["", ""])[1]}\nDate souhaitée : ${CT.date || "—"}\nCréneau : ${(CT_CREN.find(x => x[0] === CT.cren) || ["", "Peu importe"])[1]}\nObjectif : ${CT.obj.join(", ") || "—"}\n${CT.note ? "\n" + CT.note + "\n" : ""}\n${nom}`
-    : `Bonjour,\n\n${CT.msg || ""}\n\n${nom}\n(My Style v${typeof VERSION !== "undefined" ? VERSION : ""})`;
+    : `Bonjour,\n\n${CT.msg || ""}\n\n${nom}\n(Diva Divina v${typeof VERSION !== "undefined" ? VERSION : ""})`;
   return "mailto:" + CT_EMAIL + "?subject=" + encodeURIComponent(sujet) + "&body=" + encodeURIComponent(corps);
 }
 
@@ -96,7 +96,7 @@ P.contact = () => {
    <label class="vf-lab" for="ct_note">Un petit mot (facultatif)</label>
    <textarea class="field" id="ct_note" rows="3" maxlength="1500" placeholder="Par exemple : je me marie en mars et je ne sais pas par où commencer.">${esc(CT.note)}</textarea>
    ${moi}${err}
-   <p class="hint">Rien n’est payé maintenant. Ta styliste te confirme la date et t’envoie le moyen de paiement par email. Tes résultats My Style sont joints pour qu’elle prépare ta séance.</p>`;
+   <p class="hint">Rien n’est payé maintenant. Ta styliste te confirme la date et t’envoie le moyen de paiement par email. Tes résultats Diva Divina sont joints pour qu’elle prépare ta séance.</p>`;
   return { back: true, html: `<p class="step">Contact</p><h1>${tab === "seance" ? "Séance privée" : "Contacte-nous"}</h1>${html}`, say: "",
     foot: S.ctBusy ? `<button class="btn" disabled>J’envoie…</button>` : `<button class="btn" data-ctsend="${tab}">${tab === "seance" ? "Demander ma séance" : "Envoyer mon message"}</button>` };
 };

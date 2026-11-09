@@ -1,4 +1,4 @@
-// Tests v170 : garde-robe « photo d'abord » et tenue demandée à Aura dans la discussion = tenue de SA garde-robe.
+// Tests v170 : garde-robe « photo d'abord » et tenue demandée à Diva dans la discussion = tenue de SA garde-robe.
 // L'IA est simulée. Lancer : python3 -m http.server 8765, puis : node tests/chatlook.js
 const {chromium}=require('playwright');const URL=process.env.URL||'http://localhost:8765/';
 let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
@@ -23,7 +23,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  await p.evaluate(()=>go('chat'));await p.waitForTimeout(200);
  await p.evaluate(()=>send('سوّي لي لبسة للسهرة'));await p.waitForTimeout(500);
  const pr=await p.evaluate(()=>__pr[0]);
- ok(/UNIQUEMENT avec les pièces de sa garde-robe/.test(pr)&&/Soirée/.test(pr)&&/Blazer noir/.test(pr)&&/jamais d’acheter/.test(pr),'Aura reçoit la garde-robe, l’occasion, sans achat');
+ ok(/UNIQUEMENT avec les pièces de sa garde-robe/.test(pr)&&/Soirée/.test(pr)&&/Blazer noir/.test(pr)&&/jamais d’acheter/.test(pr),'Diva reçoit la garde-robe, l’occasion, sans achat');
  ok(await p.evaluate(()=>S.page==='tenues'&&S.grOcc==='soiree'&&S.chat.length===0),'Ouvre « Créer une tenue » sur Soirée, rien dans la discussion');
  ok(await p.evaluate(()=>GR.looks.soiree[0].pieces.join()==='it0,it1,it3'),'Tenue en tête, pièce inventée retirée');
  ok(await p.evaluate(()=>document.querySelectorAll('.gr-look').length===1&&!!document.querySelector('.gr-look [data-gsave]')),'Tenue affichée avec Enregistrer');

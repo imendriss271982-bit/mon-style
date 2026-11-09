@@ -1,8 +1,8 @@
-/* My Style — Accueil en « 4 portes » (v153, choix d'Imen : garder toutes les fonctions sans qu'elles paraissent trop).
-   Accueil : salutation + Aura, My Stylist, 1 à 3 actions selon le moment, 1 suggestion écrite d'Aura, les 4 portes, Nouveautés en bas.
+/* Diva Divina — Accueil en « 4 portes » (v153, choix d'Imen : garder toutes les fonctions sans qu'elles paraissent trop).
+   Accueil : salutation + Diva, My Stylist, 1 à 3 actions selon le moment, 1 suggestion écrite de Diva, les 4 portes, Nouveautés en bas.
    Les 4 portes (page P.porte, S.porte) rangent toutes les fonctions existantes : Mon style · M'habiller · Acheter · Mon mariage (= Zifafi).
    Rien n'est supprimé : « Tout afficher » (FX.all de aura-focus.js) montre l'ancien accueil complet ; « Accueil simplifié » revient ici.
-   Suggestions d'Aura : écrites, calculées sur le téléphone, sans IA ni voix (coût 0). Une seule à la fois ; ✕ la cache pour aujourd'hui.
+   Suggestions de Diva : écrites, calculées sur le téléphone, sans IA ni voix (coût 0). Une seule à la fois ; ✕ la cache pour aujourd'hui.
    Aucune voix sur la page d'une porte (en arabe, chaque phrase dite coûte : voir CLAUDE.md).
    Arrêter : PORTES = false. Chargé après aura-focus.js (enveloppe P.home en dernier). */
 // (Les tests de l’ancien accueil, focus.js et wedding.js, posent monstyle_portes = "0".)
@@ -32,7 +32,7 @@ function ptPortes() {
     style: { t: "Mon style", s: "Visage, silhouette, couleurs, beauté", items: [
       reste ? { t: reste === 3 ? "Découvre ton style" : "Termine ton analyse", s: reste === 3 ? "Visage, silhouette et couleurs, une seule fois" : "Encore " + reste + " étape(s)", a: 'data-onb=""' }
             : { t: "Ma fiche style", s: "Visage, silhouette, Kibbe et couleurs", a: 'data-view="fiche"' },
-      { t: "Your Style Twin", s: "Ta copie de style : ce qu’Aura sait de toi", a: 'data-view="twin"' },
+      { t: "Your Style Twin", s: "Ta copie de style : ce que Diva sait de toi", a: 'data-view="twin"' },
       { t: "Beauté et make-up", s: "Ton make-up et l’art de la tenue", a: 'data-go="beaute"' },
       { t: "Mes préférences", s: "Couleurs, pièces et occasions que tu aimes", a: 'data-go="prefs"' },
       { t: "Vérifié par une vraie styliste", s: "Une professionnelle relit ton analyse", a: 'data-go="verif"' }
@@ -64,7 +64,7 @@ function ptActions() {
   return out.slice(0, 3);
 }
 
-// Suggestion écrite d'Aura (une seule, sans IA). Cachée pour aujourd'hui avec ✕.
+// Suggestion écrite de Diva (une seule, sans IA). Cachée pour aujourd'hui avec ✕.
 const PT_SUG_KEY = "monstyle_sug";
 function ptAuj() { const d = new Date(); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
 function ptSugCachees() { try { const j = JSON.parse(localStorage.getItem(PT_SUG_KEY) || "null"); return j && j.d === ptAuj() && Array.isArray(j.x) ? j.x : []; } catch (e) { return []; } }
@@ -89,7 +89,7 @@ function ptSuggestion() {
 const ptTile = o => `<button class="pt-act${o.big ? " big" : ""}" ${o.a}><span class="pt-ai" aria-hidden="true">${o.ic}</span><span class="pt-at"><b>${o.t}</b><small>${o.s}</small></span><i aria-hidden="true">›</i></button>`;
 function ptPortesHTML() {
   const P4 = ptPortes(), ordre = ptMariageActif() ? ["mariage", "style", "habiller", "acheter"] : ["style", "habiller", "acheter", "mariage"];
-  return `<section class="pt-sec"><h2 class="hz-h">Tout My Style</h2><div class="pt-grid">${ordre.map(k => {
+  return `<section class="pt-sec"><h2 class="hz-h">Tout Diva Divina</h2><div class="pt-grid">${ordre.map(k => {
     const p = P4[k], act = p.go ? `data-go="${p.go}"` : `data-porte="${k}"`;
     return `<button class="pt-door" ${act}><span class="pt-di"><svg viewBox="0 0 24 24" aria-hidden="true">${PT_IC[k]}</svg></span><b>${p.t}</b><small>${p.s}</small></button>`;
   }).join("")}</div></section>`;
@@ -120,7 +120,7 @@ if (PORTES && typeof P.home === "function") {
     const sug = ptSuggestion();
     const neuf = document.createElement("template");
     neuf.innerHTML = `<section class="pt-now"><h2 class="hz-h">Pour toi maintenant</h2>${ptActions().map(ptTile).join("")}</section>
-${sug ? `<div class="pt-sug" role="note"><span class="pt-sa" aria-hidden="true">💬</span><div><small>Aura te propose</small><p>${sug.t}</p><button class="btn" ${sug.a}>${sug.b}</button></div><button class="pt-sx" type="button" data-sugx="${sug.id}" aria-label="Pas aujourd’hui">✕</button></div>` : ""}
+${sug ? `<div class="pt-sug" role="note"><span class="pt-sa" aria-hidden="true">💬</span><div><small>Diva te propose</small><p>${sug.t}</p><button class="btn" ${sug.a}>${sug.b}</button></div><button class="pt-sx" type="button" data-sugx="${sug.id}" aria-label="Pas aujourd’hui">✕</button></div>` : ""}
 ${ptPortesHTML()}`;
     hx.replaceChildren(...garde, ...neuf.content.childNodes, ...(insp ? [insp] : []));
     const pied = document.createElement("div");
@@ -134,7 +134,7 @@ ${ptPortesHTML()}`;
   // Page d'une porte : la liste de ses fonctions. Pas de voix (coût).
   P.porte = () => {
     const P4 = ptPortes(), k = P4[S.porte] && !P4[S.porte].go ? S.porte : "style", p = P4[k];
-    return { back: true, html: `<p class="step">My Style</p><h1>${p.t}</h1><p class="sub">${p.s}</p>
+    return { back: true, html: `<p class="step">Diva Divina</p><h1>${p.t}</h1><p class="sub">${p.s}</p>
 <div class="pt-list">${p.items.map(x => `<button class="pt-row" ${x.a}><span class="pt-at"><b>${x.t}</b><small>${x.s}</small></span><i aria-hidden="true">›</i></button>`).join("")}</div>` };
   };
   if (typeof DOCK_OF === "object") DOCK_OF.porte = "home";

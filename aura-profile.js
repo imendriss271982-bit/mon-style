@@ -1,9 +1,9 @@
-/* My Style — Profil de style d'Aura.
+/* Diva Divina — Profil de style de Diva.
    Ce fichier garde UNIQUEMENT ce que la cliente choisit elle-même (rien n'est deviné) :
    couleurs aimées / évitées, pièces portées / évitées, coupes, occasions habituelles,
    préférence de mode pudique, note libre, et ses avis sur les tenues.
    Tout reste sur son téléphone (localStorage « monstyle_pref »), modifiable et effaçable.
-   pfCtx() résume ces préférences pour Aura (voix, chat, tenues), pfRules() donne les règles strictes aux prompts,
+   pfCtx() résume ces préférences pour Diva (voix, chat, tenues), pfRules() donne les règles strictes aux prompts,
    pfFit() ajuste le classement de la boutique. Chargé APRÈS le script principal (utilise S, P, render, toast, esc…). */
 
 const PF_KEY = "monstyle_pref";
@@ -57,7 +57,7 @@ function pfAvis(ok, txt) {
   pfSave();
 }
 
-// ——— Ce qu'Aura sait des préférences (ajouté au profil envoyé à Aura) ———
+// ——— Ce que Diva sait des préférences (ajouté au profil envoyé à Diva) ———
 function pfCtx() {
   const p = [], low = a => a.join(", ").toLowerCase();
   if (PF.aime.length) p.push("couleurs qu’elle aime : " + low(PF.aime));
@@ -108,9 +108,9 @@ P.prefs = () => {
     return `<button type="button" data-pfv="${esc(c[0])}" aria-pressed="${on}" ${off ? 'data-pfoff' : ''} aria-label="${esc(c[0])}"><i style="background:${c[1]}"></i><span>${esc(c[0])}</span></button>`;
   }).join("")}</div>`;
   const chips = (k, list) => `<div class="pk" data-pfk="${k}">${list.map(v => `<button type="button" data-pfv="${esc(v)}" aria-pressed="${PF[k].includes(v)}">${esc(v)}</button>`).join("")}</div>`;
-  const avis = PF.avis.length ? `<h2>Ce qu’Aura a retenu de tes avis</h2><div class="pf-av">${PF.avis.map(a => `<div class="pf-a"><span aria-hidden="true">${a.ok ? "👍" : "👎"}</span><p>${esc(a.txt)}</p><button type="button" data-pfdel="${esc(a.id)}" aria-label="Supprimer cet avis">×</button></div>`).join("")}</div>` : "";
+  const avis = PF.avis.length ? `<h2>Ce que Diva a retenu de tes avis</h2><div class="pf-av">${PF.avis.map(a => `<div class="pf-a"><span aria-hidden="true">${a.ok ? "👍" : "👎"}</span><p>${esc(a.txt)}</p><button type="button" data-pfdel="${esc(a.id)}" aria-label="Supprimer cet avis">×</button></div>`).join("")}</div>` : "";
   return { back: true, html: `<p class="step">Mon profil</p><h1>Mes préférences de style</h1>
-  <p class="sub">Dis à Aura ce que tu aimes. Elle s’en sert pour la boutique, tes tenues et ses conseils. Tout est enregistré tout de suite, et tu peux tout changer.</p>
+  <p class="sub">Dis à Diva ce que tu aimes. Elle s’en sert pour la boutique, tes tenues et ses conseils. Tout est enregistré tout de suite, et tu peux tout changer.</p>
   <h2>Couleurs que j’aime</h2>${sw("aime", "evite")}
   <h2>Couleurs que j’évite</h2>${sw("evite", "aime")}
   <h2>J’aime porter</h2>${chips("porte", PF_PIECES)}
@@ -122,7 +122,7 @@ P.prefs = () => {
   <h2>Mode pudique</h2><div class="pk" data-pfone="pudeur">${PF_PUDEUR.map(p => `<button type="button" data-pfv="${esc(p[0])}" aria-pressed="${PF.pudeur === p[0]}">${esc(p[1])}</button>`).join("")}</div>
   <label class="lbl" for="pf_note">Autre chose à savoir <small>· facultatif</small></label>
   <textarea class="field pf-note" id="pf_note" maxlength="200" rows="2" placeholder="Par exemple : je préfère les talons bas">${esc(PF.note)}</textarea>
-  <p class="sub pf-priv">Ces choix restent sur ce téléphone (pas de synchronisation entre appareils). Aura ne retient que ce que tu choisis ici et tes 👍 / 👎.</p>
+  <p class="sub pf-priv">Ces choix restent sur ce téléphone (pas de synchronisation entre appareils). Diva ne retient que ce que tu choisis ici et tes 👍 / 👎.</p>
   ${avis}
   ${pfEmpty() ? "" : `<button class="link" data-pfwipe>Effacer toutes mes préférences</button>`}`,
     say: "Dis-moi ce que tu aimes, " + NOM + ". Tes couleurs, les pièces que tu portes, et tes occasions. Je m’en souviendrai pour te conseiller." };

@@ -1,4 +1,4 @@
-// My Style — Comptes clientes, sauvegarde dans le cloud et mesure d'usage (v181).
+// Diva Divina — Comptes clientes, sauvegarde dans le cloud et mesure d'usage (v181).
 // Base D1 `MAJLIS` (même base que le Majlis et les quotas). Tables créées toutes seules au premier appel :
 //   ms_users (id, email, nom, pays, lang, cree, vu)          — la liste unique des clientes
 //   ms_otp   (eh, ch, exp, n)                                — code à 6 chiffres envoyé par email (empreintes seulement)
@@ -38,20 +38,20 @@ async function init(DB) {
 
 // Email du code (fr / en / ar), envoyé par Brevo.
 const MAIL = {
-  fr: { s: "Ton code My Style : {c}", h: "Voici ton code pour retrouver ton style sur My Style :", f: "Il est valable 15 minutes. Si tu n'as rien demandé, ignore simplement cet email." },
-  en: { s: "Your My Style code: {c}", h: "Here is your code to get your style back on My Style:", f: "It is valid for 15 minutes. If you did not ask for it, simply ignore this email." },
-  ar: { s: "كود My Style: {c}", h: "هذا الكود عشان ترجعين ستايلچ في My Style:", f: "صالح لمدة 15 دقيقة. إذا ما طلبتيه، تجاهلي هالإيميل." }
+  fr: { s: "Ton code Diva Divina : {c}", h: "Voici ton code pour retrouver ton style sur Diva Divina :", f: "Il est valable 15 minutes. Si tu n'as rien demandé, ignore simplement cet email." },
+  en: { s: "Your Diva Divina code: {c}", h: "Here is your code to get your style back on Diva Divina:", f: "It is valid for 15 minutes. If you did not ask for it, simply ignore this email." },
+  ar: { s: "كود Diva Divina: {c}", h: "هذا الكود عشان ترجعين ستايلچ في Diva Divina:", f: "صالح لمدة 15 دقيقة. إذا ما طلبتيه، تجاهلي هالإيميل." }
 };
 async function sendCode(env, email, code, lang) {
   const BK = String(env.BREVO_KEY || "").replace(/[^\x21-\x7E]/g, "");
   if (!BK) return { off: true };
   const m = MAIL[lang] || MAIL.fr, rtl = lang === "ar";
   const html = `<div dir="${rtl ? "rtl" : "ltr"}" style="font-family:Arial,sans-serif;font-size:16px;color:#292421;text-align:${rtl ? "right" : "left"}">
-<p style="margin:0 0 6px;font-family:Georgia,serif;font-size:22px;color:#8C6D35">My Style</p>
+<p style="margin:0 0 6px;font-family:Georgia,serif;font-size:22px;color:#8C6D35">Diva Divina</p>
 <p>${m.h}</p><p style="font-size:32px;letter-spacing:8px;font-weight:bold;margin:18px 0;color:#292421" dir="ltr">${code}</p>
 <p style="color:#6E6E6E;font-size:13px">${m.f}</p></div>`;
   const r = await fetch("https://api.brevo.com/v3/smtp/email", { method: "POST", headers: { "api-key": BK, "Content-Type": "application/json", "Accept": "application/json" },
-    body: JSON.stringify({ sender: { name: "My Style", email: env.CONTACT_FROM || "imendriss@divadivina.app" }, to: [{ email }], subject: m.s.replace("{c}", code), htmlContent: html }) });
+    body: JSON.stringify({ sender: { name: "Diva Divina", email: env.CONTACT_FROM || "imendriss@divadivina.app" }, to: [{ email }], subject: m.s.replace("{c}", code), htmlContent: html }) });
   if (!r.ok) { console.error("Brevo code", r.status, (await r.text()).slice(0, 300)); return { err: true }; }
   return { ok: true };
 }

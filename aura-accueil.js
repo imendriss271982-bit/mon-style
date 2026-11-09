@@ -1,26 +1,26 @@
-/* My Style — Accueil v177 (audit de design, validé par Imen le 8 novembre 2026 : « je ne veux pas une home page entassée, facile à utiliser ») :
+/* Diva Divina — Accueil v177 (audit de design, validé par Imen le 8 novembre 2026 : « je ne veux pas une home page entassée, facile à utiliser ») :
    5 blocs au lieu de 9, rien n'est supprimé de l'app.
-     1. Salutation + météo + Aura (la recherche quitte l'accueil ; le globe de langue est caché sur l'accueil, la langue se change dans le Profil)
+     1. Salutation + météo + Diva (la recherche quitte l'accueil ; le globe de langue est caché sur l'accueil, la langue se change dans le Profil)
      2. UNE grande carte qui change : analyse pas finie → « Découvre ton style » (3 étapes) ; analyse finie → « Ma tenue du jour »
-     3. My Stylist « Appeler Aura » (bat comme un cœur)
+     3. My Stylist « Appeler Diva » (bat comme un cœur)
      4. 3 raccourcis ronds : Outfit check, Ma garde-robe, Créer une tenue
      5. Abaya et occasions du Golfe (v179, carte large, très importante pour Imen)
      6. En descendant : Style Twin et Zifafi Wedding côte à côte (Zifafi toujours visible)
-   « Tout My Style » est retiré de l'accueil : Boutique, Beauté, Majlis restent dans la barre du bas et les pages.
+   « Tout Diva Divina » est retiré de l'accueil : Boutique, Beauté, Majlis restent dans la barre du bas et les pages.
    Accueil v176 : carte du jour selon la garde-robe (plus de « Ajoute 7 pièces » quand il y a des vêtements ; la tenue avec ses pièces, « Je la porte » et « Autre idée »).
-   Accueil v175 : plus de question en double (météo en haut près d'Aura, la question seulement dans la carte du jour).
+   Accueil v175 : plus de question en double (météo en haut près de Diva, la question seulement dans la carte du jour).
    Accueil v174 (ordre voulu par Imen, 7 novembre 2026).
    « المجلس حنشيلها من فوق نخليها بس تحت » : la bande du Majlis disparaît du haut de l'accueil (l'onglet Majlis de la barre du bas reste).
-   Ordre : salutation + Aura → (cartes d'avis : invitation / message du Majlis, réponse de la styliste, nouveauté)
-           1. Que porter aujourd'hui ?  2. Your Style Twin  3. My Stylist (« Appeler Aura » qui bat comme un cœur)
+   Ordre : salutation + Diva → (cartes d'avis : invitation / message du Majlis, réponse de la styliste, nouveauté)
+           1. Que porter aujourd'hui ?  2. Your Style Twin  3. My Stylist (« Appeler Diva » qui bat comme un cœur)
            4. Outfit check  5. Ma garde-robe + Créer une tenue  6. Zifafi Wedding
-           puis « Tout My Style » (3 portes : rien n'est perdu) et Inspirations du jour tout en bas.
+           puis « Tout Diva Divina » (3 portes : rien n'est perdu) et Inspirations du jour tout en bas.
    Chargé en DERNIER (après aura-majlis.js et aura-chatlook.js) : enveloppe P.home après toutes les autres.
    Arrêter : localStorage.monstyle_accueil = "0" (posé aussi par les tests des anciens accueils). */
 const ACC_ON = (() => { try { return localStorage.getItem("monstyle_accueil") !== "0" && localStorage.getItem("monstyle_portes") !== "0"; } catch (e) { return true; } })();
 
 // 1. Que porter aujourd'hui ? — toujours visible, même si la garde-robe n'est pas prête.
-// v175 (Imen, 8 novembre 2026) : le titre n'est plus répété. La météo monte près d'Aura (en haut),
+// v175 (Imen, 8 novembre 2026) : le titre n'est plus répété. La météo monte près de Diva (en haut),
 // la carte garde LA question + un conseil selon la température + une action claire.
 function acTemp() { try { return typeof JR_METEO !== "undefined" && JR_METEO && typeof JR_METEO.t === "number" ? JR_METEO.t : null; } catch (e) { return null; } }
 function acConseil(pret) {
@@ -56,7 +56,7 @@ function acJour() {
    <small>${txt}</small>${cta}${pret && !plein ? `<button class="ac-plus" data-go="garde">Ajoute d’autres pièces pour plus d’idées ›</button>` : ""}</div>`;
 }
 
-// « Choisis ma tenue » / « Autre idée » depuis l'accueil : on ouvre la page du jour et Aura compose tout de suite.
+// « Choisis ma tenue » / « Autre idée » depuis l'accueil : on ouvre la page du jour et Diva compose tout de suite.
 addEventListener("click", e => {
   const t = e.target.closest("[data-acgo],[data-acshuf]");
   if (!t || typeof jrChoisir !== "function") return;
@@ -64,7 +64,7 @@ addEventListener("click", e => {
   S.flow = null; go("jour"); jrChoisir(t.hasAttribute("data-acshuf"));
 }, true);
 
-// En haut, près d'Aura : la météo à la place de « Qu'est-ce qu'on porte aujourd'hui ? » (la question est dans la carte).
+// En haut, près de Diva : la météo à la place de « Qu'est-ce qu'on porte aujourd'hui ? » (la question est dans la carte).
 const AC_SOLEIL = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>';
 function acMeteoHaut() {
   let met = "";
@@ -90,11 +90,11 @@ function acActs() {
  </div>`;
 }
 
-// « Tout My Style » : les 3 portes (Mon style, M'habiller, Acheter) pour garder l'accès à tout le reste. Zifafi a déjà sa carte.
+// « Tout Diva Divina » : les 3 portes (Mon style, M'habiller, Acheter) pour garder l'accès à tout le reste. Zifafi a déjà sa carte.
 function acPortes() {
   if (typeof PORTES === "undefined" || !PORTES || typeof ptPortes !== "function" || typeof PT_IC === "undefined") return "";
   const P4 = ptPortes();
-  return `<section class="pt-sec ac-tout"><h2 class="hz-h">Tout My Style</h2><div class="pt-grid ac-grid">${["style", "habiller", "acheter"].map(k => {
+  return `<section class="pt-sec ac-tout"><h2 class="hz-h">Tout Diva Divina</h2><div class="pt-grid ac-grid">${["style", "habiller", "acheter"].map(k => {
     const p = P4[k];
     return `<button class="pt-door" data-porte="${k}"><span class="pt-di"><svg viewBox="0 0 24 24" aria-hidden="true">${PT_IC[k]}</svg></span><b>${p.t}</b><small>${p.s}</small></button>`;
   }).join("")}</div></section>`;
@@ -140,7 +140,7 @@ function acDuo() {
   const ring = typeof twinRing === "function" ? twinRing(pct, 18) : "";
   const twin = typeof twinCard === "function" ? `<button class="ac-duo-c" data-view="twin" aria-label="Your Style Twin"><span class="ac-duo-ring">${ring}<b>${pct}%</b></span><b data-noi18n>Your Style Twin</b><small>Ta copie de style</small></button>` : "";
   const bague = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="15" r="6"/><path d="M9.5 9.5 8 5.5l2-2h4l2 2-1.5 4"/></svg>';
-  const zf = typeof zfHomeCards === "function" ? `<button class="ac-duo-c ac-zf" data-go="zf"><span class="ac-duo-ic">${bague}</span><b><span data-noi18n>Zifafi</span> Wedding</b><small>Ton style de mariée, guidé par Aura.</small></button>` : "";
+  const zf = typeof zfHomeCards === "function" ? `<button class="ac-duo-c ac-zf" data-go="zf"><span class="ac-duo-ic">${bague}</span><b><span data-noi18n>Zifafi</span> Wedding</b><small>Ton style de mariée, guidé par Diva.</small></button>` : "";
   return twin || zf ? `<div class="ac-duo">${twin}${zf}</div>` : "";
 }
 
@@ -163,7 +163,7 @@ if (ACC_ON && typeof P.home === "function") {
     const q = top && top.querySelector(".hz-hi > p");
     if (q) { const m = acMeteoHaut(); if (m) q.outerHTML = m; else q.remove(); }
     if (top) top.querySelectorAll(".hz-q").forEach(x => x.remove());
-    // v187 (Imen, 8 novembre 2026 : « Enlève mon visage de home ») : plus de photo d'Aura en haut de l'accueil.
+    // v187 (Imen, 8 novembre 2026 : « Enlève mon visage de home ») : plus de photo de Diva en haut de l'accueil.
     if (top) top.querySelectorAll(".hz-ava").forEach(x => x.remove());
     const neuf = document.createElement("template");
     neuf.innerHTML = `${acHero()}
@@ -234,11 +234,11 @@ body.pg-home header #voice{margin-inline-start:auto}
 .hz .ac-duo-ring b{font-size:11px;color:var(--accent,#8C6D35)}
 .hz .ac-duo-ic{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:#F3E7DC;color:var(--accent,#8C6D35)}
 .hz .ac-duo-ic svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-/* v178 : boutons dorés de l'accueil bombés, comme « Appeler Aura » */
+/* v178 : boutons dorés de l'accueil bombés, comme « Appeler Diva » */
 .hz .ac-cta{position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(180deg,#C4A05C 0%,#96753A 40%,#846630 62%,#624922 100%)!important;box-shadow:inset 0 2px 1px rgba(255,255,255,.75),inset 0 -6px 10px rgba(70,48,14,.45),0 3px 0 #5E4520,0 10px 20px rgba(94,69,32,.35)!important;text-shadow:0 1px 2px rgba(70,46,12,.55);transition:transform .12s}
 .hz .ac-cta::before{content:"";position:absolute;left:8%;right:8%;top:2px;height:52%;border-radius:999px;z-index:-1;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.7),rgba(255,255,255,.2) 70%,rgba(255,255,255,0))}
 .hz .ac-cta:active{transform:translateY(2px);box-shadow:inset 0 2px 1px rgba(255,255,255,.6),inset 0 -3px 8px rgba(70,48,14,.45),0 1px 0 #5E4520,0 4px 10px rgba(94,69,32,.3)!important}
-/* « Appeler Aura » grossit et rapetisse comme un cœur, avec des ondes dorées, pour qu'on comprenne qu'il faut toucher. */
+/* « Appeler Diva » grossit et rapetisse comme un cœur, avec des ondes dorées, pour qu'on comprenne qu'il faut toucher. */
 .hz .ac-st{overflow:visible}
 .hz .ac-st .hz-call{animation:acBeat 1.6s ease-in-out infinite!important;overflow:visible}
 .hz .ac-st .hz-call svg{animation:acRing 1.6s ease-in-out infinite;transform-origin:50% 50%}

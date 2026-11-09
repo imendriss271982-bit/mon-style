@@ -35,7 +35,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  await p.evaluate(()=>{S.grItem=GR.items[0].id;go('g_item')});await p.waitForTimeout(200);
  ok(await p.$eval('#g_type',e=>e.value)==='Blazer long','Fiche : type précis modifiable');
  await p.fill('#g_type','Blazer court');ok(await p.evaluate(()=>GR.items[0].type)==='Blazer court','Correction du type enregistrée');
- ok(await p.evaluate(()=>/blazer court/.test(grItemsTxt())),'Le type part chez Aura (grItemsTxt)');
+ ok(await p.evaluate(()=>/blazer court/.test(grItemsTxt())),'Le type part chez Diva (grItemsTxt)');
  // Ancien format (une seule pièce, sans cadre) et erreur
  await p.evaluate(()=>{SAMPLE={json:async()=>({categorie:'haut',nom:'Chemise blanche',couleur:'Blanc',hex:'#FFFFFF'})};go('garde')});await mk();
  await p.evaluate(()=>grAdd([__f]));await p.waitForTimeout(300);
@@ -67,13 +67,13 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  ok(await p.$$eval('.oc-pb',e=>e.length)===1&&/veste en jean casse/.test(await p.$eval('.oc-pb',e=>e.innerText)),'v177 : le défaut est affiché au-dessus de sa correction');ok(!/À changer/.test(t),'Plus de liste « À changer »');
  ok(await p.$$eval('.oc-sol',e=>e.length)===3,'3 solutions affichées');
  ok(await p.$$eval('.oc-ok',e=>e.length)===1,'Une pièce « Dans ta garde-robe » (id inventé ignoré)');
- ok(await p.$$eval('.oc-go',e=>e.length)===0&&!/achat/i.test(t)&&await p.$$eval('.oc-idee',e=>e.length)===2,'Sinon : idée d’Aura, jamais « achète »');
+ ok(await p.$$eval('.oc-go',e=>e.length)===0&&!/achat/i.test(t)&&await p.$$eval('.oc-idee',e=>e.length)===2,'Sinon : idée de Diva, jamais « achète »');
  ok(await p.$('.oc-sol button.oc-ph[data-gitem]'),'Photo de la pièce de sa garde-robe');
  ok(/casse l’élégance/.test(t),'v177 : le défaut est expliqué');
  ok(/structure tes épaules/.test(t)&&await p.$$eval('.oc-pq',e=>e.length)===1,'Courte explication sous l’idée');
 
- ok(/casse l’élégance/.test(await p.evaluate(()=>ocSay(S.res.outfit))),'v177 : Aura dit le défaut puis la correction');
- ok(await p.evaluate(()=>/blazer court noir/.test(ocSay(S.res.outfit))),'Aura dit la 1re idée');
+ ok(/casse l’élégance/.test(await p.evaluate(()=>ocSay(S.res.outfit))),'v177 : Diva dit le défaut puis la correction');
+ ok(await p.evaluate(()=>/blazer court noir/.test(ocSay(S.res.outfit))),'Diva dit la 1re idée');
  // Ancien résultat (changements) toujours lisible
  await p.evaluate(()=>{S.res.outfit={note:6,resume:'Ok.',points_forts:[],changements:['Ajoute une ceinture.']};go('o_res')});await p.waitForTimeout(300);
  ok(/Pour sublimer ton look/.test(await p.$eval('body',e=>e.innerText))&&/ceinture/.test(await p.$eval('body',e=>e.innerText)),'Ancien résultat lisible');
@@ -81,7 +81,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  await p.evaluate(()=>{S.res.outfit={note:7,resume:'Bien.',points_forts:[],note_apres:9,solutions:[{action:'ajouter',texte:'Ajoute un sac.',id:'',achat:'Sac'}]};S.lang='ar';save();go('garde')});await p.waitForTimeout(400);
  ok(/تصورين كذا قطعة/.test(await p.$eval('.gr-tip',e=>e.innerText)),'Astuce traduite en arabe');
  await p.evaluate(()=>go('o_res'));await p.waitForTimeout(300);
- ok(/فكرة أورا/.test(await p.$eval('.oc-sols',e=>e.innerText))&&/ترفعين لوكچ/.test(await p.$eval('body',e=>e.innerText)),'Idées traduites en arabe');
+ ok(/فكرة ديفا/.test(await p.$eval('.oc-sols',e=>e.innerText))&&/ترفعين لوكچ/.test(await p.$eval('body',e=>e.innerText)),'Idées traduites en arabe');
  await p.setViewportSize({width:320,height:700});await p.waitForTimeout(200);
  ok(await p.evaluate(()=>document.documentElement.scrollWidth<=321),'320 px : pas de défilement horizontal');
  ok(!errs.length,'Aucune erreur JS'+(errs.length?' : '+errs.join(' | '):''));

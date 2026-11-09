@@ -1,12 +1,12 @@
-/* My Style — v149 (choix d'Imen) : « Photo studio » de l'Outfit check.
+/* Diva Divina — v149 (choix d'Imen) : « Photo studio » de l'Outfit check.
    Le fond de la photo de tenue est enlevé SUR LE TÉLÉPHONE (MediaPipe Image Segmenter, modèle selfie multiclasse,
    même bibliothèque que aura-mesure.js) puis la silhouette est posée sur un fond professionnel dessiné en canvas
-   (studio crème, gris pro, blanc boutique, soie My Style) avec une ombre au sol. Rien n'est envoyé à un serveur.
-   La cliente peut enregistrer ou partager l'image (petite signature « My Style » en bas, pour le bouche-à-oreille).
+   (studio crème, gris pro, blanc boutique, soie Diva Divina) avec une ombre au sol. Rien n'est envoyé à un serveur.
+   La cliente peut enregistrer ou partager l'image (petite signature « Diva Divina » en bas, pour le bouche-à-oreille).
    Chargé après aura-multi.js. Test : node tests/studio.js (segmentation simulée). */
 const ST_MP="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
 const ST_MODELE="https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float32/latest/selfie_multiclass_256x256.tflite";
-const ST_FONDS=[["creme","Studio crème"],["gris","Gris pro"],["blanc","Blanc boutique"],["soie","Soie My Style"]];
+const ST_FONDS=[["creme","Studio crème"],["gris","Gris pro"],["blanc","Blanc boutique"],["soie","Soie Diva Divina"]];
 const ST={seg:null,pret:null,bg:"creme",cache:new Map(),f:null,etat:""};
 try{const b=localStorage.getItem("monstyle_stbg");if(ST_FONDS.some(x=>x[0]===b))ST.bg=b}catch(e){}
 
@@ -53,7 +53,7 @@ async function stRendu(f,bg){const k=bg;const c0=ST.cache.get(f);if(c0&&c0[k])re
  g.save();g.translate(base.cx,Math.min(base.H-4,base.pied));g.scale(1,.16);const sh=g.createRadialGradient(0,0,2,0,0,base.lw*.75);sh.addColorStop(0,"rgba(0,0,0,.28)");sh.addColorStop(1,"rgba(0,0,0,0)");g.fillStyle=sh;g.beginPath();g.arc(0,0,base.lw*.75,0,7);g.fill();g.restore();
  g.drawImage(base.cut,0,0);
  // signature discrète
- const fz=Math.max(12,Math.round(base.W*.028));g.font="600 "+fz+"px Georgia,serif";g.textAlign="right";g.fillStyle=bg==="gris"?"rgba(60,50,40,.55)":"rgba(140,109,53,.75)";g.fillText("My Style",base.W-fz*.8,base.H-fz*.8);
+ const fz=Math.max(12,Math.round(base.W*.028));g.font="600 "+fz+"px Georgia,serif";g.textAlign="right";g.fillStyle=bg==="gris"?"rgba(60,50,40,.55)":"rgba(140,109,53,.75)";g.fillText("Diva Divina",base.W-fz*.8,base.H-fz*.8);
  const url=out.toDataURL("image/jpeg",.9);ST.cache.get(f)[k]=url;return url}
 
 function stRun(){const f=S.file&&S.file.outfit,el=document.getElementById("stImg");if(!f||!el)return;
@@ -78,7 +78,7 @@ function stFichier(){const f=S.file&&S.file.outfit,c=f&&ST.cache.get(f),u=c&&c[S
 document.addEventListener("click",e=>{const t=e.target.closest("[data-stbg],[data-stsave],[data-stshare]");if(!t)return;
  if(t.dataset.stbg){ST.bg=t.dataset.stbg;try{localStorage.setItem("monstyle_stbg",ST.bg)}catch(x){}document.querySelectorAll("[data-stbg]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.stbg===ST.bg));if(ST.etat!=="ko"){ST.etat="";stBtns();stRun()}return}
  const f=stFichier();if(!f)return;
- if(t.hasAttribute("data-stshare")&&navigator.share){navigator.share({files:[f],title:"My Style"}).catch(()=>{});return}
+ if(t.hasAttribute("data-stshare")&&navigator.share){navigator.share({files:[f],title:"Diva Divina"}).catch(()=>{});return}
  const a=document.createElement("a"),u=URL.createObjectURL(f);a.href=u;a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);toast("Photo enregistrée")});
 
 (function(){const st=document.createElement("style");st.textContent=`

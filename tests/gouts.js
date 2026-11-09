@@ -1,5 +1,5 @@
 // Tests du profil de goûts appris (v182) : 👍/👎 sur les tenues → couleurs et pièces aimées / rejetées,
-// envoyées à Aura et visibles dans Mes préférences. Lancer : python3 -m http.server 8765, puis : node tests/gouts.js
+// envoyées à Diva et visibles dans Mes préférences. Lancer : python3 -m http.server 8765, puis : node tests/gouts.js
 const { chromium } = require('playwright');
 const URL = process.env.URL || 'http://localhost:8765/';
 let fails = 0; const ok = (c, m) => { console.log((c ? '✓ ' : '✗ ') + m); if (!c) fails++; };
@@ -39,19 +39,19 @@ let fails = 0; const ok = (c, m) => { console.log((c ? '✓ ' : '✗ ') + m); if
   ok(gt.c.blanc === 1.5, 'Tenue enregistrée : +0,5');
   await p.evaluate(() => { gtNote(['a', 'b'], 1); });
   const ctx = await p.evaluate(() => pfCtx()), rules = await p.evaluate(() => pfRules());
-  ok(/rejette souvent ces couleurs : orange/.test(ctx) && /choisit souvent ces couleurs : blanc/.test(ctx), 'Aura reçoit ce que la cliente aime et rejette');
-  ok(/Évite autant que possible ce qu’elle rejette souvent : orange/.test(rules), 'Règle pour Aura : éviter l’orange');
+  ok(/rejette souvent ces couleurs : orange/.test(ctx) && /choisit souvent ces couleurs : blanc/.test(ctx), 'Diva reçoit ce que la cliente aime et rejette');
+  ok(/Évite autant que possible ce qu’elle rejette souvent : orange/.test(rules), 'Règle pour Diva : éviter l’orange');
   ok(/rejette souvent/.test(await p.evaluate(() => PR_OUT())), 'Le profil de goûts entre dans l’Outfit check');
   // Mes préférences
   await p.evaluate(() => { S.hist = []; go('prefs'); }); await p.waitForTimeout(400);
   const txt = await p.textContent('#page');
-  ok(/Ce qu’Aura a appris de tes goûts/.test(txt) && /Tu choisis souvent/.test(txt) && /Tu rejettes souvent/.test(txt) && /orange/.test(txt), 'Mes préférences : ce qu’Aura a appris (aime / rejette)');
+  ok(/Ce que Diva a appris de tes goûts/.test(txt) && /Tu choisis souvent/.test(txt) && /Tu rejettes souvent/.test(txt) && /orange/.test(txt), 'Mes préférences : ce que Diva a appris (aime / rejette)');
   ok(!/pas de synchronisation/.test(txt) && /dans ton compte/.test(txt), 'Texte mis à jour : gardé dans le compte');
   await p.click('[data-gtwipe]'); await p.waitForTimeout(300);
-  ok(await p.evaluate(() => !Object.keys(GT.c).length) && /Note les tenues d’Aura/.test(await p.textContent('#page')), 'Remettre à zéro');
+  ok(await p.evaluate(() => !Object.keys(GT.c).length) && /Note les tenues de Diva/.test(await p.textContent('#page')), 'Remettre à zéro');
   // Arabe
   await p.evaluate(() => { gtNote(['a', 'b'], 3); S.lang = 'ar'; save(); i18nApply(); render(false); }); await p.waitForTimeout(400);
-  ok(/شو تعلّمت أورا عن ذوقچ/.test(await p.textContent('#page')), 'Traduit en arabe');
+  ok(/شو تعلّمت ديفا عن ذوقچ/.test(await p.textContent('#page')), 'Traduit en arabe');
   ok(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'Pas de débordement');
   // Effacer toutes mes données
   await p.evaluate(() => { S.lang = 'fr'; save(); S.hist = []; go('profil'); }); await p.waitForTimeout(400);

@@ -1,5 +1,5 @@
 // Silhouette v107 : moteur des mesures (aura-corps.js), puis dans l'app : ordre visage → résultat → écran rassurant,
-// mesures sans photo, « Refaire avec une photo », prompt sans visage, voix d'Aura, 3 langues, largeurs 320 à 1280 px.
+// mesures sans photo, « Refaire avec une photo », prompt sans visage, voix de Diva, 3 langues, largeurs 320 à 1280 px.
 // Lancer : node tests/corps.js (moteur seul) ; avec python3 -m http.server 8765 lancé : PAGE=1 node tests/corps.js
 const C=require('../aura-corps.js');
 const errs=[];const ok=(c,m)=>{console.log((c?'ok  ':'ERR ')+m);if(!c)errs.push(m)};
@@ -39,7 +39,7 @@ ok(C.resultat(cas[0][1]).res.src==='mesures'&&!C.resultat(cas[0][1]).res.kibbe,'
   ok(bi.pg==='b_intro','Écran rassurant ouvert après le résultat du visage');
   ok(/habillée, avec des vêtements près du corps/.test(bi.t)&&/cacher ou couper ton visage/.test(bi.t)&&/jamais gardée/.test(bi.t),'Les 3 phrases rassurantes');
   ok(/Prendre ma photo/.test(bi.f)&&/Je préfère donner mes mesures/.test(bi.f),'Les 2 boutons');
-  ok(bi.said==='Ta photo reste privée, et tu peux cacher ton visage.','Aura le dit à voix haute');
+  ok(bi.said==='Ta photo reste privée, et tu peux cacher ton visage.','Diva le dit à voix haute');
   ok(await p.evaluate(()=>getComputedStyle(document.body).backgroundColor==='rgb(250, 247, 242)'&&getComputedStyle(document.querySelector('[data-bgo]')).backgroundColor==='rgb(112, 43, 58)'),'Palette officielle (#FAF7F2, #702B3A)');
   // Photo : l'appareil s'ouvre tout de suite, puis analyse
   await p.click('[data-bgo]');await p.waitForTimeout(200);
@@ -64,7 +64,7 @@ ok(C.resultat(cas[0][1]).res.src==='mesures'&&!C.resultat(cas[0][1]).res.kibbe,'
   ok(/Calculée avec tes mesures/.test(rc.t)&&/Ce qui te met en valeur/.test(rc.t)&&/Ta hauteur/.test(rc.t)&&/Refaire avec une photo/.test(rc.t),'Même type de résultat + lien « Refaire avec une photo »');
   ok(rc.ls&&rc.ls.mes&&rc.ls.mes.hanches===104,'Mesures gardées dans le téléphone (localStorage)');
   ok(rc.pr===0,'Aucune donnée envoyée à l’IA pour les mesures');
-  ok(!/Kibbe undefined/.test(rc.pf)&&/A · Poire/.test(rc.pf),'Profil d’Aura correct sans Kibbe');
+  ok(!/Kibbe undefined/.test(rc.pf)&&/A · Poire/.test(rc.pf),'Profil de Diva correct sans Kibbe');
   await p.click('[data-bphoto]');await p.waitForTimeout(200);
   ok(await p.evaluate(()=>S.page==='a_body'&&S.flow.join()==='a_body,c_run,r_corps'),'« Refaire avec une photo » ouvre la photo de la silhouette');
   await p.close();

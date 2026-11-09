@@ -1,4 +1,4 @@
-/* My Style — Morphologie avec les mesures de la cliente (sans photo).
+/* Diva Divina — Morphologie avec les mesures de la cliente (sans photo).
    Elle donne : hauteur (cm), tour de poitrine, tour de taille, tour de hanches, largeur d'épaules (cm).
    On applique la méthode d'Imen (aura-methode.js, MORPHOLOGIE) : R_WE = taille / épaules, R_HE = hanches / épaules.
    « Épaules » = moyenne du tour de poitrine et de la largeur d'épaules ramenée à un tour (× EPAULE_TOUR),

@@ -1,8 +1,8 @@
-/* My Style — v147 (choix d'Imen)
+/* Diva Divina — v147 (choix d'Imen)
    1) Garde-robe : une seule photo peut contenir plusieurs pièces. Gemini repère chaque pièce (cadre box_2d),
       le téléphone la découpe, enlève le fond uni (sans IA, sur le téléphone) et range chaque pièce à part,
       avec son type précis (« Blazer long », « Robe blazer », « Blazer court »…) que la cliente peut corriger.
-   2) Outfit check (v177, Imen : « liste les défauts ») : Aura donne la note, puis pour chaque point le DÉFAUT
+   2) Outfit check (v177, Imen : « liste les défauts ») : Diva donne la note, puis pour chaque point le DÉFAUT
       précis (« probleme », affiché ✗) et sa correction (changer / ajouter), en cherchant d'abord dans la garde-robe.
    Chargé après aura-focus.js. Testable : node tests/multi.js */
 
@@ -109,7 +109,7 @@ grAdd=async function(files){const sm=await getSample();
 
 // Garde-robe : astuce pour la photo groupée + le type précis sous le nom de chaque pièce.
 if(typeof P!=="undefined"&&P.garde){const _g=P.garde;P.garde=(asT)=>{const r=_g(asT);if(!r||asT||typeof r.html!=="string")return r;
- r.html=r.html.replace('<div class="gr-adds">','<p class="gr-tip"><span aria-hidden="true">📸 </span><span>Pose tes pièces à plat sur un fond blanc (drap blanc, sol clair), sans qu’elles se touchent : Aura enlève le fond toute seule.</span> <span>Tu peux en photographier plusieurs ensemble, elle range chacune à sa place.</span></p><div class="gr-adds">');
+ r.html=r.html.replace('<div class="gr-adds">','<p class="gr-tip"><span aria-hidden="true">📸 </span><span>Pose tes pièces à plat sur un fond blanc (drap blanc, sol clair), sans qu’elles se touchent : Diva enlève le fond toute seule.</span> <span>Tu peux en photographier plusieurs ensemble, elle range chacune à sa place.</span></p><div class="gr-adds">');
  GR.items.forEach(x=>{if(x.type&&!x.wait&&norm(x.type)!==norm(x.nom||"")){const a=`data-gitem="${x.id}" aria-label="${esc(x.nom||"Article")}">`,i=r.html.indexOf(a);
   if(i>=0){const s=r.html.indexOf("</span></button>",i);if(s>0)r.html=r.html.slice(0,s)+`<small class="gr-ty">${esc(x.type)}</small>`+r.html.slice(s)}}});
  return r}}
@@ -118,7 +118,7 @@ if(typeof P!=="undefined"&&P.g_item){const _i=P.g_item;P.g_item=()=>{const r=_i(
  if(x.fond)r.html=r.html.replace('<label class="lbl" for="g_nom">','<p class="gr-fond">'+esc(GR_FOND_MSG)+'</p><label class="lbl" for="g_nom">');
  r.html=r.html.replace('<label class="lbl" for="g_coul">',`<label class="lbl" for="g_type">Type précis</label><input class="field" id="g_type" data-gi="type" list="g_types" value="${esc(x.type||"")}" placeholder="Par exemple : blazer long"><datalist id="g_types">${ty.map(t=>`<option value="${esc(t)}">`).join("")}</datalist><label class="lbl" for="g_coul">`);
  return r}}
-// Le type précis part aussi chez Aura (tenues, Outfit check, appel vocal).
+// Le type précis part aussi chez Diva (tenues, Outfit check, appel vocal).
 if(typeof grItemsTxt==="function"){grItemsTxt=function(){return GR.items.filter(x=>!x.wait).map(x=>x.id+" : "+grCat(x.cat).toLowerCase()+(x.type?" ("+x.type.toLowerCase()+")":"")+", "+(x.nom||"")+(x.couleur?", "+x.couleur:"")+(x.matiere?", "+x.matiere:"")+(x.style?", style "+x.style:"")).join("\n")}}
 
 // ——— Outfit check : solutions au lieu d'erreurs ———
@@ -131,7 +131,7 @@ function ocHtml(o){const sols=ocSols(o);
  return `<h2>${sols.some(x=>x.probleme)?"À corriger pour sublimer ton look":"Pour sublimer ton look"}</h2><div class="oc-sols">${sols.map(s=>`<div class="oc-sol">
   ${s.it?`<button class="oc-ph" data-gitem="${s.it.id}" aria-label="${esc(s.it.nom||"Article")}">${grImg(s.it)}</button>`:`<span class="oc-ph oc-idee" aria-hidden="true">✨</span>`}
   <div class="oc-tx">${s.probleme?`<p class="oc-pb">${esc(s.probleme)}</p>`:""}<span class="oc-tag">${s.action==="ajouter"?"Ajoute":"Change"}</span><p>${esc(s.texte)}</p>${s.pourquoi?`<p class="oc-pq">${esc(s.pourquoi)}</p>`:""}
-  ${s.it?`<small class="oc-ok">✓ Dans ta garde-robe</small>`:`<small class="oc-no">💡 L’idée d’Aura</small>`}</div></div>`).join("")}</div>`}
+  ${s.it?`<small class="oc-ok">✓ Dans ta garde-robe</small>`:`<small class="oc-no">💡 L’idée de Diva</small>`}</div></div>`).join("")}</div>`}
 function ocSay(o){const s=ocSols(o)[0];if(!s)return (o.changements||[]).length?" "+o.changements[0]:"";return " "+(s.probleme?s.probleme.replace(/[.!]?$/,". "):"")+s.texte}
 
 (function(){const st=document.createElement("style");st.textContent=`

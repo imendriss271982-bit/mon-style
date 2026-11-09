@@ -1,4 +1,4 @@
-// Test de l'accueil v177 (audit, validé par Imen) : 5 blocs — Aura, grande carte (analyse ou tenue du jour), My Stylist, 3 raccourcis ronds, Style Twin + Zifafi.
+// Test de l'accueil v177 (audit, validé par Imen) : 5 blocs — Diva, grande carte (analyse ou tenue du jour), My Stylist, 3 raccourcis ronds, Style Twin + Zifafi.
 // Lancer : python3 -m http.server 8765 (dans le dossier du projet), puis : node tests/accueil.js   (SHOTS=dossier pour les captures)
 const {chromium}=require('playwright');
 const URL=process.env.URL||'http://localhost:8765/';
@@ -19,11 +19,11 @@ const SHOTS=process.env.SHOTS||'';
  okk(await p.evaluate(()=>!!document.querySelector('.ac-an [data-onb]')&&document.querySelectorAll('.ac-an .hx-an-s li').length===3),'Grande carte = « Découvre ton style » en 3 étapes');
  okk(!(await p.evaluate(()=>!!document.querySelector('#page .hz-q,#page #hq'))),'Plus de recherche sur l’accueil');
  okk(await p.evaluate(()=>getComputedStyle(document.querySelector('header .lgbtn')).display==='none'),'Globe de langue caché sur l’accueil');
- okk(!(await p.evaluate(()=>!!document.querySelector('.ac-tout,.pt-door,.ac-acts,.tw-card,.zf-uni'))),'Plus de « Tout My Style » ni de cartes en double');
+ okk(!(await p.evaluate(()=>!!document.querySelector('.ac-tout,.pt-door,.ac-acts,.tw-card,.zf-uni'))),'Plus de « Tout Diva Divina » ni de cartes en double');
  okk(!(await p.evaluate(()=>!!document.querySelector('.mj-bar'))),'Bande du Majlis retirée du haut');
  okk(await p.evaluate(()=>!!document.querySelector('#dkmj')),'Onglet Majlis toujours dans la barre du bas');
  okk(await p.evaluate(()=>[...document.querySelectorAll('.ac-ronds .ac-rd')].map(x=>x.dataset.go).join(','))==='o_photo,garde,tenues','3 raccourcis : Outfit check, garde-robe, créer une tenue');
- okk(await p.evaluate(()=>getComputedStyle(document.querySelector('.hz-st .hz-call')).animationName==='acBeat'),'« Appeler Aura » bat comme un cœur');
+ okk(await p.evaluate(()=>getComputedStyle(document.querySelector('.hz-st .hz-call')).animationName==='acBeat'),'« Appeler Diva » bat comme un cœur');
  okk(await p.evaluate(()=>{const g=document.querySelector('.ac-duo');return !!g.querySelector('[data-view="twin"]')&&!!g.querySelector('[data-go="zf"]')}),'Style Twin et Zifafi côte à côte (Zifafi toujours là)');
  okk(await p.evaluate(()=>[...document.querySelectorAll('#page button')].filter(b=>{const r=b.getBoundingClientRect();return r.width&&(r.height<44||r.width<44)}).length)===0,'Toutes les cibles tactiles ≥ 44 px');
  await shot('accueil-fr');
@@ -39,7 +39,7 @@ const SHOTS=process.env.SHOTS||'';
  await p.evaluate(()=>{S.hist=[];home()});await p.waitForTimeout(250);
  // Invitation du Majlis : la carte reste (elle n'apparaît que quand il y en a une)
  await p.evaluate(()=>{MJ.inv='ABCDEF';MJ.invNom='Sara';S.hist=[];S.page='home';render(false)});await p.waitForTimeout(300);
- okk(await ordre().then(o=>o.startsWith('top,mj-invite,jour')),'Invitation du Majlis juste sous Aura');
+ okk(await ordre().then(o=>o.startsWith('top,mj-invite,jour')),'Invitation du Majlis juste sous Diva');
  await p.evaluate(()=>{MJ.inv='';render(false)});
  // Tenue du jour déjà choisie
  const gr=[];for(let i=0;i<8;i++)gr.push({id:'x'+i,cat:i<4?'haut':'pantalon',nom:'Pièce '+i,coul:'noir',img:''});
@@ -55,7 +55,7 @@ const SHOTS=process.env.SHOTS||'';
  okk(await p.evaluate(()=>!!document.querySelector('.ac-jour [data-acgo]')&&!!document.querySelector('.ac-jour .ac-plus')),'v176 : un haut + un bas → « Choisis ma tenue » + petit lien');
  await open({gr,res:RES});okk(await p.evaluate(()=>!!document.querySelector('.ac-jour [data-acgo]')&&!document.querySelector('.ac-jour .ac-plus')),'v176 : garde-robe pleine → « Choisis ma tenue » sans lien');
  await p.evaluate(()=>{window.jrChoisir=a=>{window.JRA=a===true?'autre':'go'}});await p.click('.ac-jour [data-acgo]');await p.waitForTimeout(300);
- okk(await p.evaluate(()=>S.page==='jour'&&window.JRA==='go'),'v176 : « Choisis ma tenue » ouvre la page et lance Aura');
+ okk(await p.evaluate(()=>S.page==='jour'&&window.JRA==='go'),'v176 : « Choisis ma tenue » ouvre la page et lance Diva');
  // Arabe + largeurs
  await open({res:RES},'ar');await p.waitForTimeout(400);
  okk(await p.evaluate(()=>document.documentElement.dir)==='rtl','Arabe : RTL');

@@ -1,4 +1,4 @@
-/* My Style — Mon compte : connexion par code reçu par email, sauvegarde dans le cloud, mesure d'usage (v181).
+/* Diva Divina — Mon compte : connexion par code reçu par email, sauvegarde dans le cloud, mesure d'usage (v181).
    Chargé après aura-chatlook.js, avant aura-accueil.js.
    - Profil (`P.profil` enveloppée) : carte « Sauvegarde ton style » → email → code à 6 chiffres → connectée.
    - Sauvegarde automatique : toutes les 15 s et quand l'app passe en arrière-plan, les clés de `CP_KEYS`

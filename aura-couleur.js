@@ -1,4 +1,4 @@
-/* My Style — Colorimétrie avec une feuille blanche (v182).
+/* Diva Divina — Colorimétrie avec une feuille blanche (v182).
    La cliente tient une feuille blanche (A4) à côté de son visage. Sur le téléphone, sans IA :
    1) on trouve la feuille : la plus grande zone claire et sans couleur de la photo (hors visage) ;
    2) on corrige la lumière : chaque canal est multiplié pour que la feuille redevienne blanche neutre

@@ -1,4 +1,4 @@
-/* My Style × ZIFAFI — My Wedding : méthode de stylisme mariée (logique seule, aucun affichage).
+/* Diva Divina × ZIFAFI — My Wedding : méthode de stylisme mariée (logique seule, aucun affichage).
    Ce fichier contient les choix du questionnaire mariée, le nettoyage des données et le moteur de
    recommandation à RÈGLES SIMPLES (ce n'est pas une IA entraînée) : chaque suggestion dit quelles réponses
    de la mariée l'ont influencée. Les préférences déclarées passent toujours en premier ; la catégorie de
@@ -276,15 +276,15 @@ const ZF_LOOK_CATS = [["bijoux","Bijoux"],["voile","Voile"],["chaussures","Chaus
 
 if (typeof module !== "undefined") module.exports = { ZF, ZF_ONE, zfCleanProf, zfReco, zfScore, zfSignals, zfLookOpts, zfPalFit, ZF_PALS, ZF_SIL, ZF_DIRS };
 
-// ——— Zifafi Wedding (v112) : repères My Style, checklist, conseils, cohérence du look ———
-// Repère de couleurs tiré de la saison My Style (test déjà fait) : une piste, jamais une obligation.
+// ——— Zifafi Wedding (v112) : repères Diva Divina, checklist, conseils, cohérence du look ———
+// Repère de couleurs tiré de la saison Diva Divina (test déjà fait) : une piste, jamais une obligation.
 function zfSeasonHint(season) {
   const s = String(season || "");
   if (/^(Printemps|Automne)/.test(s)) return { temp: "chaud", whites: ["ivoire", "champagne", "casse"], metal: "or" };
   if (/^(Été|Hiver)/.test(s)) return { temp: "froid", whites: ["blanc", "casse"], metal: "argent" };
   return null;
 }
-// Silhouette My Style → catégorie du profil mariée (proposée à la cliente, jamais appliquée sans son accord).
+// Silhouette Diva Divina → catégorie du profil mariée (proposée à la cliente, jamais appliquée sans son accord).
 function zfShapeFromMS(forme) {
   const f = String(forme || "");
   if (/Sablier|^X/.test(f)) return "X"; if (/Poire|^A/.test(f)) return "A"; if (/Triangle invers|^V/.test(f)) return "V"; if (/Rectangle|^H/.test(f)) return "H";
@@ -296,7 +296,7 @@ const ZF_TASKS0 = [
   ["t_budget","p12","Définir le budget de ma tenue de mariée"],["t_explore","p12","Explorer les styles de robe"],["t_profil","p12","Remplir mon profil de mariée"],
   ["t_rdv","p6","Prendre rendez-vous pour les essayages"],["t_robe","p6","Choisir ma robe"],["t_retouches","p6","Planifier les retouches"],
   ["t_acc","p3","Choisir mes accessoires (voile, bijoux)"],["t_chauss","p3","Choisir mes chaussures et les porter à la maison"],["t_bouquet","p3","Choisir mon bouquet"],["t_beaute","p3","Réserver coiffure et maquillage (avec un essai)"],
-  ["t_essfin","p1","Dernier essayage avec chaussures et lingerie"],["t_look","p1","Vérifier mon look complet avec Aura"],["t_bijoux","p1","Préparer chaussures et bijoux ensemble"],
+  ["t_essfin","p1","Dernier essayage avec chaussures et lingerie"],["t_look","p1","Vérifier mon look complet avec Diva"],["t_bijoux","p1","Préparer chaussures et bijoux ensemble"],
   ["t_kit","w1","Préparer une trousse d’urgence"],["t_horaire","w1","Confirmer le programme du jour J"],["t_confirm","w1","Confirmer coiffure et maquillage"],
   ["t_eau","jj","Manger et boire un peu avant de m’habiller"],["t_respire","jj","Prendre un moment pour respirer et profiter"]
 ];

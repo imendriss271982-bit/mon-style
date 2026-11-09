@@ -1,9 +1,9 @@
-/* My Style — Accueil « focus » (v146, essai voulu par Imen).
+/* Diva Divina — Accueil « focus » (v146, essai voulu par Imen).
    Une nouvelle cliente ne voit d'abord que l'essentiel ; les autres rubriques apparaissent au fil de son parcours.
    Rien n'est supprimé : « Tout afficher » montre tout de suite l'accueil complet (et « Accueil simplifié » revient en arrière).
    Pour arrêter l'essai : FOCUS = false.
    Niveaux :
-     0 · nouvelle cliente      → Aura, analyse de style, Outfit check, My Style / Zifafi
+     0 · nouvelle cliente      → Diva, analyse de style, Outfit check, Diva Divina / Zifafi
      1 · analyse terminée      → + garde-robe, créer une tenue, rubriques (shopping, beauté), « Pour toi aujourd'hui »
      2 · 3 vêtements ajoutés   → + Your Style Twin, abaya et occasions du Golfe
      3 · + 7 jours d'usage     → + Inspirations du jour (Nouveautés)

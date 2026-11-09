@@ -1,5 +1,5 @@
 // Tests UX v102 : barre du bas à 5 onglets, onglet actif, accueil (recommandation réelle), garde-robe ≠ tenues,
-// idées de la page Aura, arabe RTL, pas de défilement horizontal de 320 à 1280 px, données conservées.
+// idées de la page Diva, arabe RTL, pas de défilement horizontal de 320 à 1280 px, données conservées.
 // Lancer : python3 -m http.server 8765, puis : node tests/ux.js
 const {chromium}=require('playwright');const URL=process.env.URL||'http://localhost:8765/';
 let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
@@ -12,7 +12,7 @@ const items=[['Abaya noire','abaya','#111111'],['Chemise soie','haut','#f5efe6']
  // ——— Navigation ———
  let p=await open(390,fresh);
  const labels=await p.$$eval('#dock button',bs=>bs.map(x=>x.textContent.trim()));
- ok(labels.join('|')==='Accueil|Garde-robe|Aura|Boutique|Majlis','Barre du bas : 5 onglets nommés ('+labels.join(', ')+')');
+ ok(labels.join('|')==='Accueil|Garde-robe|Diva|Boutique|Majlis','Barre du bas : 5 onglets nommés ('+labels.join(', ')+')');
  for(const g of ['garde','chat','boutique','majlis','home']){await p.click(`#dock [data-go="${g}"]`);await p.waitForTimeout(200);
   ok(await p.evaluate(g=>S.page===g&&document.querySelector(`#dock [data-go="${g}"]`).getAttribute('aria-current')==='page'&&document.querySelectorAll('#dock [aria-current]').length===1,g),'Onglet '+g+' ouvert et marqué actif')}
  ok(await p.$$eval('#dock button',bs=>bs.every(x=>{const r=x.getBoundingClientRect();return r.height>=44&&r.width>=44})),'Cibles tactiles de la barre ≥ 44 px');
@@ -20,15 +20,15 @@ const items=[['Abaya noire','abaya','#111111'],['Chemise soie','haut','#f5efe6']
   ok(await p.evaluate(t=>document.querySelector(`#dock [data-go="${t}"]`).getAttribute('aria-current')==='page',tab),`Page ${pg} : onglet ${tab} reste actif`)}
  // ——— Accueil, nouvelle cliente ———
  await p.evaluate(()=>home());await p.waitForTimeout(200);
- ok(await p.evaluate(()=>!!document.querySelector('[data-view="chat"].hz-st')&&!!document.querySelector('.hz-acts [data-go="tenues"]')&&!!document.querySelector('.hz-acts [data-go="garde"]')),'Accueil : 3 actions (Aura, créer une tenue, garde-robe)');
+ ok(await p.evaluate(()=>!!document.querySelector('[data-view="chat"].hz-st')&&!!document.querySelector('.hz-acts [data-go="tenues"]')&&!!document.querySelector('.hz-acts [data-go="garde"]')),'Accueil : 3 actions (Diva, créer une tenue, garde-robe)');
  ok(await p.evaluate(()=>/Découvre ton style/.test(document.querySelector('.hx-an').innerText)&&!!document.querySelector('.hx-an [data-onb]')&&document.querySelectorAll('.hx-an-s li').length===3&&document.querySelector('.hx-an').compareDocumentPosition(document.querySelector('.hx-oc2'))&4),'Nouvelle cliente : analyse en 3 étapes visible avant Outfit check');
  ok(await p.evaluate(()=>['boutique','beaute','news'].every(g=>document.querySelector(`.hz [data-go="${g}"]`))),'Boutique, Beauté, Nouveautés accessibles depuis l’accueil');
  await p.evaluate(()=>go('tenues'));ok(await p.evaluate(()=>!!document.querySelector('.gr-empty [data-go="garde"]')),'Mes tenues vide : renvoie vers la garde-robe');
  await p.evaluate(()=>go('garde'));ok(await p.evaluate(()=>!!document.querySelector('[data-gadd]')&&!!document.querySelector('[data-gmanual]')&&/vide/.test(document.querySelector('.gr-empty').innerText)),'Garde-robe vide : ajout visible et message clair');
- // ——— Idées de la page Aura ———
+ // ——— Idées de la page Diva ———
  await p.evaluate(()=>{go('chat');window.__sent=[];window.send=t=>__sent.push(t)});
- await p.click('[data-chsay="Aide-moi à décider avant d’acheter une pièce."]');ok(await p.evaluate(()=>__sent[0]==='Aide-moi à décider avant d’acheter une pièce.'),'Aura : « Avant d’acheter » envoie la vraie question');
- await p.click('.ch-sug [data-go="tenues"]');ok(await p.evaluate(()=>S.page==='tenues'),'Aura : « Créer une tenue » ouvre Mes tenues');
+ await p.click('[data-chsay="Aide-moi à décider avant d’acheter une pièce."]');ok(await p.evaluate(()=>__sent[0]==='Aide-moi à décider avant d’acheter une pièce.'),'Diva : « Avant d’acheter » envoie la vraie question');
+ await p.click('.ch-sug [data-go="tenues"]');ok(await p.evaluate(()=>S.page==='tenues'),'Diva : « Créer une tenue » ouvre Mes tenues');
  await p.close();
  // ——— Accueil avec garde-robe : recommandation réelle ———
  p=await open(390,full);

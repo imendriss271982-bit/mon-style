@@ -1,4 +1,4 @@
-// Test de fumée My Style : ouvre chaque page, touche les boutons sans effet externe, et liste les erreurs JavaScript.
+// Test de fumée Diva Divina : ouvre chaque page, touche les boutons sans effet externe, et liste les erreurs JavaScript.
 // Lancer : python3 -m http.server 8765 (dans le dossier du projet), puis : node tests/smoke.js
 const {chromium}=require('playwright');
 const URL=process.env.URL||'http://localhost:8765/';

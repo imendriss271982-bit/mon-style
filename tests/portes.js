@@ -49,7 +49,7 @@ const SHOTS=process.env.SHOTS||'';
  okk(await p.evaluate(()=>!!document.querySelector('.pt-grid')),'Accueil simplifié : retour aux portes');
  // Arabe
  await open({res:{...RES}},'ar');await p.evaluate(()=>{S.res.couleurs={saison:Object.keys(SEASONS)[3]};home()});await p.waitForTimeout(600);t=await txt();await shot('4-arabe');
- okk(/ستايلي|كل My Style/.test(t)&&!/Pour toi maintenant|M’habiller/.test(t),'Arabe : tout est traduit');
+ okk(/ستايلي|كل Diva Divina/.test(t)&&!/Pour toi maintenant|M’habiller/.test(t),'Arabe : tout est traduit');
  okk(await p.evaluate(()=>document.documentElement.dir)==='rtl','Arabe : de droite à gauche');
  // Largeurs
  for(const w of [320,390,768]){await p.setViewportSize({width:w,height:800});await p.waitForTimeout(200);

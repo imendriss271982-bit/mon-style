@@ -1,7 +1,7 @@
 // Tests ZIFAFI — My Wedding : accueil (2 univers), tableau de bord, profil en 6 étapes (enregistrer, relire, modifier,
 // supprimer), moteur de recommandation (préférences → résultats), robes (enregistrer, comparer, refuser, autre option),
 // couleurs, look complet (créer, modifier, dupliquer, comparer, favori, supprimer), inspiration (envoi d'image,
-// format refusé, filtre, favori, suppression), académie (leçon terminée, liste d'entraînement), Aura (contexte mariée),
+// format refusé, filtre, favori, suppression), académie (leçon terminée, liste d'entraînement), Diva (contexte mariée),
 // langues (anglais, arabe RTL), largeurs 320 à 1280 px, données abîmées, effacement.
 // Lancer : python3 -m http.server 8765, puis : node tests/zifafi.js
 const {chromium}=require('playwright');const path=require('path');const URL=process.env.URL||'http://localhost:8765/';
@@ -26,13 +26,13 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  ok(!JSON.stringify(E.zfReco({volume:'ample',aesthetic:['royal']})).match(/QAR|€|\$|Pronovias|Vera Wang/),'Moteur : aucune marque ni prix');
  // ——— Accueil et navigation ———
  let p=await open(390);
- ok(await p.evaluate(()=>!!document.querySelector('.zf-uni [data-zfmystyle]')&&!!document.querySelector('.zf-uni [data-go="zf"]')),'Accueil : cartes MY STYLE et ZIFAFI');
- await click(p,'[data-zfmystyle]');ok(await p.evaluate(()=>S.page==='home'),'« Explorer My Style » garde l’expérience existante');
+ ok(await p.evaluate(()=>!!document.querySelector('.zf-uni [data-zfmystyle]')&&!!document.querySelector('.zf-uni [data-go="zf"]')),'Accueil : cartes DIVA DIVINA et ZIFAFI');
+ await click(p,'[data-zfmystyle]');ok(await p.evaluate(()=>S.page==='home'),'« Explorer Diva Divina » garde l’expérience existante');
  await click(p,'.zf-uni [data-go="zf"]');ok(await p.evaluate(()=>S.page==='zf'&&!!document.querySelector('.zf-start [data-zfprof]')),'ZIFAFI : tableau de bord, invitation au profil');
  ok(await p.evaluate(()=>!/%/.test(document.querySelector('.zf-mods').innerText)&&/Rien pour l’instant/.test(document.body.innerText)),'Tableau de bord : aucun pourcentage inventé');
  ok(await p.evaluate(()=>document.querySelector('#dock [data-go="home"]').getAttribute('aria-current')==='page'),'Barre du bas : Accueil reste allumé');
  for(const m of ['zf_prof','zf_robe','zf_col','zf_look','zf_insp','zf_acad','zf_looks']){await p.evaluate(m=>{go('zf');document.querySelector(`.zf-mods [data-go="${m}"]`).click()},m);await p.waitForTimeout(120);ok(await p.evaluate(m=>S.page===m,m),'Module '+m+' s’ouvre')}
- await p.evaluate(()=>go('zf'));await click(p,'[data-zfhome]');ok(await p.evaluate(()=>S.page==='home'),'Retour à My Style');
+ await p.evaluate(()=>go('zf'));await click(p,'[data-zfhome]');ok(await p.evaluate(()=>S.page==='home'),'Retour à Diva Divina');
  // ——— Profil ———
  await p.evaluate(()=>go('zf'));await click(p,'.zf-start [data-zfprof]');
  ok(await p.evaluate(()=>S.page==='zf_prof'&&/Étape 1 sur 6/.test(document.body.innerText)&&!!document.querySelector('[role=progressbar]')),'Profil : étape 1 sur 6 avec progression');
@@ -103,13 +103,13 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  await click(p,'#foot [data-zfles]');ok(await p.evaluate(()=>S.zfLes==='asseoir'),'Leçon suivante');
  await p.evaluate(()=>{S.zfLes='pratique';go('zf_les')});await click(p,'[data-zfprac="voile"]');z=await st(p);ok(z.prac.voile===1&&await p.evaluate(()=>/1 \/ 7/.test(document.body.innerText)),'Liste d’entraînement cochée pour de vrai');
  await p.evaluate(()=>go('zf'));ok(await p.evaluate(()=>/1 \/ 9 leçons terminées/.test(document.body.innerText)),'Tableau de bord : progression réelle des leçons');
- // ——— Aura ———
- await click(p,'[data-zfaura]');ok(await p.evaluate(()=>S.page==='chat'&&S.zfCtx==='mariee'&&document.querySelector('[data-zfctx="mariee"]').getAttribute('aria-pressed')==='true'),'Aura en mode « Stylisme mariée »');
- ok(await p.evaluate(()=>/MODE AURA — STYLISME MARIÉE/.test(PROFIL())&&/date du mariage 2027-05-20/.test(PROFIL())&&/n’invente ni marque/.test(PROFIL())),'PROFIL() envoie le profil mariée et les règles d’honnêteté');
- await click(p,'[data-zfctx="quotidien"]');ok(await p.evaluate(()=>!/STYLISME MARIÉE/.test(PROFIL())&&!document.querySelector('.ch-sug [data-go="zf"]')),'Retour à Aura quotidien : contexte mariée retiré');
+ // ——— Diva ———
+ await click(p,'[data-zfaura]');ok(await p.evaluate(()=>S.page==='chat'&&S.zfCtx==='mariee'&&document.querySelector('[data-zfctx="mariee"]').getAttribute('aria-pressed')==='true'),'Diva en mode « Stylisme mariée »');
+ ok(await p.evaluate(()=>/MODE DIVA — STYLISME MARIÉE/.test(PROFIL())&&/date du mariage 2027-05-20/.test(PROFIL())&&/n’invente ni marque/.test(PROFIL())),'PROFIL() envoie le profil mariée et les règles d’honnêteté');
+ await click(p,'[data-zfctx="quotidien"]');ok(await p.evaluate(()=>!/STYLISME MARIÉE/.test(PROFIL())&&!document.querySelector('.ch-sug [data-go="zf"]')),'Retour à Diva quotidien : contexte mariée retiré');
  await p.evaluate(()=>{go('zf');window.__sent=[];window.send=t=>__sent.push(t)});await p.evaluate(()=>go('zf_col'));await click(p,'[data-zfask]');await p.waitForTimeout(200);
- ok(await p.evaluate(()=>S.page==='chat'&&S.zfCtx==='mariee'&&__sent.length===1),'« Demander à Aura » envoie la question en mode mariée');
- await p.evaluate(()=>home());ok(await p.evaluate(()=>S.zfCtx==='quotidien'),'Accueil My Style : Aura revient au quotidien');
+ ok(await p.evaluate(()=>S.page==='chat'&&S.zfCtx==='mariee'&&__sent.length===1),'« Demander à Diva » envoie la question en mode mariée');
+ await p.evaluate(()=>home());ok(await p.evaluate(()=>S.zfCtx==='quotidien'),'Accueil Diva Divina : Diva revient au quotidien');
  // ——— Langues ———
  await p.evaluate(()=>{S.lang='en';save();i18nApply();go('zf')});await p.waitForTimeout(300);
  ok(await p.evaluate(()=>/Your journey/.test(document.body.innerText)&&/Find my wedding dress/.test(document.body.innerText)),'Anglais : tableau de bord traduit');

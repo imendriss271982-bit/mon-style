@@ -1,5 +1,5 @@
 // Tests fonctionnels : préférences de style, garde-robe, tenues enregistrées, semaine, autre version, données abîmées.
-// L'IA est simulée (SAMPLE) : on vérifie le parcours et ce qui est envoyé à Aura, pas la qualité des réponses de Gemini.
+// L'IA est simulée (SAMPLE) : on vérifie le parcours et ce qui est envoyé à Diva, pas la qualité des réponses de Gemini.
 // Lancer : python3 -m http.server 8765, puis : node tests/features.js
 const {chromium}=require('playwright');const URL=process.env.URL||'http://localhost:8765/';
 let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
@@ -24,7 +24,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  const pf=await p.evaluate(()=>PF);
  ok(pf.aime.join()==='Bordeaux'&&pf.evite.join()==='Orange,Rose'&&pf.evitePieces.join()==='Jupes'&&pf.pudeur==='hijab'&&pf.note==='Je préfère les talons bas','Préférences gardées après rechargement');
  const prof=await p.evaluate(()=>PROFIL());
- ok(/couleurs qu’elle évite : orange, rose/.test(prof)&&/hijab/.test(prof)&&/talons bas/.test(prof),'Le profil envoyé à Aura contient les préférences');
+ ok(/couleurs qu’elle évite : orange, rose/.test(prof)&&/hijab/.test(prof)&&/talons bas/.test(prof),'Le profil envoyé à Diva contient les préférences');
  const fit=await p.evaluate(()=>{const j=CATALOGUE.find(a=>a.cat==='jupe');const before=artFit(j).sc;const keep=PF.evitePieces;PF.evitePieces=[];const after=artFit(j).sc;PF.evitePieces=keep;return [before,after]});
  ok(fit[0]<fit[1],'Boutique : une pièce évitée descend dans le classement ('+fit[0]+' < '+fit[1]+')');
  // ——— Garde-robe : ajout sans photo ———
@@ -36,7 +36,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  ok(await p.evaluate(()=>GR.items.every(x=>x.nom&&x.cat)&&GR.items.find(x=>x.nom==='Abaya kimono').cat==='abaya'),'Nom et catégorie enregistrés (dont abaya)');
  await p.click('[data-gf="jupe"]');ok(await p.evaluate(()=>document.querySelectorAll('.gr-grid .gr-it').length===1),'Filtre par catégorie');
  await p.click('[data-gf=""]');
- ok(await p.evaluate(()=>/sa garde-robe enregistrée \(8 pièces\)/.test(PROFIL())),'Aura reçoit la liste des vraies pièces');
+ ok(await p.evaluate(()=>/sa garde-robe enregistrée \(8 pièces\)/.test(PROFIL())),'Diva reçoit la liste des vraies pièces');
  ok(await p.evaluate(()=>grOccs()[0][0]==='mariage'||grOccs()[0][0]==='ramadan'),'Les occasions choisies (Mariages, Ramadan) passent en premier');
  // ——— Tenues (IA simulée) ———
  await p.evaluate(()=>{window.__pr=[];const ids=GR.items.map(x=>x.id);SAMPLE={json:async pr=>{__pr.push(pr);if(/Propose UNE autre tenue/.test(pr))return {titre:'Variante chic',pieces:[ids[1],ids[2],ids[6]],conseil:'Le beige adoucit.',manque:''};return {tenues:[{titre:'Iftar élégant',pieces:[ids[4],ids[6],ids[7]],conseil:'L’abaya noire structure.',manque:'Broche dorée'},{titre:'Soie et noir',pieces:[ids[0],ids[2],ids[6]],conseil:'Contraste net.',manque:''},{titre:'Pièce inventée',pieces:['zzz'],conseil:'',manque:''}]}}}});
@@ -50,7 +50,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  await p.click('.gr-look [data-pfgood]');ok(await p.evaluate(()=>PF.avis[0]&&PF.avis[0].ok&&/Iftar élégant/.test(PF.avis[0].txt)),'Avis 👍 mémorisé');
  await p.click('[data-galt="ramadan:1"]');await p.waitForTimeout(500);
  ok(await p.evaluate(()=>GR.looks.ramadan[1].titre==='Variante chic'),'Autre version remplace la tenue');
- ok(await p.evaluate(()=>/tenues qu’elle a aimées : « Iftar élégant/.test(PROFIL())),'Les avis sont transmis à Aura');
+ ok(await p.evaluate(()=>/tenues qu’elle a aimées : « Iftar élégant/.test(PROFIL())),'Les avis sont transmis à Diva');
  await boot();await p.evaluate(()=>go('tenues'));
  ok(await p.evaluate(()=>GR.saved.length===1&&/Mes tenues enregistrées/.test(document.body.innerText)),'Tenue enregistrée retrouvée après rechargement');
  const sid=await p.evaluate(()=>GR.saved[0].id);
@@ -67,7 +67,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  ok(await p.evaluate(()=>GR.saved[0]&&GR.saved[0].pieces.length===2),'Pièce supprimée retirée de la tenue enregistrée');
  // ——— Objectifs et confort ———
  await p.evaluate(()=>go('prefs'));await p.click('[data-pfk="objectifs"] [data-pfv="Gagner en confiance"]');await p.click('[data-pfk="confort"] [data-pfv="Talons bas ou plats"]');
- ok(await p.evaluate(()=>/objectifs de style : gagner en confiance/.test(PROFIL())&&/confort : talons bas/.test(pfRules().toLowerCase())),'Objectifs et confort transmis à Aura');
+ ok(await p.evaluate(()=>/objectifs de style : gagner en confiance/.test(PROFIL())&&/confort : talons bas/.test(pfRules().toLowerCase())),'Objectifs et confort transmis à Diva');
  ok(await p.evaluate(()=>REF==='§REF§'&&REFP('VISAGISME','KIBBE')==='§REFP:VISAGISME|KIBBE§\n'),'Méthode : seulement des repères dans l’app (le texte est dans le Worker)');
  await p.evaluate(()=>go('tenues'));await p.click(`[data-gunsave="${sid}"]`);ok(await p.evaluate(()=>GR.saved.length===0),'Tenue retirée');
  // préférences : suppression d'un avis puis effacement total

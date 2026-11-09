@@ -1,9 +1,9 @@
-/* My Style — Profil de goûts appris (v182). Chargé juste après aura-profile.js.
-   Avant, les 👍/👎 n'étaient qu'une liste de titres de tenues recopiée dans les demandes à Aura.
+/* Diva Divina — Profil de goûts appris (v182). Chargé juste après aura-profile.js.
+   Avant, les 👍/👎 n'étaient qu'une liste de titres de tenues recopiée dans les demandes à Diva.
    Maintenant chaque réaction compte pour les PIÈCES de la tenue : leur couleur, leur type précis (ex. « Blazer long »)
    et leur famille (Haut, Robe…). Poids : 👍 +1, 👎 −1, tenue enregistrée +0,5, tenue du jour portée +0,5.
    Score borné entre −10 et +10. Ce qui revient souvent (≥ 2) = « elle aime » ; (≤ −2) = « elle évite ».
-   Aura le reçoit dans pfCtx() (contexte) et pfRules() (règles) ; la cliente le voit et peut le remettre à zéro dans
+   Diva le reçoit dans pfCtx() (contexte) et pfRules() (règles) ; la cliente le voit et peut le remettre à zéro dans
    Mes préférences. Données : localStorage `monstyle_gouts` (sauvegardé dans le compte, effacé avec « Effacer toutes mes données »). */
 const GT_KEY = "monstyle_gouts";
 let GT = (() => { try { const o = JSON.parse(localStorage.getItem(GT_KEY) || "{}"); const ok = v => v && typeof v === "object" && !Array.isArray(v) ? v : {}; return { c: ok(o.c), t: ok(o.t), k: ok(o.k), n: +o.n || 0 }; } catch (e) { return { c: {}, t: {}, k: {}, n: 0 }; } })();
@@ -24,7 +24,7 @@ function gtAppris() {
 }
 const gtVide = () => { const a = gtAppris(); return !a.aimeC.length && !a.aimeT.length && !a.eviteC.length && !a.eviteT.length; };
 
-// ——— Ce qu'Aura reçoit ———
+// ——— Ce que Diva reçoit ———
 if (typeof pfCtx === "function") {
   const pfCtxAvantGt = pfCtx;
   pfCtx = function () {
@@ -48,11 +48,11 @@ if (typeof pfRules === "function") {
 // ——— Ce que la cliente voit (Mes préférences) ———
 function gtHTML() {
   const a = gtAppris(), ch = (l, cls) => l.map(v => `<span class="gt-c ${cls}" data-noi18n>${esc(v)}</span>`).join("");
-  if (gtVide()) return `<h2>Ce qu’Aura a appris de tes goûts</h2><p class="sub">Note les tenues d’Aura avec 👍 / 👎, enregistre celles que tu aimes : elle apprendra tes goûts toute seule.</p>`;
-  return `<h2>Ce qu’Aura a appris de tes goûts</h2><p class="sub">D’après tes 👍 / 👎 et les tenues que tu gardes ou portes.</p>
+  if (gtVide()) return `<h2>Ce que Diva a appris de tes goûts</h2><p class="sub">Note les tenues de Diva avec 👍 / 👎, enregistre celles que tu aimes : elle apprendra tes goûts toute seule.</p>`;
+  return `<h2>Ce que Diva a appris de tes goûts</h2><p class="sub">D’après tes 👍 / 👎 et les tenues que tu gardes ou portes.</p>
   ${a.aimeC.length || a.aimeT.length ? `<p class="gt-l">Tu choisis souvent</p><div class="gt-w">${ch(a.aimeC.concat(a.aimeT), "on")}</div>` : ""}
   ${a.eviteC.length || a.eviteT.length ? `<p class="gt-l">Tu rejettes souvent</p><div class="gt-w">${ch(a.eviteC.concat(a.eviteT), "off")}</div>` : ""}
-  <button class="link" data-gtwipe>Remettre à zéro ce qu’Aura a appris</button>`;
+  <button class="link" data-gtwipe>Remettre à zéro ce que Diva a appris</button>`;
 }
 if (typeof P !== "undefined" && typeof P.prefs === "function") {
   const prefsAvantGt = P.prefs;
@@ -60,7 +60,7 @@ if (typeof P !== "undefined" && typeof P.prefs === "function") {
     const o = prefsAvantGt(...x);
     if (o && o.html) {
       o.html = o.html.replace("Ces choix restent sur ce téléphone (pas de synchronisation entre appareils).", "Ces choix sont gardés sur ce téléphone, et dans ton compte si tu en as créé un.");
-      const i = o.html.indexOf("<h2>Ce qu’Aura a retenu de tes avis</h2>");
+      const i = o.html.indexOf("<h2>Ce que Diva a retenu de tes avis</h2>");
       o.html = i >= 0 ? o.html.slice(0, i) + gtHTML() + o.html.slice(i) : o.html.replace(/(<button class="link" data-pfwipe>|$)/, gtHTML() + "$1");
     }
     return o;
@@ -73,7 +73,7 @@ document.addEventListener("click", e => {
   if (!t) return;
   if (t.hasAttribute("data-gtwipe")) {
     e.preventDefault(); e.stopPropagation();
-    if (!confirm(tr("Remettre à zéro ce qu’Aura a appris de tes goûts ?"))) return;
+    if (!confirm(tr("Remettre à zéro ce que Diva a appris de tes goûts ?"))) return;
     GT = { c: {}, t: {}, k: {}, n: 0 }; gtSave(); toast("C’est remis à zéro"); render(false); return;
   }
   // 👍 / 👎 : une seule fois par tenue et par sens (le bouton déjà allumé ne compte pas deux fois)

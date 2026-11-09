@@ -1,4 +1,4 @@
-/* My Style — micro-interactions du système de design (v185). Aucune donnée, aucun réseau.
+/* Diva Divina — micro-interactions du système de design (v185). Aucune donnée, aucun réseau.
    1) en-tête en verre quand on descend ; 2) apparition échelonnée des blocs ; 3) onde au toucher des boutons dorés.
    Tout est coupé si la cliente a demandé « réduire les animations ». */
 (function(){

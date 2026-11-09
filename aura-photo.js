@@ -1,4 +1,4 @@
-/* My Style — v158 (demande d'Imen) : bien photographier ses pièces, dans le bon sens.
+/* Diva Divina — v158 (demande d'Imen) : bien photographier ses pièces, dans le bon sens.
    1) Page guide `P.g_guide` avant la photo de la garde-robe : dessin « comme ça / pas comme ça »,
       le sens de chaque type de pièce (col / taille en haut…) et 4 règles. Montrée les 3 premières fois,
       ensuite l'ajout est direct et le lien « Comment bien photographier ? » reste dans la garde-robe.
@@ -50,7 +50,7 @@ P.g_guide=()=>({back:true,html:`<p class="step">Ma garde-robe</p><h1>Bien photog
   <li>Lumière du jour, sans flash ni ombre.</li>
   <li>Toute la pièce dans le cadre, rien de coupé.</li>
  </ol>
- <p class="gg-note">Une pièce arrive quand même de travers ? Aura la redresse ; sinon, touche « Pivoter » dans sa fiche.</p>`,
+ <p class="gg-note">Une pièce arrive quand même de travers ? Diva la redresse ; sinon, touche « Pivoter » dans sa fiche.</p>`,
  foot:`<label class="btn">Prendre la photo<input type="file" accept="image/*" capture="environment" data-ggadd hidden></label><label class="btn ghost">Choisir dans ma galerie<input type="file" accept="image/*" multiple data-ggadd hidden></label>`});
 if(typeof DOCK_OF!=="undefined")DOCK_OF.g_guide="garde";
 

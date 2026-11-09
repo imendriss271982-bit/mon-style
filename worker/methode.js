@@ -1,4 +1,4 @@
-// My Style — Méthode de stylisme d'Imen Driss (base de référence d'Aura), CÔTÉ SERVEUR (v180).
+// Diva Divina — Méthode de stylisme d'Imen Driss (base de référence de Diva), CÔTÉ SERVEUR (v180).
 // Ce texte n'est plus envoyé dans l'application : le téléphone met seulement des repères « §REF§ » ou
 // « §REFP:VISAGISME|COLORIMÉTRIE§ » dans ses demandes, et le Worker les remplace ici par la méthode.
 // Pour mettre à jour la méthode avec de nouveaux cours : modifie ce texte (une rubrique par ligne, chaque ligne

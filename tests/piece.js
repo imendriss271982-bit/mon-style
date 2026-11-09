@@ -19,7 +19,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  await p.evaluate(()=>{window.__pr=[];let n=0;SAMPLE={json:async pr=>{__pr.push(pr);n++;return {tenues:n===1?[{titre:'Soir chic',pieces:['it1','it2','zzz'],conseil:'Le noir structure.',manque:''},{titre:'Jupe et blazer',pieces:['it0','it4','it3'],conseil:'Élégant.',manque:'Boucles dorées'}]:[{titre:'Autre look',pieces:['it0','it1','it2'],conseil:'Net.',manque:''}]}}}});
  await p.click('[data-pcgo]');await p.waitForTimeout(400);
  const pr=await p.evaluate(()=>__pr[0]);
- ok(/OBLIGATOIREMENT la pièce it0/.test(pr)&&/Soirée/.test(pr)&&/Blazer noir/.test(pr),'Aura reçoit la pièce, l’occasion et la garde-robe');
+ ok(/OBLIGATOIREMENT la pièce it0/.test(pr)&&/Soirée/.test(pr)&&/Blazer noir/.test(pr),'Diva reçoit la pièce, l’occasion et la garde-robe');
  ok(await p.evaluate(()=>S.pc.looks.length===2&&S.pc.looks.every(l=>l.pieces.includes('it0'))&&!S.pc.looks[0].pieces.includes('zzz')),'Chaque tenue contient la pièce, pièce inventée retirée');
  ok(await p.evaluate(()=>document.querySelectorAll('.gr-look').length===2&&/Boucles dorées/.test(document.body.innerText)),'Tenues affichées avec l’achat facultatif');
  await p.click('[data-pcsave="0"]');

@@ -1,4 +1,4 @@
-// My Style — Worker corrigé : répond toujours avec les en-têtes CORS,
+// Diva Divina — Worker corrigé : répond toujours avec les en-têtes CORS,
 // même en cas de plantage, pour que l'app affiche la vraie erreur.
 import { expandRef } from "./methode.js";
 import { compte, evenements, adminClientes } from "./compte.js";
@@ -22,7 +22,7 @@ const MIMES = ["image/jpeg", "image/png", "image/webp"];
 
 // ——— Sécurité des coûts (v180) ———
 // 1) Chaque téléphone reçoit un « jeton d'appareil » signé (route /device). Les routes qui coûtent (IA, make-up,
-//    voix, appel d'Aura) l'exigent : sans jeton valide, rien ne part chez Google ni chez ElevenLabs.
+//    voix, appel de Diva) l'exigent : sans jeton valide, rien ne part chez Google ni chez ElevenLabs.
 // 2) Quotas par JOUR comptés dans la base D1 (table ms_quota, même base que le Majlis) : par téléphone, par
 //    adresse IP et pour toute l'app (un plafond global protège la facture même si quelqu'un fabrique des jetons).
 //    Chaque limite peut être changée sans toucher au code avec une variable Cloudflare Q_<NOM> (ex. Q_AI_DEV=120).
@@ -31,7 +31,7 @@ const QUOTAS = {
   AI_DEV: 80, AI_IP: 400, AI_ALL: 5000,      // analyses, tenues, chat photo, traductions
   MK_DEV: 5, MK_ALL: 150,                    // essais make-up (images, les plus chers)
   TTS_DEV: 200, TTS_ALL: 6000,               // phrases lues par la voix (seulement si pas déjà en cache)
-  VOICE_DEV: 30, VOICE_ALL: 800,             // ouvertures d'appel / de chat avec l'agent Aura
+  VOICE_DEV: 30, VOICE_ALL: 800,             // ouvertures d'appel / de chat avec l'agent Diva
   DEV_IP: 20, DEV_ALL: 3000,                 // nouveaux jetons d'appareil
   CODE_IP: 20,                               // essais de code testeuse
   AUTH_DEV: 6, AUTH_IP: 15, AUTH_MAIL: 5, AUTH_ALL: 1000, // codes de connexion envoyés par email (v181)
@@ -64,8 +64,8 @@ async function quota(env, list) {
     return "";
   } catch (e) { console.error("quota", e); return ""; }
 }
-const QUOTA_MSG = "Aura a beaucoup travaillé pour toi aujourd'hui. Reviens demain, elle sera là.";
-const BUSY_MSG = "My Style est très demandée aujourd'hui. Réessaie un peu plus tard.";
+const QUOTA_MSG = "Diva a beaucoup travaillé pour toi aujourd'hui. Reviens demain, elle sera là.";
+const BUSY_MSG = "Diva Divina est très demandée aujourd'hui. Réessaie un peu plus tard.";
 async function hmacHex(secret, txt) {
   const k = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
   const s = await crypto.subtle.sign("HMAC", k, new TextEncoder().encode(txt));
@@ -82,9 +82,9 @@ async function devCheck(env, tok) {
   if (!m) return "";
   return (await hmacHex(await devSecret(env), m[1])) === m[2] ? m[1] : "";
 }
-const DEV_MSG = "Mets à jour My Style : ferme puis rouvre l'application.";
+const DEV_MSG = "Mets à jour Diva Divina : ferme puis rouvre l'application.";
 // Consigne système envoyée à Gemini avec chaque demande de l'app.
-const GUARD = "Tu es le moteur d'analyse de l'application de stylisme My Style (styliste Aura). Tu ne traites que la mode, les vêtements, la beauté, le maquillage, la coiffure, la colorimétrie, la morphologie, les occasions et l'actualité mode et beauté, ainsi que la traduction des textes de l'application. Pour toute autre demande (code informatique, devoirs, sujets sans rapport), réponds seulement {\"erreur\":\"Je suis ta styliste : je peux t'aider pour ton style, tes tenues et ta beauté.\"}. Réponds toujours en JSON valide, sans texte autour.";
+const GUARD = "Tu es le moteur d'analyse de l'application de stylisme Diva Divina (styliste Diva). Tu ne traites que la mode, les vêtements, la beauté, le maquillage, la coiffure, la colorimétrie, la morphologie, les occasions et l'actualité mode et beauté, ainsi que la traduction des textes de l'application. Pour toute autre demande (code informatique, devoirs, sujets sans rapport), réponds seulement {\"erreur\":\"Je suis ta styliste : je peux t'aider pour ton style, tes tenues et ta beauté.\"}. Réponds toujours en JSON valide, sans texte autour.";
 
 // ——— « Vérifié par une vraie styliste » (v143) ———
 // Les demandes des clientes sont rangées dans le KV `VERIF` (namespace « mon-style-styliste », voir wrangler.jsonc),
@@ -214,7 +214,7 @@ async function contact(req, env, json) {
     const quoi = { bug: "Problème technique", question: "Question", idee: "Suggestion" }[b.quoi] || "Message";
     lignes.unshift(["Type", quoi]);
     lignes.push(["Version de l'app", txt(b.version, 12) || "—"], ["Téléphone", txt(b.appareil, 160) || "—"]);
-    sujet = `[My Style] ${quoi} — ${nom || email}`;
+    sujet = `[Diva Divina] ${quoi} — ${nom || email}`;
   } else {
     const mode = b.mode === "doha" ? "En présentiel à Doha" : "En ligne (appel vidéo)";
     const date = /^\d{4}-\d{2}-\d{2}$/.test(String(b.date || "")) ? b.date : "";
@@ -222,15 +222,15 @@ async function contact(req, env, json) {
     const creneau = { matin: "Matin (9 h – 12 h)", aprem: "Après-midi (13 h – 17 h)", soir: "Soir (18 h – 21 h)" }[b.creneau] || "Peu importe";
     const obj = Array.isArray(b.objectifs) ? b.objectifs.map(x => txt(x, 40)).slice(0, 6).join(", ") : "";
     lignes.unshift(["Type", "Demande de séance privée (1 heure)"], ["Prix affiché", txt(b.prix, 20) || "—"], ["Format", mode], ["Date souhaitée", date], ["Créneau", creneau], ["Objectif", obj || "—"]);
-    lignes.push(["Ses résultats My Style", txt(b.profil, 6000) || "Pas encore d'analyse"]);
-    sujet = `[My Style] Séance privée — ${nom || email} — ${date}`;
+    lignes.push(["Ses résultats Diva Divina", txt(b.profil, 6000) || "Pas encore d'analyse"]);
+    sujet = `[Diva Divina] Séance privée — ${nom || email} — ${date}`;
   }
   const html = `<div style="font-family:Arial,sans-serif;font-size:15px;color:#292421">
-<h2 style="color:#8C6D35;margin:0 0 12px">${h(sujet.replace("[My Style] ", ""))}</h2>
+<h2 style="color:#8C6D35;margin:0 0 12px">${h(sujet.replace("[Diva Divina] ", ""))}</h2>
 <table style="border-collapse:collapse">${lignes.map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0;color:#6E6E6E;vertical-align:top;white-space:nowrap">${h(k)}</td><td style="padding:4px 0">${h(v)}</td></tr>`).join("")}</table>
 ${message ? `<p style="margin:16px 0 4px;color:#6E6E6E">Son message :</p><div style="white-space:pre-wrap;padding:12px;background:#F5F5F5;border-radius:8px">${h(message)}</div>` : ""}
 <p style="margin-top:18px;color:#6E6E6E;font-size:13px">Réponds simplement à cet email : ta réponse ira directement à la cliente.</p></div>`;
-  const mail = { sender: { name: "My Style", email: env.CONTACT_FROM || CONTACT_MAIL }, to: [{ email: env.CONTACT_TO || CONTACT_MAIL }],
+  const mail = { sender: { name: "Diva Divina", email: env.CONTACT_FROM || CONTACT_MAIL }, to: [{ email: env.CONTACT_TO || CONTACT_MAIL }],
     replyTo: { email, name: nom || email }, subject: sujet, htmlContent: html };
   if (photo) mail.attachment = [{ name: "photo." + (photo.startsWith("data:image/png") ? "png" : photo.startsWith("data:image/webp") ? "webp" : "jpg"), content: photo.split(",")[1] }];
   const r = await fetch("https://api.brevo.com/v3/smtp/email", { method: "POST", headers: { "api-key": BK, "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(mail) });
@@ -238,7 +238,7 @@ ${message ? `<p style="margin:16px 0 4px;color:#6E6E6E">Son message :</p><div st
   return json({ ok: true });
 }
 
-// My Style — « Le Majlis » (v159, demandé par Imen) : discuter avec ses amies qui ont aussi My Style.
+// Diva Divina — « Le Majlis » (v159, demandé par Imen) : discuter avec ses amies qui ont aussi Diva Divina.
 // Base D1 `MAJLIS` (base « mon-style-majlis », id dans wrangler.jsonc). Tables :
 //   mj_users (id, th = empreinte SHA-256 du jeton, nom, code d'invitation, cree, vu)
 //   mj_amis  (a, b, cree)  — rangée dans les deux sens
@@ -338,7 +338,7 @@ async function majlis(path, req, env, json) {
     if (msgs.some(m => m.de === b.ami && !m.lu)) await DB.prepare("UPDATE mj_msgs SET lu=1 WHERE conv=? AND de=? AND lu=0").bind(cv, b.ami).run();
     // « Vu » : jusqu'où l'amie a lu mes messages
     const v = await DB.prepare("SELECT MAX(id) AS v FROM mj_msgs WHERE conv=? AND de=? AND lu=1").bind(cv, uid).first();
-    // Messages d'Aura (de = "aura") : le conseil de la styliste, visible par les deux amies ; « ref » = la photo commentée.
+    // Messages de Diva (de = "aura") : le conseil de la styliste, visible par les deux amies ; « ref » = la photo commentée.
     return json({ msgs: msgs.map(m => m.de === "aura"
       ? { id: m.id, aura: true, moi: false, t: m.t, txt: m.txt || "", img: "", look: "", ref: parseInt(String(m.look || "").slice(1), 10) || 0 }
       : { id: m.id, moi: m.de === uid, t: m.t, txt: m.txt || "", img: m.img || "", look: m.look || "" }), vu: (v && v.v) || 0 });
@@ -355,14 +355,14 @@ async function majlis(path, req, env, json) {
     return json({ id: (r.meta && r.meta.last_row_id) || 0, t: now });
   }
 
-  // Aura (v160, demandé par Imen) : un conseil ÉCRIT de la styliste au milieu de la conversation (pas de voix : moins cher).
-  // Le téléphone de celle qui envoie la photo (ou qui écrit « Aura ») prépare le conseil avec l'IA, puis le range ici.
+  // Diva (v160, demandé par Imen) : un conseil ÉCRIT de la styliste au milieu de la conversation (pas de voix : moins cher).
+  // Le téléphone de celle qui envoie la photo (ou qui écrit « Diva ») prépare le conseil avec l'IA, puis le range ici.
   // Un seul conseil par photo (ref = id du message photo) ; rangé déjà lu, pour ne pas faire sonner les pastilles.
   if (path === "/majlis/aura") {
     if (!await amie(b.ami)) return json({ erreur: "Cette amie n'est plus dans ton Majlis.", code: "amie" }, 404);
     const cv = mjConv(uid, b.ami), ref = Math.max(0, parseInt(b.ref, 10) || 0), kind = String(b.kind || "");
-    // « fin » (petit mot à la fin d'une vraie discussion) et « conseil » (quand elles parlent de style) : Aura ne parle
-    // pas trop. fin = au moins 6 messages des DEUX amies depuis le dernier mot d'Aura ; conseil = Aura n'a rien dit
+    // « fin » (petit mot à la fin d'une vraie discussion) et « conseil » (quand elles parlent de style) : Diva ne parle
+    // pas trop. fin = au moins 6 messages des DEUX amies depuis le dernier mot de Diva ; conseil = Diva n'a rien dit
     // dans les 4 derniers messages. check = 1 : on demande seulement la permission (avant de payer l'IA).
     if (kind === "fin" || kind === "conseil") {
       const der = await DB.prepare("SELECT MAX(id) AS id FROM mj_msgs WHERE conv=? AND de='aura'").bind(cv).first();
@@ -479,7 +479,7 @@ export default {
       if (P.startsWith("/auth/") || P.startsWith("/sync/") || P === "/compte/del") return await compte(P, B, env, json, { DEV, IP, quota, QUOTA_MSG });
       if (P === "/ev") return await evenements(B, env, json, { DEV, quota });
 
-      // Appel / chat avec l'agent Aura (v180) : lien signé à usage unique, délivré seulement aux téléphones de l'app.
+      // Appel / chat avec l'agent Diva (v180) : lien signé à usage unique, délivré seulement aux téléphones de l'app.
       // Une fois l'authentification activée sur l'agent dans ElevenLabs, son identifiant seul ne suffit plus pour l'appeler.
       if (P === "/voice/session") {
         const EK = String(env.ELEVEN_KEY || "").replace(/[^\x21-\x7E]/g, "").replace(/^["']+|["']+$/g, "");
@@ -489,11 +489,11 @@ export default {
         const agent = String(env.AGENT_ID || "agent_3801m58kjga8fddsm7bz46gcz4wf").replace(/[^A-Za-z0-9_]/g, "");
         const r = await fetch("https://api.elevenlabs.io/v1/convai/conversation/get-signed-url?agent_id=" + agent, { headers: { "xi-api-key": EK } });
         let d = {}; try { d = await r.json(); } catch {}
-        if (!r.ok || !d.signed_url) { console.error("signed-url", r.status, JSON.stringify(d).slice(0, 300)); return json({ erreur: "Aura n'est pas joignable pour le moment.", code: "voice" }, 502); }
+        if (!r.ok || !d.signed_url) { console.error("signed-url", r.status, JSON.stringify(d).slice(0, 300)); return json({ erreur: "Diva n'est pas joignable pour le moment.", code: "voice" }, 502); }
         return json({ signedUrl: d.signed_url });
       }
 
-      // Voix d'Aura qui dit le prénom de la cliente (ElevenLabs), avec phrases fixes uniquement.
+      // Voix de Diva qui dit le prénom de la cliente (ElevenLabs), avec phrases fixes uniquement.
       if (new URL(req.url).pathname === "/tts") {
         const EK = String(env.ELEVEN_KEY || "").replace(/[^\x21-\x7E]/g, "").replace(/^["']+|["']+$/g, "");
         if (!EK) return json({ erreur: "La clé ElevenLabs n'est pas configurée." }, 500);
@@ -501,13 +501,13 @@ export default {
         const ttsQuota = async () => quota(env, [["d|" + DEV + "|tts", "TTS_DEV"], ["all|tts", "TTS_ALL"]]);
         const nom = String(b2.nom || "").normalize("NFC").replace(/[^\p{L}\p{M} '\-]/gu, "").trim().slice(0, 30);
         const PH = {
-          enchantee: n => `Enchantée, ${n} ! Moi, c'est Aura.`,
-          retour: n => `Salut ${n} ! C'est Aura, ta personal stylist. Je suis là pour révéler ta beauté.`,
-          hello_en: n => `Hi${n ? " " + n : ""}! I'm Aura, your personal stylist. I'm here to bring out your beauty.`,
-          hello_ar: n => `هلا والله${n ? " " + n : ""}! أنا أورا، الستايلست الخاصة فيچ. موجودة عشان أطلّع جمالچ، وأخليچ تحسين بثقة كل يوم.`
+          enchantee: n => `Enchantée, ${n} ! Moi, c'est Diva.`,
+          retour: n => `Salut ${n} ! C'est Diva, ta personal stylist. Je suis là pour révéler ta beauté.`,
+          hello_en: n => `Hi${n ? " " + n : ""}! I'm Diva, your personal stylist. I'm here to bring out your beauty.`,
+          hello_ar: n => `هلا والله${n ? " " + n : ""}! أنا ديفا، الستايلست الخاصة فيچ. موجودة عشان أطلّع جمالچ، وأخليچ تحسين بثقة كل يوم.`
         };
-        // Arabe : Aura lit à voix haute les phrases de l'application (texte arabe uniquement, 480 caractères max).
-        // Anglais : même principe, avec la voix habituelle d'Aura (texte latin uniquement).
+        // Arabe : Diva lit à voix haute les phrases de l'application (texte arabe uniquement, 480 caractères max).
+        // Anglais : même principe, avec la voix habituelle de Diva (texte latin uniquement).
         if (b2.type === "say_ar" || b2.type === "say_en") {
           const en = b2.type === "say_en";
           const texte = String(b2.texte || "").normalize("NFC").slice(0, 480).trim();
@@ -531,13 +531,13 @@ export default {
         }
         const kind = PH[b2.type] ? b2.type : "enchantee";
         if (!nom && !kind.startsWith("hello_")) return json({ erreur: "Prénom manquant." }, 400);
-        const ck = new Request("https://cache.mon-style/tts2/" + kind + "/" + encodeURIComponent(nom.toLowerCase() || "_"));
+        const ck = new Request("https://cache.mon-style/tts3/" + kind + "/" + encodeURIComponent(nom.toLowerCase() || "_"));
         const cache = caches.default;
         let hit = await cache.match(ck);
         if (!hit) {
           const over = await ttsQuota();
           if (over) return json({ erreur: over === "TTS_DEV" ? QUOTA_MSG : BUSY_MSG, code: "quota" }, 429);
-          // Arabe : voix féminine khaleeji (Maryam Essa) ; sinon la voix habituelle d'Aura.
+          // Arabe : voix féminine khaleeji (Maryam Essa) ; sinon la voix habituelle de Diva.
           const voice = kind === "hello_ar" ? "w0uhBAmNIG5kUDeaFEsA" : (env.VOICE_ID || "cgSgspJ2msm6clMCkdW9");
           const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice}?output_format=mp3_44100_128`, {
             method: "POST",
@@ -561,7 +561,7 @@ export default {
         if (typeof img !== "string" || !img || img.length > 6e6 || !mp) return json({ erreur: "Requête invalide." }, 400);
         { const over = await quota(env, [["d|" + DEV + "|mk", "MK_DEV"], ["all|mk", "MK_ALL"]]);
           if (over) return json({ erreur: over === "MK_DEV" ? "Tu as utilisé tous tes essais make-up pour aujourd'hui. Reviens demain." : BUSY_MSG, code: "quota" }, 429); }
-        const ibody = JSON.stringify({ system_instruction: { parts: [{ text: "Tu es l'outil d'essai make-up de l'application de stylisme My Style : tu maquilles la photo du visage fournie selon la demande, sans rien changer d'autre. Pour toute autre demande, ne crée pas d'image." }] }, contents: [{ role: "user", parts: [{ text: mp }, { inline_data: { mime_type: "image/jpeg", data: img } }] }],
+        const ibody = JSON.stringify({ system_instruction: { parts: [{ text: "Tu es l'outil d'essai make-up de l'application de stylisme Diva Divina : tu maquilles la photo du visage fournie selon la demande, sans rien changer d'autre. Pour toute autre demande, ne crée pas d'image." }] }, contents: [{ role: "user", parts: [{ text: mp }, { inline_data: { mime_type: "image/jpeg", data: img } }] }],
           generationConfig: { responseModalities: ["IMAGE", "TEXT"], temperature: 0.4 } });
         const T1 = Date.now();
         const icall = async model => {

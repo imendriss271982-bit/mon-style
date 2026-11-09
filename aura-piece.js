@@ -1,6 +1,6 @@
 /* v167 — « Coordonne-moi une tenue avec cette pièce » (principe d'Imen).
    Depuis la fiche d'une pièce de la garde-robe (ouverte depuis la garde-robe OU depuis une solution de l'Outfit check),
-   la cliente choisit une occasion et Aura crée 2 tenues qui contiennent OBLIGATOIREMENT cette pièce,
+   la cliente choisit une occasion et Diva crée 2 tenues qui contiennent OBLIGATOIREMENT cette pièce,
    avec seulement les vraies pièces de sa garde-robe (ids vérifiés). Page P.g_piece, état S.pc.
    Chargé après aura-majlis.js. */
 (function(){
@@ -51,7 +51,7 @@ if(P.g_item){const _i=P.g_item;P.g_item=()=>{const r=_i(),x=GR.items.find(i=>i.i
 
 // Garde-robe : rappel sous « Mes articles ».
 if(P.garde){const _g=P.garde;P.garde=a=>{const r=_g(a);if(a||!r||typeof r.html!=="string"||!GR.items.length)return r;
- r.html=r.html.replace(/(<h2>Mes articles <small class="gr-n">\d+<\/small><\/h2>)/,'$1<p class="pc-tip">✨ Touche une pièce : Aura te crée une tenue avec elle.</p>');return r}}
+ r.html=r.html.replace(/(<h2>Mes articles <small class="gr-n">\d+<\/small><\/h2>)/,'$1<p class="pc-tip">✨ Touche une pièce : Diva te crée une tenue avec elle.</p>');return r}}
 
 document.addEventListener("click",e=>{const t=e.target.closest("[data-pcopen],[data-pcocc],[data-pcgo],[data-pcsave]");if(!t)return;
  if(t.dataset.pcopen){if(S.pc.id!==t.dataset.pcopen)S.pc={id:t.dataset.pcopen,occ:S.pc.occ,looks:[],busy:false,err:"",vus:[]};go("g_piece");return}

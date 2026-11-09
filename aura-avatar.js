@@ -1,4 +1,4 @@
-/* My Style — Your Style Twin, niveau 2 : l'avatar cartoon (v157, choix d'Imen).
+/* Diva Divina — Your Style Twin, niveau 2 : l'avatar cartoon (v157, choix d'Imen).
    Une petite poupée dessinée SUR LE TÉLÉPHONE (SVG, aucune IA, coût 0) qui reprend :
    - la silhouette de la cliente (S.res.corps.forme → SHAPE : épaules, taille, hanches) ;
    - le teint, la couleur et la coiffure qu'ELLE choisit (rien n'est deviné ; couleur des cheveux du questionnaire si elle l'a rempli) ;

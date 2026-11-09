@@ -1,4 +1,4 @@
-// Test v111 : le bonjour d’Aura n’est dit qu’une fois par ouverture (écran d’ouverture OU accueil), jamais au retour sur l’accueil.
+// Test v111 : le bonjour de Diva n’est dit qu’une fois par ouverture (écran d’ouverture OU accueil), jamais au retour sur l’accueil.
 // Lancer : python3 -m http.server 8765, puis : node tests/salut.js
 const {chromium}=require('playwright');const URL=process.env.URL||'http://localhost:8765/';
 let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
