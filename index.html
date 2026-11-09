@@ -942,14 +942,15 @@ header .brand.bar .ddmark{display:none}
 </nav>
 </div>
 <script src="zifafi-i18n.js?v=4"></script>
-<script src="i18n.js?v=55"></script>
+<script src="i18n.js?v=56"></script>
 <script src="aura-methode.js?v=4"></script>
 <script src="aura-mesure.js?v=3"></script>
 <script src="aura-couleur.js?v=2"></script>
 <script src="aura-corps.js?v=2"></script>
+<script src="aura-silhouette.js?v=1"></script>
 <script src="zifafi-methode.js?v=3"></script>
 <script>
-const VERSION="201";
+const VERSION="202";
 // Bonjour de Diva : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -1734,7 +1735,7 @@ r_visage:()=>{const v=ok("visage");if(!v)return missing("visage",S.res.visage);
  <div class="row"><span>Lunettes</span>${esc(v.lunettes)}</div><div class="row"><span>Make-up</span>${esc(v.makeup)}</div>`,
  say:"Ton visage est "+String(v.forme).toLowerCase()+". "+v.pourquoi+" Les coupes qui te vont : "+v.coupes,foot:nextBtn()}},
 r_corps:()=>{if(S.wait&&S.wait.corps)return waitPage("corps");const b=ok("corps");if(!b)return missing("corps",S.res.corps);const bm=b.src==="mesures";
- return {step:"Résultat 2 sur 3",html:`<p class="step">Ta morphologie</p><div class="big">${esc(b.forme)}</div>${bm?`<p class="sub">Calculée avec tes mesures.</p>`:""}<p>${esc(b.proportions)}</p>
+ return {step:"Résultat 2 sur 3",html:`<p class="step">Ta morphologie</p><div class="big">${esc(b.forme)}</div>${bm?`<p class="sub">Calculée avec tes mesures.</p>`:b.mesure_ok?`<p class="sub">Forme mesurée sur ta photo, point par point.</p>`:""}<p>${esc(b.proportions)}</p>
  ${b.somatotype?`<div class="row"><span>Somatotype</span>${esc(cap(b.somatotype))}</div>`:""}
  <div class="row"><span>Ce qui te met en valeur</span>${esc(b.conseils)}</div><div class="row"><span>À éviter</span>${esc(b.a_eviter)}</div>${b.hauteur?`<div class="row"><span>Ta hauteur</span>${esc(b.hauteur)}</div>`:""}
  ${bm?`<p class="note" style="margin-top:18px">Ton type Kibbe se lit sur une photo : avec une photo, je te le donne aussi.</p><button class="link bm-redo" data-bphoto>Refaire avec une photo</button>`:""}
@@ -2007,6 +2008,12 @@ let MES=null;
 async function prepVisage(f){MES=null;try{MES=window.MESURE?await MESURE.mesurer(f):null}catch(e){MES=null}return MES&&MES.erreur?{erreur:MES.erreur}:PR_VISAGE()}
 function fixVisage(r){const m=MES;if(!m||m.erreur||!r||r.fail)return r;if(r.erreur&&!r.forme)return r;
  return {...r,forme:m.forme,ratios:{R_HL:m.R_HL,R_JW:m.R_JW,R_CH:m.R_CH},pourquoi:r.pourquoi||m.pourquoi,mesure:m.mesures,mesure_ok:1}}
+// v202 : silhouette MESURÉE sur la photo (aura-silhouette.js : 33 points + contour du corps) ; Gemini garde seulement Kibbe, essences et conseils.
+let CMES=null;
+async function prepCorps(f){CMES=null;try{CMES=window.SILHOUETTE?await SILHOUETTE.mesurer(f,S.info&&S.info.taille):null}catch(e){CMES=null}if(CMES&&CMES.erreur)return {erreur:CMES.erreur};
+ return PR_BODY()+(CMES&&CMES.forme?" LA SILHOUETTE A DÉJÀ ÉTÉ MESURÉE par le téléphone sur cette photo (points du corps et contour, méthode d’Imen) : forme = "+CMES.forme+". Mets exactement cette valeur dans « forme », ne la change pas et ne la contredis jamais ; écris « conseils » et « a_eviter » pour cette silhouette, puis le Kibbe et les essences.":"")}
+function fixCorps(r){const m=CMES;if(!m||m.erreur||!m.forme||!r||r.fail||r.erreur)return r;
+ return {...r,forme:m.forme,ratios:m.ratios,proportions:m.proportions,conseils:r.conseils||m.conseils,a_eviter:r.a_eviter||m.a_eviter,hauteur:r.hauteur||m.hauteur,mesure:m.largeurs,mesure_ok:1}}
 const PR_VISAGE_MES=m=>REFP("VISAGISME")+" Tu es styliste experte en visagisme. Voici la photo de visage d’une cliente. Sa forme de visage a DÉJÀ été mesurée précisément par le téléphone (478 points, méthode A, B, C, D d’Imen) : forme = "+m.forme+" ("+m.regle+"). Mesures : longueur A = "+m.L+" fois la largeur des pommettes C ; front B = "+Math.round(m.f*100)+" % de C ; mâchoire D = "+Math.round(m.j*100)+" % de C ; mâchoire "+(m.anguleux?"anguleuse":"douce")+". Ne refais pas la mesure, ne change pas la forme et ne la contredis jamais. Analyse seulement la micro-morphologie (yeux, nez, lèvres) et donne les conseils correctifs adaptés à un visage "+m.forme+" selon la méthode ci-dessus. Si la photo est inutilisable (pas de visage, trop sombre, filtre), réponds {\"erreur\":\"explication courte et ce qu’il faut changer\"}. "+FMT+"Format : {\"forme\":\""+m.forme+"\",\"pourquoi\":\"2 phrases simples qui expliquent la forme avec ces mesures (en pourcentages)\",\"micro\":\"yeux, nez, lèvres en 1 phrase\",\"coupes\":\"coupes, raie et frange correctives\",\"couleur_cheveux\":\"\",\"lunettes\":\"\",\"makeup\":\"\"}";
 const PR_VISAGE=()=>MES&&MES.forme?PR_VISAGE_MES(MES):REFP("VISAGISME")+" Tu es styliste experte en visagisme et suis STRICTEMENT la méthode ci-dessus. Voici la photo de visage d’une cliente. Observe les proportions du visage (longueur par rapport à la largeur, front, pommettes, mâchoire, menton) en tenant compte de la perspective, puis classe le visage parmi les 9 formes de la matrice. N’écris AUCUN chiffre que tu n’as pas mesuré : pas de ratio, d’indice, de score ni de pourcentage (la méthode sert à raisonner, pas à afficher des nombres).  Analyse aussi la micro-morphologie (yeux, nez, lèvres). Si la photo est inutilisable (pas de visage, trop sombre, filtre, visage pas de face), réponds {\"erreur\":\"explication courte et ce qu’il faut changer\"}. "+FMT+"Format : {\"forme\":\"une des 9 formes\",\"pourquoi\":\"2 phrases simples qui décrivent ce que tu vois (sans chiffres)\",\"micro\":\"yeux, nez, lèvres en 1 phrase\",\"coupes\":\"coupes, raie et frange correctives\",\"couleur_cheveux\":\"\",\"lunettes\":\"\",\"makeup\":\"\"}";
 const PR_COUL=(c)=>REFP("COLORIMÉTRIE 12")+" Tu es styliste experte en colorimétrie. Voici la photo de visage d’une cliente. "+(c&&c.faits?c.faits+" ":"")+" Combine ce que tu vois (teint, sous-ton, yeux, cheveux, contraste) avec ses réponses au questionnaire : "+ANS_TXT(S.ans)+". Le questionnaire seul indique : "+seasonFromAnswers(S.ans)+". Choisis la saison exacte parmi : "+SEAS_LIST+". Si la photo est inutilisable, réponds {\"erreur\":\"explication courte\"}. "+FMT+""+NOCHIFFRE+"Format : {\"saison\":\"une des 12 saisons exactement\",\"sous_ton\":\"chaud|froid|neutre\",\"contraste\":\"faible|moyen|fort\",\"pourquoi\":\"2 phrases simples sur son teint, ses yeux et ses cheveux (sans chiffres)\"}";
@@ -2055,8 +2062,8 @@ async function runMod(k){const [key,pr,f,msg]=RUNS[k];const sm=await getSample()
  if(!sm){if(key==="couleurs")return done(Q);return fail("L’analyse par photo n’est pas disponible ici.")}
  const rid=++S.rid;say(msg);
  try{const col=key==="couleurs"&&window.COULEUR?await COULEUR.preparer(S.file[f]):null;if(rid!==S.rid)return;
-  const p=key==="visage"?await prepVisage(S.file[f]):key==="couleurs"?PR_COUL(col):pr();if(rid!==S.rid)return;if(p&&p.erreur)return fail(p.erreur);
-  let r=await sm.json(p,{images:[col&&col.img||S.file[f]]});if(r&&!r.erreur&&key==="couleurs")r.wb=!!(col&&col.wb);if(rid!==S.rid)return;if(key==="visage")r=fixVisage(r);
+  const p=key==="visage"?await prepVisage(S.file[f]):key==="corps"?await prepCorps(S.file[f]):key==="couleurs"?PR_COUL(col):pr();if(rid!==S.rid)return;if(p&&p.erreur)return fail(p.erreur);
+  let r=await sm.json(p,{images:[col&&col.img||S.file[f]]});if(r&&!r.erreur&&key==="couleurs")r.wb=!!(col&&col.wb);if(rid!==S.rid)return;if(key==="visage")r=fixVisage(r);if(key==="corps")r=fixCorps(r);
   if(key==="couleurs")r=r&&!r.erreur&&SEASONS[r.saison]?r:{...Q,quiz:1,sous_ton:(r&&r.sous_ton)||""};
   if(r&&r.erreur)return fail(r.erreur);done(r)}
  catch(e){if(rid!==S.rid)return;if(key==="couleurs")return done(Q);fail(errMsg(e))}}
@@ -2070,7 +2077,7 @@ async function run(k){if(RUNS[k])return runMod(k);
    Promise.resolve(pr()).then(p=>typeof p==="string"?sm.json(p,{images:[img]}):p).then(r=>fix?fix(r):r,e=>({erreur:errMsg(e),fail:1})).then(r=>{if(rid!==S.rid)return;S.res[key]=r;S.wait[key]=false;save();arrived(key)})};
   say("Je regarde ton visage, une seconde.");setMsg("Je regarde ton visage.");
   job("visage",()=>prepVisage(S.file.face),S.file.face,fixVisage);
-  job("corps",PR_BODY,S.file.body);
+  job("corps",()=>prepCorps(S.file.body),S.file.body,fixCorps);
   job("couleurs",async()=>{const col=window.COULEUR?await COULEUR.preparer(S.file.face):null;const r=await sm.json(PR_COUL(col),{images:[col&&col.img||S.file.face]});if(r&&!r.erreur)r.wb=!!(col&&col.wb);return r},S.file.face,r=>r&&!r.erreur&&SEASONS[r.saison]?r:{...Q,quiz:1,sous_ton:(r&&r.sous_ton)||""});
   if(ok("visage")){S.busy=false;go("r_visage")}
  }else{

@@ -1161,6 +1161,10 @@ const I18N_D=[
 ["styles préférés : {0}","favourite styles: {0}","الستايلات المفضلة: {0}"],
 // Formes du visage
 ["Forme mesurée sur ta photo, point par point.","Shape measured on your photo, point by point.","شكل وجهچ انقاس على صورتچ، نقطة نقطة."],
+["Je ne vois pas bien ta silhouette des épaules aux genoux. Recule un peu et reprends la photo.","I can't see your silhouette clearly from shoulders to knees. Step back a little and take the photo again.","ما أشوف جسمچ زين من الچتوف للركب. ارجعي شوي لورا وعيدي الصورة."],
+["Tiens-toi bien droite et de face, puis reprends la photo.","Stand up straight, facing the camera, then take the photo again.","وقفي عدل ومن قدام، وعيدي الصورة."],
+["Tu es un peu de profil. Mets-toi bien de face, puis reprends la photo.","You're turned slightly sideways. Face the camera, then take the photo again.","انتي مايلة على جنب شوي. وقفي من قدام وعيدي الصورة."],
+["Tes bras touchent ton corps. Écarte-les un peu, puis reprends la photo.","Your arms are touching your body. Move them out a little, then take the photo again.","يدينچ لاصقة بجسمچ. بعّديهم شوي وعيدي الصورة."],
 ["Ton visage est un peu tourné. Regarde bien l’objectif, de face, et reprends la photo.","Your face is turned slightly. Look straight at the camera and take the photo again.","وجهچ مايل شوي. طالعي الكاميرا من قدام وعيدي الصورة."],
 ["Ovale","Oval","بيضاوي"],
 ["Rond","Round","دائري"],
