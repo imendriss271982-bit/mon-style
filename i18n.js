@@ -913,7 +913,7 @@ const I18N_D=[
 ["Montre-moi celle d’aujourd’hui.","Show me today’s.","وريني لوك اليوم."],
 ["Prendre ma tenue en photo","Take a photo of my outfit","صوّري لبسي"],
 ["Voir mon dernier résultat","See my last result","شوفي آخر نتيجة"],
-["My Stylist","My Stylist","My Stylist"],
+["Parle-moi quand tu veux","Talk to me anytime","كلّميني متى ما تبين"],
 ["Parle avec Diva","Talk to Diva","كلّمي ديفا"],
 ["Voir ma fiche style","See my style profile","شوفي ملف ستايلي"],
 ["Mon style","My style","ستايلي"],
@@ -1557,7 +1557,7 @@ const I18N_D=[
 ["Appeler Diva","Call Diva","اتصلي بديفا"],
 ["Une note et les changements à faire","A score and what to change","درجة وشنو تغيّرين"],
 ["Dernière note : {0}/10","Last score: {0}/10","آخر درجة: {0}/10"],
-["My Stylist : parle avec Diva","My Stylist: talk to Diva","My Stylist: كلّمي ديفا"],
+["Diva : parle avec ta styliste","Diva: talk to your stylist","ديفا: كلّمي الستايلست مالچ"],
 ["Parle-moi, Diva","Talk to me, Diva","كلّمني ديفا"],
 // ——— Lumière et caméra guidée ———
 ["Mets-toi face à une fenêtre ou une belle lumière.","Face a window or a nice bright light.","وقفي قدّام دريشة أو في مكان فيه إضاءة حلوة."],
@@ -1577,7 +1577,7 @@ const I18N_D=[
 ["Inspirations du jour","Today’s inspiration","ملهمات اليوم"],
 ["Looks, beauté, art de vivre","Looks, beauty, lifestyle","إطلالات، جمال، أسلوب حياة"],
 ["Mon style au quotidien","My everyday style","ستايلي كل يوم"],
-["My Stylist : parle avec Diva","My Stylist: talk to Diva","My Stylist: كلّمي ديفا"],
+["Diva : parle avec ta styliste","Diva: talk to your stylist","ديفا: كلّمي الستايلست مالچ"],
 ["Parle-moi, Diva","Talk to me, Diva","كلّمني ديفا"],
 ];
 /* Liste d’installation (texte avec mise en forme). */
