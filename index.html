@@ -927,14 +927,14 @@ nav.dock button:not([aria-current="page"])::after{content:"";height:2px;margin-t
 </nav>
 </div>
 <script src="zifafi-i18n.js?v=4"></script>
-<script src="i18n.js?v=54"></script>
+<script src="i18n.js?v=55"></script>
 <script src="aura-methode.js?v=4"></script>
 <script src="aura-mesure.js?v=3"></script>
 <script src="aura-couleur.js?v=2"></script>
 <script src="aura-corps.js?v=2"></script>
 <script src="zifafi-methode.js?v=3"></script>
 <script>
-const VERSION="192";
+const VERSION="193";
 // Bonjour de Diva : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -1470,8 +1470,26 @@ function beauteEt(){return `<p class="sub">${BL(BX.etS)}</p>`+ETQ.map(e=>`<div c
 // ===== Photo avec minuteur (3 ou 10 secondes) : poser le téléphone, se mettre en place, Diva reçoit la photo =====
 let CAM={st:null,face:"user",delay:3,busy:false};
 function camBeep(f,d){try{const C=window.AudioContext||window.webkitAudioContext;const ac=CAM.ac||(CAM.ac=new C());const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;g.gain.value=.15;o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+(d||.12))}catch(e){}}
+// v193 : photos nettes. Meilleure résolution demandée, mise au point et exposition en continu,
+// puis rafale de quelques images au moment de la photo : on garde la plus nette (variance du laplacien).
+async function camStream(face){const md=navigator.mediaDevices;let s;
+ try{s=await md.getUserMedia({video:{facingMode:face,width:{ideal:3840},height:{ideal:2160}},audio:false})}
+ catch(e){s=await md.getUserMedia({video:{facingMode:face,width:{ideal:1920},height:{ideal:1080}},audio:false})}
+ try{const t=s.getVideoTracks()[0],c=t.getCapabilities?t.getCapabilities():{},a={};
+  ["focusMode","exposureMode","whiteBalanceMode"].forEach(k=>{if(c[k]&&c[k].includes&&c[k].includes("continuous"))a[k]="continuous"});
+  if(Object.keys(a).length)t.applyConstraints({advanced:[a]}).catch(()=>{})}catch(e){}
+ return s}
+function camNet(cv){try{const W=200,H=Math.max(1,Math.round(W*cv.height/cv.width)),c=document.createElement("canvas");c.width=W;c.height=H;
+ const x=c.getContext("2d",{willReadFrequently:true});x.drawImage(cv,cv.width*.2,cv.height*.15,cv.width*.6,cv.height*.7,0,0,W,H);
+ const d=x.getImageData(0,0,W,H).data,g=new Float32Array(W*H);for(let i=0;i<W*H;i++)g[i]=.299*d[i*4]+.587*d[i*4+1]+.114*d[i*4+2];
+ let n=0,m=0,q=0;for(let y=1;y<H-1;y++)for(let x2=1;x2<W-1;x2++){const i=y*W+x2,l=4*g[i]-g[i-1]-g[i+1]-g[i-W]-g[i+W];n++;m+=l;q+=l*l}
+ return n?q/n-(m/n)*(m/n):0}catch(e){return 0}}
+function camFrame(v){return Promise.race([new Promise(r=>v.requestVideoFrameCallback?v.requestVideoFrameCallback(()=>r()):setTimeout(r,90)),wait(250)])}
+async function camRafale(v,draw,n){let best=null,bs=-1,spare=null;n=n||7;
+ for(let i=0;i<n;i++){const c=spare||document.createElement("canvas");draw(c);const sc=camNet(c);if(sc>bs){spare=best;best=c;bs=sc}else spare=c;if(i<n-1)await camFrame(v)}
+ return best}
 async function camStart(){const v=$("#camv");if(!v)return;try{if(CAM.st)CAM.st.getTracks().forEach(t=>t.stop());
-  CAM.st=await navigator.mediaDevices.getUserMedia({video:{facingMode:CAM.face,width:{ideal:1920},height:{ideal:1080}},audio:false});
+  CAM.st=await camStream(CAM.face);
   v.srcObject=CAM.st;v.classList.toggle("mir",CAM.face==="user");await v.play().catch(()=>{})}
  catch(e){camClose();toast("Autorise la caméra pour prendre la photo.")}}
 function camOpen(){if($("#cam"))return;const d=document.createElement("div");d.id="cam";d.setAttribute("role","dialog");d.setAttribute("aria-label","Photo avec minuteur");
@@ -1482,18 +1500,19 @@ function camClose(){CAM.busy=false;if(CAM.st){CAM.st.getTracks().forEach(t=>t.st
 async function camGo(){if(CAM.busy)return;CAM.busy=true;const cd=$("#camcd");
  for(let n=CAM.delay;n>0;n--){if(!$("#cam"))return;cd.textContent=n;camBeep(n<=3?880:660);await wait(1000)}
  if(!$("#cam"))return;cd.textContent="";camBeep(1320,.25);const v=$("#camv"),fl=$("#camfl");
- const c=document.createElement("canvas");c.width=v.videoWidth||720;c.height=v.videoHeight||1280;const x=c.getContext("2d");
- if(CAM.face==="user"){x.translate(c.width,0);x.scale(-1,1)}x.drawImage(v,0,0,c.width,c.height);
+ const mir=CAM.face==="user";cd.textContent="";
+ const c=await camRafale(v,c=>{c.width=v.videoWidth||720;c.height=v.videoHeight||1280;const x=c.getContext("2d");x.setTransform(1,0,0,1,0,0);
+  if(mir){x.translate(c.width,0);x.scale(-1,1)}x.drawImage(v,0,0,c.width,c.height)});if(!$("#cam"))return;
  fl.style.opacity="1";setTimeout(()=>{fl.style.opacity="0"},150);
  c.toBlob(b=>{camClose();if(!b){toast("La photo n’a pas marché. Réessaie.");return}
   const f=new File([b],"photo.jpg",{type:"image/jpeg"});S.cphoto={file:f,url:URL.createObjectURL(f)};render(false);
   if(window.liveConv&&window.liveConv()){voicePhoto((S.draft||"").trim());return}
-  const m=$("#msg");if(m)m.focus();say("Jolie photo ! Dis-moi ce que tu veux savoir, puis touche Envoyer.")},"image/jpeg",.9)}
+  const m=$("#msg");if(m)m.focus();say("Jolie photo ! Dis-moi ce que tu veux savoir, puis touche Envoyer.")},"image/jpeg",.94)}
 // ===== Caméra guidée des analyses : contour du visage ou de la silhouette, et contrôle de la lumière en direct =====
 const DARK_LIM=72; // luminosité moyenne (0 à 255) sous laquelle la photo est trop sombre
 const DARK_MSG="Ta photo est un peu sombre. Reprends-la face à une fenêtre ou une belle lumière : l’analyse sera plus rapide et plus juste.";
 const GUIDE={face:'<svg viewBox="0 0 100 150" preserveAspectRatio="xMidYMid meet"><ellipse cx="50" cy="60" rx="29" ry="38"/><path d="M26 104c-12 5-19 14-22 30M74 104c12 5 19 14 22 30"/></svg>',
- body:'<svg viewBox="0 0 100 200" preserveAspectRatio="xMidYMid meet"><circle cx="50" cy="17" r="11"/><path d="M44 29v5q-14 1-17 9l-6 54q0 5 4 5l5-40 2 37q-2 23 2 52l3 43h10l2-71h2l2 71h10l3-43q4-29 2-52l2-37 5 40q4 0 4-5l-6-54q-3-8-17-9v-5"/></svg>'};
+ body:'<svg viewBox="0 0 100 200" preserveAspectRatio="xMidYMid meet"><ellipse cx="50" cy="14.5" rx="8.6" ry="11.2"/><path d="M46.5 27L46.5 32C44 35 38 36 34 37.5C30 39 28.5 42 28.3 47C27.5 58 26 68 25.2 76C24.4 84 23.2 92 22.6 99C21.8 104 22.6 109 25 109.5C26.8 109 27.3 105 27 100C27.8 92 29.3 84 30.4 76C31.4 68 32.6 60 33.6 53C34.2 51 35.4 50.5 36 52C36.2 59 38 66 38.8 72C39.4 79 34 85 33 94C32.4 104 34.6 124 36.6 142C37.8 156 39.6 170 40.6 183C40.4 187 37.4 190 37.6 193C38 195.5 44 195.5 45.6 194C46.4 192 45.8 188 45.6 184C46 170 47 156 47.2 144C47.6 128 49 112 50 104C51 112 52.4 128 52.8 144C53 156 54 170 54.4 184C54.2 188 53.6 192 54.4 194C56 195.5 62 195.5 62.4 193C62.6 190 59.6 187 59.4 183C60.4 170 62.2 156 63.4 142C65.4 124 67.6 104 67 94C66 85 60.6 79 61.2 72C62 66 63.8 59 64 52C64.6 50.5 65.8 51 66.4 53C67.4 60 68.6 68 69.6 76C70.7 84 72.2 92 73 100C72.7 105 73.2 109 75 109.5C77.4 109 78.2 104 77.4 99C76.8 92 75.6 84 74.8 76C74 68 72.5 58 71.7 47C71.5 42 70 39 66 37.5C62 36 56 35 53.5 32L53.5 27Z"/></svg>'};
 GUIDE.outfit=GUIDE.body;GUIDE.mk=GUIDE.face;
 const GTIP={mk:"Place ton visage dans l’ovale.",face:"Place ton visage dans l’ovale.",body:"Pose le téléphone et recule jusqu’à voir tes pieds dans la silhouette. Touche le bouton : tu as 10 secondes.",outfit:"Pose le téléphone et recule jusqu’à voir tes pieds dans la silhouette. Touche le bouton : tu as 10 secondes."};
 function lumaOf(src,w,h){try{const c=document.createElement("canvas");c.width=24;c.height=32;const x=c.getContext("2d",{willReadFrequently:true});
@@ -1516,7 +1535,7 @@ function acamOpen(k){if($("#cam"))return;
   <div class="bar"><button data-acamx aria-label="Fermer">✕</button><button data-acamd="3" class="${ACAM.delay===3?"on":""}">3 s</button><button class="shoot" data-acamgo aria-label="Prendre la photo"></button><button data-acamd="10" class="${ACAM.delay===10?"on":""}">10 s</button><button data-acamf aria-label="Changer de caméra">⟲</button></div>`;
  document.body.appendChild(d);if(window.i18nApply)i18nApply();acamStart()}
 async function acamStart(){const v=$("#camv");if(!v||!ACAM)return;try{if(CAM.st)CAM.st.getTracks().forEach(t=>t.stop());
-  CAM.st=await navigator.mediaDevices.getUserMedia({video:{facingMode:ACAM.face,width:{ideal:1920},height:{ideal:1080}},audio:false});
+  CAM.st=await camStream(ACAM.face);
   v.srcObject=CAM.st;v.classList.toggle("mir",ACAM.face==="user");v.onloadedmetadata=v.onresize=acamFit;await v.play().catch(()=>{});acamFit();
   clearInterval(ACAM.tm);ACAM.tm=setInterval(acamLight,700)}
  catch(e){const k=ACAM&&ACAM.k;acamClose();const n=k&&$("#nat_"+k);if(n)n.click();else toast("Autorise la caméra pour prendre la photo.")}}
@@ -1532,14 +1551,15 @@ function acamFit(){const v=$("#camv"),g=$("#camgd");if(!v||!g||!v.videoWidth)ret
 addEventListener("resize",()=>{try{acamFit()}catch(e){}});
 function acamClose(){if(ACAM){clearInterval(ACAM.tm);ACAM.busy=false}ACAM=null;if(CAM.st){CAM.st.getTracks().forEach(t=>t.stop());CAM.st=null}const d=$("#cam");if(d)d.remove()}
 async function acamGo(){if(!ACAM||ACAM.busy)return;ACAM.busy=true;stopVoice();const cd=$("#camcd"),k=ACAM.k;
- for(let n=ACAM.delay;n>0;n--){if(!$("#cam"))return;cd.textContent=n;camBeep(n<=3?880:660);await wait(1000)}
+ for(let n=ACAM.delay;n>0;n--){if(!$("#cam"))return;cd.textContent=n;if(n===2){const tp=$("#camtip");if(tp)tp.textContent=tr("Ne bouge plus…")}camBeep(n<=3?880:660);await wait(1000)}
  if(!$("#cam"))return;cd.textContent="";camBeep(1320,.25);const v=$("#camv"),fl=$("#camfl");
  const vw=v.videoWidth||720,vh=v.videoHeight||1280,box=v.getBoundingClientRect(),sc=Math.min(box.width/vw,box.height/vh)||1;
  const cw=Math.min(vw,Math.round(box.width/sc)),ch=Math.min(vh,Math.round(box.height/sc)),sx=(vw-cw)/2,sy=(vh-ch)/2;
- const c=document.createElement("canvas");c.width=cw;c.height=ch;const x=c.getContext("2d");
- if(ACAM.face==="user"){x.translate(cw,0);x.scale(-1,1)}x.drawImage(v,sx,sy,cw,ch,0,0,cw,ch);
+ const mir=ACAM.face==="user",tip=$("#camtip");if(tip)tip.textContent=tr("Ne bouge plus…");
+ const c=await camRafale(v,c=>{c.width=cw;c.height=ch;const x=c.getContext("2d");x.setTransform(1,0,0,1,0,0);
+  if(mir){x.translate(cw,0);x.scale(-1,1)}x.drawImage(v,sx,sy,cw,ch,0,0,cw,ch)});if(!$("#cam"))return;
  fl.style.opacity="1";setTimeout(()=>{fl.style.opacity="0"},150);
- c.toBlob(b=>{acamClose();if(!b){toast("La photo n’a pas marché. Réessaie.");return}setPhoto(k,new File([b],"photo.jpg",{type:"image/jpeg"}))},"image/jpeg",.92)}
+ c.toBlob(b=>{acamClose();if(!b){toast("La photo n’a pas marché. Réessaie.");return}setPhoto(k,new File([b],"photo.jpg",{type:"image/jpeg"}))},"image/jpeg",.94)}
 document.addEventListener("click",e=>{const t=e.target.closest("[data-acam],[data-acamx],[data-acamd],[data-acamgo],[data-acamf]");if(!t)return;
  if(t.dataset.acam){acamOpen(t.dataset.acam);return}
  if(!ACAM)return;

@@ -1560,6 +1560,7 @@ const I18N_D=[
 ["Place ton visage dans l’ovale.","Place your face inside the oval.","حطي وجهچ داخل الدائرة."],
 ["Place-toi entière dans la silhouette.","Fit your whole body inside the outline.","خلي جسمچ كله داخل الرسمة."],
 ["Trop sombre : approche-toi d’une fenêtre ou d’une lumière.","Too dark: move closer to a window or a light.","المكان مظلم: قرّبي من دريشة أو من الضوء."],
+["Ne bouge plus…","Hold still…","لا تتحركي…"],
 ["C’est un peu sombre ici. Mets-toi face à une fenêtre ou une belle lumière, ce sera plus rapide et plus juste.","It’s a little dark here. Face a window or a nice bright light: it will be faster and more accurate.","المكان مظلم شوي. وقفي قدّام دريشة أو في مكان فيه إضاءة حلوة، عشان التحليل يكون أسرع وأدق."],
 ["Ta photo est un peu sombre. Reprends-la face à une fenêtre ou une belle lumière : l’analyse sera plus rapide et plus juste.","Your photo is a little dark. Take it again facing a window or a nice bright light: the analysis will be faster and more accurate.","صورتچ مظلمة شوي. عيدي الصورة قدّام دريشة أو في إضاءة حلوة، عشان التحليل يكون أسرع وأدق."],
 ["Caméra guidée","Guided camera","كاميرا مع دليل"],
