@@ -48,7 +48,7 @@
 
   /* Typographie */
   --ms-ff:Jost,"IBM Plex Sans Arabic",system-ui,-apple-system,sans-serif;
-  --ms-fh:"Cormorant Garamond","Noto Naskh Arabic","IBM Plex Sans Arabic",Georgia,serif;
+  --ms-fh:"Bodoni Moda","Noto Naskh Arabic","IBM Plex Sans Arabic",Georgia,serif;
   --ms-t-display:clamp(31px,8.6vw,38px);
   --ms-t-h2:clamp(22px,6vw,25px);
   --ms-t-h3:17px;

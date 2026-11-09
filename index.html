@@ -28,7 +28,7 @@
 <link rel="preload" href="sons/aura-retour.mp3?v=c1" as="fetch" crossorigin>
 <link rel="preload" href="aura-pose.webp?v=6" as="image" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&family=Italiana&family=Jost:wght@300;400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Noto+Naskh+Arabic:wght@500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,600&family=Great+Vibes&family=Italiana&family=Jost:wght@300;400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Noto+Naskh+Arabic:wght@500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
 :root{--bg:#FFFFFF;--surface:#FFFFFF;--soft:#F5F5F5;--ink:#292421;--muted:#6E6E6E;--line:#E6E6E6;--accent:#8A6346;--on:#FFFFFF;--gold:#8A6346;--rose:#F5F5F5;--ok:#2E6B4A;--warn:#8A5310;--err:#B3261E;--ff:Jost,"IBM Plex Sans Arabic",system-ui,sans-serif;--fh:"Cormorant Garamond","Noto Naskh Arabic","IBM Plex Sans Arabic",Georgia,serif}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#151311;--surface:#1E1B18;--soft:#28241F;--ink:#F3EDE6;--muted:#B5A898;--line:#353029;--accent:#E6A9B9;--on:#1E1517;--gold:#C9B49A;--rose:#2E2226}}
@@ -884,6 +884,21 @@ header .logo .st{font-size:14px;letter-spacing:.38em;margin:0 -.38em 0 0}
 #page .hz-hi .hh{font-size:clamp(24px,6.6vw,28px);line-height:1.25;margin:0}
 .hz-hi .hh em{font:inherit;font-style:normal}
 .hz-heart{font-size:.55em}
+/* v205 (Imen, 9 novembre 2026 : « je veux la même typographie que Dior ») — esprit maison de couture parisienne :
+   didone à fort contraste (Bodoni Moda, libre) en capitales très espacées pour le logo, titres en didone,
+   petites étiquettes en capitales espacées. Le logo n'est plus manuscrit ni en dégradé : noir couture, net.
+   (On reprend un STYLE typographique, pas le logo d'une marque.) */
+:root{--ms-fh:"Bodoni Moda","Noto Naskh Arabic","IBM Plex Sans Arabic",Georgia,serif;--fh:"Bodoni Moda","Noto Naskh Arabic",Georgia,serif}
+header .logo,#splash .logo{flex-direction:column;gap:0}
+header .logo .my,#splash .logo .my,header .logo .st,#splash .logo .st{background:none!important;-webkit-text-fill-color:currentColor!important;color:#1C1714!important;filter:none!important;padding:0!important;font-family:"Bodoni Moda",Georgia,serif!important;font-style:normal;text-transform:uppercase}
+header .logo .my{font-size:25px!important;font-weight:500;letter-spacing:.2em;line-height:1!important;margin:0 -.2em 0 0!important}
+header .logo .st{font-size:9.5px!important;font-weight:500;letter-spacing:.62em;line-height:1!important;margin:6px -.62em 0 0!important}
+#splash .sptop .logo .my,#splash .logo .my{font-size:clamp(40px,6.2svh,54px)!important;font-weight:500;letter-spacing:.2em;line-height:1!important;margin:0 -.2em 0 0!important}
+#splash .sptop .logo .st,#splash .logo .st{font-size:clamp(12px,1.8svh,15px)!important;font-weight:500;letter-spacing:.62em;line-height:1!important;margin:clamp(8px,1.4svh,12px) -.62em 0 0!important}
+@media (max-width:340px){header .logo .my{font-size:22px!important}header .logo .st{font-size:8.5px!important}}
+#page h1,#page h2,.hz-st b{font-family:var(--ms-fh);font-weight:400;letter-spacing:-.005em}
+.hr-lab,.hz-st small,.ac-jour .hr-lab,.ac-duo-c small,.zf-uni small{font-family:Jost,"IBM Plex Sans Arabic",sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:500}
+[dir="rtl"] .hr-lab,[dir="rtl"] .hz-st small,[dir="rtl"] .ac-duo-c small{letter-spacing:0;font-size:13px}
 </style>
 <link rel="stylesheet" href="zifafi.css?v=5">
 </head>
@@ -2640,7 +2655,7 @@ $("#start").addEventListener("click",()=>{if(window.endCall)window.endCall();SKI
 <script src="aura-compte.js?v=3"></script>
 <script src="aura-accueil.js?v=11"></script>
 <!-- v185 : système de design « Maison » (en dernier pour unifier tous les modules) -->
-<link rel="stylesheet" href="ms-design.css?v=3">
+<link rel="stylesheet" href="ms-design.css?v=4">
 <script src="ms-design.js?v=2"></script>
 <script type="module">
 let conv=null,busy=false,raf=0;
