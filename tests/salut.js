@@ -14,6 +14,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  ok(await p.evaluate(()=>HOME_HI&&SKIP),'Rechargement (mise à jour) dans la même ouverture : écran d’ouverture silencieux');
  const p2=await b.newPage();await p2.goto(URL);await p2.evaluate(()=>{localStorage.setItem('monstyle',JSON.stringify({nom:'Imen',lang:'ar',later:true}))});await p2.goto(URL);await p2.waitForTimeout(500);
  await p2.evaluate(()=>{window.SAID=[];window.say=t=>SAID.push(t);window.GREETED=false;document.getElementById('start').click();home();go('garde');home()});
- ok(await p2.evaluate(()=>SAID.filter(t=>/هلا|Bonjour|Hello/.test(t)).length===1),'Voix bloquée à l’ouverture : bonjour dit une seule fois sur l’accueil');
+ ok(await p2.evaluate(()=>SAID.filter(t=>/هلا|Bonjour|Hello/.test(t)).length===0),'v211 : après « Commencer », Diva se tait (aucun bonjour redit sur la page suivante)');
+ ok(await p2.evaluate(()=>window.SPOUT===true&&AUD.paused),'v211 : la voix de l’écran d’ouverture est coupée en le quittant');
  ok(!errs.length,'Aucune erreur JavaScript'+(errs.length?' : '+errs[0]:''));
  await b.close();console.log(fails?fails+' échec(s)':'Tous les tests passent');process.exit(fails?1:0)})();
