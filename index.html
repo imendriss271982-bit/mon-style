@@ -927,13 +927,21 @@ body.talk #splash .tapaura{background:var(--accent);color:#fff;border-color:var(
 #splash .spbot{padding:0 var(--g) calc(var(--sab) + 24px);gap:8px}
 #splash .spbot:before{display:block!important;content:"";position:absolute;inset:-72px 0 0;z-index:-1;opacity:1!important;background:linear-gradient(to bottom,rgba(250,246,240,0),rgba(250,246,240,.86) 45%,rgba(250,246,240,.96))!important}
 #splash .spbot .btn{width:100%;max-width:342px;height:56px;min-height:56px;padding:0 24px;border-radius:28px;font-size:17px;font-weight:600;letter-spacing:.02em;margin:0}
-#splash .spbot #start.ghost{height:44px;min-height:44px;background:none!important;border:0!important;box-shadow:none!important;color:var(--accent)!important;font-size:15px;font-weight:500;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px}
-#splash .spbot #start.ghost::before{display:none}
+#splash:has(#install:not([hidden])) .spbot #start.ghost{height:44px;min-height:44px;background:none!important;border:0!important;box-shadow:none!important;color:var(--accent)!important;font-size:15px;font-weight:500;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px}
+#splash:has(#install:not([hidden])) .spbot #start.ghost::before{display:none}
 #splash .spbot .spst:empty{display:none}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #splash .spbot:before{background:linear-gradient(to bottom,rgba(26,22,19,0),rgba(26,22,19,.9) 45%,#1A1613)!important}}
 :root[data-theme="dark"] #splash .spbot:before{background:linear-gradient(to bottom,rgba(26,22,19,0),rgba(26,22,19,.9) 45%,#1A1613)!important}
 /* Petits écrans (iPhone SE) */
 @media (max-height:700px){#splash .sptop .ddmark{height:32px!important;margin-bottom:8px!important}#splash .sptop .logo .my,#splash .logo .my{font-size:28px!important}#splash .sptop .sp-tag{margin-top:8px!important;font-size:14px!important}}
+/* v212 (Imen, 11 nov. 2026 : « tu as enlevé le bouton Start, ce n'est pas beau ; les mains sortent de l'écran ; la tête est trop haute, pas proportionnel ») :
+   1) « Commencer » redevient un vrai bouton doré 56 px ; il ne devient un lien que si « Télécharger l'application » est affiché.
+   2) Diva est dimensionnée par la LARGEUR de l'écran (mains comprises, 12 px de marge de chaque côté), posée juste au-dessus du bouton :
+      plus rien ne sort de l'écran et la tête descend, sous l'accroche, avec de l'air. */
+#splash .avatar.aura{--free:calc(100svh - var(--top,260px) - var(--ab));--w:min(calc(100vw - 24px),calc((var(--free) - 32px)*.92),440px);--h:calc(var(--w)*546/480);
+ width:var(--w)!important;height:var(--h)!important;max-width:none;left:50%;transform:translateX(-50%);
+ bottom:calc(var(--ab) + 12px - var(--h)*.02 + max(0px,(var(--free) - 28px - var(--h)*.95)/2))!important}
+#splash .avatar.aura .fig{inset:0 0 auto 0}
 </style>
 <link rel="stylesheet" href="zifafi.css?v=5">
 </head>
