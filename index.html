@@ -980,7 +980,7 @@ header .logo .st{font-size:9.5px!important;font-weight:500;letter-spacing:.62em;
 <script src="aura-silhouette.js?v=1"></script>
 <script src="zifafi-methode.js?v=3"></script>
 <script>
-const VERSION="209";
+const VERSION="210";
 // Bonjour de Diva : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -2693,12 +2693,16 @@ async function startCall(){
   // du micro avant l'appel (sur iPhone ça basculait la sortie du son et faisait saccader le début)
   const [{Conversation},sess]=await Promise.all([elSDK(),auraSession("webrtc")]);
   window.CALLED=true;window.FV_PAUSE=true;
-  VOLSEEN=false;MODE="";conv=await Conversation.startSession({...sess,connectionType:sess.conversationToken?"webrtc":"websocket",...(typeof S!=="undefined"&&S.lang?{overrides:{agent:{language:S.lang}}}:{}),dynamicVariables:{user_name:(typeof S!=="undefined"&&S.nom)||"",profil:(typeof PROFIL==="function"&&PROFIL())||"pas encore analysé"},
+  // v210 : les appels partaient en WebSocket (repli agentId « public » : le Worker ne donne pas de jeton) → son saccadé.
+  // Maintenant WebRTC TOUJOURS (jeton du Worker, sinon la bibliothèque prend elle-même le jeton de l'agent public) ;
+  // WebSocket seulement si WebRTC échoue (micro refusé = vraie erreur, pas de repli).
+  const opts=c=>({...(c==="webrtc"?sess:(sess.conversationToken?{agentId:AGENT_ID}:sess)),connectionType:c,...(typeof S!=="undefined"&&S.lang?{overrides:{agent:{language:S.lang}}}:{}),dynamicVariables:{user_name:(typeof S!=="undefined"&&S.nom)||"",profil:(typeof PROFIL==="function"&&PROFIL())||"pas encore analysé"},
    onModeChange:({mode})=>{MODE=mode;st(mode==="speaking"?"Elle te parle…":"Je t’écoute, parle-moi")},
    onDisconnect:()=>{conv=null;window.FV_PAUSE=false;live(false);if(window.auraTalking)auraTalking(false);st("Appel terminé. Appuie pour reparler.")},
    onError:m=>st("Petit souci : "+m),
    onMessage:({message,source})=>{if(source==="ai"&&window.addAuraBubble)addAuraBubble(message);
     if(source==="user"&&message){const lg=typeof S!=="undefined"&&S.lang;st((lg==="ar"?"سمعتچ: «":lg==="en"?"I heard you: “":"Je t’ai entendue : « ")+message.slice(0,60)+(lg==="ar"?"» لحظة…":lg==="en"?"” one moment…":" » Un instant…"))}}});
+  VOLSEEN=false;MODE="";try{conv=await Conversation.startSession(opts("webrtc"))}catch(e){if(e&&(e.name==="NotAllowedError"||e.code==="quota"))throw e;conv=null;conv=await Conversation.startSession(opts("websocket"))}
   try{if(typeof CATCTX==="function")conv.sendContextualUpdate(CATCTX(true))}catch(_){}
   const tp=window.CALLTOPIC;window.CALLTOPIC=null;if(tp){try{conv.sendContextualUpdate(tp.ctx);setTimeout(()=>{try{conv&&conv.sendUserMessage(tp.msg)}catch(_){}},900)}catch(_){}}
   live(true);st("Elle arrive…");cancelAnimationFrame(raf);anim();
