@@ -980,7 +980,7 @@ header .logo .st{font-size:9.5px!important;font-weight:500;letter-spacing:.62em;
 <script src="aura-silhouette.js?v=1"></script>
 <script src="zifafi-methode.js?v=3"></script>
 <script>
-const VERSION="207";
+const VERSION="208";
 // Bonjour de Diva : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -2064,7 +2064,11 @@ async function aiPost(path,body){const send=async renew=>fetch(AI_URL+path,{meth
  let r=await send(false);if(r.status===401){let c="";try{c=(await r.clone().json()).code}catch(e){}if(c==="device")r=await send(true)}return r}
 // Appel / chat avec l'agent Diva : lien signé délivré par le Worker ; en secours, l'identifiant de l'agent
 // (ne marche plus une fois l'authentification activée sur l'agent dans ElevenLabs, ce qui est le but).
-async function auraSession(){try{const r=await aiPost("/voice/session",{});const d=await r.json().catch(()=>({}));if(r.ok&&d.signedUrl)return {signedUrl:d.signedUrl};if(d&&d.code==="quota")throw Object.assign(new Error(d.erreur),{code:"quota"})}catch(e){if(e&&e.code==="quota")throw e}return {agentId:AGENT_ID}}
+// v208 : bibliothèque ElevenLabs à version fixe, téléchargée une seule fois et à l'avance (appel plus rapide)
+const EL_SDK="https://esm.sh/@elevenlabs/client@1.35.0";
+function elSDK(){return window.__elSDK||(window.__elSDK=import(EL_SDK).catch(e=>{window.__elSDK=null;throw e}))}
+addEventListener("load",()=>setTimeout(()=>{elSDK().catch(()=>{})},2500));
+async function auraSession(mode){try{const r=await aiPost("/voice/session",mode?{mode}:{});const d=await r.json().catch(()=>({}));if(r.ok&&d.conversationToken)return {conversationToken:d.conversationToken};if(r.ok&&d.signedUrl)return {signedUrl:d.signedUrl};if(d&&d.code==="quota")throw Object.assign(new Error(d.erreur),{code:"quota"})}catch(e){if(e&&e.code==="quota")throw e}return {agentId:AGENT_ID}}
 function shrink(file,max=1024){return new Promise((ok,ko)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL("image/jpeg",0.85).split(",")[1])};im.onerror=()=>{URL.revokeObjectURL(u);ko(Object.assign(new Error("photo"),{code:"image_rejected"}))};im.src=u})}
 const SHR=new WeakMap();function shrunk(f){if(!SHR.has(f))SHR.set(f,shrink(f,f.mx||1024));return SHR.get(f)}
 const WORKER_AI={json:async(prompt,o={})=>{const images=[];for(const f of o.images||[])images.push({mime:"image/jpeg",data:await shrunk(f)});
@@ -2125,7 +2129,7 @@ function SYS(){return REF_LOOK+" Tu es la styliste personnelle de l’applicatio
 let TCONV=null;
 async function textConv(){
  if(TCONV)return TCONV;
- const {Conversation}=await import("https://esm.sh/@elevenlabs/client");
+ const {Conversation}=await elSDK();
  TCONV=await Conversation.startSession({...(await auraSession()),textOnly:true,connectionType:"websocket",overrides:{conversation:{textOnly:true},...(S.lang?{agent:{language:S.lang}}:{})},
   dynamicVariables:{user_name:S.nom||"",profil:PROFIL()||"pas encore analysé"},
   onMessage:({message,source})=>{if(source!=="ai"||!message)return;const l=S.chat[S.chat.length-1];
@@ -2637,7 +2641,7 @@ $("#start").addEventListener("click",()=>{if(window.endCall)window.endCall();SKI
 </script>
 <script src="aura-profile.js?v=4"></script>
 <script src="aura-gouts.js?v=2"></script>
-<script src="fond-vivant.js?v=3"></script>
+<script src="fond-vivant.js?v=4"></script>
 <script src="zifafi.js?v=6"></script>
 <script src="zifafi-plus.js?v=2"></script>
 <script src="aura-twin.js?v=2"></script>
@@ -2668,7 +2672,8 @@ const live=on=>{if(on&&typeof hush==="function")hush();if(on&&typeof skipIntro==
 let stFn=()=>{};
 const st=t=>{stFn(t);const e=$$("callst");if(e)e.textContent=t};
 let LOUD=0,MODE="",VOLSEEN=false;
-function anim(){const v=conv&&conv.getOutputVolume?conv.getOutputVolume():0;const now=performance.now();if(v>0.02)LOUD=now;if(window.auraTalking&&!conv){window.AURA_DRIVE=false;window.AURA_OFF_MS=0;auraTalking(false)}
+let ANT=0;
+function anim(t){if(conv&&t&&t-ANT<50){raf=requestAnimationFrame(anim);return}ANT=t||0;const v=conv&&conv.getOutputVolume?conv.getOutputVolume():0;const now=performance.now();if(v>0.02)LOUD=now;if(window.auraTalking&&!conv){window.AURA_DRIVE=false;window.AURA_OFF_MS=0;auraTalking(false)}
  // v199 : pendant l'appel, la bouche suit le volume réel de sa voix (se tait dans les silences)
  if(v>0.02)VOLSEEN=true;
  if(conv&&window.auraTalking){window.AURA_DRIVE=true;window.AURA_OFF_MS=120;const vn=Math.min(1,v*3);
@@ -2678,18 +2683,19 @@ function anim(){const v=conv&&conv.getOutputVolume?conv.getOutputVolume():0;cons
  raf=conv?requestAnimationFrame(anim):0;if(!conv)document.querySelectorAll(".avatar").forEach(a=>{a.classList.remove("speak");const i=a.querySelector("img");if(i)i.style.transform=""})}
 async function startCall(){
  if(busy)return;busy=true;
- if(conv){try{await conv.endSession()}catch(_){}conv=null;live(false);st("Appel terminé.");busy=false;return}
+ if(conv){try{await conv.endSession()}catch(_){}conv=null;window.FV_PAUSE=false;live(false);st("Appel terminé.");busy=false;return}
  if(typeof secLeft==="function"&&secLeft()<=0){busy=false;if(typeof paywall==="function")paywall("aura");return}
  st("Connexion…");
  try{
   if(typeof stopVoice==="function")stopVoice();
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){try{navigator.clipboard&&navigator.clipboard.writeText(location.href.split("?")[0])}catch(_){}throw new Error("cette fenêtre bloque le micro. Le lien est copié : ouvre Safari, colle-le dans la barre d’adresse, puis ajoute l’application à l’écran d’accueil.")};
-  {const ms=await navigator.mediaDevices.getUserMedia({audio:true});ms.getTracks().forEach(t=>t.stop())}
-  const {Conversation}=await import("https://esm.sh/@elevenlabs/client");
-  window.CALLED=true;
-  VOLSEEN=false;MODE="";conv=await Conversation.startSession({...(await auraSession()),connectionType:"websocket",...(typeof S!=="undefined"&&S.lang?{overrides:{agent:{language:S.lang}}}:{}),dynamicVariables:{user_name:(typeof S!=="undefined"&&S.nom)||"",profil:(typeof PROFIL==="function"&&PROFIL())||"pas encore analysé"},
+  // v208 : bibliothèque + autorisation de l'appel en même temps (avant : l'une après l'autre) ; plus d'ouverture/fermeture
+  // du micro avant l'appel (sur iPhone ça basculait la sortie du son et faisait saccader le début)
+  const [{Conversation},sess]=await Promise.all([elSDK(),auraSession("webrtc")]);
+  window.CALLED=true;window.FV_PAUSE=true;
+  VOLSEEN=false;MODE="";conv=await Conversation.startSession({...sess,connectionType:sess.conversationToken?"webrtc":"websocket",...(typeof S!=="undefined"&&S.lang?{overrides:{agent:{language:S.lang}}}:{}),dynamicVariables:{user_name:(typeof S!=="undefined"&&S.nom)||"",profil:(typeof PROFIL==="function"&&PROFIL())||"pas encore analysé"},
    onModeChange:({mode})=>{MODE=mode;st(mode==="speaking"?"Elle te parle…":"Je t’écoute, parle-moi")},
-   onDisconnect:()=>{conv=null;live(false);if(window.auraTalking)auraTalking(false);st("Appel terminé. Appuie pour reparler.")},
+   onDisconnect:()=>{conv=null;window.FV_PAUSE=false;live(false);if(window.auraTalking)auraTalking(false);st("Appel terminé. Appuie pour reparler.")},
    onError:m=>st("Petit souci : "+m),
    onMessage:({message,source})=>{if(source==="ai"&&window.addAuraBubble)addAuraBubble(message);
     if(source==="user"&&message){const lg=typeof S!=="undefined"&&S.lang;st((lg==="ar"?"سمعتچ: «":lg==="en"?"I heard you: “":"Je t’ai entendue : « ")+message.slice(0,60)+(lg==="ar"?"» لحظة…":lg==="en"?"” one moment…":" » Un instant…"))}}});
@@ -2698,10 +2704,10 @@ async function startCall(){
   live(true);st("Elle arrive…");cancelAnimationFrame(raf);anim();
   clearInterval(window.MINT);window.MINT=setInterval(()=>{if(!conv){clearInterval(window.MINT);return}useSec(1);if(secLeft()<=0){clearInterval(window.MINT);try{conv.endSession()}catch(_){}conv=null;live(false);paywall("aura")}},1000);
   window.callStatus=st;if(typeof S!=="undefined"&&S.cphoto&&typeof voicePhoto==="function")setTimeout(()=>voicePhoto((S.draft||"").trim()),2500);
- }catch(err){conv=null;live(false);st(err&&err.name==="NotAllowedError"?"Autorise le micro : Réglages, Safari, Micro.":err&&err.code==="quota"?err.message:"Impossible de lancer l’appel : "+(err&&err.message||err))}
+ }catch(err){conv=null;window.FV_PAUSE=false;live(false);st(err&&err.name==="NotAllowedError"?"Autorise le micro : Réglages, Safari, Micro.":err&&err.code==="quota"?err.message:"Impossible de lancer l’appel : "+(err&&err.message||err))}
  busy=false}
 window.startCall=()=>{stFn=()=>{};return startCall()};
-window.endCall=()=>{if(conv){try{conv.endSession()}catch(_){}conv=null;live(false)}};
+window.endCall=()=>{if(conv){try{conv.endSession()}catch(_){}conv=null;window.FV_PAUSE=false;live(false)}};
 document.addEventListener("click",e=>{
  if(e.target.closest("#talkbtn")){stFn=t=>{const x=$$("spst");if(x)x.textContent=t};startCall()}
  else if(e.target.closest("#callbtn")){stFn=()=>{};startCall()}});

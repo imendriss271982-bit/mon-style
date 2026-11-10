@@ -72,7 +72,7 @@ function placer(){var sp=document.getElementById("splash");var hote=sp&&sp.isCon
 
 var pret=false,t0=performance.now(),der=0;
 function boucle(now){requestAnimationFrame(boucle);
- if(!pret||document.hidden)return;
+ if(!pret||document.hidden||window.FV_PAUSE)return; /* v208 : en pause pendant l’appel avec Diva (son plus fluide) */
  if(now-der<33)return;der=now; /* ~30 images/s : doux et léger pour la batterie */
  var nuit=sombre();cv.style.display=nuit?"none":"block";if(nuit)return;
  placer();taille();gl.viewport(0,0,W,H);

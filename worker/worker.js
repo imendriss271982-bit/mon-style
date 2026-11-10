@@ -487,6 +487,15 @@ export default {
         const over = await quota(env, [["d|" + DEV + "|voice", "VOICE_DEV"], ["all|voice", "VOICE_ALL"]]);
         if (over) return json({ erreur: over === "VOICE_DEV" ? QUOTA_MSG : BUSY_MSG, code: "quota" }, 429);
         const agent = String(env.AGENT_ID || "agent_3801m58kjga8fddsm7bz46gcz4wf").replace(/[^A-Za-z0-9_]/g, "");
+        // v208 : appel vocal en WebRTC (son fluide sur téléphone) → jeton de conversation ; sinon lien signé (WebSocket)
+        if (B && B.mode === "webrtc") {
+          try {
+            const t = await fetch("https://api.elevenlabs.io/v1/convai/conversation/token?agent_id=" + agent, { headers: { "xi-api-key": EK } });
+            let td = {}; try { td = await t.json(); } catch {}
+            if (t.ok && td.token) return json({ conversationToken: td.token });
+            console.error("conv-token", t.status, JSON.stringify(td).slice(0, 300));
+          } catch (e) { console.error("conv-token", String(e)); }
+        }
         const r = await fetch("https://api.elevenlabs.io/v1/convai/conversation/get-signed-url?agent_id=" + agent, { headers: { "xi-api-key": EK } });
         let d = {}; try { d = await r.json(); } catch {}
         if (!r.ok || !d.signed_url) { console.error("signed-url", r.status, JSON.stringify(d).slice(0, 300)); return json({ erreur: "Diva n'est pas joignable pour le moment.", code: "voice" }, 502); }
