@@ -946,6 +946,17 @@ body.talk #splash .tapaura{background:var(--accent);color:#fff;border-color:var(
    et le bord gauche de l'image (main coupée net dans la photo d'origine) se fond doucement au lieu d'une coupure droite. */
 #splash .avatar.aura{--w:min(calc((100vw - 24px)*.82),calc((var(--free) - 32px)*.78),360px)}
 #splash .avatar.aura .fig img.pose,#splash .avatar.aura .fig canvas.vid{-webkit-mask-image:linear-gradient(to right,transparent 0,#000 9%);mask-image:linear-gradient(to right,transparent 0,#000 9%)}
+/* v214 (Imen, 11 nov. 2026 : « la 1re page ne parle plus du tout ; je veux qu'elle parle sur la 1re page et que ça coupe en allant à l'accueil ») :
+   sur téléphone le son est bloqué tant qu'on n'a pas touché l'écran ; depuis v211 « Commencer » est silencieux, donc Diva ne parlait plus jamais.
+   Quand le son est bloqué, un bouton « Écouter Diva » (pulsation douce) apparaît au-dessus de « Commencer » : un toucher et elle parle ici. */
+#splash .spbot .ecoute{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;min-height:44px;padding:0 22px;margin:0 0 4px;border-radius:22px;border:1px solid rgba(140,109,53,.35);background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:var(--accent);font:600 15px/1 var(--fb,inherit);letter-spacing:.02em;box-shadow:0 2px 12px rgba(140,109,53,.18);cursor:pointer;animation:ecoutePulse 1.8s ease-in-out infinite}
+#splash .spbot .ecoute[hidden]{display:none}
+#splash .spbot .ecoute svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#splash .spbot .ecoute svg path:first-child{fill:currentColor}
+@keyframes ecoutePulse{0%,100%{box-shadow:0 2px 12px rgba(140,109,53,.18),0 0 0 0 rgba(140,109,53,.35)}50%{box-shadow:0 2px 12px rgba(140,109,53,.18),0 0 0 8px rgba(140,109,53,0)}}
+@media (prefers-reduced-motion:reduce){#splash .spbot .ecoute{animation:none}}
+#splash.sndb{--ab:calc(var(--sab) + 24px + 56px + 16px + 48px)}
+#splash.sndb:has(#install:not([hidden])){--ab:calc(var(--sab) + 24px + 56px + 8px + 44px + 8px + 48px)}
 </style>
 <link rel="stylesheet" href="zifafi.css?v=5">
 </head>
@@ -1001,7 +1012,7 @@ body.talk #splash .tapaura{background:var(--accent);color:#fff;border-color:var(
 <path class="s3" d="M148 70l1.4 4 4 1.4-4 1.4-1.4 4-1.4-4-4-1.4 4-1.4Z"/><path class="s2" d="M262 40l1.4 4 4 1.4-4 1.4-1.4 4-1.4-4-4-1.4 4-1.4Z"/>
 <path class="s3" d="M24 380l1.4 4 4 1.4-4 1.4-1.4 4-1.4-4-4-1.4 4-1.4Z"/><path d="M384 560l1.6 5 5 1.6-5 1.6-1.6 5-1.6-5-5-1.6 5-1.6Z"/></g>
 <ellipse cx="200" cy="830" rx="230" ry="40" fill="#E3DACA" opacity=".55"/>
-</svg><div class="sptop"><img class="ddmark" src="logo-dd.svg?v=1" alt="" aria-hidden="true" width="400" height="240"><span class="logo" role="img" aria-label="Diva Divina" data-noi18n><span class="my" aria-hidden="true">Diva</span><span class="st" aria-hidden="true">DIVINA</span></span><p class="sp-tag">Ta styliste personnelle</p><h1 id="hi"></h1><p id="hi2"></p></div><div class="avatar aura" id="ava"><div class="fig"><img class="pose" src="aura-pose.webp?v=7" alt="Diva, ta styliste personnelle"><img class="body" src="aura-full.webp?v=3" alt="Diva, ta styliste personnelle"><img class="bras" src="aura-bras2.webp?v=3" alt=""><img class="mf" src="aura-m1.jpg?v=3" alt=""><img class="mf" src="aura-m2.jpg?v=3" alt=""><img class="mf" src="aura-m3.jpg?v=3" alt=""><img class="blink" src="aura-blink.webp?v=3" alt=""></div></div><button class="tapaura" type="button" aria-label="Entends-moi"><svg class="son" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><svg class="coupe" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg></button><div class="spbot"><button class="btn" id="install" hidden>Télécharger l’application</button><div id="spnom" hidden><input class="field" id="spnomI" autocomplete="given-name" placeholder="Ton prénom" style="font-size:20px;padding:16px;margin-bottom:12px;text-align:center"><button class="btn show" id="spnomB" disabled>Continuer</button></div><p id="spst" class="spst"></p><button class="btn ghost" id="start">Commencer</button></div><button id="skip" class="skip" type="button">Passer ›</button><button class="micbadge" id="talkbtn" type="button" aria-label="Parler avec elle"><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg><svg class="hg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15.5c5.3-4.7 12.7-4.7 18 0l-2.6 2.6-3.2-1.6v-2.7c-2.7-.9-4.7-.9-6.4 0v2.7l-3.2 1.6z"/></svg></button><div class="splg"><button type="button" class="lgbtn" data-lgmenu aria-label="Langue" aria-haspopup="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></svg><b class="lgc">FR</b></button></div></div>
+</svg><div class="sptop"><img class="ddmark" src="logo-dd.svg?v=1" alt="" aria-hidden="true" width="400" height="240"><span class="logo" role="img" aria-label="Diva Divina" data-noi18n><span class="my" aria-hidden="true">Diva</span><span class="st" aria-hidden="true">DIVINA</span></span><p class="sp-tag">Ta styliste personnelle</p><h1 id="hi"></h1><p id="hi2"></p></div><div class="avatar aura" id="ava"><div class="fig"><img class="pose" src="aura-pose.webp?v=7" alt="Diva, ta styliste personnelle"><img class="body" src="aura-full.webp?v=3" alt="Diva, ta styliste personnelle"><img class="bras" src="aura-bras2.webp?v=3" alt=""><img class="mf" src="aura-m1.jpg?v=3" alt=""><img class="mf" src="aura-m2.jpg?v=3" alt=""><img class="mf" src="aura-m3.jpg?v=3" alt=""><img class="blink" src="aura-blink.webp?v=3" alt=""></div></div><button class="tapaura" type="button" aria-label="Entends-moi"><svg class="son" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><svg class="coupe" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg></button><div class="spbot"><button class="btn" id="install" hidden>Télécharger l’application</button><div id="spnom" hidden><input class="field" id="spnomI" autocomplete="given-name" placeholder="Ton prénom" style="font-size:20px;padding:16px;margin-bottom:12px;text-align:center"><button class="btn show" id="spnomB" disabled>Continuer</button></div><p id="spst" class="spst"></p><button class="ecoute" id="ecoute" type="button" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><span>Écouter Diva</span></button><button class="btn ghost" id="start">Commencer</button></div><button id="skip" class="skip" type="button">Passer ›</button><button class="micbadge" id="talkbtn" type="button" aria-label="Parler avec elle"><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg><svg class="hg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15.5c5.3-4.7 12.7-4.7 18 0l-2.6 2.6-3.2-1.6v-2.7c-2.7-.9-4.7-.9-6.4 0v2.7l-3.2 1.6z"/></svg></button><div class="splg"><button type="button" class="lgbtn" data-lgmenu aria-label="Langue" aria-haspopup="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></svg><b class="lgc">FR</b></button></div></div>
 <div id="lgmenu" role="menu" hidden><button type="button" role="menuitem" data-pick="fr" data-noi18n>Français</button><button type="button" role="menuitem" data-pick="en" data-noi18n>English</button><button type="button" role="menuitem" data-pick="ar" data-noi18n>عربي</button></div>
 <div id="inst" role="dialog" aria-modal="true" aria-labelledby="instT"><div class="sh"><h2 id="instT">Installer Diva Divina</h2><p class="sub" id="instS">Quelques gestes dans Safari, et Diva Divina s’ouvre comme une vraie application depuis ton écran d’accueil.</p>
 <ol id="instL"><li><span>Ouvert depuis <b>WhatsApp</b> ? Touche d’abord la <b>boussole Safari</b> <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg> en bas à droite</span></li><li><span>Touche <b>Partager</b> <svg viewBox="0 0 24 24"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M6 11H5v10h14V11h-1"/></svg> en bas de Safari</span></li><li><span>Fais défiler et choisis <b>Sur l’écran d’accueil</b> <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg></span></li><li><span>Touche <b>Ajouter</b>, puis ouvre l’icône Diva Divina</span></li></ol>
@@ -1027,7 +1038,7 @@ body.talk #splash .tapaura{background:var(--accent);color:#fff;border-color:var(
 <script src="aura-silhouette.js?v=1"></script>
 <script src="zifafi-methode.js?v=3"></script>
 <script>
-const VERSION="213";
+const VERSION="214";
 // Bonjour de Diva : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -2534,10 +2545,14 @@ function clipLine(name,t){return new Promise(r=>{let done=false,iv=0;const fin=v
  AUD.onended=()=>fin();AUD.onerror=dev;
  AUD.onplay=()=>{SPOKE=true;window.GREETED=true;talk(true);clearInterval(iv);const u=AUD.src;envOf(u).then(e=>{if(AUD.src===u&&!AUD.paused)voiceDrive(AUD,e)})};
  AUDTOK++;AUD.src=CLIPS[name]||("sons/"+name+".mp3?v=c1");
- try{const p=AUD.play();if(p&&p.catch)p.catch(e=>{if(e&&e.name==="NotAllowedError"){clearInterval(iv);done=true;r("blocked")}else dev()})}catch(e){dev()}})}
+ try{const p=AUD.play();if(p&&p.catch)p.catch(e=>{if(e&&e.name==="NotAllowedError"){clearInterval(iv);done=true;if(!window.TAPDONE)window.SNDBLOCK=true;r("blocked")}else dev()})}catch(e){dev()}})}
 // Si le téléphone bloque le son avant le premier toucher, Diva continue quand même :
 // elle bouge, sa bouche parle, et au premier toucher la voix démarre.
 let TAPR;const TAPPED=new Promise(r=>TAPR=r);
+// v214 : son bloqué sur l'écran d'ouverture → bouton « Écouter Diva » visible (sinon on ne l'entendait jamais : « Commencer » est silencieux).
+(()=>{let v=false;const upd=()=>{const sp=document.getElementById("splash"),b=document.getElementById("ecoute");const on=v&&!window.SPOUT&&!SKIP;
+  if(sp)sp.classList.toggle("sndb",on);if(b){b.hidden=!on;const t={fr:"Écouter Diva",en:"Hear Diva",ar:"اسمعي ديفا"}[S.lang]||"Écouter Diva";const sp2=b.querySelector("span");if(sp2&&sp2.textContent!==t)sp2.textContent=t}};
+ Object.defineProperty(window,"SNDBLOCK",{configurable:true,get:()=>v,set:x=>{v=!!x;upd()}});window.sndUpd=upd})();
 (()=>{const go=()=>{document.removeEventListener("click",go,true);document.removeEventListener("touchend",go,true);if(window.SNDBLOCK)window.TAPJUST=Date.now();window.SNDBLOCK=false;try{if(AUD.paused){const t=AUDTOK;AUD.onplay=AUD.onended=AUD.onerror=null;AUD.muted=true;const q=AUD.play();const un=()=>{AUD.muted=false};if(q&&q.then)q.then(()=>{if(AUDTOK===t)AUD.pause();un()}).catch(un);else un()}}catch(e){AUD.muted=false}unlock();window.TAPDONE=true;TAPR(true)};
  document.addEventListener("click",go,true);document.addEventListener("touchend",go,true)})();
 // v206 (Imen : « elle bouge la bouche alors qu'il n'y a pas de son ») : jamais de bouche qui bouge sans voix.
@@ -2546,7 +2561,8 @@ function mime(t){let to;const p=new Promise(r=>{voiceDriveStop();talk(false);to=
  p.stop=()=>{clearTimeout(to);talk(false)};return p}
 let GEN=0;
 async function line(t,clip,g,again,parts){if(SKIP||window.SPOUT)return;const gen=GEN;CUR=t;const p=$("#hi2");p.textContent="";if(g)gesture();
- const [,res]=await Promise.all([parts?typeParts(p,parts,t):typeSkip(p,t,RM?1:28),clip==="say"?sayLine(t):clipLine(clip,t)]);if(gen!==GEN)return;
+ // v214 : son bloqué → on n'attend pas la fin du texte écrit, pour que le toucher fasse parler Diva tout de suite.
+ const tp=parts?typeParts(p,parts,t):typeSkip(p,t,RM?1:28);const res=await (clip==="say"?sayLine(t):clipLine(clip,t));if(res!=="blocked")await tp;if(gen!==GEN)return;
  if(res==="blocked"&&!SKIP){if(!again&&window.TAPDONE)return line(t,clip,g,true,parts);
   window.SNDBLOCK=true;
   // Son bloqué : Diva mime la phrase puis attend le premier toucher pour la redire à voix haute (on ne saute plus sa présentation).
@@ -2570,7 +2586,7 @@ const LG={fr:{hi:"Salut",t:"Je suis Diva, ta personal stylist. Je suis là pour 
  en:{hi:"Hi",t:"I’m Diva, your personal stylist. I’m here to bring out your beauty.",talk:"Talk to her",hang:"Hang up",start:"Start",cont:"Continue in the browser"},
  ar:{hi:"هلا والله",t:"أنا ديفا، الستايلست الخاصة فيچ. موجودة عشان أطلّع جمالچ، وأخليچ تحسين بثقة كل يوم.",talk:"كلّميها",hang:"سكّري",start:"يلا نبدأ",cont:"كمّلي من المتصفح"}};
 const L=k=>(LG[S.lang]||LG.fr)[k];
-function applyLang(){const ar=S.lang==="ar";["hi","hi2"].forEach(i=>{const e=$("#"+i);if(e)e.dir=ar?"rtl":"auto"});
+function applyLang(){const ar=S.lang==="ar";if(window.sndUpd)sndUpd();["hi","hi2"].forEach(i=>{const e=$("#"+i);if(e)e.dir=ar?"rtl":"auto"});
  const tb=$("#talkbtn");if(tb&&!tb.classList.contains("live"))tb.setAttribute("aria-label",L("talk"));if(window.lgSync)lgSync();const st=$("#start");if(st)st.textContent=L($("#install").hidden?"start":"cont");
  if(S.lang&&S.lang!=="fr"){$("#hi").textContent=L("hi")+(S.nom?" "+S.nom:"")+" !";$("#hi2").textContent=L("t")}}
 // Diva se tait net (changement de langue).
@@ -2637,7 +2653,7 @@ function sayLine(t){return new Promise(async r=>{let done=false,iv=0;const fin=v
  AUD.onended=()=>fin();AUD.onerror=phone;
  AUD.onplay=()=>{SPOKE=true;window.GREETED=true;talk(true);clearInterval(iv);envOf(url).then(e=>{if(AUD.src===url&&!AUD.paused)voiceDrive(AUD,e)})};
  window.SAYT0=performance.now();AUD.src=url;
- try{const p=AUD.play();if(p&&p.catch)p.catch(e=>{if(e&&e.name==="NotAllowedError"){clearInterval(iv);done=true;r("blocked")}else phone()})}catch(e){phone()}})}
+ try{const p=AUD.play();if(p&&p.catch)p.catch(e=>{if(e&&e.name==="NotAllowedError"){clearInterval(iv);done=true;if(!window.TAPDONE)window.SNDBLOCK=true;r("blocked")}else phone()})}catch(e){phone()}})}
 let INTRO_ON=false;
 async function introFr(){INTRO_ON=true;try{await introRun()}finally{INTRO_ON=false}}
 async function introRun(){const gen=GEN,ok=()=>gen===GEN&&!SKIP,lg=SCR[S.lang]?S.lang:"fr";
@@ -2663,6 +2679,7 @@ if(HOME_HI){SKIP=true;showBtns();applyLang();$("#hi").textContent=L("hi")+(S.nom
 function HELLO(){return "Salut"+(S.nom?" "+S.nom:"")+" ! Je suis ta personal stylist. Je suis là pour révéler ta beauté."}
 function skipIntro(){SKIP=true;stopVoice();try{AUD.pause()}catch(e){}$("#hi2").textContent=L("t");if(window.SKIPNOM)window.SKIPNOM();showBtns()}
 $("#skip").addEventListener("click",skipIntro);
+$("#ecoute").addEventListener("click",()=>{if(window.TAPJUST&&Date.now()-window.TAPJUST<600)return;hush();if(window.SKIPNOM)window.SKIPNOM();SKIP=false;unlock();introFr()});
 // Haut-parleur : si Diva parle, elle se tait ; sinon elle redit sa présentation. Pendant un appel, il raccroche d'abord (jamais les deux en même temps).
 document.addEventListener("click",e=>{if(!e.target.closest("#splash .tapaura"))return;
  if(window.TAPJUST&&Date.now()-window.TAPJUST<600)return; // premier toucher : la voix bloquée démarre toute seule
@@ -2683,7 +2700,7 @@ $("#instOk").addEventListener("click",()=>$("#inst").classList.remove("show"));
 $("#inst").addEventListener("click",e=>{if(e.target.id==="inst")$("#inst").classList.remove("show")});
 (function(){const fit=()=>{const sp=document.getElementById("splash");if(!sp)return;const t=sp.querySelector(".sptop .sp-tag")||sp.querySelector(".sptop .logo");if(!t)return;sp.style.setProperty("--top",Math.ceil(t.getBoundingClientRect().bottom)+"px")};
  fit();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);addEventListener("resize",fit);setTimeout(fit,600);setTimeout(fit,1800)})();
-$("#start").addEventListener("click",()=>{window.SPOUT=true;if(window.endCall)window.endCall();SKIP=true;GEN++;stopVoice();try{if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}unlock();$("#splash").classList.add("out");setTimeout(()=>$("#splash").remove(),800);
+$("#start").addEventListener("click",()=>{window.SPOUT=true;window.SNDBLOCK=false;if(window.endCall)window.endCall();SKIP=true;GEN++;stopVoice();try{if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}unlock();$("#splash").classList.add("out");setTimeout(()=>$("#splash").remove(),800);
  SKIP=true;if(window.SKIPNOM)window.SKIPNOM();if(/formules|abo/i.test(location.hash)){go("abo");return}if(!window.CALLED){if(todoMods().length===3&&!S.later&&S.page==="home")startOnb()}window.GREETED=true;markHi()});
 </script>
 <script src="aura-profile.js?v=4"></script>
