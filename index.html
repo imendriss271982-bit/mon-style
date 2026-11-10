@@ -942,6 +942,10 @@ body.talk #splash .tapaura{background:var(--accent);color:#fff;border-color:var(
  width:var(--w)!important;height:var(--h)!important;max-width:none;left:50%;transform:translateX(-50%);
  bottom:calc(var(--ab) + 12px - var(--h)*.02 + max(0px,(var(--free) - 28px - var(--h)*.95)/2))!important}
 #splash .avatar.aura .fig{inset:0 0 auto 0}
+/* v213 (Imen, 11 nov. 2026 : « c'est flou, diminue le cadrage ») : Diva 18 % plus petite (moins agrandie, donc plus nette)
+   et le bord gauche de l'image (main coupée net dans la photo d'origine) se fond doucement au lieu d'une coupure droite. */
+#splash .avatar.aura{--w:min(calc((100vw - 24px)*.82),calc((var(--free) - 32px)*.78),360px)}
+#splash .avatar.aura .fig img.pose,#splash .avatar.aura .fig canvas.vid{-webkit-mask-image:linear-gradient(to right,transparent 0,#000 9%);mask-image:linear-gradient(to right,transparent 0,#000 9%)}
 </style>
 <link rel="stylesheet" href="zifafi.css?v=5">
 </head>
@@ -1023,7 +1027,7 @@ body.talk #splash .tapaura{background:var(--accent);color:#fff;border-color:var(
 <script src="aura-silhouette.js?v=1"></script>
 <script src="zifafi-methode.js?v=3"></script>
 <script>
-const VERSION="211";
+const VERSION="213";
 // Bonjour de Diva : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
