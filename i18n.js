@@ -3,6 +3,17 @@
    Le texte affiché à l'écran et la voix de Diva sont traduits automatiquement à partir de cette liste.
    Pour corriger une traduction : modifie simplement la 2e (anglais) ou la 3e (arabe) colonne. */
 const I18N_D=[
+["Robes de créatrice","Designer dresses","فساتين مصمّمة"],
+["Maison de couture de Dubaï · livraison dans tout le Golfe","Dubai couture house · delivery across the Gulf","دار أزياء من دبي · توصيل لكل الخليج"],
+["Tout","All","الكل"],
+["Avec manches","With sleeves","بأكمام"],
+["Kaftans et abaya","Kaftans and abaya","قفاطين وعباية"],
+["Promos","Sale","تخفيضات"],
+["Promo","Sale","تخفيض"],
+["♥︎ Coup de cœur","♥︎ Diva's pick","♥︎ اختيار ديفا"],
+["{0} couleurs","{0} colours","{0} ألوان"],
+["Voir plus de robes","See more dresses","شوفي فساتين أكثر"],
+["Prix en dollars américains, tels qu’affichés par la maison.","Prices in US dollars, as shown by the fashion house.","الأسعار بالدولار الأمريكي، مثل ما تعرضها الدار."],
 ["Ce que Diva a appris de tes goûts","What Diva has learned about your taste","شو تعلّمت ديفا عن ذوقچ"],
 ["Note les tenues de Diva avec 👍 / 👎, enregistre celles que tu aimes : elle apprendra tes goûts toute seule.","Rate Diva's outfits with 👍 / 👎 and save the ones you like: she will learn your taste by herself.","قيّمي لبسات ديفا بـ 👍 / 👎 واحفظي اللي تعجبچ: بتتعلم ذوقچ بروحها."],
 ["D’après tes 👍 / 👎 et les tenues que tu gardes ou portes.","Based on your 👍 / 👎 and the outfits you keep or wear.","حسب 👍 / 👎 مالچ واللبسات اللي تحفظينها أو تلبسينها."],

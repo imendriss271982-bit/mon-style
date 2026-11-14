@@ -1030,7 +1030,7 @@ body.talk #splash .tapaura{background:var(--accent);color:#fff;border-color:var(
 </nav>
 </div>
 <script src="zifafi-i18n.js?v=5"></script>
-<script src="i18n.js?v=58"></script>
+<script src="i18n.js?v=59"></script>
 <script src="aura-methode.js?v=4"></script>
 <script src="aura-mesure.js?v=3"></script>
 <script src="aura-couleur.js?v=2"></script>
@@ -1038,7 +1038,7 @@ body.talk #splash .tapaura{background:var(--accent);color:#fff;border-color:var(
 <script src="aura-silhouette.js?v=1"></script>
 <script src="zifafi-methode.js?v=3"></script>
 <script>
-const VERSION="214";
+const VERSION="215";
 // Bonjour de Diva : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -2724,6 +2724,8 @@ $("#start").addEventListener("click",()=>{window.SPOUT=true;window.SNDBLOCK=fals
 <script src="aura-piece.js?v=3"></script>
 <script src="aura-chatlook.js?v=4"></script>
 <script src="aura-compte.js?v=3"></script>
+<script src="partenaires-data.js?v=1"></script>
+<script src="aura-partenaires.js?v=1"></script>
 <script src="aura-accueil.js?v=11"></script>
 <!-- v185 : système de design « Maison » (en dernier pour unifier tous les modules) -->
 <link rel="stylesheet" href="ms-design.css?v=4">
