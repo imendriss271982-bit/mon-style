@@ -310,3 +310,18 @@ body:has(#splash) nav.dock{display:none!important}
 /* « Commencer / يلا نبدأ » = bouton doré plein, comme tous les boutons de l'app */
 #splash .spbot #start{background:var(--goldg,linear-gradient(180deg,#A8843F,#8C6D35 55%,#765A2A))!important;color:#FFFFFF!important;border:0!important;
   font-size:19px;font-weight:600;letter-spacing:.02em;min-height:58px;box-shadow:0 12px 26px -8px rgba(118,90,42,.55),inset 0 1px 0 rgba(255,255,255,.35)!important}
+
+/* ---------- v221. CHARTE GRAPHIQUE v1 (charte.css) : l'app suit la charte ----------
+   Mode clair seulement (les blocs sombres plus haut gardent leurs valeurs). */
+:root{
+  --ms-ink:var(--dd-noir);--ink:var(--dd-noir);
+  --ms-ink-2:var(--dd-taupe);--muted:var(--dd-taupe);
+  --ms-ivory:var(--dd-ivoire);--ms-pearl:var(--dd-nacre);
+  --ms-champ-1:var(--dd-champagne);--ms-champ-2:var(--dd-or);
+  --ms-gold-ink:var(--dd-or-texte);--accent:var(--dd-or-texte);--gold:var(--dd-or-texte);
+  --ms-wine:var(--dd-bordeaux);--ms-line:var(--dd-filet);
+  --ms-btn:var(--dd-bouton);--goldg:var(--dd-bouton);
+  --ms-fh:var(--dd-titre);--fh:var(--dd-titre);--ms-ff:var(--dd-texte);--ff:var(--dd-texte);
+}
+/* « Commencer » : même bouton doré que le reste de l'app */
+#splash .spbot #start{background:var(--dd-bouton)!important}
