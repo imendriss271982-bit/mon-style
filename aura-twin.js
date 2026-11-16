@@ -42,9 +42,9 @@ const twinRing = (pct, r) => { const C = 2 * Math.PI * r; return `<svg viewBox="
 // Carte de l'accueil (sous Outfit check)
 function twinCard() {
   const p = twinParts(), pct = twinPct(), n = p.filter(x => x.ok).length;
-  return `<button class="tw-card" data-view="twin" aria-label="Your Style Twin">
+  return `<button class="tw-card" data-view="twin" aria-label="Mon jumeau de style">
   <span class="tw-ring">${twinRing(pct, 22)}<b>${pct}%</b></span>
-  <span class="tw-ct"><small>Ta copie de style</small><b data-noi18n>Your Style Twin</b><em>${pct === 100 ? "Ton jumeau est complet" : `Complet à ${pct} %`}</em></span>
+  <span class="tw-ct"><small>Ta copie de style</small><b>Mon jumeau de style</b><em>${pct === 100 ? "Ton jumeau est complet" : `Complet à ${pct} %`}</em></span>
   <span class="hx-chev" aria-hidden="true">›</span></button>`;
 }
 
@@ -59,13 +59,13 @@ P.twin = () => {
   const miss = p.find(x => !x.ok);
   return {
     back: true,
-    html: `<p class="step">Ta copie de style</p><h1 data-noi18n>Your Style Twin</h1>
+    html: `<p class="step">Ta copie de style</p><h1>Mon jumeau de style</h1>
   <p class="sub">Ton jumeau de style garde ta silhouette, ton teint, tes goûts et chaque pièce de ta garde-robe. Plus il est complet, plus Diva te conseille juste.</p>
   <div class="tw-hero"><span class="tw-ring big">${twinRing(pct, 34)}<b>${pct}%</b></span>
    <span><b>${pct === 100 ? "Ton jumeau est complet" : `Complet à ${pct} %`}</b><small>${n} sur ${p.length}</small></span></div>
   <div class="tw-list">${rows}</div>
   <p class="hint">Tout reste sur ton téléphone. Tu peux tout modifier ou effacer dans ton profil.</p>`,
-    say: pct === 100 ? "Voici ton Style Twin. Il est complet : je te connais bien maintenant." : "Voici ton Style Twin. Il est complet à " + pct + " %. Complète-le pour que je te conseille encore plus juste.",
+    say: pct === 100 ? "Voici ton jumeau de style. Il est complet : je te connais bien maintenant." : "Voici ton jumeau de style. Il est complet à " + pct + " %. Complète-le pour que je te conseille encore plus juste.",
     foot: miss ? `<button class="btn" ${miss.go}>Compléter : ${miss.t.toLowerCase()}</button>` : `<button class="btn" data-view="chat">Parler à Diva</button>`
   };
 };

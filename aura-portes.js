@@ -32,7 +32,7 @@ function ptPortes() {
     style: { t: "Mon style", s: "Visage, silhouette, couleurs, beauté", items: [
       reste ? { t: reste === 3 ? "Découvre ton style" : "Termine ton analyse", s: reste === 3 ? "Visage, silhouette et couleurs, une seule fois" : "Encore " + reste + " étape(s)", a: 'data-onb=""' }
             : { t: "Ma fiche style", s: "Visage, silhouette, Kibbe et couleurs", a: 'data-view="fiche"' },
-      { t: "Your Style Twin", s: "Ta copie de style : ce que Diva sait de toi", a: 'data-view="twin"' },
+      { t: "Mon jumeau de style", s: "Ta copie de style : ce que Diva sait de toi", a: 'data-view="twin"' },
       { t: "Beauté et make-up", s: "Ton make-up et l’art de la tenue", a: 'data-go="beaute"' },
       { t: "Mes préférences", s: "Couleurs, pièces et occasions que tu aimes", a: 'data-go="prefs"' },
       { t: "Vérifié par une vraie styliste", s: "Une professionnelle relit ton analyse", a: 'data-go="verif"' }

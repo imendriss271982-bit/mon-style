@@ -24,10 +24,10 @@ const SHOTS=process.env.SHOTS||'';
  okk(await p.evaluate(()=>!!document.querySelector('#dkmj')),'Onglet Majlis toujours dans la barre du bas');
  okk(await p.evaluate(()=>[...document.querySelectorAll('.ac-ronds .ac-rd')].map(x=>x.dataset.go).join(','))==='o_photo,garde,tenues','3 raccourcis : Outfit check, garde-robe, créer une tenue');
  okk(await p.evaluate(()=>getComputedStyle(document.querySelector('.hz-st .hz-call')).animationName==='acBeat'),'« Appeler Diva » bat comme un cœur');
- okk(await p.evaluate(()=>{const g=document.querySelector('.ac-duo');return !!g.querySelector('[data-view="twin"]')&&!!g.querySelector('[data-go="zf"]')}),'Style Twin et Zifafi côte à côte (Zifafi toujours là)');
+ okk(await p.evaluate(()=>{const g=document.querySelector('.ac-duo');return g.classList.contains('solo')&&!g.querySelector('[data-view="twin"]')&&!!g.querySelector('[data-go="zf"]')}),'v219 Nouvelle cliente : Zifafi seul en pleine largeur, pas encore le jumeau à 0 %');
  okk(await p.evaluate(()=>[...document.querySelectorAll('#page button')].filter(b=>{const r=b.getBoundingClientRect();return r.width&&(r.height<44||r.width<44)}).length)===0,'Toutes les cibles tactiles ≥ 44 px');
  await shot('accueil-fr');
- for(const [sel,pg] of [['.hz-st','chat'],['.ac-rd[data-go="o_photo"]','o_photo'],['.ac-rd[data-go="garde"]','garde'],['.ac-rd[data-go="tenues"]','tenues'],['.ac-golfe','golfe'],['.ac-duo [data-view="twin"]','twin'],['.ac-duo [data-go="zf"]','zf']]){
+ for(const [sel,pg] of [['.hz-st','chat'],['.ac-rd[data-go="o_photo"]','o_photo'],['.ac-rd[data-go="garde"]','garde'],['.ac-rd[data-go="tenues"]','tenues'],['.ac-golfe','golfe'],['.ac-duo [data-go="zf"]','zf']]){
   await p.evaluate(()=>{window.CALLED=1;S.hist=[];home()});await p.waitForTimeout(250);
   await p.evaluate(s=>document.querySelector(s).click(),sel);await p.waitForTimeout(350);
   okk(await p.evaluate(()=>S.page)===pg,sel+' → '+pg)}
@@ -36,6 +36,10 @@ const SHOTS=process.env.SHOTS||'';
  okk(/^top,jour,stylist,ronds,golfe,duo(,insp)?$/.test(await ordre()),'Analyse finie : '+await ordre());
  await p.evaluate(()=>{S.hist=[];home()});await p.waitForTimeout(250);await p.evaluate(()=>document.querySelector('.ac-jour').click());await p.waitForTimeout(350);
  okk(await p.evaluate(()=>S.page)==='jour','.ac-jour → jour');
+ await p.evaluate(()=>{S.hist=[];home()});await p.waitForTimeout(250);
+ okk(await p.evaluate(()=>{const g=document.querySelector('.ac-duo');return !g.classList.contains('solo')&&/Mon jumeau de style/.test(g.innerText)&&!!g.querySelector('[data-go="zf"]')}),'v219 Analyse finie : « Mon jumeau de style » + Zifafi côte à côte');
+ await p.evaluate(()=>document.querySelector('.ac-duo [data-view="twin"]').click());await p.waitForTimeout(350);
+ okk(await p.evaluate(()=>S.page)==='twin','.ac-duo twin → twin');
  await p.evaluate(()=>{S.hist=[];home()});await p.waitForTimeout(250);
  // Invitation du Majlis : la carte reste (elle n'apparaît que quand il y en a une)
  await p.evaluate(()=>{MJ.inv='ABCDEF';MJ.invNom='Sara';S.hist=[];S.page='home';render(false)});await p.waitForTimeout(300);

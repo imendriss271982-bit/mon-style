@@ -27,7 +27,7 @@ function fxNiveau() {
 }
 const FX_NOUV = {
   1: "Ta garde-robe, la tenue du jour, le shopping et la beauté sont maintenant ouverts.",
-  2: "Ton Style Twin et ton abaya selon ta silhouette sont maintenant ouverts.",
+  2: "Ton jumeau de style et ton abaya selon ta silhouette sont maintenant ouverts.",
   3: "Les inspirations et les événements mode sont maintenant ouverts."
 };
 

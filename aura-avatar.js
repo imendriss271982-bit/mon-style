@@ -165,7 +165,7 @@ const avChips = (k, list, cur, sw) => `<div class="av-chips">${list.map((o, i) =
 
 P.avatar = () => {
   const ts = avTenues();
-  return { back: true, html: `<p class="step">Your Style Twin</p><h1>Ton avatar</h1>
+  return { back: true, html: `<p class="step">Mon jumeau de style</p><h1>Ton avatar</h1>
 <p class="sub">Choisis ce qui te ressemble. Ton avatar prend ta silhouette et porte tes vrais vêtements.</p>
 <div class="av-prev">${avSVG(ts.length ? ts[0].it : null)}</div>
 <h2 class="av-h">Ton teint</h2>${avChips("peau", AV_PEAUX, AV.peau, 1)}

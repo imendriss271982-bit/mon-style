@@ -145,10 +145,13 @@ function acGolfe() {
 function acDuo() {
   let pct = 0; try { pct = typeof twinPct === "function" ? twinPct() : 0; } catch (e) {}
   const ring = typeof twinRing === "function" ? twinRing(pct, 18) : "";
-  const twin = typeof twinCard === "function" ? `<button class="ac-duo-c" data-view="twin" aria-label="Your Style Twin"><span class="ac-duo-ring">${ring}<b>${pct}%</b></span><b data-noi18n>Your Style Twin</b><small>Ta copie de style</small></button>` : "";
+  const twin = typeof twinCard === "function" ? `<button class="ac-duo-c" data-view="twin" aria-label="Mon jumeau de style"><span class="ac-duo-ring">${ring}<b>${pct}%</b></span><b>Mon jumeau de style</b><small>Ta copie de style</small></button>` : "";
   const bague = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="15" r="6"/><path d="M9.5 9.5 8 5.5l2-2h4l2 2-1.5 4"/></svg>';
   const zf = typeof zfHomeCards === "function" ? `<button class="ac-duo-c ac-zf" data-go="zf"><span class="ac-duo-ic">${bague}</span><b><span data-noi18n>Zifafi</span> Wedding</b><small>Ton style de mariée, guidé par Diva.</small></button>` : "";
-  return twin || zf ? `<div class="ac-duo">${twin}${zf}</div>` : "";
+  // v219 (audit UX) : tant que l'analyse n'est pas finie, le jumeau (à 0 %) n'apparaît pas encore — une nouvelle cliente
+  // n'a qu'un chemin clair (Diva → analyse). Zifafi reste toujours visible, en pleine largeur.
+  const t2 = acNd() < 3 ? "" : twin;
+  return t2 || zf ? `<div class="ac-duo${t2 && zf ? "" : " solo"}">${t2}${zf}</div>` : "";
 }
 
 if (ACC_ON && typeof P.home === "function") {
@@ -244,6 +247,10 @@ body.pg-home header #voice{margin-inline-start:auto}
 .hz .ac-golfe-t b{font-size:16px;font-weight:600}
 .hz .ac-golfe-t em{font-style:normal;font-size:13px;color:#6B625A;line-height:1.4}
 .hz .ac-duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
+.hz .ac-duo.solo{grid-template-columns:1fr}
+.hz .ac-duo.solo .ac-duo-c{min-height:0;display:grid;grid-template-columns:44px 1fr;column-gap:14px;row-gap:2px;align-items:center}
+.hz .ac-duo.solo .ac-duo-c>:first-child{grid-row:1/3}
+.hz .ac-duo.solo .ac-duo-c>b{margin-top:0}
 .hz .ac-duo-c{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:16px;border-radius:20px;background:#FFFFFF;border:1px solid #EAE3D8;box-shadow:0 4px 16px rgba(42,36,32,.06);font:inherit;color:var(--ink);text-align:start;cursor:pointer;min-height:132px}
 .hz .ac-duo-c>b{font-size:15px;font-weight:600;line-height:1.25;margin-top:6px}
 .hz .ac-duo-c small{font-size:12.5px;color:#6B625A;line-height:1.35}

@@ -361,7 +361,7 @@ const I18N_D=[
 // ——— v146 : accueil focus ———
 ["Nouveau pour toi","New for you","جديد لچ"],
 ["Ta garde-robe, la tenue du jour, le shopping et la beauté sont maintenant ouverts.","Your wardrobe, outfit of the day, shopping and beauty are now open.","خزانتچ، لبسة اليوم، التسوق والجمال صارت مفتوحة لچ."],
-["Ton Style Twin et ton abaya selon ta silhouette sont maintenant ouverts.","Your Style Twin and your abaya for your silhouette are now open.","Style Twin وعبايتچ حسب قوامچ صارت مفتوحة لچ."],
+["Ton jumeau de style et ton abaya selon ta silhouette sont maintenant ouverts.","Your Style Twin and your abaya for your silhouette are now open.","توأم ستايلچ وعبايتچ حسب قوامچ صارت مفتوحة لچ."],
 ["Les inspirations et les événements mode sont maintenant ouverts.","Inspirations and fashion events are now open.","الإلهام وفعاليات الموضة صارت مفتوحة لچ."],
 ["D'autres rubriques s'ouvriront au fil de ton parcours.","More sections will open as you go.","أقسام ثانية بتنفتح لچ وياه رحلتچ."],
 ["Tout afficher","Show everything","اعرضي كل شي"],
@@ -627,6 +627,7 @@ const I18N_D=[
 ["Autre idée ↻","Another idea ↻","فكرة ثانية ↻"],
 // ——— v139 : Your Style Twin (jumeau de style, niveau 1 : fiche de données) ———
 ["Ta copie de style","Your style copy","نسختچ في الستايل"],
+["Mon jumeau de style","My Style Twin","توأم ستايلي"],
 ["Ton jumeau est complet","Your twin is complete","توأمچ كامل"],
 ["Complet à {0} %","{0}% complete","كامل {0}٪"],
 ["{0} sur {1}","{0} of {1}","{0} من {1}"],
@@ -649,8 +650,8 @@ const I18N_D=[
 ["tes occasions","your occasions","مناسباتچ"],
 ["ta garde-robe","your wardrobe","كبتچ"],
 ["Parler à Diva","Talk to Diva","كلّمي ديفا"],
-["Voici ton Style Twin. Il est complet : je te connais bien maintenant.","Here’s your Style Twin. It’s complete: I know you well now.","هذا توأم ستايلچ. صار كامل: الحين أعرفچ زين."],
-["Voici ton Style Twin. Il est complet à {0} %. Complète-le pour que je te conseille encore plus juste.","Here’s your Style Twin. It’s {0}% complete. Fill it in so I can advise you even better.","هذا توأم ستايلچ. كامل {0}٪. كمّليه عشان أنصحچ أدق."],
+["Voici ton jumeau de style. Il est complet : je te connais bien maintenant.","Here’s your Style Twin. It’s complete: I know you well now.","هذا توأم ستايلچ. صار كامل: الحين أعرفچ زين."],
+["Voici ton jumeau de style. Il est complet à {0} %. Complète-le pour que je te conseille encore plus juste.","Here’s your Style Twin. It’s {0}% complete. Fill it in so I can advise you even better.","هذا توأم ستايلچ. كامل {0}٪. كمّليه عشان أنصحچ أدق."],
 ["Cherche un look…","Search a look…","دوّري على لوك…"],
 ["Ouvrir","Open","افتحي"],
 // ——— v132 : analyse de style en 3 étapes sur l'accueil ———
