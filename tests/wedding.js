@@ -25,10 +25,10 @@ const MS={nom:'Lina',lang:'fr',later:true,res:{corps:{forme:'X · Sablier',kibbe
  ok(!JSON.stringify(E.ZF_TIPS).match(/QAR|€|\$|obligatoire|interdit/),'Conseils : ni prix ni règle imposée');
  // ——— Entrée et tableau de bord ———
  let p=await open(390,MS);
- ok(await p.evaluate(()=>/Zifafi/.test(document.querySelector('.zf-u.zw').innerText)&&/guidé par Diva/.test(document.querySelector('.zf-u.zw').innerText)),'Accueil Diva Divina : entrée « Zifafi Wedding » + sous-titre');
+ ok(await p.evaluate(()=>/Mariage/.test(document.querySelector('.zf-u.zw').innerText)&&/guidé par Diva/.test(document.querySelector('.zf-u.zw').innerText)),'Accueil Diva Divina : entrée « Mariage » (v221) + sous-titre');
  await click(p,'.zf-u.zw [data-go="zf"]');
  let t=await txt(p);
- ok(/Zifafi Wedding/.test(t)&&/Bienvenue,\s*Lina/.test(t),'Tableau de bord : titre et bienvenue avec le prénom');
+ ok(/Mariage/.test(t)&&/Bienvenue,\s*Lina/.test(t),'Tableau de bord : titre et bienvenue avec le prénom');
  ok(await p.evaluate(()=>!!document.querySelector('.zf-big[data-go="zf_dress"]')&&!!document.querySelector('.zf-big[data-zfaura]')),'Deux actions principales : robe de rêve, Demander à Diva');
  ok(/Ovale/.test(t)&&/Sablier/.test(t)&&/Soft Classic/.test(t)&&/Hiver Vif/.test(t)&&/rien à refaire/.test(t),'Profil Diva Divina réutilisé (visage, silhouette, Kibbe, saison) sans refaire de test');
  ok(await p.evaluate(()=>document.querySelectorAll('.zf-nav [data-zfgo]').length===8&&!!document.querySelector('.zf-jour [role=progressbar]')),'Navigation compacte (8 sections) et progression du parcours');

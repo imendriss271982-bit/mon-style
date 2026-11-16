@@ -48,14 +48,14 @@ function ptPortes() {
       { t: "Boutique", s: "Les pièces choisies pour toi", a: 'data-go="boutique"' },
       { t: "Ça vaut le coup ?", s: "Photo d’une pièce : je te dis si elle te va", a: 'data-go="achat"' }
     ] },
-    mariage: { t: "Mon mariage", s: "Zifafi Wedding", go: "zf" }
+    mariage: { t: "Mon mariage", s: "Ton style de mariée, guidé par Diva.", go: "zf" }
   };
 }
 
 // 1 à 3 actions selon le moment de la cliente.
 function ptActions() {
   const out = [], reste = ptAnalyseRestante();
-  if (ptMariageActif()) out.push({ ic: "💍", t: "Zifafi Wedding", s: "Ton style de mariée", a: 'data-go="zf"' });
+  if (ptMariageActif()) out.push({ ic: "💍", t: ZFN(), s: "Ton style de mariée", a: 'data-go="zf"' });
   {
     if (ptGardeOk()) out.push({ ic: "☀️", t: "Tenue du jour", s: "Avec tes vêtements", a: 'data-go="jour"' });
     out.push({ ic: "📸", t: "Outfit check", s: "Une note et quoi changer", a: 'data-go="o_photo"' });

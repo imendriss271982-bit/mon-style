@@ -1,3 +1,7 @@
+/* v221 (Imen, 17 novembre 2026) : le nom de l'espace mariée change selon la langue de l'app :
+   arabe « زفافي », anglais « Wedding », français « Mariage ». Toujours afficher avec data-noi18n (sinon « Mariage » serait retraduit en « عرس »). */
+function ZFN(){let l="fr";try{l=(typeof S!=="undefined"&&S.lang)||"fr"}catch(e){}return l==="ar"?"زفافي":l==="en"?"Wedding":"Mariage"}
+const ZFNH=()=>`<span data-noi18n>${ZFN()}</span>`;
 /* Diva Divina × ZIFAFI — My Wedding : méthode de stylisme mariée (logique seule, aucun affichage).
    Ce fichier contient les choix du questionnaire mariée, le nettoyage des données et le moteur de
    recommandation à RÈGLES SIMPLES (ce n'est pas une IA entraînée) : chaque suggestion dit quelles réponses

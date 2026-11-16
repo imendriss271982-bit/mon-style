@@ -147,7 +147,7 @@ function acDuo() {
   const ring = typeof twinRing === "function" ? twinRing(pct, 18) : "";
   const twin = typeof twinCard === "function" ? `<button class="ac-duo-c" data-view="twin" aria-label="Mon jumeau de style"><span class="ac-duo-ring">${ring}<b>${pct}%</b></span><b>Mon jumeau de style</b><small>Ta copie de style</small></button>` : "";
   const bague = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="15" r="6"/><path d="M9.5 9.5 8 5.5l2-2h4l2 2-1.5 4"/></svg>';
-  const zf = typeof zfHomeCards === "function" ? `<button class="ac-duo-c ac-zf" data-go="zf"><span class="ac-duo-ic">${bague}</span><b><span data-noi18n>Zifafi</span> Wedding</b><small>Ton style de mariée, guidé par Diva.</small></button>` : "";
+  const zf = typeof zfHomeCards === "function" ? `<button class="ac-duo-c ac-zf" data-go="zf"><span class="ac-duo-ic">${bague}</span><b>${ZFNH()}</b><small>Ton style de mariée, guidé par Diva.</small></button>` : "";
   // v219 (audit UX) : tant que l'analyse n'est pas finie, le jumeau (à 0 %) n'apparaît pas encore — une nouvelle cliente
   // n'a qu'un chemin clair (Diva → analyse). Zifafi reste toujours visible, en pleine largeur.
   const t2 = acNd() < 3 ? "" : twin;

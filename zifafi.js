@@ -186,8 +186,8 @@ function zfDays() { const d = ZD.prof && ZD.prof.date; if (!d) return null; cons
 
 // ——— Accueil de Diva Divina : les deux univers ———
 function zfHomeCards() {
-  return `<section class="zf-uni solo" aria-label="Zifafi Wedding">
-  <article class="zf-u zw"><span class="zf-u-i">${zfIco.ring}</span><h3>Zifafi <span>Wedding</span></h3><p class="zf-u-s">Ton style de mariée, guidé par Diva.</p>
+  return `<section class="zf-uni solo" aria-label="${ZFN()}">
+  <article class="zf-u zw"><span class="zf-u-i">${zfIco.ring}</span><h3>${ZFNH()}</h3><p class="zf-u-s">Ton style de mariée, guidé par Diva.</p>
    <p class="zf-u-d">Ta robe, tes accessoires, ton bouquet et ton look complet, à partir de ton profil Diva Divina.</p>
    <button type="button" class="zf-u-b" data-go="zf">Ouvrir</button></article></section>`;
 }
@@ -202,7 +202,7 @@ P.zf = () => {
   const nextT = tk.filter(t => !t.done).slice(0, 2);
   return { dock: 1, html: `<div class="zf">
   <button class="zf-backms" data-zfhome>‹ Diva Divina</button>
-  <div class="zf-hero"><p class="zf-kick">Diva Divina ×</p><h1>Zifafi Wedding</h1><p class="zf-tag">Ton style de mariée, guidé par Diva.</p>
+  <div class="zf-hero"><p class="zf-kick">Diva Divina ×</p><h1>${ZFNH()}</h1><p class="zf-tag">Ton style de mariée, guidé par Diva.</p>
    ${S.nom ? `<p class="zf-wel"><span>Bienvenue,</span> <span data-noi18n>${esc(S.nom)}</span></p>` : ""}
    ${n !== null ? `<p class="zf-count">${n === 0 ? "C’est aujourd’hui" : n === 1 ? "Plus qu’un jour" : `Plus que ${n} jours`}</p>` : ""}</div>
   ${zfNav("zf")}
@@ -234,7 +234,7 @@ P.zf = () => {
    ${mod("zf_looks", "saved", "Mes looks de mariée", "Comparer, modifier, choisir", zfStatus(ZD.looks.length > 0, nb(ZD.looks.length, "1 look", "{0} looks")))}
   </div>
   <p class="zf-priv">Tes réponses, tes looks et tes photos d’inspiration restent sur ce téléphone. Ils ne sont pas synchronisés avec tes autres appareils.</p>
-  ${p || ZD.saved.length || ZD.looks.length || ZD.pal.length || ZD.insN || ZD.tasks ? `<button class="link" data-zfwipe>Effacer toutes mes données Zifafi</button>` : ""}
+  ${p || ZD.saved.length || ZD.looks.length || ZD.pal.length || ZD.insN || ZD.tasks ? `<button class="link" data-zfwipe>Effacer toutes mes données de mariée</button>` : ""}
   </div>`, say: "Bienvenue dans Zifafi Wedding, ton espace mariée." };
 };
 
@@ -321,7 +321,7 @@ P.zf_robe = () => {
     else { S.zfLast = r.recos; main = `<p class="zf-hint">Ces propositions viennent de règles simples appliquées à tes réponses. Ce sont des pistes à essayer en boutique, pas une garantie : seul l’essayage dit si une robe te va.</p>${r.recos.map(x => zfRecoCard(x)).join("")}${ZD.rej.length ? `<button class="link" data-zfunrej>Revoir les propositions écartées (${ZD.rej.length})</button>` : ""}`; }
   }
   const cmp = (S.zfCmp || []).length;
-  return { back: true, html: `<div class="zf"><p class="step">ZIFAFI</p><h1>Trouver ma robe</h1>
+  return { back: true, html: `<div class="zf"><p class="step">${ZFNH()}</p><h1>Trouver ma robe</h1>
    ${p ? `<div class="zf-tools"><button class="zf-lnk" data-zfprof="1">Ajuster mes préférences</button><button class="zf-lnk" data-zfprof="5">Retour à mon profil</button></div>` : ""}
    ${main}
    ${ZD.saved.length ? `<h2 class="zf-h">Mes robes enregistrées</h2>${ZD.saved.map(x => zfRecoCard(x, true)).join("")}` : ""}</div>`,
@@ -343,7 +343,7 @@ P.zf_cmp = () => {
 // ——— Mes couleurs ———
 P.zf_col = () => {
   const p = ZD.prof || zfCleanProf({}), sea = typeof season === "function" && season();
-  return { back: true, html: `<div class="zf"><p class="step">ZIFAFI</p><h1>Mes couleurs</h1>
+  return { back: true, html: `<div class="zf"><p class="step">${ZFNH()}</p><h1>Mes couleurs</h1>
   <p class="sub">Robe, voile, bijoux, chaussures, bouquet, coiffure et maquillage : tout se coordonne. Le choix final dépend de tes goûts, du tissu et de la lumière du lieu.</p>
   <h2 class="zf-h">La couleur de la robe</h2><div class="zf-sw">${ZF_ROBES.map(([id, n, hex, t]) => `<div class="zf-swi ${zfHas(p, "whites", id) ? "me" : ""}"><i style="background:${hex}"></i><b>${n}</b><small>${t}</small>${zfHas(p, "whites", id) ? `<em>Ton choix</em>` : ""}</div>`).join("")}</div>
   <h2 class="zf-h">La couleur des bijoux</h2><div class="zf-sw met">${ZF_METAUX.map(([id, n, hex]) => `<div class="zf-swi ${zfHas(p, "metal", id) ? "me" : ""}"><i style="background:${hex}"></i><b>${n}</b>${zfHas(p, "metal", id) ? `<em>Ton choix</em>` : ""}</div>`).join("")}</div>
@@ -365,7 +365,7 @@ P.zf_look = () => {
   const cat = ([k, n]) => { const cur = o[k].find(x => x.id === L.sel[k]);
     return `<fieldset class="zf-q"><legend>${n}</legend><div class="pk zf-pk">${o[k].map(x => `<button type="button" data-zflk="${k}" data-zfv="${x.id}" aria-pressed="${L.sel[k] === x.id}">${esc(x.t)}</button>`).join("")}</div>
      <p class="zf-why2">${cur ? esc(cur.w) : "À décider. Touche une option pour voir pourquoi elle peut aller avec ta robe."}</p></fieldset>`; };
-  return { back: true, html: `<div class="zf zf-form"><p class="step">ZIFAFI</p><h1>${L.id ? "Modifier mon look" : "Compléter mon look"}</h1>
+  return { back: true, html: `<div class="zf zf-form"><p class="step">${ZFNH()}</p><h1>${L.id ? "Modifier mon look" : "Compléter mon look"}</h1>
    <fieldset class="zf-q"><legend>Ma robe</legend>${dressPick}${L.dress ? `<div class="zf-lkd">${zfDressSVG(L.dress)}<p>${[L.dress.nom, zfLabel("neckline", L.dress.neck), L.dress.sleeveTxt, zfLabel("fabric", L.dress.fab), zfLabel("train", L.dress.train), zfLabel("whites", L.dress.color)].filter(Boolean).map(x => `<span>${esc(x)}</span>`).join(" · ")}</p></div>` : ""}</fieldset>
    <fieldset class="zf-q"><legend>Ma palette</legend><div class="pk zf-pk">${ZF_PALS.filter(p => ZD.pal.includes(p.id) || L.pal === p.id).map(p => `<button type="button" data-zflkpal="${p.id}" aria-pressed="${L.pal === p.id}"><span class="zf-mini">${p.c.map(c => `<i style="background:${c}"></i>`).join("")}</span>${esc(p.nom)}</button>`).join("") || `<span class="zf-hint">Aucune palette enregistrée.</span>`}</div><button class="zf-lnk" data-go="zf_col">Voir les harmonies ›</button></fieldset>
    ${ZF_LOOK_CATS.map(cat).join("")}
@@ -385,7 +385,7 @@ function zfLookSum(L) {
 P.zf_looks = () => {
   const sel = S.zfLkSel || [], cmp = sel.map(id => ZD.looks.find(l => l.id === id)).filter(Boolean);
   const list = ZD.looks.slice().sort((a, b) => (b.fav - a.fav) || (b.d > a.d ? 1 : -1));
-  return { back: true, html: `<div class="zf"><p class="step">ZIFAFI</p><h1>Mes looks de mariée</h1>
+  return { back: true, html: `<div class="zf"><p class="step">${ZFNH()}</p><h1>Mes looks de mariée</h1>
    ${!list.length ? `<div class="zf-start"><h2>Aucun look pour l’instant</h2><p>Crée ton premier look complet : robe, bijoux, voile, chaussures, coiffure, maquillage et bouquet.</p><button class="btn" data-zflknew>Créer un look</button></div>`
     : `<button class="btn" data-zflknew>Créer un nouveau look</button>
    ${list.map(l => `<article class="zf-lk"><div class="zf-lk-h"><h2 data-noi18n>${esc(l.nom)}</h2><button type="button" class="zf-fav" data-zflkfav="${l.id}" aria-pressed="${l.fav}" aria-label="Favori">${l.fav ? "★" : "☆"}</button></div>
@@ -400,7 +400,7 @@ P.zf_insp = () => {
   if (ZINS === null) { zfLoadIns(); return { back: true, html: `<div class="zf"><h1>Mon inspiration</h1><p class="sub">Chargement…</p></div>` }; }
   const f = S.zfInsF || "", only = !!S.zfInsFav, sel = S.zfInsSel || [], draft = S.zfInsD || { cat: "robes", titre: "", note: "" };
   const list = ZINS.filter(x => (!f || x.cat === f) && (!only || x.fav)), cmp = sel.map(id => ZINS.find(x => x.id === id)).filter(Boolean);
-  return { back: true, html: `<div class="zf"><p class="step">ZIFAFI</p><h1>Mon inspiration</h1>
+  return { back: true, html: `<div class="zf"><p class="step">${ZFNH()}</p><h1>Mon inspiration</h1>
    <p class="sub">Garde tes idées en images et classe-les.</p>
    ${ZINS_ERR ? `<div class="note">${ZINS_ERR}</div>` : `<details class="zf-add" ${S.zfInsOpen ? "open" : ""}><summary>+ Ajouter une inspiration</summary>
     <fieldset class="zf-q"><legend>Catégorie</legend><div class="pk zf-pk">${ZF_ICATS.map(([id, n]) => `<button type="button" data-zfinscat="${id}" aria-pressed="${draft.cat === id}">${n}</button>`).join("")}</div></fieldset>
@@ -427,7 +427,7 @@ async function zfAddIns(file) {
 }
 
 // ——— Académie ———
-P.zf_acad = () => ({ back: true, html: `<div class="zf"><p class="step">ZIFAFI</p><h1>Académie de l’élégance</h1><p class="zf-tag2">Bouge avec confiance. Sois à l’aise. Profite de ton moment.</p>
+P.zf_acad = () => ({ back: true, html: `<div class="zf"><p class="step">${ZFNH()}</p><h1>Académie de l’élégance</h1><p class="zf-tag2">Bouge avec confiance. Sois à l’aise. Profite de ton moment.</p>
   <div class="zf-mods">${ZF_LES.map((l, i) => `<button class="zf-mod" data-zfles="${l.id}"><span class="zf-num">${i + 1}</span><span class="zf-mod-t"><b>${l.t}</b><small>${l.i}</small>${zfStatus(!!ZD.les[l.id], ZD.les[l.id] ? "Terminée" : "Pas encore faite")}</span><span class="zf-chev" aria-hidden="true">›</span></button>`).join("")}</div>
   <p class="zf-priv">Les schémas sont des illustrations simplifiées dessinées pour l’app ; des illustrations détaillées ou des vidéos viendront compléter les leçons.</p></div>` });
 P.zf_les = () => {

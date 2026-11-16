@@ -68,7 +68,7 @@ function zfJourney() {
 }
 const ZF_NAV = [["zf", "Aperçu"], ["zf_dress", "Ma robe"], ["zf_cat:acc", "Accessoires"], ["zf_cat:bouquet", "Bouquet"], ["zf_cat:beaute", "Coiffure et make-up"], ["zf_full", "Mon look complet"], ["zf_chk", "Checklist"], ["zf_tips", "Conseils et étiquette"]];
 function zfNav(cur) {
-  return `<nav class="zf-nav" aria-label="Sections de Zifafi Wedding"><div class="zf-nav-in">${ZF_NAV.map(([g, n]) => `<button type="button" data-zfgo="${g}" ${g === cur ? 'aria-current="page"' : ""}>${n}</button>`).join("")}</div></nav>`;
+  return `<nav class="zf-nav" aria-label="${ZFN()}"><div class="zf-nav-in">${ZF_NAV.map(([g, n]) => `<button type="button" data-zfgo="${g}" ${g === cur ? 'aria-current="page"' : ""}>${n}</button>`).join("")}</div></nav>`;
 }
 
 // ——— Ma robe : trois façons de commencer ———
@@ -82,7 +82,7 @@ const zfPhotoBtn = (cat, lbl) => `<label class="btn ghost zf-up">${lbl}<input ty
 const zfKeepBox = () => `<label class="zf-keep"><input type="checkbox" data-zfkeepph ${S.zfKeepPh === false ? "" : "checked"}> Garder aussi la photo dans mon inspiration (sur ce téléphone)</label>`;
 P.zf_dress = () => {
   const m = zfMS(), hint = zfSeasonHint(m.saison);
-  return { back: true, html: `<div class="zf"><p class="step">Zifafi Wedding</p><h1>Trouver la robe de mes rêves</h1>${zfNav("zf_dress")}
+  return { back: true, html: `<div class="zf"><p class="step">${ZFNH()}</p><h1>Trouver la robe de mes rêves</h1>${zfNav("zf_dress")}
    <p class="sub">Choisis comment commencer. Tu peux passer de l’une à l’autre à tout moment.</p>
    <section class="zf-mode"><span class="zf-num">A</span><div><h2>Diva, recommande-moi ma robe</h2><p>${m.corps || m.saison ? "À partir de ton profil de mariée, de ton profil Diva Divina et des robes que tu as aimées. Chaque proposition est expliquée." : "À partir de ton profil de mariée et des robes que tu as aimées. Chaque proposition est expliquée."}</p>
     <button class="btn" data-zfreco>Recommander ma robe de rêve</button></div></section>
@@ -122,7 +122,7 @@ P.zf_cat = () => {
   const ctx = key === "beaute" ? `<div class="note">${m.visage ? `<p><span>Ta forme de visage (Diva Divina) :</span> <b>${esc(m.visage)}</b></p>` : `<p>Ta forme de visage n’est pas encore analysée. <button class="zf-lnk" data-zfms>Faire l’analyse</button></p>`}${m.saison ? `<p><span>Ta saison :</span> <b>${esc(m.saison)}</b></p>` : ""}<button class="zf-lnk" data-go="beaute">Essai make-up Diva Divina ›</button></div>` : "";
   const own = key === "acc" ? `<label class="lbl" for="zf_own">Ce que j’ai déjà <small>· facultatif</small></label><textarea class="field" id="zf_own" data-noi18n maxlength="300" rows="2" placeholder="Par exemple : boucles de ma mère, escarpins ivoire">${esc(ZD.own)}</textarea><p class="zf-hint">Diva s’en sert pour éviter les achats inutiles.</p>` : "";
   const ask = key === "acc" ? "Complète mon look de mariée : " : key === "bouquet" ? "Aide-moi à choisir mon bouquet de mariée pour ce look : " : "Aide-moi à choisir ma coiffure et mon maquillage de mariée pour ce look : ";
-  return { back: true, html: `<div class="zf zf-form"><p class="step">Zifafi Wedding</p><h1>${c.t}</h1>${zfNav("zf_cat:" + key)}
+  return { back: true, html: `<div class="zf zf-form"><p class="step">${ZFNH()}</p><h1>${c.t}</h1>${zfNav("zf_cat:" + key)}
    <p class="sub">${c.intro}</p>${ctx}
    ${L ? `<p class="zf-hint"><span>Pour le look :</span> <b data-noi18n>${esc(L.nom)}</b>${L.dress ? ` · <span>${esc(L.dress.nom)}</span>` : ` · <span>robe à décider</span>`}</p>${lookBar}` : `<p class="zf-hint">Ton choix crée ton premier look complet.</p>`}
    ${!L || !L.dress ? `<p class="zf-hint">Choisis une robe pour des conseils plus précis.</p><button class="zf-lnk" data-go="zf_dress">Trouver ma robe ›</button>` : ""}
@@ -137,7 +137,7 @@ const ZF_FULLROWS = [["robe", "Robe", "zf_dress"], ["voile", "Voile", "zf_cat:ac
 P.zf_full = () => {
   if (ZINS === null) zfLoadIns();
   const L = zfCurLook();
-  if (!L) return { back: true, html: `<div class="zf"><p class="step">Zifafi Wedding</p><h1>Mon look complet</h1>${zfNav("zf_full")}
+  if (!L) return { back: true, html: `<div class="zf"><p class="step">${ZFNH()}</p><h1>Mon look complet</h1>${zfNav("zf_full")}
    <div class="zf-start"><h2>Ton look tient sur une seule page</h2><p>Robe, voile, bijoux, chaussures, coiffure, maquillage, bouquet et couleurs : choisis chaque élément, ajoute tes photos et demande à Diva de vérifier l’ensemble.</p><button class="btn" data-zffullnew>Créer mon look complet</button></div></div>` };
   const o = zfLookOpts(ZD.prof, L.dress), pal = ZF_PALS.find(p => p.id === L.pal), co = zfCoherence(L), img = id => (ZINS || []).find(x => x.id === id);
   const row = ([k, n, g]) => { const val = k === "robe" ? (L.dress ? L.dress.nom + " · " + L.dress.dirNom : "") : ((o[k] || []).find(x => x.id === L.sel[k]) || {}).t || "", r = img((L.ref || {})[k]);
@@ -145,7 +145,7 @@ P.zf_full = () => {
      ${r ? `<img src="${r.img}" alt="${esc(n)}" class="zf-fr-img" loading="lazy">` : ""}
      <div class="zf-fr-a"><button type="button" data-zfgo="${g}">${val ? "Changer" : "Choisir"}</button><label class="zf-fr-ph">${r ? "Autre photo" : "Photo"}<input type="file" accept="image/jpeg,image/png,image/webp" data-zfref="${k}" hidden></label>${r ? `<button type="button" data-zfrefdel="${k}">Retirer la photo</button>` : ""}</div></div>`; };
   const more = ZD.looks.length >= ZF_FREE.looks && !zfPrem();
-  return { back: true, html: `<div class="zf zf-full"><p class="step">Zifafi Wedding</p><h1>Mon look complet</h1>${zfNav("zf_full")}
+  return { back: true, html: `<div class="zf zf-full"><p class="step">${ZFNH()}</p><h1>Mon look complet</h1>${zfNav("zf_full")}
    <div class="pk zf-pk" role="group" aria-label="Mes looks">${ZD.looks.map(l => `<button type="button" data-zfcur="${l.id}" aria-pressed="${l.id === L.id}" data-noi18n>${esc(l.nom)}</button>`).join("")}<button type="button" data-zffullnew>+ Nouveau look</button></div>
    <p class="zf-hint"><span>Plusieurs cérémonies ou changements de tenue ? Crée un look pour chacun.</span> ${zfPremTag()}</p>
    <div class="zf-frs">${ZF_FULLROWS.map(row).join("")}
@@ -169,7 +169,7 @@ P.zf_chk = () => {
       <div class="zf-acts"><button type="button" data-zftksave="${t.id}">Enregistrer</button><button type="button" data-zftkcancel>Annuler</button><button type="button" data-zftkdel="${t.id}">Supprimer</button></div></li>`;
     return `<li class="zf-tk ${t.done ? "done" : ""}"><button type="button" role="checkbox" aria-checked="${t.done}" data-zftk="${t.id}"><i aria-hidden="true">${t.done ? "✓" : ""}</i><span ${user ? "data-noi18n" : ""}>${esc(t.t)}</span></button>
      <div class="zf-tk-m">${due ? `<small class="${late ? "late" : ""}">${late ? "<span>En retard</span> · " : ""}<span data-noi18n>${esc(due)}</span></small>` : ""}${t.note ? `<small data-noi18n>${esc(t.note)}</small>` : ""}<button type="button" class="zf-lnk" data-zftkedit="${t.id}" aria-label="Modifier la tâche">Modifier</button></div></li>`; };
-  return { back: true, html: `<div class="zf zf-chk"><p class="step">Zifafi Wedding</p><h1>Ma checklist</h1>${zfNav("zf_chk")}
+  return { back: true, html: `<div class="zf zf-chk"><p class="step">${ZFNH()}</p><h1>Ma checklist</h1>${zfNav("zf_chk")}
    <div class="zf-jour-h"><b>${done} tâches faites sur ${T.length}</b></div>
    <div class="zf-prog" role="progressbar" aria-valuemin="0" aria-valuemax="${T.length}" aria-valuenow="${done}" aria-label="Progression de la checklist"><i style="width:${T.length ? done / T.length * 100 : 0}%"></i></div>
    ${date ? `<p class="zf-hint"><span>Dates conseillées d’après la date de ton mariage :</span> <b data-noi18n>${esc(date)}</b>. <span>Tu peux les changer.</span></p>` : `<p class="zf-hint">Ajoute la date de ton mariage dans ton profil pour voir des dates conseillées.</p><button class="zf-lnk" data-zfprof="0">Ajouter la date ›</button>`}
@@ -191,7 +191,7 @@ function zfTipList() {
 }
 P.zf_tips = () => {
   const p = ZD.prof, trad = p && p.traditions && p.traditions.length ? p.traditions.map(t => zfLabel("traditions", t)).join(", ") : "";
-  return { back: true, html: `<div class="zf zf-tipsp"><p class="step">Zifafi Wedding</p><h1>Conseils et étiquette</h1>${zfNav("zf_tips")}
+  return { back: true, html: `<div class="zf zf-tipsp"><p class="step">${ZFNH()}</p><h1>Conseils et étiquette</h1>${zfNav("zf_tips")}
    <button class="zf-mod" data-go="zf_acad"><span class="zf-mod-i">${zfIco.acad}</span><span class="zf-mod-t"><b>Académie de l’élégance</b><small>Marcher, s’asseoir, la traîne, le voile, les photos, accueillir tes invités</small></span><span class="zf-chev" aria-hidden="true">›</span></button>
    <div class="note">${trad ? `<p><span>Tes traditions :</span> <b>${esc(trad)}</b> · <span>Les coutumes changent d’une famille à l’autre : vérifie les détails avec tes proches.</span></p>` : `<p>Il n’existe pas d’étiquette unique : indique tes traditions dans ton profil pour des conseils plus adaptés.</p><button class="zf-lnk" data-zfprof="0">Mes traditions ›</button>`}</div>
    <label class="lbl" for="zf_tipq">Rechercher un conseil</label><input class="field" id="zf_tipq" type="search" value="${esc(S.zfTipQ || "")}" placeholder="Par exemple : retouches">

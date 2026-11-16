@@ -40,7 +40,7 @@ const SHOTS=process.env.SHOTS||'';
  const gr=[];for(let i=0;i<8;i++)gr.push({id:'x'+i,cat:i<4?'haut':'pantalon',nom:'Pièce '+i,coul:'noir',img:''});
  await open({res:{...RES},gr,zf:{budget:'moyen'}});await p.evaluate(()=>{S.res.couleurs={saison:Object.keys(SEASONS)[3]};home()});await p.waitForTimeout(300);await shot('3-garde-mariage');
  const acts=await p.evaluate(()=>[...document.querySelectorAll('.pt-act b')].map(x=>x.innerText));
- okk(acts[0]==='Zifafi Wedding'&&acts.includes('Tenue du jour')&&acts.length<=3,'Garde-robe prête + mariage : '+acts.join(' · '));
+ okk(acts[0]==='Mariage'&&acts.includes('Tenue du jour')&&acts.length<=3,'Garde-robe prête + mariage : '+acts.join(' · '));
  okk(await p.evaluate(()=>document.querySelector('.pt-door b').innerText)==='Mon mariage','Mariage prévu : porte Mon mariage en premier');
  // Tout afficher / Accueil simplifié
  await p.click('[data-fxall="1"]');await p.waitForTimeout(300);

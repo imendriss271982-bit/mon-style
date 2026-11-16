@@ -734,6 +734,7 @@ var ZF_I18N = [
 ["{0} tâches faites sur {1}", "{0} of {1} tasks done", "خلّصتي {0} من {1} مهام"],
 ["Tous tes outils", "All your tools", "كل أدواتچ"],
 ["Effacer toutes mes données Zifafi", "Delete all my Zifafi data", "امسحي كل بياناتي في زفافي"],
+["Effacer toutes mes données de mariée", "Delete all my Wedding data", "امسحي كل بياناتي في زفافي"],
 ["Ton profil", "Your profile", "ملفچ"],
 ["Diva Divina · déjà fait", "Diva Divina · already done", "Diva Divina · مخلّص"],
 ["Visage", "Face", "الوجه"],
