@@ -15,6 +15,11 @@ const PTN_ROBES = (typeof BARUNI !== "undefined" ? BARUNI : []).map(r => ({
   lien: awinLien("130995", "https://baruni.co/products/" + r[0]),
 })).sort((a, b) => (b.id === PTN_FAV) - (a.id === PTN_FAV));
 
+/* v218 (16 novembre 2026, Imen : « ajoute les brands avec logo, le nom exact ») : chaque maison a son en-tête
+   avec son logo et son nom exact (remplace la règle v137 « aucun nom de boutique » pour ces deux maisons). */
+function ptnMarque(logo, nom, lieu) {
+  return `<div class="ptn-mq"><img src="${esc(logo)}" alt="${esc(nom)}" referrerpolicy="no-referrer"><div><b data-noi18n>${esc(nom)}</b><small>${lieu}</small></div></div>`;
+}
 const PTN_FILTRES = [
   ["", "Tout"],
   ["manches", "Avec manches"],
@@ -39,7 +44,7 @@ if (typeof P.boutique === "function") {
     const o = boutPtn();
     if (!PTN_ROBES.length) return o;
     const l = ptnListe(), n = S.ptnN || 12;
-    const bloc = `<h2>Robes de créatrice</h2><p class="sub" style="font-size:14px;margin-top:-4px">Maison de couture de Dubaï · livraison dans tout le Golfe</p>
+    const bloc = `${ptnMarque("https://cdn.shopify.com/s/files/1/0436/0113/3728/files/Untitled_design_7.png?v=1734889670&width=340", "BARUNI", "Dubaï · robes, kaftans et abaya")}<p class="sub" style="font-size:14px;margin-top:-2px">Livraison dans tout le Golfe</p>
      <div class="fchips">${PTN_FILTRES.map(c => `<button data-ptnf="${c[0]}" aria-pressed="${(S.ptnF || "") === c[0]}">${c[1]}</button>`).join("")}</div>
      <div class="ptn-g">${l.slice(0, n).map(ptnCarte).join("")}</div>
      ${l.length > n ? `<button class="btn ghost" data-ptnplus style="margin-top:10px">Voir plus de robes</button>` : ""}
@@ -74,7 +79,7 @@ function scCarte(r) {
 function scBloc() {
   if (!SC_ART.length) return "";
   const l = scListe(), n = S.scN || 12;
-  return `<h2>Chemises de créatrice</h2><p class="sub" style="font-size:14px;margin-top:-4px">Maison londonienne · chemises et robes-chemises pensées pour le corps féminin</p>
+  return `${ptnMarque("logo-tsc.svg?v=1", "The Shirt Company", "Londres · chemises et robes-chemises")}<p class="sub" style="font-size:14px;margin-top:-2px">Pensées pour le corps féminin</p>
    <div class="fchips">${SC_FILTRES.map(c => `<button data-scf="${c[0]}" aria-pressed="${(S.scF || "") === c[0]}">${c[1]}</button>`).join("")}</div>
    <div class="ptn-g">${l.slice(0, n).map(scCarte).join("")}</div>
    ${l.length > n ? `<button class="btn ghost" data-scplus style="margin-top:10px">Voir plus de chemises</button>` : ""}
@@ -104,6 +109,11 @@ document.addEventListener("click", e => {
 .ptn b{font-size:14.5px;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ptn-px{font-size:14px;font-weight:600;color:#292421}
 .ptn-px s{font-weight:400;color:#8E8072;margin-inline-start:4px}
-.ptn small{font-size:12px;color:#6E6E6E}`;
+.ptn small{font-size:12px;color:#6E6E6E}
+.ptn-mq{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid #EADFC9;border-radius:18px;padding:12px 16px;margin:22px 0 8px;box-shadow:0 4px 14px rgba(90,64,30,.07)}
+.ptn-mq img{height:44px;width:auto;max-width:120px;object-fit:contain;flex:none}
+.ptn-mq div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ptn-mq b{font-size:17px;letter-spacing:.04em;color:#1C1714}
+.ptn-mq small{font-size:13px;color:#6E6E6E}`;
   document.head.appendChild(st);
 })();

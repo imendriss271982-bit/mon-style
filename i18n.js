@@ -3,6 +3,10 @@
    Le texte affiché à l'écran et la voix de Diva sont traduits automatiquement à partir de cette liste.
    Pour corriger une traduction : modifie simplement la 2e (anglais) ou la 3e (arabe) colonne. */
 const I18N_D=[
+["Dubaï · robes, kaftans et abaya","Dubai · dresses, kaftans and abaya","دبي · فساتين وقفاطين وعباية"],
+["Livraison dans tout le Golfe","Delivery across the Gulf","توصيل لكل الخليج"],
+["Londres · chemises et robes-chemises","London · shirts and shirt dresses","لندن · قمصان وفساتين قميص"],
+["Pensées pour le corps féminin","Designed for the female form","مصمّمة لجسم المرأة"],
 ["Chemises de créatrice","Designer shirts","قمصان مصمّمة"],
 ["Maison londonienne · chemises et robes-chemises pensées pour le corps féminin","London house · shirts and shirt dresses designed for the female form","دار من لندن · قمصان وفساتين قميص مصمّمة لجسم المرأة"],
 ["Chemises","Shirts","قمصان"],
