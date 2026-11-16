@@ -1038,7 +1038,7 @@ body.talk #splash .tapaura{background:var(--accent);color:#fff;border-color:var(
 <script src="aura-silhouette.js?v=1"></script>
 <script src="zifafi-methode.js?v=3"></script>
 <script>
-const VERSION="215";
+const VERSION="216";
 // Bonjour de Diva : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -2309,7 +2309,7 @@ function affPlay(){const ss=window.speechSynthesis;if(!ss){toast("Voix non dispo
  AFFT=setTimeout(one,2500)}
 // v138 (choix d’Imen) : à voix haute, Diva ne dit que l’essentiel (2 phrases courtes max) ; le texte complet reste affiché.
 function essentiel(t){const all=String(t||"").replace(/\s+/g," ").trim();const ss=all.match(/[^.!?؟…]+[.!?؟…]*/g)||[all];let o="",k=0;for(const x of ss){const y=x.trim();if(!y)continue;if(o&&(o+" "+y).length>200)break;o=o?o+" "+y:y;if(++k>=2)break}if(o.length>240){let c=o.lastIndexOf(" ",220);o=o.slice(0,c>80?c:220).replace(/[,،;:\s]+$/,"")+"."}return o||all}
-function say(t){if(!S.voice||!t)return;if(window.liveConv&&window.liveConv())return;stopVoice();t=essentiel(tr(t));if(S.lang==="ar")return sayAR(t);speak(t)}
+function say(t){if(!S.voice||!t)return;if(S.page!=="chat")return;/* v216 Imen : voix seulement a l ouverture et avec Diva */if(window.liveConv&&window.liveConv())return;stopVoice();t=essentiel(tr(t));if(S.lang==="ar")return sayAR(t);speak(t)}
 // Arabe : voix féminine khaleeji de Diva (ElevenLabs via le Worker), jamais la voix masculine du téléphone.
 let ARTOK=0;
 // Le texte est découpé en phrases courtes : chaque morceau est prêt vite et rien n'est coupé à la fin.
