@@ -45,12 +45,46 @@ if (typeof P.boutique === "function") {
      ${l.length > n ? `<button class="btn ghost" data-ptnplus style="margin-top:10px">Voir plus de robes</button>` : ""}
      <p class="sub" style="font-size:12.5px">Prix en dollars américains, tels qu’affichés par la maison.</p>`;
     const i = o.html.indexOf('<button class="btn" data-askaura');
-    o.html = i >= 0 ? o.html.slice(0, i) + bloc + o.html.slice(i) : o.html + bloc;
+    const tout = bloc + scBloc();
+    o.html = i >= 0 ? o.html.slice(0, i) + tout + o.html.slice(i) : o.html + tout;
     return o;
   };
 }
 
+/* v217 (16 novembre 2026, Imen : lien Awin de The Shirt Company à ajouter) : chemises et robes-chemises d'une maison
+   londonienne, annonceur Awin 115010. Données : shirtco-data.js (SHIRTCO). Prix en QAR (vus depuis le Qatar).
+   Nom de la maison jamais affiché (règle v137). Filtres S.scF, nombre affiché S.scN. */
+const SC_IMG = "https://cdn.shopify.com/s/files/1/0557/5547/2956/";
+const SC_ART = (typeof SHIRTCO !== "undefined" ? SHIRTCO : []).map(r => ({
+  id: r[0], nom: r[1], type: r[2], prix: r[3], avant: r[4], img: SC_IMG + r[5] + "?width=480", coul: r[6],
+  lien: awinLien("115010", "https://www.theshirtcompany.com/products/" + r[0]),
+}));
+const SC_FILTRES = [["", "Tout"], ["shirt", "Chemises"], ["dress", "Robes-chemises"], ["curve", "Grandes tailles"], ["promo", "Promos"]];
+function scListe() {
+  const f = S.scF || "";
+  return SC_ART.filter(r => !f || (f === "promo" ? r.avant > 0 : r.type === f));
+}
+function scCarte(r) {
+  return `<a class="ptn" href="${esc(r.lien)}" target="_blank" rel="noopener sponsored">
+    <span class="ptn-ph"><img src="${esc(r.img)}" alt="${esc(r.nom)}" loading="lazy" referrerpolicy="no-referrer">${r.avant ? `<span class="ptn-fav promo">Promo</span>` : ""}</span>
+    <b data-noi18n>${esc(r.nom)}</b>
+    <span class="ptn-px" data-noi18n>${r.prix} QAR${r.avant ? ` <s>${r.avant}</s>` : ""}</span>
+    ${r.coul ? `<small data-noi18n>${esc(r.coul)}</small>` : ""}</a>`;
+}
+function scBloc() {
+  if (!SC_ART.length) return "";
+  const l = scListe(), n = S.scN || 12;
+  return `<h2>Chemises de créatrice</h2><p class="sub" style="font-size:14px;margin-top:-4px">Maison londonienne · chemises et robes-chemises pensées pour le corps féminin</p>
+   <div class="fchips">${SC_FILTRES.map(c => `<button data-scf="${c[0]}" aria-pressed="${(S.scF || "") === c[0]}">${c[1]}</button>`).join("")}</div>
+   <div class="ptn-g">${l.slice(0, n).map(scCarte).join("")}</div>
+   ${l.length > n ? `<button class="btn ghost" data-scplus style="margin-top:10px">Voir plus de chemises</button>` : ""}
+   <p class="sub" style="font-size:12.5px">Prix en riyals qataris, tels qu’affichés par la maison pour le Qatar.</p>`;
+}
+
 document.addEventListener("click", e => {
+  const g = e.target.closest("[data-scf]");
+  if (g) { S.scF = g.getAttribute("data-scf"); S.scN = 12; render(false); return; }
+  if (e.target.closest("[data-scplus]")) { S.scN = (S.scN || 12) + 12; render(false); return; }
   const f = e.target.closest("[data-ptnf]");
   if (f) { S.ptnF = f.getAttribute("data-ptnf"); S.ptnN = 12; render(false); return; }
   if (e.target.closest("[data-ptnplus]")) { S.ptnN = (S.ptnN || 12) + 12; render(false); }

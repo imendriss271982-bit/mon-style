@@ -3,6 +3,13 @@
    Le texte affiché à l'écran et la voix de Diva sont traduits automatiquement à partir de cette liste.
    Pour corriger une traduction : modifie simplement la 2e (anglais) ou la 3e (arabe) colonne. */
 const I18N_D=[
+["Chemises de créatrice","Designer shirts","قمصان مصمّمة"],
+["Maison londonienne · chemises et robes-chemises pensées pour le corps féminin","London house · shirts and shirt dresses designed for the female form","دار من لندن · قمصان وفساتين قميص مصمّمة لجسم المرأة"],
+["Chemises","Shirts","قمصان"],
+["Robes-chemises","Shirt dresses","فساتين قميص"],
+["Grandes tailles","Curve sizes","مقاسات كبيرة"],
+["Voir plus de chemises","See more shirts","شوفي قمصان أكثر"],
+["Prix en riyals qataris, tels qu’affichés par la maison pour le Qatar.","Prices in Qatari riyals, as shown by the house for Qatar.","الأسعار بالريال القطري، مثل ما تعرضها الدار لقطر."],
 ["Robes de créatrice","Designer dresses","فساتين مصمّمة"],
 ["Maison de couture de Dubaï · livraison dans tout le Golfe","Dubai couture house · delivery across the Gulf","دار أزياء من دبي · توصيل لكل الخليج"],
 ["Tout","All","الكل"],
