@@ -70,13 +70,23 @@ function taille(){var dpr=Math.min(window.devicePixelRatio||1,1.5);
 function placer(){var sp=document.getElementById("splash");var hote=sp&&sp.isConnected&&getComputedStyle(sp).display!=="none"?sp:document.body;
  if(cv.parentNode!==hote){hote.insertBefore(cv,hote.firstChild);cv.style.position=hote===document.body?"fixed":"absolute"}}
 
-var pret=false,t0=performance.now(),der=0;
+var pret=false,der=0,ta=0,fige="";
+/* v220 (Imen, 17 novembre 2026 : « الحاجة المتحركة خليها في الصفحة الرئيسية بس… وفي الصفحة الخارجية ») :
+   la soie ondule seulement sur l'écran d'ouverture et sur l'accueil. Ailleurs, elle reste affichée mais immobile
+   (dessinée une seule fois) : l'app est plus calme à lire et le téléphone économise sa batterie. */
+function vivant(){var sp=document.getElementById("splash");
+ if(sp&&sp.isConnected&&getComputedStyle(sp).display!=="none")return true;
+ try{return typeof S==="undefined"||!S.page||S.page==="home"}catch(e){return true}}
 function boucle(now){requestAnimationFrame(boucle);
- if(!pret||document.hidden||window.FV_PAUSE)return; /* v208 : en pause pendant l’appel avec Diva (son plus fluide) */
- if(now-der<33)return;der=now; /* ~30 images/s : doux et léger pour la batterie */
+ if(!pret||document.hidden||window.FV_PAUSE){der=0;return} /* v208 : en pause pendant l’appel avec Diva (son plus fluide) */
+ if(der&&now-der<33)return; /* ~30 images/s : doux et léger pour la batterie */
  var nuit=sombre();cv.style.display=nuit?"none":"block";if(nuit)return;
- placer();taille();gl.viewport(0,0,W,H);
- gl.uniform1f(uT,(now-t0)/1000);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);c2.drawImage(glc,0,0)}
+ placer();taille();
+ var vif=vivant();
+ if(vif){if(der)ta+=Math.min(now-der,100);fige=""}
+ else{var k=W+"x"+H+(cv.parentNode===document.body?"b":"s");if(fige===k){der=now;return}fige=k}
+ der=now;gl.viewport(0,0,W,H);
+ gl.uniform1f(uT,ta/1000);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);c2.drawImage(glc,0,0)}
 
 var im=new Image();
 im.onload=function(){try{gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,im)}catch(e){return}
