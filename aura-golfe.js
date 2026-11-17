@@ -143,10 +143,6 @@ addEventListener("click", e => {
 // ——— Entrées : carte de l'accueil (avant « Pour toi aujourd'hui ») et lien depuis « Que porter aujourd'hui ? » ———
 const golfeCarte = () => `<button class="go-entree" data-view="golfe"><span class="go-ic" aria-hidden="true">🌙</span>
   <span class="go-rt"><small>Golfe</small><b>Abaya et occasions</b><em>Ton abaya, ta sheila et les codes des mariages, du Ramadan et de l’Aïd.</em></span><span class="hx-chev" aria-hidden="true">›</span></button>`;
-if (typeof P.home === "function") {
-  const homeAvant = P.home;
-  P.home = (...a) => { const o = homeAvant(...a); if (o && o.html) o.html = o.html.replace(/<section><h2 class="hz-h">Pour toi aujourd’hui<\/h2>/, m => golfeCarte() + m); return o; };
-}
 if (typeof P.jour === "function") {
   const jourAvant = P.jour;
   P.jour = () => {

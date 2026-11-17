@@ -45,7 +45,7 @@ const img=path.join(os.tmpdir(),'ms-contact.png');fs.writeFileSync(img,png);
  ok(await p.evaluate(()=>document.getElementById('ct_msg').value==='Mon outfit check tourne sans fin.'&&CT.quoi==='bug'&&!!document.querySelector('.vf-photo img')),'Choix, message et capture gardés');
  await p.click('[data-ctsend="aide"]');await p.waitForTimeout(800);
  const a=sent[0]&&sent[0].mail;
- ok(a&&/outfit check tourne/.test(a.htmlContent)&&a.attachment&&a.attachment[0].content.length>20&&/app<\/td><td[^>]*>1\d\d</.test(a.htmlContent)&&a.replyTo.email==='sara@mail.com','Envoyé : message, capture jointe, version de l’app');
+ ok(a&&/outfit check tourne/.test(a.htmlContent)&&a.attachment&&a.attachment[0].content.length>20&&/app<\/td><td[^>]*>\d{3,}</.test(a.htmlContent)&&a.replyTo.email==='sara@mail.com','Envoyé : message, capture jointe, version de l’app');
  ok(await p.evaluate(()=>!!document.querySelector('.ct-ok')&&document.getElementById('ct_msg').value===''),'Confirmation affichée, formulaire vidé');
  // ——— Séance ———
  await p.click('[data-cttab="seance"]');await p.waitForTimeout(300);

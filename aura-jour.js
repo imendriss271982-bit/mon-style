@@ -162,27 +162,6 @@ addEventListener("click", e => {
   if (t.hasAttribute("data-jporte")) return jrPorter();
 });
 
-// Accueil « Pour toi aujourd'hui » : la carte du jour remplace la suggestion dès que la garde-robe est prête.
-if (typeof homeReco === "function") {
-  const homeRecoAvant = homeReco;
-  homeReco = function (nd) {
-    if (!grReady()) return homeRecoAvant(nd);
-    jrMeteo();
-    const l = JR.d === jrAuj() ? JR.look : null;
-    if (!l) {
-      // Une tenue déjà planifiée pour aujourd'hui (semaine) reste prioritaire, comme avant.
-      const planifiee = GR.saved.some(t => t.jour === GR_JOURS[(new Date().getDay() + 6) % 7]);
-      if (planifiee) return homeRecoAvant(nd);
-      // Sinon : la carte du jour, puis la tenue déjà créée (si elle existe), qu'on ne cache pas.
-      const avant = homeRecoAvant(nd), carte = `<button class="hr-card jr-home" data-view="jour"><span class="hr-lab">Chaque jour</span><b>Que porter aujourd’hui ?</b><small>Une tenue avec tes vêtements, selon la météo</small><em><span data-noi18n>${esc(jrMeteoTxt())}</span> ›</em></button>`;
-      return /hr-step/.test(avant) ? carte : carte + avant;
-    }
-    // Pas de photo de vêtements sur l'accueil (choix d'Imen, v109) : seulement le titre et le conseil.
-    return `<button class="hr-card jr-home" data-view="jour"><span class="hr-lab">Ta tenue d’aujourd’hui</span><b>${esc(l.titre)}</b>
-     ${l.conseil ? `<small>${esc(l.conseil)}</small>` : ""}<em>${JR.porte ? "Portée aujourd’hui ✓" : "Voir ma tenue"} ›</em></button>`;
-  };
-}
-
 (function jrCSS() {
   const st = document.createElement("style");
   st.textContent = `

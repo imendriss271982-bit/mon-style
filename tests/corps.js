@@ -40,7 +40,7 @@ ok(C.resultat(cas[0][1]).res.src==='mesures'&&!C.resultat(cas[0][1]).res.kibbe,'
   ok(/habillée, avec des vêtements près du corps/.test(bi.t)&&/cacher ou couper ton visage/.test(bi.t)&&/jamais gardée/.test(bi.t),'Les 3 phrases rassurantes');
   ok(/Prendre ma photo/.test(bi.f)&&/Je préfère donner mes mesures/.test(bi.f),'Les 2 boutons');
   ok(bi.said==='Ta photo reste privée, et tu peux cacher ton visage.','Diva le dit à voix haute');
-  ok(await p.evaluate(()=>getComputedStyle(document.body).backgroundColor==='rgb(250, 247, 242)'&&getComputedStyle(document.querySelector('[data-bgo]')).backgroundColor==='rgb(112, 43, 58)'),'Palette officielle (#FAF7F2, #702B3A)');
+  ok(await p.evaluate(()=>{const c=getComputedStyle(document.querySelector('[data-bgo]'));return /gradient/.test(c.backgroundImage)&&!/112, 43, 58/.test(c.backgroundColor+c.backgroundImage)}),'Charte v2 : bouton doré, plus de bordeaux');
   // Photo : l'appareil s'ouvre tout de suite, puis analyse
   await p.click('[data-bgo]');await p.waitForTimeout(200);
   ok(await p.evaluate(()=>S.page==='a_body'&&__cam==='body'&&/cacher ou couper/.test(document.getElementById('page').innerText)),'« Prendre ma photo » ouvre l’appareil de la silhouette');

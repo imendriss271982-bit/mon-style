@@ -1038,7 +1038,7 @@ body.talk #splash .tapaura{background:var(--accent);color:#fff;border-color:var(
 <script src="aura-silhouette.js?v=1"></script>
 <script src="zifafi-methode.js?v=4"></script>
 <script>
-const VERSION="227";
+const VERSION="228";
 // Bonjour de Diva : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -1342,22 +1342,6 @@ async function grAlt(occ,i,dir){i=+i;dir=GR_DIR[dir]?dir:"";const o=GR_OCC.find(
  catch(e){S.grAlt=null;toast(errMsg(e));if((S.page==="garde"||S.page==="tenues")){const y=window.scrollY;render(false);window.scrollTo(0,y)}}}
 const grImg=(x,cls)=>x?(x.img?`<img class="${cls||""}" src="${x.img}" alt="${esc(x.nom||grCat(x.cat))}">`:grPh(x)):"";
 const GR_HANGER='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/></svg>';
-// Vraies photos (Unsplash, licence libre) sur les cartes Explorer ; si la photo ne charge pas, l'illustration reste.
-const HZ_PH=(id,svg)=>`<img class="hz-photo" src="https://images.unsplash.com/photo-${id}?w=480&h=360&fit=crop&crop=entropy&q=70&auto=format" alt="" loading="lazy" decoding="async" onerror="this.remove()">${svg}`;
-// Recommandation de l'accueil : seulement à partir de données réelles (tenue du jour, tenue créée, ou prochaine étape).
-function homeReco(nd){const by=id=>GR.items.find(x=>x.id===id),today=GR_JOURS[(new Date().getDay()+6)%7];
- const look=(l,lab,occ)=>{const it=l.pieces.map(by).filter(Boolean);if(it.length<2)return "";return `<button class="hr-card" data-go="tenues"${occ?` data-gocc2="${occ}"`:""}><span class="hr-lab">${lab}</span><b>${esc(l.titre)}</b>${l.conseil?`<small>${esc(l.conseil)}</small>`:""}<em>Voir mes tenues ›</em></button>`};
- const td=GR.saved.find(t=>t.jour===today);if(td){const h=look(td,"Ta tenue d’aujourd’hui");if(h)return h}
- for(const [occ,ls] of Object.entries(GR.looks)){if(ls&&ls[0]){const h=look(ls[0],"Une tenue pour toi",occ);if(h)return h}}
- const step=(lab,t,d,attr,btn)=>`<div class="hr-card hr-step"><span class="hr-lab">${lab}</span><b>${t}</b><small>${d}</small><button class="btn ghost" ${attr}>${btn}</button></div>`;
- if(!grReady())return step("Prochaine étape","Ajoute tes vêtements","Avec tes vraies pièces, je crée des tenues qui te ressemblent.",'data-go="garde"',"Ouvrir ma garde-robe");
- return step("Prochaine étape","Crée tes premières tenues","Ta garde-robe est prête : choisis une occasion.",'data-go="tenues"',"Créer une tenue")}
-function grHomeCard(){const c=grCount(),n=GR.items.filter(x=>!x.wait).slice(0,4),nl=Object.values(GR.looks).reduce((a,l)=>a+l.length,0),pct=Math.min(100,c.tot/GR_MIN*100);
- return `<button class="hx-gr" data-view="garde" aria-label="Ma garde-robe">
- <span class="hx-gr-h"><b>Ma garde-robe</b><small>${c.tot?c.tot+" article"+(c.tot>1?"s":"")+" ›":"Commencer ›"}</small></span>
- ${n.length?`<span class="hx-gr-ph">${n.map(x=>grImg(x)).join("")}</span>`:""}
- <span class="hx-gr-t"><b>Des tenues avec tes vêtements</b><small>${grReady()?(nl?nl+" tenue"+(nl>1?"s":"")+" créée"+(nl>1?"s":"")+" pour toi":"Ta garde-robe est prête : je crée tes tenues"):"Ajoute encore "+(GR_MIN-c.tot>0?GR_MIN-c.tot:1)+" article"+(GR_MIN-c.tot>1?"s":"")+" pour des idées chaque jour"}</small></span>
- <span class="gr-bar rb"><i style="width:${grReady()?100:pct}%"></i></span></button>`}
 // Beauté : make-up selon la forme du visage et la saison, et étiquette (assise, marche, parole). Textes en 3 langues.
 const BL=o=>o?(o[S.lang]||o.fr):"";
 const BX={
@@ -1711,55 +1695,20 @@ function grSavedHTML(){if(!GR.saved.length)return "";const by=id=>GR.items.find(
  <div class="gr-days" aria-label="Porter ce jour-là">${GR_JOURS.map(j=>`<button type="button" data-gday="${t.id}:${j}" aria-pressed="${t.jour===j}">${j}</button>`).join("")}</div>
  <div class="gr-acts"><button type="button" data-gunsave="${t.id}">Retirer</button></div></article>`}).join("")}</div>`}
 const P={
-home:()=>{const v=ok("visage"),bd=ok("corps"),c=season(),oc=ok("outfit");
- const nd=[v,bd,c].filter(Boolean).length;
- const ICO={visage:'<ellipse cx="12" cy="12" rx="6.5" ry="8.5"/><path d="M9.5 10.5h.01M14.5 10.5h.01M10 15c1.2.8 2.8.8 4 0"/>',corps:'<circle cx="12" cy="4.5" r="2"/><path d="M8 9h8l-2 6 2 6M8 9l2 6-2 6M12 9v6"/>',couleurs:'<path d="M12 3a9 9 0 1 0 0 18c1.5 0 2-1 2-2 0-1.5-1-2 0-3s3 0 4.5-1.5C20 13 21 11 21 10c0-4-4-7-9-7z"/><path d="M7.5 11h.01M10 7.5h.01M15 7.5h.01"/>'};
- const ILL={visage:'<g fill="none" stroke="#2B2420" stroke-width="2.2"><ellipse cx="17" cy="32" rx="9" ry="13"/><circle cx="40" cy="32" r="11"/><rect x="54" y="20" width="20" height="24" rx="6"/></g><g fill="#1A1716"><circle cx="14" cy="30" r="1.3"/><circle cx="20" cy="30" r="1.3"/><circle cx="37" cy="30" r="1.3"/><circle cx="43" cy="30" r="1.3"/><circle cx="61" cy="30" r="1.3"/><circle cx="67" cy="30" r="1.3"/></g>',
-  corps:'<g fill="#EFE9E1" stroke="#2B2420" stroke-width="1.8" stroke-linejoin="round"><path d="M9 10h14l-5 13 6 13H8l6-13z"/><path d="M33 10h10l2 12 6 14H27l4-14z"/><path d="M55 10h16l-2 13 2 13H55l2-13z"/></g><g fill="#7D2E4A"><circle cx="16" cy="6" r="3"/><circle cx="38" cy="6" r="3"/><circle cx="63" cy="6" r="3"/></g>',
-  couleurs:'<circle cx="16" cy="18" r="9" fill="#E8B4A0"/><circle cx="34" cy="18" r="9" fill="#C76B5A"/><circle cx="52" cy="18" r="9" fill="#6E8B74"/><circle cx="70" cy="18" r="9" fill="#2E4A6B"/><circle cx="25" cy="38" r="9" fill="#F2D27A"/><circle cx="43" cy="38" r="9" fill="#9B6BA8"/><circle cx="61" cy="38" r="9" fill="#D9A3B5"/>'};
- const DESC={visage:"Ta forme de visage : coupes, lunettes, make-up",corps:"Ta silhouette et ton type Kibbe : les coupes qui te subliment",couleurs:"Ta saison : les teintes qui t’illuminent"};
- const row=(m,ic,label,val,mod,extra)=>`<button class="hx-row ${val?"ok":""}" ${val?`data-view="${m}"`:`data-mod="${mod}"`}><span class="hx-ill"><svg viewBox="0 0 80 50" aria-hidden="true">${ILL[ic]}</svg></span><span class="hx-rt"><b>${label}</b><small>${DESC[ic]}</small><em>${esc(val?cap(val):"À faire une fois")}</em></span>${extra||""}<span class="hx-chev" aria-hidden="true">›</span></button>`;
- const sw=c?`<span class="hx-sw">${SEASONS[c].c.slice(0,4).map(x=>`<i style="background:${x[0]}"></i>`).join("")}</span>`:"";
- const cam='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-2.5h6L17 8h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.6"/></svg>';
- const ART={
-  shop:'<svg viewBox="0 0 120 90" aria-hidden="true"><ellipse cx="60" cy="84" rx="38" ry="4" fill="#000" opacity=".06"/><path d="M34 34h52l-5 48H39z" fill="#B99A84"/><path d="M34 34h52l-2 8H36z" fill="#A6866F"/><path d="M48 34v-6a12 12 0 0 1 24 0v6" fill="none" stroke="#7C5E4A" stroke-width="3" stroke-linecap="round"/></svg>',
-  beaute:'<svg viewBox="0 0 120 90" aria-hidden="true"><ellipse cx="60" cy="84" rx="44" ry="4" fill="#000" opacity=".06"/><rect x="22" y="44" width="16" height="38" rx="3" fill="#E9D8CC"/><rect x="25" y="30" width="10" height="15" rx="2" fill="#2A1F21"/><rect x="42" y="26" width="18" height="56" rx="4" fill="#5A3A30"/><rect x="45" y="14" width="12" height="13" rx="2" fill="#C9A86A"/><rect x="64" y="38" width="16" height="44" rx="3" fill="#C9A98F"/><rect x="67" y="26" width="10" height="13" rx="2" fill="#2A1F21"/><rect x="84" y="56" width="16" height="26" rx="6" fill="#F0E2D6"/><rect x="87" y="48" width="10" height="9" rx="2" fill="#C9A86A"/></svg>',
-  looks:'<svg viewBox="0 0 120 90" aria-hidden="true"><path d="M14 12h92" stroke="#3A2C2A" stroke-width="2.5" stroke-linecap="round"/><g fill="none" stroke="#3A2C2A" stroke-width="1.5"><path d="M30 12v6M50 12v6M70 12v6M90 12v6"/></g><path d="M22 18h16l4 62H18z" fill="#4A3027"/><path d="M42 18h16l3 64H39z" fill="#6E4A3A"/><path d="M62 18h16l4 60H58z" fill="#2A1F21"/><path d="M82 18h16l5 62H77z" fill="#EFE3D6"/></svg>',
-  insp:'<svg viewBox="0 0 150 100" aria-hidden="true"><ellipse cx="78" cy="94" rx="64" ry="5" fill="#000" opacity=".06"/><path d="M104 46c0-9 4-14 10-14s10 5 10 14v42h-20z" fill="#EFE6DD"/><g stroke="#8A6F55" stroke-width="1.4" fill="none" stroke-linecap="round"><path d="M114 34c-2-10-10-18-20-22M114 34c1-12 6-22 16-28M114 34c4-6 12-10 22-10"/></g><g fill="#F3E6C8"><circle cx="94" cy="12" r="4"/><circle cx="100" cy="18" r="3"/><circle cx="130" cy="6" r="4"/><circle cx="124" cy="14" r="3"/><circle cx="136" cy="24" r="4"/></g><path d="M40 56h50l-4 34H44z" fill="#8A6346"/><path d="M52 56v-6a13 13 0 0 1 26 0v6" fill="none" stroke="#5E412C" stroke-width="3"/><rect x="60" y="62" width="10" height="7" rx="2" fill="#C9A86A"/></svg>'};
+home:()=>{// v228 : UN SEUL accueil. Ce modèle ne donne plus que les pièces de base (salutation, carte Diva, Inspirations) ;
+ // aura-accueil.js construit la page (carte du jour ou analyse, raccourcis, Golfe, jumeau + Zifafi).
+ const INSP='<svg viewBox="0 0 150 100" aria-hidden="true"><ellipse cx="78" cy="94" rx="64" ry="5" fill="#000" opacity=".06"/><path d="M104 46c0-9 4-14 10-14s10 5 10 14v42h-20z" fill="#EFE6DD"/><g stroke="#8A6F55" stroke-width="1.4" fill="none" stroke-linecap="round"><path d="M114 34c-2-10-10-18-20-22M114 34c1-12 6-22 16-28M114 34c4-6 12-10 22-10"/></g><g fill="#F3E6C8"><circle cx="94" cy="12" r="4"/><circle cx="100" cy="18" r="3"/><circle cx="130" cy="6" r="4"/><circle cx="124" cy="14" r="3"/><circle cx="136" cy="24" r="4"/></g><path d="M40 56h50l-4 34H44z" fill="#8A6346"/><path d="M52 56v-6a13 13 0 0 1 26 0v6" fill="none" stroke="#5E412C" stroke-width="3"/><rect x="60" y="62" width="10" height="7" rx="2" fill="#C9A86A"/></svg>';
  const mins=GRATUIT?"🎁 Gratuit pendant le test":(()=>{const m=Math.max(0,Math.ceil(secLeft()/60));return premium()?`👑 ${m} min ce mois-ci`:m>0?"👑 Essai : 1 min offerte":"👑 Réservé aux abonnées"})();
  return {dock:1,html:`<div class="hx hz">
  <section class="hz-top">
-  <div class="hz-hi"><h1 class="hh">Salut <em>${esc(cap(NOM))}</em><span class="hz-heart" aria-hidden="true">&nbsp;♥&#xFE0E;</span></h1><p>Qu’est-ce qu’on porte aujourd’hui ?</p>
-   <label class="hz-q"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg><input id="hq" type="search" enterkeyhint="send" autocomplete="off" placeholder="Cherche un look…" aria-label="Cherche un look…"></label></div>
+  <div class="hz-hi"><h1 class="hh">Salut <em>${esc(cap(NOM))}</em><span class="hz-heart" aria-hidden="true">&nbsp;♥&#xFE0E;</span></h1><p></p></div>
  </section>
  <button class="hz-st" data-view="chat" aria-label="Demander à Diva : ta styliste personnelle">
   <small>Ta styliste IA personnelle</small><b data-noi18n>Diva</b><em>Parle-moi quand tu veux</em>
   <span class="hz-chip">${mins}</span>
   <span class="hz-call"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.5a11.5 11.5 0 0 0 6.6 6.6l1.5-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A17 17 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></svg>Appeler Diva</span>
  </button>
- <section class="hz-more"><h2 class="hz-h">Mon style</h2>
-
-${nd===3?`<button class="hx-ms" data-view="fiche" aria-label="Voir ma fiche style">
-   <span class="hx-ms-h"><b>Ma fiche style</b><small>Voir le détail ›</small></span>
-   <span class="hx-ms-g"><span><small>Visage</small><em>${esc(cap(v.forme))}</em></span><span><small>Silhouette</small><em>${esc(bd.kibbe?bd.forme+" · "+bd.kibbe:bd.forme)}</em></span><span><small>Saison</small><em>${esc(c)}</em>${sw}</span></span>
-  </button>`:""}
-  <button class="hx-oc2" data-go="o_photo"><span class="hx-oc2-i"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6a2 2 0 1 1 2 2c-1 0-2 .7-2 1.6v.4l8.5 6.2c.8.6.4 1.8-.6 1.8H4.1c-1 0-1.4-1.2-.6-1.8L12 10"/></svg></span>
-  <span class="hx-oc2-t"><small>Chaque jour</small><b>Outfit check</b><em>${oc?`Dernière note : ${esc(String(oc.note))}/10`:"Une note et les changements à faire"}</em></span><span class="hx-oc2-c">${cam}</span></button>
-  ${typeof twinCard==="function"?twinCard():""}
-</section>
- ${typeof zfHomeCards==="function"?zfHomeCards():""}
- <div class="hz-acts">
-  <button data-go="tenues"><span aria-hidden="true">${GR_HANGER}</span><b>Créer une tenue</b><small>Avec tes vêtements</small></button>
-  <button data-go="garde"><span aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 3v18M9.5 11v2M14.5 11v2"/></svg></span><b>Ma garde-robe</b><small>${grCount().tot?grCount().tot+" article"+(grCount().tot>1?"s":""):"À remplir"}</small></button>
- </div>
- <section><h2 class="hz-h">Tes rubriques préférées</h2>
-  <div class="hz-cats">
-   <button data-go="boutique"><span class="hz-art">${HZ_PH("1483985988355-763728e1935b",ART.shop)}</span><b>Shopping et nouveautés</b></button>
-   <button data-go="beaute"><span class="hz-art">${HZ_PH("1512496015851-a90fb38ba796",ART.beaute)}</span><b>Conseils beauté</b></button>
-   <button data-go="tenues"><span class="hz-art">${HZ_PH("1441984904996-e0b6ba687e04",ART.looks)}</span><b>Looks pour toi</b></button>
-  </div></section>
- <section><h2 class="hz-h">Pour toi aujourd’hui</h2>${homeReco(nd)}</section>
- <button class="hz-insp" data-go="news"><span class="hz-insp-t"><b>Inspirations du jour</b><small>Looks, beauté, art de vivre</small><i aria-hidden="true">›</i></span><span class="hz-insp-a">${ART.insp}</span></button>
+ <button class="hz-insp" data-go="news"><span class="hz-insp-t"><b>Inspirations du jour</b><small>Looks, beauté, art de vivre</small><i aria-hidden="true">›</i></span><span class="hz-insp-a">${INSP}</span></button>
  </div>`,
  say:"Bonjour "+NOM+", je suis contente de te voir. Touche le téléphone pour me parler, ou choisis ce qu’on fait aujourd’hui."}},
 garde:(asT)=>{const c=grCount(),rd=grReady(),occ=GR_OCC.some(o=>o[0]===S.grOcc)?S.grOcc:grOccs()[0][0],looks=GR.looks[occ],by=id=>GR.items.find(x=>x.id===id);
@@ -2711,14 +2660,13 @@ $("#start").addEventListener("click",()=>{window.SPOUT=true;window.SNDBLOCK=fals
 <script src="zifafi.js?v=7"></script>
 <script src="zifafi-plus.js?v=3"></script>
 <script src="aura-twin.js?v=3"></script>
-<script src="aura-jour.js?v=5"></script>
+<script src="aura-jour.js?v=6"></script>
 <script src="aura-achat.js?v=3"></script>
-<script src="aura-golfe.js?v=2"></script>
-<script src="aura-verif.js?v=2"></script>
-<script src="aura-focus.js?v=3"></script>
+<script src="aura-golfe.js?v=3"></script>
+<script src="aura-verif.js?v=3"></script>
 <script src="aura-multi.js?v=9"></script>
 <script src="aura-studio.js?v=2"></script>
-<script src="aura-portes.js?v=6"></script>
+<script src="aura-portes.js?v=7"></script>
 <script src="aura-contact.js?v=2"></script>
 <script src="aura-avatar.js?v=3"></script>
 <script src="aura-photo.js?v=3"></script>
@@ -2731,8 +2679,8 @@ $("#start").addEventListener("click",()=>{window.SPOUT=true;window.SNDBLOCK=fals
 <script src="partenaires-data.js?v=1"></script>
 <script src="shirtco-data.js?v=1"></script>
 <script src="aura-partenaires.js?v=3"></script>
-<script src="aura-accueil.js?v=14"></script>
-<script src="aura-amie.js?v=1"></script>
+<script src="aura-accueil.js?v=15"></script>
+<script src="aura-amie.js?v=2"></script>
 <!-- v185 : système de design « Maison » (en dernier pour unifier tous les modules) -->
 <link rel="stylesheet" href="charte.css?v=2">
 <link rel="stylesheet" href="ms-design.css?v=6">

@@ -17,7 +17,7 @@ const AM_DEBUT = (() => {
   // Première ouverture connue : focus (v146), sinon le plus vieux souvenir, sinon aujourd'hui (gardée ensuite).
   try {
     let d = +localStorage.getItem("monstyle_debut") || 0;
-    if (!d) { try { d = +(JSON.parse(localStorage.getItem("monstyle_focus") || "{}").first || 0); } catch (e) {} }
+    if (!d) { try { d = Date.parse(JSON.parse(localStorage.getItem("monstyle_focus") || "{}").first || "") || 0; } catch (e) {} }
     if (!d && typeof SV !== "undefined" && SV.l.length) d = Math.min(...SV.l.map(x => x.t));
     if (!d) d = Date.now();
     localStorage.setItem("monstyle_debut", String(d));

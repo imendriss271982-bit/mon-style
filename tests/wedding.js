@@ -9,7 +9,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
 const MS={nom:'Lina',lang:'fr',later:true,res:{corps:{forme:'X · Sablier',kibbe:'Soft Classic'},couleurs:{saison:'Hiver Vif'},visage:{forme:'Ovale'}}};
 (async()=>{const b=await chromium.launch();const errs=[];
  const open=async(w,ms,extra)=>{const p=await b.newPage({viewport:{width:w,height:820}});p.on('pageerror',e=>errs.push(w+': '+e.message));p.on('dialog',d=>d.accept());
-  await p.goto(URL);await p.evaluate(([ms,extra])=>{localStorage.clear();localStorage.setItem('monstyle_portes','0');localStorage.setItem('monstyle',JSON.stringify(ms));if(extra)localStorage.setItem('monstyle_zf',extra)},[ms,extra||null]);
+  await p.goto(URL);await p.evaluate(([ms,extra])=>{localStorage.clear();localStorage.setItem('monstyle',JSON.stringify(ms));if(extra)localStorage.setItem('monstyle_zf',extra)},[ms,extra||null]);
   await p.goto(URL);await p.waitForTimeout(900);await p.evaluate(()=>{document.getElementById('splash')?.remove();home()});return p};
  const st=p=>p.evaluate(()=>JSON.parse(localStorage.getItem('monstyle_zf')||'null'));
  const click=async(p,sel)=>{await p.click(sel);await p.waitForTimeout(160)};
@@ -25,8 +25,8 @@ const MS={nom:'Lina',lang:'fr',later:true,res:{corps:{forme:'X · Sablier',kibbe
  ok(!JSON.stringify(E.ZF_TIPS).match(/QAR|€|\$|obligatoire|interdit/),'Conseils : ni prix ni règle imposée');
  // ——— Entrée et tableau de bord ———
  let p=await open(390,MS);
- ok(await p.evaluate(()=>/Mariage/.test(document.querySelector('.zf-u.zw').innerText)&&/guidé par Diva/.test(document.querySelector('.zf-u.zw').innerText)),'Accueil Diva Divina : entrée « Mariage » (v221) + sous-titre');
- await click(p,'.zf-u.zw [data-go="zf"]');
+ ok(await p.evaluate(()=>{const c=document.querySelector('.ac-zf');return !!c&&/Mariage/.test(c.innerText)&&/guidé par Diva/.test(c.innerText)}),'Accueil Diva Divina : entrée « Mariage » (v222) + sous-titre');
+ await click(p,'.ac-zf[data-go="zf"]');
  let t=await txt(p);
  ok(/Mariage/.test(t)&&/Bienvenue,\s*Lina/.test(t),'Tableau de bord : titre et bienvenue avec le prénom');
  ok(await p.evaluate(()=>!!document.querySelector('.zf-big[data-go="zf_dress"]')&&!!document.querySelector('.zf-big[data-zfaura]')),'Deux actions principales : robe de rêve, Demander à Diva');

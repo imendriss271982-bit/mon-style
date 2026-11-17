@@ -4,7 +4,7 @@
       avec son type précis (« Blazer long », « Robe blazer », « Blazer court »…) que la cliente peut corriger.
    2) Outfit check (v177, Imen : « liste les défauts ») : Diva donne la note, puis pour chaque point le DÉFAUT
       précis (« probleme », affiché ✗) et sa correction (changer / ajouter), en cherchant d'abord dans la garde-robe.
-   Chargé après aura-focus.js. Testable : node tests/multi.js */
+   Chargé après aura-verif.js. Testable : node tests/multi.js */
 
 // Types précis par catégorie : guident Gemini (il peut en écrire un autre s'il le faut).
 const GR_TYPES={

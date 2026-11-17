@@ -8,7 +8,7 @@ const {chromium}=require('playwright');const path=require('path');const URL=proc
 let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
 (async()=>{const b=await chromium.launch();const errs=[];
  const open=async(w,setup)=>{const p=await b.newPage({viewport:{width:w,height:820}});p.on('pageerror',e=>errs.push(w+': '+e.message));p.on('dialog',d=>d.accept());
-  await p.goto(URL);await p.evaluate(setup||(()=>{localStorage.clear();localStorage.setItem('monstyle_portes','0');localStorage.setItem('monstyle',JSON.stringify({nom:'Test',lang:'fr',later:true}))}));
+  await p.goto(URL);await p.evaluate(setup||(()=>{localStorage.clear();localStorage.setItem('monstyle',JSON.stringify({nom:'Test',lang:'fr',later:true}))}));
   await p.goto(URL);await p.waitForTimeout(900);await p.evaluate(()=>{document.getElementById('splash')?.remove();home()});return p};
  const st=p=>p.evaluate(()=>JSON.parse(localStorage.getItem('monstyle_zf')||'null'));
  const click=async(p,sel)=>{await p.click(sel);await p.waitForTimeout(150)};
@@ -26,16 +26,15 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  ok(!JSON.stringify(E.zfReco({volume:'ample',aesthetic:['royal']})).match(/QAR|€|\$|Pronovias|Vera Wang/),'Moteur : aucune marque ni prix');
  // ——— Accueil et navigation ———
  let p=await open(390);
- ok(await p.evaluate(()=>!!document.querySelector('.zf-uni [data-zfmystyle]')&&!!document.querySelector('.zf-uni [data-go="zf"]')),'Accueil : cartes DIVA DIVINA et ZIFAFI');
- await click(p,'[data-zfmystyle]');ok(await p.evaluate(()=>S.page==='home'),'« Explorer Diva Divina » garde l’expérience existante');
- await click(p,'.zf-uni [data-go="zf"]');ok(await p.evaluate(()=>S.page==='zf'&&!!document.querySelector('.zf-start [data-zfprof]')),'ZIFAFI : tableau de bord, invitation au profil');
+ ok(await p.evaluate(()=>!!document.querySelector('.ac-zf[data-go="zf"]')),'Accueil : carte Zifafi (Mariage)');
+ await click(p,'.ac-zf[data-go="zf"]');ok(await p.evaluate(()=>S.page==='zf'&&!!document.querySelector('.zf-start [data-zfprof]')),'ZIFAFI : tableau de bord, invitation au profil');
  ok(await p.evaluate(()=>!/%/.test(document.querySelector('.zf-mods').innerText)&&/Rien pour l’instant/.test(document.body.innerText)),'Tableau de bord : aucun pourcentage inventé');
  ok(await p.evaluate(()=>document.querySelector('#dock [data-go="home"]').getAttribute('aria-current')==='page'),'Barre du bas : Accueil reste allumé');
  for(const m of ['zf_prof','zf_robe','zf_col','zf_look','zf_insp','zf_acad','zf_looks']){await p.evaluate(m=>{go('zf');document.querySelector(`.zf-mods [data-go="${m}"]`).click()},m);await p.waitForTimeout(120);ok(await p.evaluate(m=>S.page===m,m),'Module '+m+' s’ouvre')}
  await p.evaluate(()=>go('zf'));await click(p,'[data-zfhome]');ok(await p.evaluate(()=>S.page==='home'),'Retour à Diva Divina');
  // ——— Profil ———
  await p.evaluate(()=>go('zf'));await click(p,'.zf-start [data-zfprof]');
- ok(await p.evaluate(()=>S.page==='zf_prof'&&/Étape 1 sur 6/.test(document.body.innerText)&&!!document.querySelector('[role=progressbar]')),'Profil : étape 1 sur 6 avec progression');
+ ok(await p.evaluate(()=>S.page==='zf_prof'&&/Étape 1 sur 6/i.test(document.body.innerText)&&!!document.querySelector('[role=progressbar]')),'Profil : étape 1 sur 6 avec progression');
  await p.fill('#zf_date','2027-05-20');await click(p,'[data-zfk="setting"] [data-zfv="salle"]');await click(p,'[data-zfk="aesthetic"] [data-zfv="classique"]');await click(p,'[data-zfk="aesthetic"] [data-zfv="modeste"]');
  ok(await p.evaluate(()=>S.zfDraft.aesthetic.length===2),'Choix multiples (styles)');
  await click(p,'[data-zfstep="1"]');
@@ -121,11 +120,11 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  await p.evaluate(()=>go('zf'));await click(p,'[data-zfwipe]');z=await st(p);ok(z===null||(!z.prof&&!z.looks.length&&!z.saved.length),'Effacer toutes les données ZIFAFI');
  await p.close();
  // ——— Données abîmées ———
- p=await open(390,()=>{localStorage.clear();localStorage.setItem('monstyle_portes','0');localStorage.setItem('monstyle',JSON.stringify({nom:'T',lang:'fr',later:true}));localStorage.setItem('monstyle_zf','{"prof":{"silhouette":"oops","volume":42,"date":"hier"},"looks":[null,{"nom":5}],"saved":[{"sil":"inconnue"}],"les":"x","pal":["zz"]}')});
+ p=await open(390,()=>{localStorage.clear();localStorage.setItem('monstyle',JSON.stringify({nom:'T',lang:'fr',later:true}));localStorage.setItem('monstyle_zf','{"prof":{"silhouette":"oops","volume":42,"date":"hier"},"looks":[null,{"nom":5}],"saved":[{"sil":"inconnue"}],"les":"x","pal":["zz"]}')});
  await p.evaluate(()=>go('zf'));ok(await p.evaluate(()=>S.page==='zf'&&ZD.prof.silhouette.length===0&&ZD.prof.date===''&&ZD.saved.length===0&&ZD.pal.length===0),'Données abîmées nettoyées sans planter');
  await p.close();
  // ——— Largeurs ———
- for(const w of [320,360,390,430,768,1280]){p=await open(w,()=>{localStorage.clear();localStorage.setItem('monstyle_portes','0');localStorage.setItem('monstyle',JSON.stringify({nom:'T',lang:'fr',later:true}));localStorage.setItem('monstyle_zf',JSON.stringify({prof:{silhouette:['trapeze'],volume:'modere',aesthetic:['romantique'],date:'2027-01-01'},saved:[],pal:['p1'],looks:[{id:'a',nom:'Un nom de look assez long pour tester',sel:{}},{id:'b',nom:'B',sel:{}}]}))});const bad=[];
+ for(const w of [320,360,390,430,768,1280]){p=await open(w,()=>{localStorage.clear();localStorage.setItem('monstyle',JSON.stringify({nom:'T',lang:'fr',later:true}));localStorage.setItem('monstyle_zf',JSON.stringify({prof:{silhouette:['trapeze'],volume:'modere',aesthetic:['romantique'],date:'2027-01-01'},saved:[],pal:['p1'],looks:[{id:'a',nom:'Un nom de look assez long pour tester',sel:{}},{id:'b',nom:'B',sel:{}}]}))});const bad=[];
   for(const pg of ['home','zf','zf_prof','zf_robe','zf_col','zf_look','zf_insp','zf_acad','zf_les','zf_looks','chat']){await p.evaluate(x=>{S.hist=[];S.zfShow=true;S.zfLkSel=['a','b'];S.zfLes='photos';go(x)},pg);await p.waitForTimeout(700);
    const r=await p.evaluate(()=>({sw:document.documentElement.scrollWidth,W:document.documentElement.clientWidth,small:[...document.querySelectorAll('#page button,#foot button')].filter(e=>{const r=e.getBoundingClientRect();return r.width&&r.height<40&&!e.closest('.ch-sug,.fchips,.hz-cats')}).length}));
    if(r.sw>r.W)bad.push(pg+' déborde ('+r.sw+'>'+r.W+')');if(r.small&&pg.startsWith('zf'))bad.push(pg+' : '+r.small+' bouton(s) < 40 px')}

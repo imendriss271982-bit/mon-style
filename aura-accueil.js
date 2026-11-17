@@ -16,8 +16,18 @@
            4. Outfit check  5. Ma garde-robe + Créer une tenue  6. Zifafi Wedding
            puis « Tout Diva Divina » (3 portes : rien n'est perdu) et Inspirations du jour tout en bas.
    Chargé en DERNIER (après aura-majlis.js et aura-chatlook.js) : enveloppe P.home après toutes les autres.
-   Arrêter : localStorage.monstyle_accueil = "0" (posé aussi par les tests des anciens accueils). */
-const ACC_ON = (() => { try { return localStorage.getItem("monstyle_accueil") !== "0" && localStorage.getItem("monstyle_portes") !== "0"; } catch (e) { return true; } })();
+   v228 (nettoyage) : c'est le SEUL accueil (l'ancien accueil, l'accueil « focus » et l'accueil en 4 portes sont retirés,
+   plus d'interrupteur monstyle_accueil / monstyle_portes). Le modèle de base P.home (index.html) ne donne que .hz-top,
+   .hz-st et .hz-insp ; les cartes d'avis (.sv-home, .mj-invite, .mj-msg, .vf-home) sont ajoutées par leurs modules. */
+
+// « Inspirations du jour » (règle de l'ancien accueil focus, gardée) : seulement quand l'analyse est finie,
+// qu'il y a au moins 3 pièces et après 7 jours avec Diva (amJours dans aura-amie.js, chargé après).
+function acInspOuverte() {
+  try {
+    const n = typeof GR !== "undefined" && GR && Array.isArray(GR.items) ? GR.items.length : 0;
+    return acNd() >= 3 && n >= 3 && typeof amJours === "function" && amJours() >= 7;
+  } catch (e) { return false; }
+}
 
 // 1. Que porter aujourd'hui ? — toujours visible, même si la garde-robe n'est pas prête.
 // v175 (Imen, 8 novembre 2026) : le titre n'est plus répété. La météo monte près de Diva (en haut),
@@ -154,7 +164,7 @@ function acDuo() {
   return t2 || zf ? `<div class="ac-duo${t2 && zf ? "" : " solo"}">${t2}${zf}</div>` : "";
 }
 
-if (ACC_ON && typeof P.home === "function") {
+if (typeof P.home === "function") {
   const acHomeAvant = P.home;
   P.home = (...a) => {
     const o = acHomeAvant(...a);
@@ -167,7 +177,7 @@ if (ACC_ON && typeof P.home === "function") {
     const top = pick(".hz-top"), st = pick(".hz-st"), insp = pick(".hz-insp");
     // Cartes qui n'apparaissent que quand il y a quelque chose à lire (la bande fixe du Majlis .mj-bar est retirée).
     // (Le Majlis met ses cartes avant tout l'accueil, hors de .hx : on les cherche dans toute la page.)
-    const avis = [".sv-home", ".mj-invite", ".mj-msg", ".vf-home", ".fx-new"].map(s => t.content.querySelector(s)).filter(Boolean);
+    const avis = [".sv-home", ".mj-invite", ".mj-msg", ".vf-home"].map(s => t.content.querySelector(s)).filter(Boolean);
     t.content.querySelectorAll(".mj-bar").forEach(x => x.remove());
     if (st) st.classList.add("ac-st");
     const q = top && top.querySelector(".hz-hi > p");
@@ -188,7 +198,7 @@ ${acGolfe()}
 ${acDuo()}`;
     const place = neuf.content.querySelector(".ac-stp");
     if (st) place.replaceWith(st); else place.remove();
-    hx.replaceChildren(...[top, ...avis].filter(Boolean), ...neuf.content.childNodes, ...(insp ? [insp] : []));
+    hx.replaceChildren(...[top, ...avis].filter(Boolean), ...neuf.content.childNodes, ...(insp && acInspOuverte() ? [insp] : []));
     o.html = t.innerHTML;
     return o;
   };

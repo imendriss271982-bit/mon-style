@@ -146,13 +146,13 @@ if (typeof P.twin === "function") {
   const twinAvant = P.twin;
   P.twin = () => { const o = twinAvant(); if (o && o.html) o.html = o.html.replace(/(<div class="tw-list">[\s\S]*?<\/div>)(\s*<p class="hint">)/, `$1<div class="vf-twin">${vfTuile()}</div>$2`); return o; };
 }
-// Accueil : réponse non lue → carte en haut de « Pour toi aujourd'hui » ; et vérification discrète des réponses.
+// Accueil : réponse non lue → carte (aura-accueil.js la range avec les autres avis) ; et vérification discrète des réponses.
 if (typeof P.home === "function") {
   const homeAvant2 = P.home;
   P.home = (...a) => {
     const o = homeAvant2(...a); vfMaj();
     const n = VF.filter(x => x.statut === "repondu" && !x.vu);
-    if (n.length && o && o.html) o.html = o.html.replace(/<section><h2 class="hz-h">Pour toi aujourd’hui<\/h2>/, m => `<button class="vf-home" data-vfopen="${n[0].id}"><span aria-hidden="true">💌</span><span><b>Ta styliste t’a répondu</b><small>Touche pour lire sa réponse</small></span><span class="hx-chev" aria-hidden="true">›</span></button>` + m);
+    if (n.length && o && o.html) o.html = `<button class="vf-home" data-vfopen="${n[0].id}"><span aria-hidden="true">💌</span><span><b>Ta styliste t’a répondu</b><small>Touche pour lire sa réponse</small></span><span class="hx-chev" aria-hidden="true">›</span></button>` + o.html;
     return o;
   };
 }

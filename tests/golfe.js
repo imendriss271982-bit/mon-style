@@ -10,11 +10,11 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  const boot=async()=>{await p.goto(URL);await p.waitForTimeout(900);await p.evaluate(()=>{document.getElementById('splash')?.remove();home()});await p.waitForTimeout(200)};
  await p.goto(URL);
  // Sans analyse
- await p.evaluate(()=>{localStorage.clear();localStorage.setItem('monstyle_focus','{"all":true}');localStorage.setItem('monstyle_portes_vu','1');localStorage.setItem('monstyle_accueil','0');localStorage.setItem('monstyle',JSON.stringify({nom:'Test',lang:'fr',later:true}))});
+ await p.evaluate(()=>{localStorage.clear();localStorage.setItem('monstyle',JSON.stringify({nom:'Test',lang:'fr',later:true}))});
  await boot();
- ok(await p.$('.go-entree[data-view="golfe"]'),'Accueil : carte « Abaya et occasions »');
- ok(await p.evaluate(()=>{const c=document.querySelector('.go-entree'),h=[...document.querySelectorAll('.hz-h')].find(x=>/Pour toi/.test(x.textContent));return c&&h&&(c.compareDocumentPosition(h)&Node.DOCUMENT_POSITION_FOLLOWING)}),'Carte placée juste avant « Pour toi aujourd’hui »');
- await p.click('.go-entree');await p.waitForTimeout(300);
+ ok(await p.$('.ac-golfe[data-view="golfe"]'),'Accueil : carte « Abaya et occasions »');
+ ok(await p.evaluate(()=>{const c=document.querySelector('.ac-golfe'),r=document.querySelector('.ac-ronds');return c&&r&&r.nextElementSibling===c}),'Carte placée juste sous les 3 raccourcis ronds');
+ await p.click('.ac-golfe');await p.waitForTimeout(300);
  ok(await p.evaluate(()=>S.page==='golfe'&&/Fais ton analyse de silhouette/.test(document.body.innerText)&&!!document.querySelector('[data-mod="corps"]')),'Sans analyse : invitation à faire l’analyse');
  // Avec analyse : Poire, petite, visage Rond, saison connue
  await p.evaluate(()=>{const s=Object.keys(SEASONS)[0];localStorage.setItem('monstyle',JSON.stringify({nom:'Test',lang:'fr',later:true,info:{taille:155},res:{corps:{forme:'A · Poire'},visage:{forme:'Rond'},couleurs:{saison:s}}}))});

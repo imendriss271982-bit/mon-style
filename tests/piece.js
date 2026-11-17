@@ -6,7 +6,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  p.on('pageerror',e=>errs.push(e.message));
  const items=[['veste','Blazer noir','noir'],['haut','Chemise blanche','blanc'],['pantalon','Pantalon large','beige'],['chaussures','Escarpins','nude'],['jupe','Jupe midi','camel']].map((a,i)=>({id:'it'+i,cat:a[0],nom:a[1],couleur:a[2],hex:'#999999'}));
  await p.goto(URL);
- await p.evaluate(it=>{localStorage.clear();localStorage.setItem('monstyle_portes','0');localStorage.setItem('monstyle_focus','{"all":true}');localStorage.setItem('monstyle_portes_vu','1');localStorage.setItem('monstyle',JSON.stringify({nom:'Test',lang:'fr',later:true,res:{outfit:{note:6,solutions:[{action:'ajouter',probleme:'Il manque une structure.',texte:'Ajoute ton blazer noir.',id:'it0'}]}}}));localStorage.setItem('monstyle_gr',JSON.stringify({items:it,looks:{},saved:[]}))},items);
+ await p.evaluate(it=>{localStorage.clear();localStorage.setItem('monstyle',JSON.stringify({nom:'Test',lang:'fr',later:true,res:{outfit:{note:6,solutions:[{action:'ajouter',probleme:'Il manque une structure.',texte:'Ajoute ton blazer noir.',id:'it0'}]}}}));localStorage.setItem('monstyle_gr',JSON.stringify({items:it,looks:{},saved:[]}))},items);
  const boot=async()=>{await p.goto(URL);await p.waitForTimeout(900);await p.evaluate(()=>{document.getElementById('splash')?.remove();home()});await p.waitForTimeout(200)};
  await boot();
  await p.evaluate(()=>go('garde'));await p.waitForTimeout(200);

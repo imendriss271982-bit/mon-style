@@ -9,7 +9,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  await p.goto(URL);
  await p.evaluate(()=>{localStorage.clear();localStorage.setItem('monstyle_gguide','5');localStorage.setItem('monstyle',JSON.stringify({nom:'Test',lang:'fr',later:true}))});
  await boot();await p.evaluate(()=>go('garde'));await p.waitForTimeout(200);
- ok(await p.evaluate(()=>{const c=document.querySelector('.gr-adds label.gr-add input[capture="environment"]');const g=document.querySelector('.gr-gal input[multiple]');return !!c&&!!g&&document.querySelector('.gr-adds').firstElementChild.matches('label.gr-add')}),'Garde-robe : la caméra en premier, galerie en petit lien');
+ ok(await p.evaluate(()=>{const m=document.querySelector('.rm-card .rm-main');const c=m&&(m.matches('[data-gguide]')||m.querySelector('input[capture="environment"]'));const g=document.querySelector('.rm-card .rm-sec input[multiple]');return !!c&&!!g&&!!(m.compareDocumentPosition(g)&Node.DOCUMENT_POSITION_FOLLOWING)}),'Garde-robe : la caméra en premier, galerie en petit lien');
  // Reconnaissance des demandes
  ok(await p.evaluate(()=>['Fais-moi une tenue pour ce soir','سوّي لي لبسة للدوام','اعمليلي outfit','شو ألبس اليوم؟','Make me an outfit for work','Que porter demain ?'].every(clDemande)),'Demandes de tenue reconnues (fr, ar, en)');
  ok(await p.evaluate(()=>!['Comment tu trouves ma tenue ?','Quelle couleur me va ?','وش رايچ في لبستي؟'].some(clDemande)),'Questions ordinaires non détournées');
