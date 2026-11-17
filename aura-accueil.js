@@ -167,7 +167,7 @@ if (ACC_ON && typeof P.home === "function") {
     const top = pick(".hz-top"), st = pick(".hz-st"), insp = pick(".hz-insp");
     // Cartes qui n'apparaissent que quand il y a quelque chose à lire (la bande fixe du Majlis .mj-bar est retirée).
     // (Le Majlis met ses cartes avant tout l'accueil, hors de .hx : on les cherche dans toute la page.)
-    const avis = [".mj-invite", ".mj-msg", ".vf-home", ".fx-new"].map(s => t.content.querySelector(s)).filter(Boolean);
+    const avis = [".sv-home", ".mj-invite", ".mj-msg", ".vf-home", ".fx-new"].map(s => t.content.querySelector(s)).filter(Boolean);
     t.content.querySelectorAll(".mj-bar").forEach(x => x.remove());
     if (st) st.classList.add("ac-st");
     const q = top && top.querySelector(".hz-hi > p");

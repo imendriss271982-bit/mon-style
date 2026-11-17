@@ -2,6 +2,7 @@
 // même en cas de plantage, pour que l'app affiche la vraie erreur.
 import { expandRef } from "./methode.js";
 import { compte, evenements, adminClientes } from "./compte.js";
+import { suivi, suiviPending, suiviCron } from "./suivi.js";
 const ALLOWED = ["https://imendriss271982-bit.github.io"];
 // Site vitrine (mystyle.divadivina.app) : seulement la liste d'attente (/liste/…), jamais l'IA.
 const SITE = ["https://mystyle.divadivina.app"];
@@ -10,7 +11,7 @@ let GOOD_IMG = "";
 // Limite de demandes par adresse IP (par instance du Worker, au mieux) : l'en-tête Origin peut être imité
 // hors navigateur, cette limite évite qu'un robot épuise le crédit Gemini / ElevenLabs.
 const HITS = new Map();
-const LIMITS = { "/": 60, "/device": 20, "/auth/start": 10, "/auth/verify": 20, "/sync/meta": 120, "/sync/get": 200, "/sync/put": 300, "/ev": 120, "/admin/clientes": 40, "/compte/del": 10, "/auth/out": 20, "/code": 20, "/voice/session": 30, "/makeup": 6, "/tts": 60, "/verif/new": 4, "/verif/get": 60, "/verif/del": 30, "/verif/admin": 40, "/liste/add": 5, "/liste/admin": 40, "/contact/new": 5, "/majlis/msgs": 500, "/majlis/amis": 240, "/majlis/nonlus": 120, "/majlis/send": 150, "/majlis/aura": 60, "/majlis/moi": 20, "/majlis/join": 20, "/majlis/code": 40, "/majlis/quitter": 20, "/majlis/wipe": 10 }; // demandes par 10 minutes
+const LIMITS = { "/": 60, "/device": 20, "/auth/start": 10, "/auth/verify": 20, "/sync/meta": 120, "/sync/get": 200, "/sync/put": 300, "/ev": 120, "/admin/clientes": 40, "/compte/del": 10, "/auth/out": 20, "/code": 20, "/voice/session": 30, "/makeup": 6, "/tts": 60, "/verif/new": 4, "/verif/get": 60, "/verif/del": 30, "/verif/admin": 40, "/liste/add": 5, "/liste/admin": 40, "/contact/new": 5, "/suivi/key": 30, "/suivi/add": 40, "/suivi/del": 60, "/suivi/wipe": 10, "/suivi/mode": 20, "/suivi/pending": 60, "/majlis/msgs": 500, "/majlis/amis": 240, "/majlis/nonlus": 120, "/majlis/send": 150, "/majlis/aura": 60, "/majlis/moi": 20, "/majlis/join": 20, "/majlis/code": 40, "/majlis/quitter": 20, "/majlis/wipe": 10 }; // demandes par 10 minutes
 function tooMany(ip, path) {
   const now = Date.now(), win = 600000, key = path + "|" + ip, max = LIMITS[path] || 30;
   const list = (HITS.get(key) || []).filter(t => now - t < win);
@@ -471,6 +472,9 @@ export default {
         return await adminClientes(B, env, json);
       }
 
+      // Suivi de Diva (v225) : le service worker du téléphone vient chercher le texte de la notification (sans jeton d'appareil).
+      if (P === "/suivi/pending") return await suiviPending(B, env, json);
+
       // Toutes les routes qui coûtent exigent un jeton d'appareil valide.
       const DEV = await devCheck(env, B.dev);
       if (!DEV) return json({ erreur: DEV_MSG, code: "device" }, 401);
@@ -478,6 +482,7 @@ export default {
       // Comptes clientes, sauvegarde dans le cloud, mesure d'usage (v181) : worker/compte.js.
       if (P.startsWith("/auth/") || P.startsWith("/sync/") || P === "/compte/del") return await compte(P, B, env, json, { DEV, IP, quota, QUOTA_MSG });
       if (P === "/ev") return await evenements(B, env, json, { DEV, quota });
+      if (P.startsWith("/suivi/")) return await suivi(P, B, env, json, DEV);
 
       // Appel / chat avec l'agent Diva (v180) : lien signé à usage unique, délivré seulement aux téléphones de l'app.
       // Une fois l'authentification activée sur l'agent dans ElevenLabs, son identifiant seul ne suffit plus pour l'appeler.
@@ -742,5 +747,9 @@ export default {
       console.error(e);
       return json({ erreur: "Erreur du serveur. Réessaie dans un instant.", code: "server" }, 500);
     }
+  },
+  // v225 : toutes les 10 minutes, les questions de suivi de Diva arrivées à l'heure partent en notification.
+  async scheduled(ev, env, ctx) {
+    ctx.waitUntil(suiviCron(env).catch(e => console.error(e)));
   }
 };
