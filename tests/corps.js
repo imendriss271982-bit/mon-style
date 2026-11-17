@@ -22,7 +22,7 @@ ok(C.resultat(cas[0][1]).res.src==='mesures'&&!C.resultat(cas[0][1]).res.kibbe,'
   const {chromium}=require('playwright');const URL=process.env.URL||'http://localhost:8765/';const b=await chromium.launch();
   const AI={forme:'X · Sablier',ratios:{R_WE:0.74,R_HE:1.02},proportions:'Buste et jambes équilibrés.',somatotype:'mésomorphe',score_yinyang:2,kibbe:'Soft Classic',kibbe_pourquoi:'Score 2.',essences:[{nom:'Classique',pct:60}],conseils:'Marque la taille.',a_eviter:'Le trop ample.'};
   const open=async(w,lang)=>{const p=await b.newPage({viewport:{width:w,height:820}});p.on('pageerror',e=>errs.push(w+' pageerror: '+e.message));p.on('dialog',d=>d.dismiss());
-   await p.goto(URL);await p.evaluate(l=>{localStorage.clear();localStorage.setItem('monstyle',JSON.stringify({nom:'Test',lang:l,later:true,info:{taille:163},res:{}}))},lang);
+   await p.goto(URL);await p.evaluate(l=>{localStorage.clear();localStorage.setItem('monstyle',JSON.stringify({nom:'Test',lang:l,later:true,info:{taille:163,email:'test@test.com'},res:{}}))},lang);
    await p.goto(URL);await p.waitForTimeout(900);
    await p.evaluate(ai=>{document.getElementById('splash')?.remove();window.__said=[];S.voice=true;window.say=t=>__said.push(t);window.__pr=[];
     SAMPLE={json:async pr=>{__pr.push(pr);return /visagisme/i.test(pr)?{forme:'Ovale',pourquoi:'p',micro:'m',coupes:'c',couleur_cheveux:'h',lunettes:'l',makeup:'k'}:/morphologie/i.test(pr)?ai:{saison:Object.keys(SEASONS)[0],sous_ton:'chaud',pourquoi:'x'}}};

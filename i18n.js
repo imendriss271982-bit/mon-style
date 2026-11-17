@@ -3,6 +3,11 @@
    Le texte affiché à l'écran et la voix de Diva sont traduits automatiquement à partir de cette liste.
    Pour corriger une traduction : modifie simplement la 2e (anglais) ou la 3e (arabe) colonne. */
 const I18N_D=[
+// ——— v223 : email obligatoire à l'entrée ———
+["Pour sauvegarder ton style et le retrouver sur n’importe quel téléphone. Pas de mot de passe : je t’envoie un code.","To save your style and find it again on any phone. No password: I’ll send you a code.","عشان أحفظ ستايلچ وتلاقينه على أي تلفون. بدون كلمة سر: أرسل لچ كود."],
+["En continuant, tu acceptes que Diva Divina garde ton prénom et ton email.","By continuing, you agree that Diva Divina keeps your first name and email.","لما تكملين، توافقين إن Diva Divina تحفظ اسمچ وإيميلچ."],
+["Confidentialité","Privacy","الخصوصية"],
+["Je n’ai pas reçu le code, continuer","I didn’t get the code, continue","ما وصلني الكود، كمّلي"],
 ["Dubaï · robes, kaftans et abaya","Dubai · dresses, kaftans and abaya","دبي · فساتين وقفاطين وعباية"],
 ["Livraison dans tout le Golfe","Delivery across the Gulf","توصيل لكل الخليج"],
 ["Londres · chemises et robes-chemises","London · shirts and shirt dresses","لندن · قمصان وفساتين قميص"],

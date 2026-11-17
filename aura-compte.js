@@ -228,3 +228,72 @@ var CP_PG = "";
 .cp-err{margin:2px 0 0;color:#A23B2A;font-size:.88rem}`;
   document.head.appendChild(st);
 })();
+
+// ——— v223 (Imen, 17 novembre 2026 : « اللي يدخل على الأبليكيشن يحط الإيميل… مربوط بجوجل شيت ») ———
+// Page `a_mail` OBLIGATOIRE : juste après le prénom pour une nouvelle cliente, et une fois à l'ouverture pour une cliente
+// déjà là sans email. Dès que l'email est écrit, il part tout de suite dans la liste des inscrites (n8n → Google Sheet,
+// `n8nInscription()`), puis un code à 6 chiffres crée son compte (sauvegarde). Si le code n'arrive pas (spams, email qui ne part pas),
+// « Je n'ai pas reçu le code, continuer » apparaît après 30 s : l'email est déjà gardé, elle pourra valider son compte plus tard dans le Profil.
+function amFin() {
+  S.am = null;
+  if (S.flow && S.flow.includes("a_mail") && S.flow.indexOf("a_mail") < S.flow.length - 1) next(); else { S.flow = null; home(); }
+}
+P.a_mail = () => {
+  const m = S.am || (S.am = { etape: "mail", email: (S.info && S.info.email) || "", code: "", busy: false, err: "", t0: 0, fail: false });
+  const err = m.err ? `<p class="cp-err" role="alert">${esc(m.err)}</p>` : "";
+  if (m.etape === "code") {
+    const lent = m.fail || Date.now() - m.t0 > 30000;
+    return { back: false, html: `<p class="step">Ton email</p><h1>Entre le code reçu</h1><p class="sub">Je t’ai envoyé un code à 6 chiffres à cette adresse :</p>
+<p class="sub"><bdi data-noi18n dir="ltr"><b>${esc(m.email)}</b></bdi></p><p class="sub">Regarde aussi dans les spams.</p>
+<label class="cp-lab" for="amCode">Code à 6 chiffres</label><input class="field" id="amCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" dir="ltr" value="${esc(m.code)}" style="font-size:22px;padding:16px;letter-spacing:.3em;text-align:center">${err}`,
+      foot: `<button class="btn" data-am="verif"${m.busy ? " disabled" : ""}>${m.busy ? "Je vérifie…" : "Valider"}</button><button class="link" data-am="retour">Changer d’email</button>${lent ? `<button class="link" data-am="passer">Je n’ai pas reçu le code, continuer</button>` : ""}` };
+  }
+  return { back: false, html: `<p class="step">Ton email</p><h1>Ton email</h1><p class="sub">Pour sauvegarder ton style et le retrouver sur n’importe quel téléphone. Pas de mot de passe : je t’envoie un code.</p>
+<input class="field" id="amEmail" type="email" inputmode="email" autocomplete="email" dir="ltr" placeholder="name@email.com" value="${esc(m.email)}" style="font-size:19px;padding:18px">
+<p class="sub" style="font-size:13px;margin-top:12px">En continuant, tu acceptes que Diva Divina garde ton prénom et ton email. <a href="privacy.html?lang=${esc(S.lang || "fr")}" target="_blank" rel="noopener" style="color:var(--accent,#7A5B26);font-weight:600">Confidentialité</a></p>${err}`,
+    foot: `<button class="btn" data-am="envoyer"${m.busy ? " disabled" : ""}>${m.busy ? "J’envoie le code…" : "Recevoir mon code"}</button>${m.fail ? `<button class="link" data-am="passer">Continuer</button>` : ""}` };
+};
+const amRender = () => { if (S.page === "a_mail") render(false); };
+document.addEventListener("input", e => {
+  if (!S.am) return;
+  if (e.target.id === "amEmail") S.am.email = e.target.value;
+  if (e.target.id === "amCode") { S.am.code = e.target.value.replace(/\D/g, "").slice(0, 6); if (S.am.code.length === 6) { const b = document.querySelector('[data-am="verif"]'); if (b) b.click(); } }
+}, true);
+document.addEventListener("keydown", e => { if (e.key === "Enter" && (e.target.id === "amEmail" || e.target.id === "amCode")) { e.preventDefault(); const b = document.querySelector(`[data-am="${e.target.id === "amEmail" ? "envoyer" : "verif"}"]`); if (b) b.click(); } }, true);
+document.addEventListener("click", async e => {
+  const t = e.target.closest && e.target.closest("[data-am]");
+  if (!t || !S.am) return;
+  e.preventDefault(); e.stopPropagation();
+  const m = S.am, a = t.dataset.am;
+  if (m.busy && a !== "passer") return;
+  const fin = er => { m.busy = false; m.err = er || ""; amRender(); };
+  try {
+    if (a === "envoyer") {
+      const em = String((document.getElementById("amEmail") || {}).value || m.email || "").trim().toLowerCase();
+      if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(em)) return fin("Vérifie ton email.");
+      m.email = em; m.busy = true; m.err = ""; m.fail = false; amRender();
+      // L'email est gardé et part dans la liste des inscrites AVANT le code : rien n'est perdu si l'email du code n'arrive pas.
+      const deja = S.info && S.info.email === em;
+      S.info = S.info || {}; S.info.email = em; save();
+      if (!deja && typeof n8nInscription === "function") n8nInscription();
+      cpEv("email");
+      try { await cpApi("/auth/start", { email: em, lang: S.lang || "fr" }); }
+      catch (er) { m.fail = true; return fin(er.message); }
+      m.etape = "code"; m.code = ""; m.t0 = Date.now(); fin();
+      setTimeout(amRender, 30500);
+      setTimeout(() => { const f = document.getElementById("amCode"); if (f) f.focus(); }, 60);
+    } else if (a === "retour") { m.etape = "mail"; m.err = ""; amRender(); }
+    else if (a === "passer") { amFin(); }
+    else if (a === "verif") {
+      const code = String((document.getElementById("amCode") || {}).value || m.code).replace(/\D/g, "");
+      if (code.length !== 6) return fin("Entre les 6 chiffres du code.");
+      m.busy = true; m.err = ""; amRender();
+      const r = await cpApi("/auth/verify", { email: m.email, code, nom: S.nom || "", pays: typeof pays === "function" ? pays() : "", lang: S.lang || "fr" });
+      CP = { tok: r.tok, email: r.email, h: {}, t: {}, ph: {} }; cpMarquer();
+      cpEv("compte");
+      if (r.donnees && cpLocalRiche()) { S.am = null; S.cp.etape = "choix"; S.flow = null; go("profil"); return; }
+      if (r.donnees) { await cpRecuperer(true); return; }
+      toast("Ton compte est créé : ton style est sauvegardé"); cpPush(); amFin();
+    }
+  } catch (er) { fin(er.message); }
+}, true);

@@ -1030,7 +1030,7 @@ body.talk #splash .tapaura{background:var(--accent);color:#fff;border-color:var(
 </nav>
 </div>
 <script src="zifafi-i18n.js?v=6"></script>
-<script src="i18n.js?v=62"></script>
+<script src="i18n.js?v=63"></script>
 <script src="aura-methode.js?v=4"></script>
 <script src="aura-mesure.js?v=3"></script>
 <script src="aura-couleur.js?v=2"></script>
@@ -1038,7 +1038,7 @@ body.talk #splash .tapaura{background:var(--accent);color:#fff;border-color:var(
 <script src="aura-silhouette.js?v=1"></script>
 <script src="zifafi-methode.js?v=4"></script>
 <script>
-const VERSION="223";
+const VERSION="224";
 // Bonjour de Diva : une seule fois par ouverture de l’app (gardé même si l’app se recharge pour une mise à jour).
 let HOME_HI=false;try{HOME_HI=sessionStorage.getItem("ms_hi")==="1"}catch(e){}
 function markHi(){HOME_HI=true;try{sessionStorage.setItem("ms_hi","1")}catch(e){}}
@@ -1205,12 +1205,14 @@ function PROFIL(){const v=ok("visage"),b=ok("corps"),s=season(),p=[];
  if(typeof zfCtx==="function"){const z=zfCtx();if(z)x=z+(x?" Son style au quotidien (repère seulement, ne remplace pas ses choix de mariée) : "+x:"")}return x}
 
 // v107 : le résultat du visage s’affiche AVANT qu’on demande la photo de la silhouette (écran rassurant b_intro, ou mesures b_mes).
-const FLOW_A=["a_nom","a_intro","a_face","v_run","r_visage","b_intro","a_body","c_run","r_corps",...QS.map(q=>"q_"+q.id),"k_run","r_couleurs","r_fin"];
+const FLOW_A=["a_nom","a_mail","a_intro","a_face","v_run","r_visage","b_intro","a_body","c_run","r_corps",...QS.map(q=>"q_"+q.id),"k_run","r_couleurs","r_fin"];
 const FLOW_O=["o_photo","o_run","o_res"];
 const ONB={visage:["a_face","v_run","r_visage"],corps:["b_intro","a_body","c_run","r_corps"],couleurs:["a_face",...QS.map(q=>"q_"+q.id),"k_run","r_couleurs"]};
 const todoMods=()=>["visage","corps","couleurs"].filter(k=>k==="couleurs"?!season():!ok(k));
+// v223 : l'email est obligatoire (page a_mail) tant qu'elle n'en a pas donné un et n'a pas de compte.
+function needMail(){return !(S.info&&S.info.email)&&!(typeof cpOn==="function"&&cpOn())}
 function startOnb(){const m=todoMods().filter(k=>premium()||(k==="visage"&&!PLAN.vfree));if(!m.length)return home();let f=[];m.forEach(k=>{let st=ONB[k];if(k==="couleurs"&&f.includes("a_face"))st=st.slice(1);f=f.concat(st)});
- S.flow=[...(S.nom?[]:["a_nom"]),"a_intro",...f,"r_fin"];S.from="home";S.hist=["home"];S.page=S.flow[0];S.dir="f";S.err="";S.rid++;render(true)}
+ S.flow=[...(S.nom?[]:["a_nom"]),...(needMail()?["a_mail"]:[]),"a_intro",...f,"r_fin"];S.from="home";S.hist=["home"];S.page=S.flow[0];S.dir="f";S.err="";S.rid++;render(true)}
 const DOCK=["home","boutique","o_photo","news","profil","chat","beaute","garde","tenues","majlis"];
 // Onglet de la barre du bas qui reste allumé quand on est sur une page secondaire.
 document.addEventListener("click",e=>{const t=e.target.closest("[data-gocc2]");if(t)S.grOcc=t.dataset.gocc2},true);
@@ -1959,7 +1961,7 @@ const MOD_RES={visage:"r_visage",corps:"r_corps",kibbe:"r_kibbe",couleurs:"r_cou
 const RES_MOD={r_visage:"visage",r_corps:"corps",r_kibbe:"kibbe",r_couleurs:"couleurs"};
 const MODS={visage:["a_face","v_run","r_visage"],corps:["b_intro","a_body","c_run","r_corps"],kibbe:["b_intro","a_body","c_run","r_kibbe"],couleurs:["a_face",...QS.map(q=>"q_"+q.id),"k_run","r_couleurs"]};
 const MIC={face:IC.face,body:IC.body,kibbe:'<svg viewBox="0 0 24 24"><path d="M12 3l7 9-7 9-7-9z"/><path d="M5 12h14"/></svg>',pal:'<svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.2 0 1.8-.9 1.4-1.9-.5-1.1.3-2.1 1.5-2.1H17a4 4 0 0 0 4-4c0-5.5-4-10-9-10z"/><circle cx="7.5" cy="11" r="1.2"/><circle cx="10" cy="7" r="1.2"/><circle cx="15" cy="7.5" r="1.2"/></svg>'};
-function startMod(m){const F=MODS[m];if(!F)return;S.from=S.page==="profil"||/^r_/.test(S.page)?"profil":"home";S.flow=S.nom?F:["a_nom",...F];S.hist=[S.from];S.page=S.flow[0];S.dir="f";S.err="";S.rid++;render(true)}
+function startMod(m){const F=MODS[m];if(!F)return;S.from=S.page==="profil"||/^r_/.test(S.page)?"profil":"home";S.flow=[...(S.nom?[]:["a_nom"]),...(needMail()?["a_mail"]:[]),...F];S.hist=[S.from];S.page=S.flow[0];S.dir="f";S.err="";S.rid++;render(true)}
 function runPage(f,t,redo){return {html:`<p class="step">Analyse</p><h1>${S.err?"Un souci":t}</h1><div class="photo scan">${S.url[f]?`<img src="${S.url[f]}" alt="">`:""}</div>${S.err?`<p class="sub">${esc(S.err)}</p>`:WAITBOX}`,
  foot:S.err?`<button class="btn" data-retry>Réessayer</button><button class="link" data-go="${redo}">Changer ma photo</button>`:"",back:!!S.err}}
 function nextBtn(){if(S.flow){const last=S.flow.indexOf(S.page)===S.flow.length-1;return `<button class="btn" data-next>${last?(S.from==="profil"?"Retour à mon profil":"Retour à l’accueil"):"Continuer"}</button>`}
@@ -2373,7 +2375,7 @@ document.addEventListener("click",e=>{
  if(t.dataset.gdel){if(!confirm(tr("Supprimer cet article de ta garde-robe ?")))return;GRDB.del(t.dataset.gdel);GR_IN_DB.delete(t.dataset.gdel);GR.items=GR.items.filter(i=>i.id!==t.dataset.gdel);GR.looks={};grSave();toast("Article supprimé");back();return}
  if(t.dataset.occ){S.occ=t.dataset.occ;save();render(false);say({"Travail":"Une tenue pour le travail, parfait.","Casual":"Une tenue décontractée, j’adore.","Soirée":"Une soirée ! On va te rendre éblouissante.","Mariage":"Un mariage, il faut être élégante sans voler la vedette.","Rendez-vous":"Un rendez-vous, on veut te voir rayonner.","Voyage":"Un voyage, confort et style.","Ramadan":"Une tenue de Ramadan, élégante et confortable.","Aïd":"L’Aïd ! On va te rendre lumineuse."}[S.occ]+" Montre-moi ta tenue.");return}
  if(t.dataset.start==="A"&&!premium()){if(PLAN.vfree)return paywall("analyses");return startMod("visage")}
- if(t.dataset.start==="A"){S.flow=FLOW_A;S.hist=["home"];S.page="a_nom";S.dir="f";S.res={outfit:S.res.outfit};S.wait={};S.rid++;render(true);return}
+ if(t.dataset.start==="A"){S.flow=FLOW_A.filter(p=>p!=="a_mail"||needMail());S.hist=["home"];S.page="a_nom";S.dir="f";S.res={outfit:S.res.outfit};S.wait={};S.rid++;render(true);return}
  if(t.dataset.go==="o_photo"&&!premium())return paywall("outfit");
  if(t.dataset.go==="o_photo"){S.flow=FLOW_O;if(S.page!=="o_photo"){S.hist=["home"];S.page="o_photo";S.dir="f";render(true)}return}
  if(t.dataset.go){go(t.dataset.go);return}
@@ -2701,7 +2703,7 @@ $("#inst").addEventListener("click",e=>{if(e.target.id==="inst")$("#inst").class
 (function(){const fit=()=>{const sp=document.getElementById("splash");if(!sp)return;const t=sp.querySelector(".sptop .sp-tag")||sp.querySelector(".sptop .logo");if(!t)return;sp.style.setProperty("--top",Math.ceil(t.getBoundingClientRect().bottom)+"px")};
  fit();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);addEventListener("resize",fit);setTimeout(fit,600);setTimeout(fit,1800)})();
 $("#start").addEventListener("click",()=>{window.SPOUT=true;window.SNDBLOCK=false;if(window.endCall)window.endCall();SKIP=true;GEN++;stopVoice();try{if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}unlock();$("#splash").classList.add("out");setTimeout(()=>$("#splash").remove(),800);
- SKIP=true;if(window.SKIPNOM)window.SKIPNOM();if(/formules|abo/i.test(location.hash)){go("abo");return}if(!window.CALLED){if(todoMods().length===3&&!S.later&&S.page==="home")startOnb()}window.GREETED=true;markHi()});
+ SKIP=true;if(window.SKIPNOM)window.SKIPNOM();if(/formules|abo/i.test(location.hash)){go("abo");return}if(!window.CALLED){if(todoMods().length===3&&!S.later&&S.page==="home")startOnb();else if(S.page==="home"&&needMail()){S.flow=["a_mail"];S.from="home";S.hist=["home"];S.page="a_mail";S.dir="f";render(true)}}window.GREETED=true;markHi()});
 </script>
 <script src="aura-profile.js?v=4"></script>
 <script src="aura-gouts.js?v=2"></script>
@@ -2723,7 +2725,7 @@ $("#start").addEventListener("click",()=>{window.SPOUT=true;window.SNDBLOCK=fals
 <script src="aura-majlis.js?v=10"></script>
 <script src="aura-piece.js?v=3"></script>
 <script src="aura-chatlook.js?v=4"></script>
-<script src="aura-compte.js?v=3"></script>
+<script src="aura-compte.js?v=4"></script>
 <script src="partenaires-data.js?v=1"></script>
 <script src="shirtco-data.js?v=1"></script>
 <script src="aura-partenaires.js?v=3"></script>
