@@ -7,9 +7,9 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  await p.goto(URL);
  await p.evaluate(()=>{localStorage.clear();localStorage.setItem('monstyle',JSON.stringify({nom:'Test',lang:'fr',later:true}));localStorage.setItem('monstyle_focus',JSON.stringify({all:true}))});
  await p.goto(URL);await p.waitForTimeout(900);await p.evaluate(()=>{document.getElementById('splash')?.remove();go('garde')});await p.waitForTimeout(300);
- ok(await p.$('button.gr-add[data-gguide]'),'Garde-robe : « Ajouter en photo » ouvre le guide');
- ok(await p.$('.gg-lien'),'Lien « Comment bien photographier ? »');
- await p.click('button.gr-add[data-gguide]');await p.waitForTimeout(300);
+ ok(await p.$('button.rm-main[data-gguide]'),'Garde-robe : « Photographier plusieurs pièces » ouvre le guide (v227)');
+ ok(await p.$('.rm-sec [data-gguide]'),'Lien « Bien photographier » (v227)');
+ await p.click('button.rm-main[data-gguide]');await p.waitForTimeout(300);
  ok(await p.evaluate(()=>S.page)==='g_guide','Page guide ouverte');
  ok(await p.$$eval('.gg-row',e=>e.length)===4,'Sens de 4 types de pièces');
  ok(await p.$$eval('.gg-reg li',e=>e.length)===4,'4 règles');
@@ -38,7 +38,7 @@ let fails=0;const ok=(c,m)=>{console.log((c?'✓ ':'✗ ')+m);if(!c)fails++};
  d=await dim();ok(d.w>d.h*2,'Pivoter tourne la photo : '+JSON.stringify(d));
  // Après 3 utilisations, ajout direct
  await p.evaluate(()=>{localStorage.setItem('monstyle_gguide','3');go('garde')});await p.waitForTimeout(300);
- ok(await p.$('label.gr-add input[data-gadd][capture]')&&!(await p.$('button.gr-add[data-gguide]')),'Après 3 fois : ajout direct, lien du guide gardé');
+ ok(await p.$('label.rm-main input[data-gadd][capture]')&&!(await p.$('button.rm-main[data-gguide]')),'Après 3 fois : ajout direct, lien du guide gardé');
  // Arabe
  await p.evaluate(()=>localStorage.setItem('monstyle',JSON.stringify({nom:'Test',lang:'ar',later:true})));await p.goto(URL);await p.waitForTimeout(900);
  await p.evaluate(()=>{document.getElementById('splash')?.remove();go('g_guide')});await p.waitForTimeout(500);

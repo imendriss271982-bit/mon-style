@@ -4,6 +4,8 @@
    la question s'affiche dans l'app quand elle touche la notification. Mode silencieux (réglé dans le Profil) : sans son ni vibration. */
 const API = "https://mon-style.imendriss271982.workers.dev";
 const DEF = { fr: "Diva a un message pour toi 💛", en: "Diva has a message for you 💛", ar: "ديفا عندها رسالة لچ 💛" };
+// v227 : la tenue du matin (ids « m » + date) a son propre texte, toujours sans rien de personnel.
+const MATIN = { fr: "Bonjour ☀️ Ta tenue du jour t’attend", en: "Good morning ☀️ Your outfit of the day is waiting", ar: "صباح الخير ☀️ لبسة اليوم جاهزة لچ" };
 
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", e => e.waitUntil(self.clients.claim()));
@@ -20,7 +22,7 @@ self.addEventListener("push", e => e.waitUntil((async () => {
   const lang = DEF[j.lang] ? j.lang : ((self.navigator && self.navigator.language) || "fr").slice(0, 2);
   const id = ((j.msgs || [])[0] || {}).id || "";
   await self.registration.showNotification("Diva", {
-    body: DEF[lang] || DEF.fr, icon: "icon-192.png?v=5", badge: "icon-192.png?v=5", tag: "diva-message",
+    body: (/^m\d{8}$/.test(id) ? MATIN : DEF)[lang] || DEF.fr, icon: "icon-192.png?v=5", badge: "icon-192.png?v=5", tag: /^m\d{8}$/.test(id) ? "diva-matin" : "diva-message",
     silent: !!j.silent, data: { id }, lang: DEF[lang] ? lang : "fr", dir: lang === "ar" ? "rtl" : "auto"
   });
 })()));

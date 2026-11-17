@@ -247,6 +247,7 @@ document.addEventListener("click", e => {
 (function () {
   try {
     const q = new URLSearchParams(location.search).get("suivi");
+    window.SV_Q = q || "";
     if (q != null) { history.replaceState(null, "", location.pathname + location.hash); try { if (typeof cpEv === "function") cpEv("suivi_notif"); } catch (e) {} }
     if (SV_SW) {
       navigator.serviceWorker.addEventListener("message", ev => { if (ev.data && "suivi" in ev.data && typeof home === "function") home(); });

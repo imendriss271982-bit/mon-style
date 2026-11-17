@@ -15,7 +15,7 @@ const SHOTS=process.env.SHOTS||'';
 
  const RES={visage:{forme:'ovale'},corps:{forme:'Sablier',kibbe:'Soft Classic'},couleurs:{saison:'Hiver Profond'}};
  await open();
- okk(/^top,stylist,analyse,ronds,golfe,duo(,insp)?$/.test(await ordre()),'Nouvelle cliente : '+await ordre());
+ okk(/^top,(am-mot,)?stylist,analyse,ronds,golfe,duo(,insp)?$/.test(await ordre()),'Nouvelle cliente : '+await ordre());
  okk(await p.evaluate(()=>!!document.querySelector('.ac-an [data-onb]')&&document.querySelectorAll('.ac-an .hx-an-s li').length===3),'Grande carte = « Découvre ton style » en 3 étapes');
  okk(!(await p.evaluate(()=>!!document.querySelector('#page .hz-q,#page #hq'))),'Plus de recherche sur l’accueil');
  okk(await p.evaluate(()=>getComputedStyle(document.querySelector('header .lgbtn')).display==='none'),'Globe de langue caché sur l’accueil');
@@ -33,7 +33,7 @@ const SHOTS=process.env.SHOTS||'';
   okk(await p.evaluate(()=>S.page)===pg,sel+' → '+pg)}
  // Analyse finie : la grande carte devient « Ma tenue du jour »
  await open({res:RES});
- okk(/^top,jour,stylist,ronds,golfe,duo(,insp)?$/.test(await ordre()),'Analyse finie : '+await ordre());
+ okk(/^top,(am-mot,)?jour,stylist,ronds,golfe,duo(,insp)?$/.test(await ordre()),'Analyse finie : '+await ordre());
  await p.evaluate(()=>{S.hist=[];home()});await p.waitForTimeout(250);await p.evaluate(()=>document.querySelector('.ac-jour').click());await p.waitForTimeout(350);
  okk(await p.evaluate(()=>S.page)==='jour','.ac-jour → jour');
  await p.evaluate(()=>{S.hist=[];home()});await p.waitForTimeout(250);
@@ -43,7 +43,7 @@ const SHOTS=process.env.SHOTS||'';
  await p.evaluate(()=>{S.hist=[];home()});await p.waitForTimeout(250);
  // Invitation du Majlis : la carte reste (elle n'apparaît que quand il y en a une)
  await p.evaluate(()=>{MJ.inv='ABCDEF';MJ.invNom='Sara';S.hist=[];S.page='home';render(false)});await p.waitForTimeout(300);
- okk(await ordre().then(o=>o.startsWith('top,mj-invite,jour')),'Invitation du Majlis juste sous Diva');
+ okk(await ordre().then(o=>/^top,(am-mot,)?mj-invite,jour/.test(o)),'Invitation du Majlis juste sous Diva');
  await p.evaluate(()=>{MJ.inv='';render(false)});
  // Tenue du jour déjà choisie
  const gr=[];for(let i=0;i<8;i++)gr.push({id:'x'+i,cat:i<4?'haut':'pantalon',nom:'Pièce '+i,coul:'noir',img:''});
