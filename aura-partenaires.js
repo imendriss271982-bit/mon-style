@@ -50,7 +50,7 @@ if (typeof P.boutique === "function") {
      ${l.length > n ? `<button class="btn ghost" data-ptnplus style="margin-top:10px">Voir plus de robes</button>` : ""}
      <p class="sub" style="font-size:12.5px">Prix en dollars américains, tels qu’affichés par la maison.</p>`;
     const i = o.html.indexOf('<button class="btn" data-askaura');
-    const tout = bloc + scBloc();
+    const tout = bloc + scBloc() + elBloc();
     o.html = i >= 0 ? o.html.slice(0, i) + tout + o.html.slice(i) : o.html + tout;
     return o;
   };
@@ -86,7 +86,41 @@ function scBloc() {
    <p class="sub" style="font-size:12.5px">Prix en riyals qataris, tels qu’affichés par la maison pour le Qatar.</p>`;
 }
 
+/* v230 (17 novembre 2026, Imen : lien Awin d'Elvorique Jewelry à ajouter) : bijoux en diamants de laboratoire,
+   annonceur Awin 128211. Données : elvorique-data.js (ELVORIQUE). Prix en $. Logo et nom exact comme les autres
+   maisons (v218). Filtres S.elF, nombre affiché S.elN. */
+const EL_IMG = "https://cdn.shopify.com/s/files/1/0760/5485/5928/";
+const EL_LOGO = "https://elvoriquejewelry.com/cdn/shop/files/LOGO_c8d4d48c-e300-4e13-b958-eb50df8990b7.png?v=1784902640&width=360";
+const EL_ART = (typeof ELVORIQUE !== "undefined" ? ELVORIQUE : []).map(r => ({
+  id: r[0], nom: r[1], type: r[2], prix: r[3], avant: r[4], img: EL_IMG + r[5] + "&width=480", met: r[6],
+  lien: awinLien("128211", "https://elvoriquejewelry.com/products/" + r[0]),
+}));
+const EL_FILTRES = [["", "Tout"], ["bague", "Bagues"], ["alliance", "Alliances"], ["oreilles", "Boucles d’oreilles"], ["collier", "Colliers"], ["bracelet", "Bracelets"], ["promo", "Promos"]];
+function elListe() {
+  const f = S.elF || "";
+  return EL_ART.filter(r => !f || (f === "promo" ? r.avant > 0 : r.type === f));
+}
+function elCarte(r) {
+  return `<a class="ptn" href="${esc(r.lien)}" target="_blank" rel="noopener sponsored">
+    <span class="ptn-ph"><img src="${esc(r.img)}" alt="${esc(r.nom)}" loading="lazy" referrerpolicy="no-referrer">${r.avant ? `<span class="ptn-fav promo">Promo</span>` : ""}</span>
+    <b data-noi18n>${esc(r.nom)}</b>
+    <span class="ptn-px" data-noi18n>${r.prix} $${r.avant ? ` <s>${r.avant} $</s>` : ""}</span>
+    ${r.met ? `<small>${esc(r.met)}</small>` : ""}</a>`;
+}
+function elBloc() {
+  if (!EL_ART.length) return "";
+  const l = elListe(), n = S.elN || 12;
+  return `${ptnMarque(EL_LOGO, "ELVORIQUE", "Bijoux en diamants de laboratoire")}<p class="sub" style="font-size:14px;margin-top:-2px">Bagues, alliances, colliers et boucles d’oreilles</p>
+   <div class="fchips">${EL_FILTRES.map(c => `<button data-elf="${c[0]}" aria-pressed="${(S.elF || "") === c[0]}">${c[1]}</button>`).join("")}</div>
+   <div class="ptn-g">${l.slice(0, n).map(elCarte).join("")}</div>
+   ${l.length > n ? `<button class="btn ghost" data-elplus style="margin-top:10px">Voir plus de bijoux</button>` : ""}
+   <p class="sub" style="font-size:12.5px">Prix en dollars américains, tels qu’affichés par la maison.</p>`;
+}
+
 document.addEventListener("click", e => {
+  const ef = e.target.closest("[data-elf]");
+  if (ef) { S.elF = ef.getAttribute("data-elf"); S.elN = 12; render(false); return; }
+  if (e.target.closest("[data-elplus]")) { S.elN = (S.elN || 12) + 12; render(false); return; }
   const g = e.target.closest("[data-scf]");
   if (g) { S.scF = g.getAttribute("data-scf"); S.scN = 12; render(false); return; }
   if (e.target.closest("[data-scplus]")) { S.scN = (S.scN || 12) + 12; render(false); return; }
