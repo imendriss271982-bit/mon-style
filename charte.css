@@ -1,20 +1,23 @@
 /* ==========================================================================
-   CHARTE GRAPHIQUE DIVA DIVINA — v1 (17 novembre 2026)
+   CHARTE GRAPHIQUE DIVA DIVINA — v2 (17 novembre 2026)
    Source unique pour l'app, le site et Instagram. Ne pas inventer d'autres
    couleurs ou polices : tout part d'ici.
-   Règle 60 / 30 / 10 : 60 % ivoire et blanc nacre · 30 % champagne et or ·
-   10 % noir couture. Le bordeaux reste un détail (moins de 5 %).
+   5 couleurs : noir couture, ivoire, nacre, champagne, or.
+   + 2 nuances réservées au texte : or texte, taupe.
+   Règle 70 / 20 / 10 : 70 % ivoire et nacre · 20 % noir couture (titres,
+   texte) · 10 % or (logo, boutons, détails). Le champagne = fonds doux.
+   Pas de bordeaux (retiré en v2, choix d'Imen).
    ========================================================================== */
 :root{
-  /* Couleurs */
-  --dd-noir:#1C1714;        /* logo, titres, texte principal */
+  /* Les 5 couleurs */
+  --dd-noir:#1C1714;        /* logo, titres, texte, badges */
   --dd-ivoire:#FBF8F2;      /* fond */
   --dd-nacre:#FFFDF9;       /* cartes, surfaces */
   --dd-champagne:#E9D6AE;   /* fonds doux, filets, halos */
-  --dd-or:#C9A464;          /* accents, icônes, pastilles actives */
-  --dd-or-texte:#7A5B26;    /* texte doré et liens (lisible sur ivoire) */
+  --dd-or:#C9A464;          /* logo, boutons, icônes, pastilles actives */
+  /* Les 2 nuances pour le texte */
+  --dd-or-texte:#7A5B26;    /* texte doré, liens, sur-titres (lisible sur ivoire) */
   --dd-taupe:#5D534B;       /* texte secondaire */
-  --dd-bordeaux:#6B1E2E;    /* accent fin seulement : sur-titres, badges */
   --dd-filet:rgba(154,118,56,.20);
   /* Dégradés */
   --dd-bouton:linear-gradient(180deg,#D2B072 0%,#B08A4A 34%,#94713A 66%,#7C5D2D 100%);
